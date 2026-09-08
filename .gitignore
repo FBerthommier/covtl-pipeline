@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.eggs/
+
+# Test / tooling caches
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Generated artifacts
+out/
+out_demo/
+temp_video/
+*.wav
+*.mp4
+*.tract
+
+# Editors / OS
+.vscode/
+.idea/
+Thumbs.db

@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vtl-synth"
+version = "1.0.2"
+description = "Articulatory synthesis from text (Berthommier COVTL model + VocalTractLab), with sagittal MP4 video"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "GPL-3.0-or-later"}
+authors = [
+    {name = "Frédéric Berthommier", email = "fberthommier@users.noreply.github.com"},
+]
+keywords = [
+    "articulatory synthesis",
+    "vocal tract",
+    "VocalTractLab",
+    "speech synthesis",
+    "coarticulation",
+]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+    "Topic :: Scientific/Engineering",
+]
+dependencies = [
+    "numpy>=1.22",
+    "scipy>=1.7",
+    "vocaltractlab-cython>=0.0.10",
+    "Pillow>=9.0",
+    "imageio-ffmpeg>=0.4",
+    "cmudict>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+]
+plot = [
+    "matplotlib>=3.5",
+]
+
+[project.scripts]
+vtl-synth = "vtl_synth.cli.main:main"
+
+[project.urls]
+Homepage = "https://github.com/fberthommier/covtl-pipeline"
+Repository = "https://github.com/fberthommier/covtl-pipeline"
+Documentation = "https://www.vocaltractlab.de"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["vtl_synth*"]
+
+[tool.setuptools.package-data]
+vtl_synth = ["py.typed", "data/vtl_binaries/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
