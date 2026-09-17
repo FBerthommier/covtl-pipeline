@@ -20,10 +20,7 @@ Shared developer docs at the repository root and in this folder:
 ## Building the PDFs
 
 ```bash
-# manual.pdf (fontspec). NB: manual.tex loads a local IPA font file
-# (.l_10646.ttf) that is NOT redistributed with the repository — the
-# shipped manual.pdf embeds it. To rebuild, provide an IPA-capable
-# font and adjust the \newfontfamily line in manual.tex.
+# manual.pdf (fontspec; uses the shipped IPA font docs/.l_10646.ttf)
 xelatex manual.tex && xelatex manual.tex
 
 # the four companion manuals (plain pdflatex)

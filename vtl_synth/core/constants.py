@@ -412,7 +412,11 @@ CONSONANT_TARGETS: Dict[str, Tuple[float, float, List[str]]] = {
 
     # --- Palatals ---
     'C':    (1.15, np.radians(353),  ['JA', 'TCX', 'TCY']),
-    'j':    (1.22, np.radians(1),   ['JA', 'TCX', 'TCY', 'TBX', 'TBY']),
+    # NB (2026-09-17, audit): the glide /j/ is defined in the Glides
+    # section below (FIX-2, coordinates of /i/) — the former palatal
+    # 'j' entry (1.22, 1°) was a SHADOWED duplicate key (later dict
+    # entry always won) and has been removed; the effective target is
+    # unchanged.
 
     # --- Uvulars ---
     'X':    (1.28, np.radians(234), ['JA', 'TCX', 'TCY', 'TBX', 'TBY', 'TS2']),
@@ -434,10 +438,13 @@ CONSONANT_TARGETS: Dict[str, Tuple[float, float, List[str]]] = {
 
     # --- Glides / approximants ---
     'w':    (0.60, np.radians(60),  ['JA', 'LP', 'LD', 'TCX', 'TCY']),
-    # Glides (reference v14 FIX-2: via the vowel tree):
-    #   /j/ → coordinates of /i/ (unrounded)      → (0.8, 300°)
-    #   /ɥ/ → coordinates of /y/ (rounded)          → (0.519, 260.6°)
-    #   /w/ → coordinates of /u/ (rounded)          → (0.6, 60°)
+    # Glides (reference v14 FIX-2: via the vowel tree) — the anchors
+    # are the REFERENCE vowel radii, deliberately kept independent of
+    # the calibrated vowel plateaus (rho_i = 0.60, rho_u = 0.55 in
+    # VOWEL_TARGETS): a glide is a consonantal target, not a plateau.
+    #   /j/ → reference coordinates of /i/ (unrounded)  → (0.80, 300°)
+    #   /ɥ/ → coordinates of /y/ (rounded)               → (0.519, 260.6°)
+    #   /w/ → reference coordinates of /u/ (rounded)     → (0.60, 60°)
     # is_vowel=False (no plateau — these are C nodes); selector
     # depends on rounding: rounded w → LP/LD in the selector with ρ 0.6
     # (rounded labiovelar constriction 0.14-0.15 cm²; ρ≥0.7 with

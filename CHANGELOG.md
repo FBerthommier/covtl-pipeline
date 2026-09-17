@@ -3,6 +3,29 @@
 All notable changes to this package are documented here.
 Format: Keep a Changelog — https://keepachangelog.com/
 
+## [Unreleased]
+
+### Documentation / hygiene
+- **Manual audit fixes (A/C/D/E)** — no functional change: glides
+  documented as consonantal nodes anchored on the *reference* vowel
+  tree, deliberately independent of the calibrated vowel plateaus
+  (ρᵢ = 0.60, ρᵤ = 0.55); the spelled-`r` input alias removed from the
+  engine-SAMPA inventory (only `R` exists, normalized in
+  `notation.py`); the Fig. 1 caption corrected (m vs b: same target
+  and selector, only the velum VO extension differs); the two
+  constant sets explicitly split — reference curvature (Kc=10, Kv=30,
+  ν=1) belongs to the deprecated `legacy` engine (plus the polar-video
+  branch display), the `syl` engine runs ν=−1, K=1000,
+  `SYL_COEFCEN=0.5`. The ARPAbet `NG → J` mapping is now documented as
+  a compromise (the English velar nasal has no closure target); the
+  `NG → N` alternative was left to a dedicated property test.
+- **`constants.py`**: removed the shadowed duplicate `'j'` key (the
+  former palatal entry (1.22, 1°) never took effect — the FIX-2 glide
+  definition always won); effective targets unchanged (verified:
+  j = 0.80/300°, w = 0.60/60°). Glide comment updated accordingly.
+- **`docs/.l_10646.ttf`** is now shipped, so `manual.pdf` can be
+  rebuilt from the repository (xelatex, two passes).
+
 ## [1.1.0] — 2026-09-16
 
 Version decision (vs v2.0.0): **no file removed**; the 7 modified
