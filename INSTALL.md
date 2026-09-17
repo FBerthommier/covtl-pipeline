@@ -56,7 +56,19 @@ vtl-synth run "this is easy for us" -o out
 ```
 
 You should get `out\this_is_easy_for_us.tract`, `.wav`, `.mp4` and
-`.txt` (the SAMPA transcript).
+`.txt` (the SAMPA transcript). The default speaker is **jd3**; after
+cloning/updating the repository, (re)install the speaker you want
+before synthesizing — the selector rewrites the active constants and
+the wheel resource:
+
+```bat
+python install_speaker.py list          :: jd3 s1 s2 m01 w02 + active
+python install_speaker.py install m01   :: example: switch to M01
+```
+
+Languages (de/en/es/fr/it/pt) are managed by `python setup_lang.py
+list` / `install --lang fr` / `setlang de` / `restore` — see the
+README section *Languages*.
 
 ## 4. Optional: run the test suite
 
@@ -65,8 +77,11 @@ pip install --user pytest
 python -m pytest
 ```
 
-55 tests: engine non-regression (against `regression_baselines.json`)
-plus CLI/g2p unit tests.
+111 tests (lightweight suite, ~80 s): engine non-regression against
+the active speaker's `regression_baselines*.json`, CLI/g2p units,
+registry integrity, expressive-prosody and polar-model units. The
+heavyweight install/restore end-to-end test stayed in the development
+repository (see `MIGRATION_NOTES.md` §5).
 
 ## Notes on vocaltractlab-cython
 

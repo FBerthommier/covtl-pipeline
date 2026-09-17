@@ -36,9 +36,28 @@ import numpy as np
 
 from vtl_synth.core.assemble_tract import AssembleTract
 from vtl_synth.core.build_phrase_tract import build_phrase_tract
-from vtl_synth.core.constants import TRACT_SR
+from vtl_synth.core.constants import TRACT_SR, SpeakerConfig
 from vtl_synth.core.synth import synthesize_audio
 from vtl_synth.utils.g2p import text_to_sampa
+from vtl_synth.utils.setlang import (
+    get_active_profile as _get_active_lang_profile,
+    get_profile as _get_lang_profile,
+    setlang as _setlang,
+    text_to_sampa as _text_to_sampa_lang,
+)
+
+# Expressive prosody (v1.0.8, option — défaut OFF). Import non
+# critique : indisponible → Pipeline(expressive=True) retombe sur la
+# déclinaison monotone avec un avertissement.
+try:
+    from vtl_synth.core.syltraj import get_last_build as _get_last_build
+    from vtl_synth.utils.prosody_f0 import (
+        apply_expressive_f0 as _apply_expressive_f0,
+        plan_expressive_text as _plan_expressive_text,
+    )
+    _EXPRESSIVE_OK = True
+except Exception:                                        # pragma: no cover
+    _EXPRESSIVE_OK = False
 
 
 # ==========================================================================
@@ -54,6 +73,7 @@ class PipelineResult:
     wav_path: Path
     mp4_path: Optional[Path] = None
     transcript_path: Optional[Path] = None
+    polar_path: Optional[Path] = None
     n_frames: int = 0
     duration_s: float = 0.0
     warnings: List[str] = field(default_factory=list)
@@ -170,29 +190,88 @@ class Pipeline:
         Engine configuration, passed through to
         :func:`build_phrase_tract` (defaults = validated
         settings: JD3 speaker, syl engine, orthogonal branch on).
+        ``f0_hz=None`` (default) resolves to ``f0_default`` of the
+        installed constants — i.e. the active speaker of the registry
+        (see vtl_synth.core.speaker_registry).
+    lang :
+        Active language profile (language pack; default ``en`` =
+        the CMUdict gateway, i.e. the historical behaviour).
     t_cons_ms, t_voy_ms :
         Consonant / vowel gesture duration (ms).
     pause_short_ms, pause_long_ms :
         Inter-word (space) and end-of-sentence ('|') pause duration.
+    expressive : bool
+        Prosodie expressive (v1.0.8) : respiration syntaxique
+        (pauses courtes aux frontières de blocs — aucune chaîne de
+        mots coarticulés > ``max_chain_words``) et contour de F0
+        sculpté (accents de hauteur sur les syllabes accentuées,
+        reprise d'attaque par bloc, chute nucléaire). DÉFAUT OFF :
+        sorties bit-identiques au mode monotone. N'agit que sur la
+        colonne f0 du glottis et les durées de pause — jamais sur le
+        tract. Requiert ``use_g2p=True`` (l'entrée phonétique n'a
+        pas de structure syntaxique).
     """
 
     def __init__(self,
-                 f0_hz: float = 102.216,
+                 f0_hz: Optional[float] = None,
                  speaker: str = 'JD3',
                  engine: str = 'syl',
                  use_orthogonal: bool = True,
-                 t_cons_ms: float = 100.0,
-                 t_voy_ms: float = 80.0,
-                 pause_short_ms: float = 200.0,
-                 pause_long_ms: float = 320.0):
+                 t_cons_ms: Optional[float] = None,
+                 t_voy_ms: Optional[float] = None,
+                 pause_short_ms: Optional[float] = None,
+                 pause_long_ms: Optional[float] = None,
+                 lang: str = 'en',
+                 expressive: bool = False):
+        # None -> f0_default of the installed constants, i.e. the active
+        # speaker of the registry (D14 fix: was the hardcoded JD3
+        # literal 102.216; JD3 behaviour is unchanged since its
+        # f0_default is 102.216).
+        if f0_hz is None:
+            f0_hz = SpeakerConfig().f0_default
         self.f0_hz = f0_hz
         self.speaker = speaker
         self.engine = engine
         self.use_orthogonal = use_orthogonal
+        # Multilingual support (language pack v1.0.7, merged with the
+        # multi-speaker branch 2026-09-15): the active language profile
+        # is selected at construction time. The g2p dispatch and the
+        # F0 declination gains are taken from the profile; when
+        # t_cons_ms / t_voy_ms / pause_*_ms are None (the CLI passes
+        # explicit values), the LangProfile defaults apply.
+        self.lang = lang
+        try:
+            _setlang(lang)
+        except LookupError as exc:
+            raise ValueError(str(exc)) from exc
+        _profile = _get_lang_profile(lang)
+        self._lang_profile = _profile
+        if t_cons_ms is None:
+            t_cons_ms = _profile.t_cons_ms if _profile is not None else 100.0
+        if t_voy_ms is None:
+            t_voy_ms = _profile.t_voy_ms if _profile is not None else 80.0
+        if pause_short_ms is None:
+            pause_short_ms = (_profile.pause_short_ms
+                              if _profile is not None else 200.0)
+        if pause_long_ms is None:
+            pause_long_ms = (_profile.pause_long_ms
+                             if _profile is not None else 320.0)
         self.t_cons_ms = t_cons_ms
         self.t_voy_ms = t_voy_ms
         self.pause_short_ms = pause_short_ms
         self.pause_long_ms = pause_long_ms
+        # Prosodie expressive (v1.0.8, défaut OFF)
+        self.expressive = bool(expressive)
+        self._expressivity = getattr(_profile, 'expressivity', None)
+        if self.expressive:
+            if not _EXPRESSIVE_OK:
+                print('[pipeline] prosody_f0 indisponible : '
+                      'retombée sur la déclinaison monotone')
+                self.expressive = False
+            elif self._expressivity is None:
+                print(f'[pipeline] pas de profil expressif pour '
+                      f'{lang!r} : retombée sur la déclinaison monotone')
+                self.expressive = False
 
     # ------------------------------------------------------------------
     # Full chain
@@ -205,7 +284,8 @@ class Pipeline:
             video: bool = True,
             fps: int = 25,
             scale: int = 2,
-            label: Optional[str] = None) -> PipelineResult:
+            label: Optional[str] = None,
+            polar: bool = False) -> PipelineResult:
         """Synthesize ``text`` into .tract + .wav (+ .mp4).
 
         Parameters
@@ -224,14 +304,41 @@ class Pipeline:
         label : str, optional
             File stem (default: derived from the first phrase).
         """
+        from vtl_synth.core.speaker_registry import announce
+        announce(f0_used=self.f0_hz)
+
         out_dir = Path(output_dir)
         out_dir.mkdir(parents=True, exist_ok=True)
 
         warnings: List[str] = []
-        sampa = text_to_sampa(text, warnings) if use_g2p else text.strip()
+        expressive = self.expressive and use_g2p
+        if self.expressive and not use_g2p:
+            warnings.append(
+                'mode expressif ignoré : l\'entrée phonétique '
+                '(use_g2p=False) n\'a pas de structure syntaxique')
+            print(f'[pipeline] {warnings[-1]}')
+        expressive_plans = None
+        if expressive:
+            # Respiration syntaxique + plan d'accents : le SAMPA
+            # assemblé est celui du g2p de la langue, séparé en
+            # groupes de souffle par le marqueur '%'.
+            sampa, expressive_plans = _plan_expressive_text(
+                text, self.lang, self._lang_profile.g2p_callable,
+                self._expressivity, warnings)
+        elif use_g2p:
+            # Dispatch via the language registry (language pack): the
+            # active profile (set at __init__ time via lang) selects
+            # the appropriate g2p callable (en = CMUdict gateway).
+            sampa = _text_to_sampa_lang(text, warnings)
+        else:
+            sampa = text.strip()
         phrases = [p.strip() for p in sampa.split('|') if p.strip()]
         if not phrases:
             raise ValueError(f'no phonetic content in: {text!r}')
+        if expressive_plans is not None and \
+                len(expressive_plans) != len(phrases):
+            # garde-fou : le plan et le SAMPA doivent s'aligner
+            expressive_plans = None
 
         # File stem from the *original* text (not the SAMPA), so that
         # "this is easy for us" -> this_is_easy_for_us.tract
@@ -241,6 +348,9 @@ class Pipeline:
         t_voy_steps = max(1, round(self.t_voy_ms / 10.0))
 
         all_tracts, all_glottis, all_audio = [], [], []
+        pause_breath_ms = None
+        if self.expressive and self._expressivity is not None:
+            pause_breath_ms = self._expressivity.pause_breath_ms
         for pi, phrase in enumerate(phrases):
             tract400, glott400 = build_phrase_tract(
                 phrase,
@@ -256,8 +366,34 @@ class Pipeline:
                 t_voy=t_voy_steps,
                 pause_short_ms=self.pause_short_ms,
                 pause_long_ms=self.pause_long_ms,
+                pause_breath_ms=pause_breath_ms,
             )
-            glott400 = apply_f0_declination(glott400, self.f0_hz)
+            # Prosodie F0 : expressive (accents + reprises + chute
+            # nucléaire, plan aligné sur les blocs syltraj) ou
+            # déclinaison monotone (language pack : gains du profil
+            # actif).
+            applied = False
+            if expressive and expressive_plans is not None:
+                last_build = _get_last_build()
+                applied = _apply_expressive_f0(
+                    glott400,
+                    f0_base=self.f0_hz,
+                    onset_gain=self._lang_profile.onset_gain,
+                    final_gain=self._lang_profile.final_gain,
+                    expr=self._expressivity,
+                    chunk_plans=expressive_plans[pi],
+                    block_info=last_build['block_info'],
+                )
+            if not applied:
+                if self._lang_profile is not None:
+                    glott400 = apply_f0_declination(
+                        glott400,
+                        f0_base=self.f0_hz,
+                        onset_gain=self._lang_profile.onset_gain,
+                        final_gain=self._lang_profile.final_gain,
+                    )
+                else:
+                    glott400 = apply_f0_declination(glott400, self.f0_hz)
             all_tracts.append(tract400)
             all_glottis.append(glott400)
             all_audio.append(np.asarray(
@@ -270,6 +406,7 @@ class Pipeline:
         tract_path = out_dir / f'{stem}.tract'
         wav_path = out_dir / f'{stem}.wav'
         transcript_path = out_dir / f'{stem}.txt'
+        polar_path = out_dir / f'{stem}.polar'
 
         AssembleTract.write_tract_file(
             tract_all, glott_all, str(tract_path), sr=int(TRACT_SR))
@@ -287,12 +424,33 @@ class Pipeline:
             warnings=warnings,
         )
 
+        if polar:
+            # Intermediate .polar file: 100 Hz polar trajectories +
+            # phoneme targets + per-phoneme timing, re-run with the
+            # same engine parameters as the synthesis above (so the
+            # .polar timeline matches the .tract / audio timeline).
+            from vtl_synth.video.polar_video import build_polar, write_polar
+            polar_data = build_polar(
+                phrases, t_cons=t_cons_steps, t_voy=t_voy_steps,
+                pause_short_ms=self.pause_short_ms,
+                pause_long_ms=self.pause_long_ms)
+            write_polar(polar_path, polar_data)
+            result.polar_path = polar_path
+
         if video:
-            result.mp4_path = self.tract_to_mp4(
-                tract_path, wav_path,
-                out_path=out_dir / f'{stem}.mp4',
-                fps=fps, scale=scale,
-                work_dir=out_dir / 'temp_video')
+            if polar:
+                from vtl_synth.video.polar_video import make_polar_video
+                result.mp4_path = make_polar_video(
+                    tract_path, polar_path, wav_path=wav_path,
+                    out_path=out_dir / f'{stem}.mp4',
+                    fps=fps, scale=scale,
+                    work_dir=out_dir / 'temp_video')
+            else:
+                result.mp4_path = self.tract_to_mp4(
+                    tract_path, wav_path,
+                    out_path=out_dir / f'{stem}.mp4',
+                    fps=fps, scale=scale,
+                    work_dir=out_dir / 'temp_video')
         return result
 
     # ------------------------------------------------------------------

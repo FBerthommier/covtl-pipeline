@@ -115,8 +115,14 @@ from vtl_synth.core.types import PolarTarget
 # Package root (vtl_synth/)
 _PKG_ROOT = Path(__file__).resolve().parent.parent
 
-# Speaker file shipped as package data (vtl_synth/data/vtl_binaries/)
-DEFAULT_SPEAKER_FILE = _PKG_ROOT / 'data' / 'vtl_binaries' / 'JD3.speaker'
+# Multi-speaker (install_speaker.py, 2026-09-11): the default .speaker is
+# resolved through the registry (data/speakers/, marker ACTIVE_SPEAKER)
+# instead of the hardcoded vtl_binaries/JD3.speaker.  The constant keeps
+# the import-time value for compatibility; build_phrase_tract()
+# re-resolves at each call.
+from vtl_synth.core.speaker_registry import active_speaker_file
+
+DEFAULT_SPEAKER_FILE = Path(active_speaker_file())
 
 # Default output directory (cwd-based: the package may be installed
 # read-only in site-packages)
@@ -324,7 +330,7 @@ def build_phrase_tract(
     phrase_id: Optional[int] = None,
     label: Optional[str] = None,
     output_dir: Optional[Union[str, Path]] = None,
-    f0_hz: float = 102.216,
+    f0_hz: Optional[float] = None,
     speaker: str = 'JD3',
     speaker_config: Optional[SpeakerConfig] = None,
     speaker_file: Optional[str] = None,
@@ -340,6 +346,7 @@ def build_phrase_tract(
     t_voy: Optional[int] = None,
     pause_short_ms: Optional[float] = None,
     pause_long_ms: Optional[float] = None,
+    pause_breath_ms: Optional[float] = None,
 ) -> Optional[Tuple[np.ndarray, np.ndarray]]:
     """Assemble the complete 400 Hz VTL vector for a phrase.
 
@@ -407,6 +414,10 @@ def build_phrase_tract(
     pause_long_ms : float, optional
         Long (inter-word) pause duration (ms), engine='syl' only.
         None → 320 ms.
+    pause_breath_ms : float, optional
+        Breath pause ('%', expressive prosody v1.0.8) duration (ms),
+        engine='syl' only. None → = pause_short_ms (phrases without
+        '%' are bit-identical whatever this value).
     verbose : bool
         Display progress information.
 
@@ -425,6 +436,13 @@ def build_phrase_tract(
     # ------------------------------------------------------------------
     # Configuration
     # ------------------------------------------------------------------
+    # f0 default follows the active speaker: None -> f0_default of the
+    # custom speaker_config when given, else of the installed constants
+    # (D14 fix: was the hardcoded JD3 literal 102.216).
+    if f0_hz is None:
+        f0_hz = speaker_config.f0_default if speaker_config is not None \
+            else SpeakerConfig().f0_default
+
     if speaker_config is None:
         speaker_config = SpeakerConfig(name=speaker, f0_default=f0_hz)
 
@@ -432,7 +450,7 @@ def build_phrase_tract(
         output_dir = DEFAULT_OUTPUT_DIR
 
     if speaker_file is None:
-        speaker_file = str(DEFAULT_SPEAKER_FILE)
+        speaker_file = active_speaker_file()
 
     # ------------------------------------------------------------------
     # Step 1: Text/IPA → annotated segments
@@ -496,7 +514,8 @@ def build_phrase_tract(
         Pval, block_info, _nodes_syl, _anchors_syl = build_phrase_pval(
             ipa, t_cons=t_cons, t_voy=t_voy,
             pause_short_ms=pause_short_ms or 200.0,
-            pause_long_ms=pause_long_ms or 320.0)
+            pause_long_ms=pause_long_ms or 320.0,
+            pause_breath_ms=pause_breath_ms)
         _syltraj.VV_CLOSURE_PROBE = None
         tract_100 = Pval
         n_steps = tract_100.shape[0]

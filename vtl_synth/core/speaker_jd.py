@@ -43,11 +43,17 @@ from vtl_synth.core.constants import (
 # Default path of the speaker file
 # ==========================================================================
 
-# Package root (vtl_synth/); the speaker file ships as package data
+# Package root (vtl_synth/); the legacy speaker file ships as package data
 _PKG_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-DEFAULT_SPEAKER_FILE = os.path.join(
-    _PKG_ROOT, 'data', 'vtl_binaries', 'JD3.speaker')
+# Multi-speaker (install_speaker.py, 2026-09-11): the default .speaker is
+# resolved through the registry (data/speakers/, marker ACTIVE_SPEAKER)
+# instead of the hardcoded vtl_binaries/JD3.speaker.  Kept as a module
+# constant for backward compatibility (value at import time); the
+# functions below re-resolve at each call via active_speaker_file().
+from vtl_synth.core.speaker_registry import active_speaker_file
+
+DEFAULT_SPEAKER_FILE = active_speaker_file()
 
 
 # ==========================================================================
@@ -198,19 +204,22 @@ class SpeakerData:
 # Parsing XML
 # ==========================================================================
 
-def parse_speaker_file(speaker_file: str = DEFAULT_SPEAKER_FILE) -> SpeakerData:
+def parse_speaker_file(speaker_file: Optional[str] = None) -> SpeakerData:
     """Parses a VTL speaker file (XML) and extracts all the data.
 
     Parameters
     ----------
-    speaker_file : str
-        Path to the .speaker file.
+    speaker_file : str, optional
+        Path to the .speaker file.  None (default) resolves through the
+        speaker registry (active speaker marker).
 
     Returns
     -------
     SpeakerData
         Complete speaker data.
     """
+    if speaker_file is None:
+        speaker_file = active_speaker_file()
     if not os.path.exists(speaker_file):
         raise FileNotFoundError(f"Speaker file not found: {speaker_file}")
 
@@ -331,7 +340,7 @@ def _parse_glottis_models(glottis_models: ET.Element, data: SpeakerData) -> None
 # ==========================================================================
 
 def get_jd_glottis_presets(
-    speaker_file: str = DEFAULT_SPEAKER_FILE,
+    speaker_file: Optional[str] = None,
 ) -> Dict[str, GlottisPreset]:
     """Extracts the JD glottal presets from the speaker file.
 
@@ -368,7 +377,7 @@ def get_jd_glottis_presets(
 # ==========================================================================
 
 def get_orthogonal_targets(
-    speaker_file: str = DEFAULT_SPEAKER_FILE,
+    speaker_file: Optional[str] = None,
 ) -> Dict[str, Dict[str, float]]:
     """Extracts the orthogonal parameters per tract shape.
 
@@ -399,7 +408,7 @@ def get_orthogonal_targets(
 
 
 def get_ts3_context_map(
-    speaker_file: str = DEFAULT_SPEAKER_FILE,
+    speaker_file: Optional[str] = None,
 ) -> Dict[str, float]:
     """Builds the TS3 contextual map from the JD shapes.
 
@@ -433,7 +442,7 @@ def get_ts3_context_map(
 
 
 def get_vowel_orthogonal_defaults(
-    speaker_file: str = DEFAULT_SPEAKER_FILE,
+    speaker_file: Optional[str] = None,
 ) -> Dict[str, Dict[str, float]]:
     """Extracts the orthogonal values per vowel from JD.
 
@@ -466,7 +475,7 @@ def get_vowel_orthogonal_defaults(
 
 
 def get_consonant_orthogonal_targets(
-    speaker_file: str = DEFAULT_SPEAKER_FILE,
+    speaker_file: Optional[str] = None,
 ) -> Dict[str, Dict[str, float]]:
     """Extracts the orthogonal targets per consonantal context.
 
@@ -520,7 +529,7 @@ def get_consonant_orthogonal_targets(
 # Summary / debug
 # ==========================================================================
 
-def print_speaker_summary(speaker_file: str = DEFAULT_SPEAKER_FILE) -> None:
+def print_speaker_summary(speaker_file: Optional[str] = None) -> None:
     """Prints a summary of the speaker file (debug/inspection)."""
     data = parse_speaker_file(speaker_file)
 

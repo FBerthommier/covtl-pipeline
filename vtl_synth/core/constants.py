@@ -292,44 +292,39 @@ for _idx, _pname in enumerate(COVTL_PARAMS):
 # Source: rapport_espace_vocalique.pdf, §2
 # /a/, /i/, /u/ are fixed at the Maeda anchors (ρ=1).
 # The other vowels are adjusted by least squares with ρ <= 1.
+# === LANG SECTION — BEGIN (managed by setup_lang.py — do not edit by hand)
+# English — strict Maeda anchors (original covtl-pipeline calibration).
+# /a/, /i/, /u/ close to the Maeda anchors (ρ≤1); the other vowels are
+# adjusted by least squares. English notation: no nasal vowels, /r/ is
+# alveolar (resolved by the notation alias layer, not by the targets).
+ACTIVE_LANG: str = 'en'
+
 VOWEL_TARGETS: Dict[str, Tuple[float, float]] = {
     'a': (1.000, np.pi),           # 180° — STRICT
-    'i': (0.600, 5 * np.pi / 3),   # 300° — rho 0.80→0.60: compensation for the raised c1(TCY) (F2 preserved to within ±65 Hz, cf. closure_final.md)
-    'u': (0.550, np.pi / 3),       #  60° — rho 0.80→0.55: compensation for the raised c1(TCY) (plateau 0.099→0.153 cm², ΔF2=+135 Hz)
+    'i': (0.600, 5 * np.pi / 3),   # 300° — compensation for the raised c1(TCY)
+    'u': (0.550, np.pi / 3),       #  60° — compensation for the raised c1(TCY)
     'e': (0.988, 4.581),           # 262.5°
     'E': (0.594, 3.563),           # 204.1°
     'o': (1.000, 1.827),           # 104.7° — clamped
     'O': (1.000, 2.616),           # 149.9° — clamped
     '6': (0.894, 3.053),           # 174.9° (œ)
     '9': (0.722, 3.105),           # 177.9° (œ̃)
-    # '@' (schwa / e-muet) : CENTRE DU TRIANGLE VOCALIQUE a-i-u tel que
-    # construit (ρ calibrés ≠ 1) : ρ̄ = (1.000 + 0.600 + 0.550)/3 =
-    # 0.7167, θ = π (moyenne circulaire des sommets 60/180/300° — les
-    # sinus s'annulent par symétrie, l'axe central est celui de a).
-    # La référence du modèle COVTL place son @ ailleurs (position jugée
-    # incorrecte — bilan 2026-09-04).  Le @ sert de voyelle muette aux
-    # consonnes isolées avant pause et de waypoint aux arcs VV fermants
-    # (syltraj._vv_waypoint).
+    # '@' (schwa): centre of the a-i-u triangle, ρ̄ = 0.7167, θ = π.
     '@': (0.7167, np.pi),          # centre du triangle a-i-u (ə)
     'y': (0.519, 4.548),           # 260.6°
     '2': (0.396, 3.946),           # 226.1° (ø)
 }
 
-# =============================================================================
-# VOWEL_EFFORT_GAIN — effort gain per vowel (relative intensity)
-# =============================================================================
-# High vowels /i/,/u/ come out ~10-11 dB below /a/ in the pipeline
-# (intrinsic F1 gap ~ -6.5 dB on native JD3 shapes + ~4 dB from the
-# fine constrictions of the rho compensations). An effort gain E×1.5 on
-# their plateaus raises intensity by about +3 dB (E is clamped to 1.5
-# downstream by compute_pressure/E_gate: pressure ~12700 dPa, rel_amp 1.5).
+# Effort gain per vowel (relative intensity): compensates the intrinsic
+# intensity gap of high vowels vs /a/ (clamped downstream to 1.5).
 VOWEL_EFFORT_GAIN: Dict[str, float] = {
     'i': 1.5,
     'u': 1.5,
-    'e': 1.5,   # /e/ came out -7.5 dB vs /a/ (phrase 2 of input.txt)
-    'y': 1.3,   # high/mid front vowels: same order of correction
+    'e': 1.5,
+    'y': 1.3,
     '2': 1.2,
 }
+# === LANG SECTION — END =============================================================
 
 # =============================================================================
 # Front vowels — palatal context for g/k

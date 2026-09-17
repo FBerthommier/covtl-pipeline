@@ -39,7 +39,7 @@
     pdftitle={covtl-pipeline User Manual},
     pdfauthor={Frederic Berthommier},
     pdfsubject={Articulatory text-to-speech synthesis with the Berthommier COVTL model},
-    pdfkeywords={articulatory synthesis, coarticulation, polar coordinates, VocalTractLab, COVTL, speech synthesis}
+    pdfkeywords={articulatory synthesis, coarticulation, polar coordinates, VocalTractLab, COVTL, speech synthesis, multi-speaker registry, language pack, expressive prosody, polar video}
 ]{hyperref}
 
 % --- Geometry ---
@@ -50,7 +50,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\small\itshape covtl-pipeline User Manual}
-\fancyhead[R]{\small v1.0.2}
+\fancyhead[R]{\small v1.1.0}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0.3pt}
 \renewcommand{\footrulewidth}{0pt}
@@ -151,13 +151,13 @@
 \Large\mdseries\color{black!70} User Manual}
 \author{\large Frédéric Berthommier\\[0.3em]
 \small\texttt{fberthommier@users.noreply.github.com}}
-\date{\small Version 1.0.2 --- September 2026\\[0.2em]
+\date{\small Version 1.1.0 --- September 2026\\[0.2em]
 \textit{Licensed under GPL-3.0-or-later}}
 
 \begin{document}
 \maketitle
 \thispagestyle{empty}
-\vspace{1cm}
+\vspace{0.2em}
 \begin{abstract}
 \noindent
 \textbf{covtl-pipeline} is a Python package and command-line tool
@@ -176,10 +176,18 @@ phrase-final holds. The 400\,Hz tract sequence is synthesized
 \emph{directly} by this model --- there is no intermediate gestural-score
 stage --- and audio is rendered by \textbf{VocalTractLab~2.4}
 (Peter Birkholz, TU~Dresden) through the
-\texttt{vocaltractlab-cython} wheel with the JD3 speaker. This manual
+\texttt{vocaltractlab-cython} wheel with the active registry speaker
+(default: JD3). This manual
 documents the model in detail (polar targets, projection coefficients,
 coarticulation rules), the command-line interface, the Python API, the
-file formats, and the underlying mechanisms and constants.
+file formats, and the underlying mechanisms and constants. Version
+1.1.0 ships the package as an integrated pack: a five-speaker
+registry with a one-command reversible selector
+(\texttt{install\_speaker.py}), a six-language pack
+(\texttt{setup\_lang.py}), an expressive-prosody option
+(\texttt{-{}-expressive}) and a dual-panel polar video
+(\texttt{-{}-polar}); each add-on has its own companion manual in
+\texttt{docs/} (\S\ref{subsec:docmap}).
 \end{abstract}
 
 \vfill
@@ -193,8 +201,14 @@ file formats, and the underlying mechanisms and constants.
 \item \textbf{Python API:} \texttt{from vtl\_synth import Pipeline}
 \item \textbf{Model:} Berthommier COVTL --- polar phonetic targets,
       selector-based coarticulation, S-curve arcs
-\item \textbf{Synthesizer:} VocalTractLab 2.4 (JD3 speaker) via
+\item \textbf{Synthesizer:} VocalTractLab 2.4 via
       \texttt{vocaltractlab-cython}
+\item \textbf{Speakers:} five-speaker registry (jd3, s1, s2, m01,
+      w02) with a one-command reversible selector
+\item \textbf{Languages:} six-language pack en/fr/es/de/it/pt with
+      calibrated vowel targets (default: en)
+\item \textbf{Options:} expressive prosody (\texttt{-{}-expressive})
+      and dual-panel polar video (\texttt{-{}-polar})
 \item \textbf{License:} GPL-3.0-or-later (inherited from upstream VTL
       components)
 \end{itemize}
@@ -276,9 +290,35 @@ reference repository; the synthesis path itself is entirely different
       selectable (\S\ref{sec:syltraj}).
 \item Inspectors for the tract sequence: \texttt{inspect} (tables,
       ranges) and the graphical \texttt{plot-tract}.
-\item 55 pytest tests: engine non-regression against
-      \texttt{regression\_baselines.json} plus CLI/g2p unit tests.
+\item Per-speaker non-regression baselines (jd3, s1, s2, m01, w02)
+      checked by pytest; the repository ships a lightened quick suite
+      (\S\ref{sec:dev}).
+\item Four integrated add-ons --- multi-speaker registry, language
+      pack, expressive prosody, polar video --- each documented in its
+      own companion manual (\S\ref{subsec:docmap}).
 \end{itemize}
+
+\subsection{Documentation map}\label{subsec:docmap}
+
+The \texttt{docs/} folder carries five manuals, written to be read
+independently:
+
+\begin{description}[leftmargin=2em]
+\item[\texttt{manual.pdf}] this reference manual: the COVTL model,
+      the CLI and Python API, the file formats.
+\item[\texttt{speakers.pdf}] the multi-speaker registry: the five
+      speakers and their provenance, the selector
+      \texttt{install\_speaker.py}, and the two adaptation chains
+      (DVTD construction; official-speaker patching).
+\item[\texttt{language\_pack.pdf}] the language pack: six languages,
+      installation, switching, calibration and verification through
+      \texttt{setup\_lang.py}.
+\item[\texttt{expressive\_prosody.pdf}] the expressive-prosody
+      option: syntactic breathing and sculpted F0 contour.
+\item[\texttt{polar\_visualization.pdf}] the dynamic polar video:
+      two-branch display of the articulation, \texttt{.polar}
+      format, dual-panel MP4.
+\end{description}
 
 %==============================================================================
 \section{Quick start}\label{sec:quickstart}
@@ -318,15 +358,24 @@ and \texttt{cmudict} automatically. The console script
 \texttt{vocaltractlab-cython} from source, install
 \texttt{vocaltractlab-cython==0.0.13} instead (full synthesis and video
 path available; four optional analysis helpers raise a clear error).
+The polar video (\texttt{-{}-polar}) and \texttt{plot-tract}
+additionally require \texttt{matplotlib} (\texttt{pip install
+".[plot]"}).
 
 \subsection{First run}
+
+The shipped tree is delivered in the reference state (speaker
+\texttt{jd3}, language \texttt{en}). The \texttt{ACTIVE\_SPEAKER}
+marker is not part of the package: create it once before the first
+synthesis with \texttt{python install\_speaker.py list}
+(\S\ref{sec:multispeaker}).
 
 \begin{lstlisting}[style=shell]
 vtl-synth run "this is easy for us" -o ./out
 \end{lstlisting}
 
 This produces the following artifacts in \texttt{./out/} (real output,
-v1.0.2 defaults):
+default configuration):
 
 \begin{lstlisting}[style=verbatim]
 this_is_easy_for_us.tract   268,286 bytes   952 frames x (19 tract + 11 glottis) @ 400 Hz
@@ -1131,6 +1180,92 @@ clamped to \([40, 600]\,\mathrm{Hz}\), with the last voiced value held
 through unvoiced spans.
 
 %==============================================================================
+\section{The multi-speaker registry and the language pack}\label{sec:multispeaker}
+%==============================================================================
+
+Since v1.1.0 the package carries five speakers and six languages.
+Both selectors follow the same design: a \emph{registry} on disk is
+the single source of truth, and one reversible command swaps the
+installed state; \texttt{restore} always returns to a bit-exact
+previous state.
+
+\subsection{The speaker registry}
+
+The directory \texttt{vtl\_synth/data/speakers/} holds
+\texttt{registry.json} (one entry per speaker: file names,
+\texttt{f0\_default}, description, SHA-256 of both files), the
+\texttt{ACTIVE\_SPEAKER} marker, the five \texttt{.speaker} files and
+their \texttt{\_constants.py} sources. The installed
+\texttt{core/constants.py} is always a bit-exact copy of a registry
+source, so its hash identifies the speaker.
+
+\begin{center}
+\small
+\begin{tabular}{@{}lllrl@{}}
+\toprule
+\textbf{name} & \textbf{origin} & \textbf{sex} &
+\textbf{f0\_default (Hz)} & \textbf{vowel targets} \\
+\midrule
+\texttt{jd3} & VTL 2.4 reference & male & 102.216 & follows the language pack \\
+\texttt{s1}  & DVTD subject 1 (MRI) & male & 114.908 & native (v3 constants) \\
+\texttt{s2}  & DVTD subject 2 (MRI) & female & 181.008 & native (v3 constants) \\
+\texttt{m01} & official VTL 2.4 (Option A) & male & 120.000 & native (v3 constants) \\
+\texttt{w02} & official VTL 2.4 (Option A) & female & 232.458 & native (v3 constants) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A switch coordinates four layers: the installed \texttt{constants.py}
+(geometry, glottis, \texttt{f0\_default}), the \texttt{.speaker} file
+read by the orthogonal branch at each call, the shared speaker
+resource of the \texttt{vocaltractlab-cython} wheel (effective in the
+next process), and the per-speaker regression baselines
+(\texttt{regression\_baselines\_\{s1,s2,m01,w02\}.json}, regenerated by
+\texttt{scripts/regen\_baselines.py}).
+
+\begin{lstlisting}[style=shell]
+python install_speaker.py list            # speakers + active one
+python install_speaker.py install s2      # 7-step swap + smoke test
+python install_speaker.py restore         # back to jd3 (bit-exact)
+python install_speaker.py status          # hashes, layer coherence
+\end{lstlisting}
+
+Every \texttt{install} runs a smoke test in a fresh subprocess and
+rolls back automatically on any error; every synthesis announces the
+four layers (constants, ortho, audio wheel, video) and warns on any
+disagreement. Provenance of the five speakers, the two adaptation
+chains and the defect catalogue are documented in
+\texttt{docs/speakers.pdf}.
+
+\subsection{The language pack}
+
+\texttt{setup\_lang.py} manages a delimited LANG SECTION
+(\texttt{VOWEL\_TARGETS}, \texttt{VOWEL\_EFFORT\_GAIN},
+\texttt{ACTIVE\_LANG}) inside the installed \texttt{constants.py},
+plus per-language g2p profiles, lexicons (Wikipron) and prosodic
+timings:
+
+\begin{lstlisting}[style=shell]
+python setup_lang.py install --lang fr    # install + activate
+python setup_lang.py setlang en|fr|es|de|it|pt
+python setup_lang.py calibrate fr --in-situ   # JD3 only (guard)
+python setup_lang.py verify               # in-situ LPC check
+python setup_lang.py restore --purge      # full uninstall
+\end{lstlisting}
+
+Two invariants matter for day-to-day use. \textbf{Only JD3 follows
+the pack}: the per-language vowel targets are calibrated in situ on
+JD3, and the language-management commands carry a guard that
+(re)installs jd3 before touching the LANG SECTION; the other speakers
+are used with their native targets. \textbf{Per-call override}: the
+CLI flag \texttt{-l} / \texttt{-{}-lang} selects the language of a
+single call without switching the installation. Installation,
+calibration, verification scores and troubleshooting are documented
+in \texttt{docs/language\_pack.pdf}; the expressive-prosody option
+(\texttt{-{}-expressive}) and its interaction with the registry in
+\texttt{docs/expressive\_prosody.pdf}.
+
+%==============================================================================
 \section{Architecture and data flow}\label{sec:architecture}
 %==============================================================================
 
@@ -1139,19 +1274,29 @@ The package is organized into five subpackages:
 \begin{description}[leftmargin=2em]
 \item[\texttt{vtl\_synth.core}] the synthesis engine: notation/parsing,
       phoneme tables, the polar model, the trajectory engines, the
-      envelope/source modules, and the \texttt{Pipeline} orchestrator
-      (26 engine modules).
+      envelope/source modules, the \texttt{Pipeline} orchestrator, and
+      the speaker registry resolver (\texttt{speaker\_registry.py}).
 \item[\texttt{vtl\_synth.cli}] the \texttt{vtl-synth} entry point with
       the subcommands \texttt{run}, \texttt{text-to-wav},
-      \texttt{tract-to-mp4}, \texttt{inspect}, \texttt{plot-tract}.
+      \texttt{tract-to-mp4}, \texttt{polar-build},
+      \texttt{polar-video}, \texttt{inspect}, \texttt{plot-tract}.
 \item[\texttt{vtl\_synth.vtl}] the VocalTractLab API facade
       (\texttt{api.py}) over the \texttt{vocaltractlab-cython} wheel.
 \item[\texttt{vtl\_synth.video}] the sagittal renderer
       (\texttt{renderer.py}: SVG frames \(\to\) PNG), the MP4 encoder
-      (\texttt{encoder.py}: ffmpeg H.264/AAC), and the parameter
-      figure tool (\texttt{tract\_figure.py}).
-\item[\texttt{vtl\_synth.utils}] the grapheme-to-phoneme module
-      (\texttt{g2p.py}, CMUdict).
+      (\texttt{encoder.py}: ffmpeg H.264/AAC), the parameter figure
+      tool (\texttt{tract\_figure.py}), and the polar-figure module
+      (\texttt{polar\_video.py}: two-branch reconstruction,
+      dual-panel composition).
+\item[\texttt{vtl\_synth.utils}] the grapheme-to-phoneme modules
+      (English \texttt{g2p.py} on CMUdict; the five language-pack
+      profiles), the language-profile layer (\texttt{setlang.py},
+      \texttt{lexicon\_loader.py}) and the prosody add-ons
+      (\texttt{chunking.py}, \texttt{prosody\_f0.py}).
+\item[\texttt{vtl\_synth.data.speakers}] the speaker registry:
+      \texttt{registry.json}, the \texttt{ACTIVE\_SPEAKER} marker,
+      the five \texttt{.speaker} files and their
+      \texttt{\_constants.py} sources (\S\ref{sec:multispeaker}).
 \end{description}
 
 \subsection{Data flow}
@@ -1230,9 +1375,11 @@ Each stage of the chain:
 \section{CLI reference}\label{sec:cli}
 %==============================================================================
 
-The \texttt{vtl-synth} command exposes five subcommands. The engine
-options (COVTL model parameters) are shared by \texttt{run} and
-\texttt{text-to-wav}:
+The \texttt{vtl-synth} command exposes seven subcommands:
+\texttt{run}, \texttt{text-to-wav}, \texttt{tract-to-mp4},
+\texttt{polar-build}, \texttt{polar-video}, \texttt{inspect} and
+\texttt{plot-tract}. The engine options (COVTL model parameters) are
+shared by \texttt{run} and \texttt{text-to-wav}:
 
 \begin{center}
 \small
@@ -1241,12 +1388,14 @@ options (COVTL model parameters) are shared by \texttt{run} and
 \textbf{Engine flag} & \textbf{Description} \\
 \midrule
 \texttt{-{}-phonetic}        & input is already engine SAMPA (skip g2p) \\
-\texttt{-{}-tcons MS}        & consonant (sub-arc) duration, default \textbf{100\,ms} \\
-\texttt{-{}-tvoy MS}         & vowel gesture duration, default \textbf{80\,ms} \\
-\texttt{-{}-tpause MS}       & short inter-word pause (space), default \textbf{200\,ms} \\
-\texttt{-{}-tpause-long MS}  & long phrase pause (\texttt{|}), default \textbf{320\,ms} \\
-\texttt{-f0, -{}-f0 HZ}      & fundamental frequency, default \textbf{102.216\,Hz} (JD3) \\
+\texttt{-l, -{}-lang CODE}   & language for this call only (default: the active language of the pack, \S\ref{sec:multispeaker}) \\
+\texttt{-{}-tcons MS}        & consonant (sub-arc) duration, default: active language profile (en: \textbf{100\,ms}) \\
+\texttt{-{}-tvoy MS}         & vowel gesture duration, default: active language profile (en: \textbf{80\,ms}) \\
+\texttt{-{}-tpause MS}       & short inter-word pause (space), default: active language profile (en: \textbf{200\,ms}) \\
+\texttt{-{}-tpause-long MS}  & long phrase pause (\texttt{|}), default: active language profile (en: \textbf{320\,ms}) \\
+\texttt{-f0, -{}-f0 HZ}      & fundamental frequency, default: \texttt{f0\_default} of the active speaker (102.216\,Hz for JD3) \\
 \texttt{-s, -{}-speaker}     & speaker name, default \texttt{JD3} \\
+\texttt{-{}-expressive} / \texttt{-{}-no-expressive} & expressive prosody (breathing + sculpted F0) / monotone declination (default); see \texttt{docs/expressive\_prosody.pdf} \\
 \texttt{-{}-no-ortho}        & disable the orthogonal branch (TS3/VS) \\
 \texttt{-{}-engine \{syl,legacy\}} & trajectory engine, default \texttt{syl} \\
 \bottomrule
@@ -1271,6 +1420,7 @@ Runs the full pipeline: text \(\to\) \texttt{.tract} \(\to\) \texttt{.wav}
 \texttt{-o, -{}-output-dir} & output directory (default: \texttt{./out}) \\
 \texttt{-{}-label}          & filename stem (default: derived from the text) \\
 \texttt{-{}-no-video}       & skip MP4 rendering \\
+\texttt{-{}-polar}          & also write the \texttt{.polar} file and render the dual-panel video (tract | polar figure); see \texttt{docs/polar\_visualization.pdf} \\
 \texttt{-{}-fps}            & video frame rate (default: 25) \\
 \texttt{-{}-scale}          & pixels per SVG unit (default: 2 \(\to\) 960\(\times\)840) \\
 \bottomrule
@@ -1286,6 +1436,12 @@ vtl-synth run "this is easy for us" -o ./out --tcons 140 --tvoy 110
 
 # Audio only
 vtl-synth run "hello world" -o ./out --no-video
+
+# French, expressive prosody (breathing + sculpted F0)
+vtl-synth run "bonjour le monde" -l fr --expressive -o ./out --no-video
+
+# Dual-panel polar video (en/jd3)
+vtl-synth run --polar "this is easy for us" -l en -o ./out --label polar_demo_en
 \end{lstlisting}
 
 \subsection{text-to-wav --- audio-only synthesis}
@@ -1305,6 +1461,24 @@ vtl-synth tract-to-mp4 <tract> [<wav>] [-o output.mp4] [--fps 25] [--scale 2]
 Re-renders the sagittal video from an existing \texttt{.tract}; when the
 \texttt{.wav} is omitted it is re-synthesized from the tract. Useful to
 change resolution or frame rate without re-running the model.
+
+\subsection{polar-build / polar-video --- the polar figure}
+
+\begin{lstlisting}[style=shell]
+# .polar only, from a phrase in the internal notation
+vtl-synth polar-build "ba.da.ga" -o out/ba.polar --tcons 160
+
+# Dual-panel video from existing files
+vtl-synth polar-video out/x.tract --polar out/x.polar out/x.wav -o out/x.mp4
+\end{lstlisting}
+
+\texttt{polar-build} reconstructs the two 100\,Hz polar trajectories
+(vocalic branch / consonantal branch) of a phrase and writes the JSON
+\texttt{.polar} side-car; \texttt{polar-video} composes the
+dual-panel MP4 (sagittal view | polar figure, 25\,Hz) from a
+\texttt{.tract}, a \texttt{.polar} and a \texttt{.wav}. The
+reconstruction, the file format and the rendering are documented in
+\texttt{docs/polar\_visualization.pdf}.
 
 \subsection{inspect --- tract inspector}
 
@@ -1391,6 +1565,7 @@ envelope/source modules (\texttt{TimedEnvelope}, \texttt{FeatureTimer},
 \texttt{CO}) and the assembly layer (\texttt{AssembleTract},
 \texttt{write\_tract\_file}).
 
+\noindent\begin{minipage}{\linewidth}
 \begin{lstlisting}[style=python]
 from vtl_synth.vtl.api import (synthesize_to_wav, render_tract_svg,
                                get_vtl_info, get_vowel_shape,
@@ -1405,6 +1580,7 @@ info = get_vtl_info()
 synthesize_to_wav("./out/this_is_easy_for_us.tract",
                   "./out/resynthesized.wav")
 \end{lstlisting}
+\end{minipage}
 
 %==============================================================================
 \section{Input notation and grapheme-to-phoneme conversion}\label{sec:notation}
@@ -1528,14 +1704,20 @@ it parses \texttt{\# sample\_rate:} and expects at least 19 columns.
       track is muxed by ffmpeg (\texttt{-shortest}).
 \item \texttt{.txt}: the engine SAMPA transcript actually synthesized
       (e.g.\ \texttt{Dis.iz.i.zi.fOR.@s}) --- the audit trail of the g2p.
+\item \texttt{.polar} (optional, \texttt{-{}-polar}): JSON side-car
+      carrying the two 100\,Hz polar trajectories (vocalic /
+      consonantal, \texttt{null} while a branch is inactive) and the
+      phoneme timing; consumed by the dual-panel video
+      (\texttt{docs/polar\_visualization.pdf}).
 \end{itemize}
 
 %==============================================================================
 \section{Worked example: ``this is easy for us''}\label{sec:example}
 %==============================================================================
 
-This section walks through the real v1.0.2 output of the demo phrase
-(all numbers measured on the artifacts of a default run).
+This section walks through the real output of the demo phrase in the
+default configuration (speaker jd3, language en; all numbers measured
+on the artifacts of a default run).
 
 \subsection{g2p output}
 
@@ -1661,32 +1843,48 @@ covtl-pipeline/
 |-- THIRD_PARTY_NOTICES.md     upstream author credits
 |-- README.md, INSTALL.md, CHANGELOG.md
 |-- launch.bat                 Windows quick-launch script
-|-- regression_baselines.json  E2E non-regression baselines
-|-- examples/demo.py           minimal usage example
-|-- tests/                     55 pytest tests (9 modules)
+|-- install_speaker.py         speaker selector (list/install/restore/status)
+|-- setup_lang.py              language selector (install/setlang/...)
+|-- lang_pack/                 language pack source tree, lexicons, manual
+|-- regression_baselines.json           E2E baselines, speaker jd3
+|-- regression_baselines_{s1,s2,m01,w02}.json  per-speaker baselines
+|-- examples/                  demo.py, demo_prosody.py
+|-- scripts/                   regen_baselines.py, calibrate_fine_v2.py,
+|                              f0_report.py, check_vowel_area.py
+|-- tests/                     lightened quick suite (see below)
+|-- docs/                      the five manuals (LaTeX + PDF)
 `-- vtl_synth/
     |-- __init__.py            public API exports (Pipeline, ...)
-    |-- core/                  26 engine modules (model, trajectories, source)
-    |-- cli/main.py            vtl-synth entry point
-    |-- video/                 renderer, encoder, tract_figure
+    |-- core/                  engine modules (model, trajectories,
+    |                          source, speaker_registry)
+    |-- cli/main.py            vtl-synth entry point (7 subcommands)
+    |-- video/                 renderer, encoder, tract_figure, polar_video
     |-- vtl/api.py             VocalTractLab API facade
-    |-- utils/g2p.py           CMUdict g2p
-    `-- data/vtl_binaries/JD3.speaker
+    |-- utils/                 g2p, language profiles, prosody add-ons
+    `-- data/
+        |-- vtl_binaries/JD3.speaker     package speaker data
+        `-- speakers/          registry.json, ACTIVE_SPEAKER,
+                               *.speaker, *_constants.py (5 speakers)
 \end{lstlisting}
 
 \subsection{Running the tests}
 
 \begin{lstlisting}[style=shell]
 pip install -e ".[dev]"
-pytest -v                      # all 55 tests
-pytest tests/test_polar_model.py
-pytest -k "syltraj"
+pytest -v                                     # quick suite
+pytest tests/test_regression_baselines.py     # per-speaker E2E baselines
+pytest tests/test_speaker_registry.py         # registry integrity
 \end{lstlisting}
 
-The suite covers the polar model (projections, arcs), the
-\texttt{legacy}/\texttt{syl} equivalence and structure tests, glottal
-classification, notation/parsing, CLI and g2p, the tract figure, and
-end-to-end non-regression against \texttt{regression\_baselines.json}.
+The repository ships a lightened quick suite: end-to-end
+non-regression against the per-speaker baseline files
+(\texttt{regression\_baselines.json} for jd3 and one baseline file
+per other speaker), speaker-registry integrity, and fast CLI/g2p unit tests. The full
+development battery (polar model, syltraj structure, notation/parsing,
+glottal classification, expressive prosody, multi-language g2p, tract
+figure; 112 tests in 10 modules on the reference development
+installation) runs from the development tree with
+\texttt{pytest -m "not slow"}.
 
 \subsection{Extending the model}
 
@@ -1726,6 +1924,13 @@ upstream components:
 \item concepts from \textbf{create\_vtl\_corpus} --- Konstantin Sering,
       Universität Tübingen.
       \url{https://github.com/quantling/create_vtl_corpus}
+\item \textbf{VTL 2.4 speaker files} (JD3 template; M01, W02
+      redistributed in patched/reformatted form with attribution) ---
+      official \texttt{VTL2.4.zip}, \url{https://www.vocaltractlab.de}.
+\item \textbf{Dresden Vocal Tract Dataset} (speakers s1/s2) ---
+      Birkholz et al., \emph{Scientific Data} 7:255, 2020; CC0 1.0.
+\item \textbf{Wikipron lexicons} (fr, es, de, it, pt) --- CC BY-SA 3.0
+      (attribution notices in \texttt{lang\_pack/LICENSE.md}).
 \end{itemize}
 
 The \texttt{JD3.speaker} file is redistributed as package data

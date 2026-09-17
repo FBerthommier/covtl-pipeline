@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vtl-synth"
-version = "1.0.2"
+version = "1.1.0"
 description = "Articulatory synthesis from text (Berthommier COVTL model + VocalTractLab), with sagittal MP4 video"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -62,7 +62,15 @@ where = ["."]
 include = ["vtl_synth*"]
 
 [tool.setuptools.package-data]
-vtl_synth = ["py.typed", "data/vtl_binaries/*"]
+vtl_synth = [
+    "py.typed",
+    "data/vtl_binaries/*",
+    "data/speakers/registry.json",
+    "data/speakers/*.speaker",
+    "data/speakers/*_constants.py",
+    "data/*.tsv",
+    "data/README_*_lexicon.md",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

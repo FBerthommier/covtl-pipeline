@@ -5,6 +5,14 @@ The baselines are the acoustically validated state (2026-09-04, TS3
 override included). After an INTENTIONAL change to the signal:
     python scripts/regen_baselines.py
 then rerun the tests.
+
+Speaker-relative baselines (install_speaker.py, 2026-09-11): the tract
+and glottis signals depend on the ACTIVE speaker (constants.py +
+registry .speaker).  For 'jd3' the reference file
+regression_baselines.json is used; for any other active speaker the
+per-speaker file regression_baselines_<name>.json is required
+(generate it with:  python scripts/regen_baselines.py  while the
+speaker is installed).
 """
 import json
 from pathlib import Path
@@ -13,12 +21,32 @@ import numpy as np
 import pytest
 
 from vtl_synth.core.build_phrase_tract import build_phrase_tract
+from vtl_synth.core import speaker_registry
 
-BASELINES_PATH = Path(__file__).resolve().parent.parent / 'regression_baselines.json'
+REPO_ROOT = Path(__file__).resolve().parent.parent
+ACTIVE = speaker_registry.active_name()
+if ACTIVE in ('', 'jd3'):
+    BASELINES_PATH = REPO_ROOT / 'regression_baselines.json'
+else:
+    BASELINES_PATH = REPO_ROOT / f'regression_baselines_{ACTIVE}.json'
+
 QUANT = 6
 
-BASELINES = json.loads(BASELINES_PATH.read_text(encoding='utf-8'))
+if BASELINES_PATH.exists():
+    BASELINES = json.loads(BASELINES_PATH.read_text(encoding='utf-8'))
+else:
+    BASELINES = {'phrases': {}}
 PHRASES = BASELINES['phrases']
+
+
+def test_baselines_available_for_active_speaker():
+    """Per-speaker baselines must exist before the signal tests run."""
+    if not BASELINES_PATH.exists():
+        pytest.fail(
+            f"baselines absentes pour le speaker actif '{ACTIVE}' : "
+            f"{BASELINES_PATH.name}\n"
+            f"generer avec : python scripts/regen_baselines.py "
+            f"(depuis la racine du depot, speaker '{ACTIVE}' installe)")
 
 
 def _build(phrase):

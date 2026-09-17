@@ -10,9 +10,33 @@ components are redistributed or relied upon; their licenses apply and
 - Role: articulatory synthesizer producing the audio (`.wav`) and the
   sagittal SVG views used by the video renderer; the `JD3.speaker`
   file shipped in `vtl_synth/data/vtl_binaries/` is a VocalTractLab
-  speaker definition.
+  speaker definition, and the **M01/W02 speaker files** redistributed
+  in `vtl_synth/data/speakers/` are derived from the official VTL 2.4
+  ZIP (speaker definition retouched: glottal mapping 2025→11 codes,
+  index 7 = PS — see `docs/ARCHITECTURE.md` §8.1).
 - License: GPL-3.0 (Ursache/usage: research). See
   https://www.vocaltractlab.de
+
+## Speakers s1/s2 (DVTD MRI)
+
+- Origin: research MRI data of the DVTD subjects (male s1, female s2),
+  converted to VTL speaker definitions with constants calibrated for
+  this repository (v3) — created for the covtl-pipeline project.
+- License: GPL-3.0-or-later, redistributed as part of this package
+  (research data of the project; cite the repository and the
+  Berthommier COVTL model references below).
+
+## Language pack (de/en/es/fr/it/pt)
+
+- Origin and per-component licensing:
+  [`lang_pack/LICENSE.md`](lang_pack/LICENSE.md). Code (g2p profiles,
+  installer, integration): GPL-3.0-or-later. Pronunciation lexicons
+  `xx_lexicon.tsv` (fr/es/de/it/pt): **Wikipron** (CUNY-CL/wikipron,
+  extracted from the English Wiktionary), **CC BY-SA 3.0** — the
+  `README_xx_lexicon.md` notices must travel beside the TSV files and
+  redistributed lexicons stay CC BY-SA 3.0
+  (<https://creativecommons.org/licenses/by-sa/3.0/>). English g2p
+  gateway: CMUdict (see below).
 
 ## vocaltractlab-cython
 
@@ -43,6 +67,7 @@ components are redistributed or relied upon; their licenses apply and
 | scipy | BSD-3-Clause | signal utilities |
 | Pillow | HPND (MIT-CMU) | SVG→PNG rasterization for the video |
 | imageio-ffmpeg | BSD-2-Clause | bundled ffmpeg binary (MP4/AAC encoding) |
+| matplotlib (optional `plot` extra) | Matplotlib license (BSD-style) | `plot-tract` figures |
 
 The bundled ffmpeg binary is licensed LGPL-2.1+ / GPL depending on
 build; the imageio-ffmpeg wheel ships an LGPL-compatible build (see

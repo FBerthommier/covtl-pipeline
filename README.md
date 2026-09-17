@@ -1,13 +1,20 @@
 # vtl-synth — articulatory synthesis from text (COVTL + VocalTractLab)
 
+**Version 1.1.0** — adds to 1.0.x: **multi-speakers** (5 registered
+voices with a reversible selector), a **language pack** (de/en/es/fr/
+it/pt), an **expressive prosody** option and the **polar-coordinate
+video**. Lightweight test suite: `python -m pytest` (~1 min, no audio
+rendering).
+
 `vtl-synth` turns English text (or phonetic input) into:
 
 - a **`.tract`** file — the 400 Hz sequence of 19 tract + 11 glottis
   VocalTractLab parameters,
-- a **`.wav`** waveform (44.1 kHz, synthesized by VocalTractLab 2.4,
-  JD3 speaker),
+- a **`.wav`** waveform (44.1 kHz, synthesized by VocalTractLab 2.4),
 - a **`.mp4`** video of the **sagittal cross-section** of the vocal
-  tract, synchronized with the audio.
+  tract, synchronized with the audio — and, with `--polar`, a
+  **dual-panel video** adding the live (ρ, θ) **polar plane** (vocalic
+  branch in red, consonantal in blue).
 
 The synthesis engine is the **Berthommier articulatory model (COVTL)**:
 place of articulation is computed in polar coordinates (ρ, θ) with
@@ -25,19 +32,38 @@ Repository: <https://github.com/fberthommier/covtl-pipeline>
 
 ## Documentation
 
-- **User manual** — [docs/manual.pdf](docs/manual.pdf)
-  (LaTeX source: [docs/manual.tex](docs/manual.tex)): full model
+- **Documentation index** — [docs/README.md](docs/README.md): the five
+  manuals (LaTeX sources + compiled PDFs, English US).
+- **Reference manual** — [docs/manual.pdf](docs/manual.pdf): full model
   description with the polar-coordinate phonetic targets
   ($\rho, \theta$ plane, projection coefficients) and the
   coarticulation mechanisms (selector superposition, S-curve arcs,
   cluster scoping), CLI/API reference and worked example.
+- **Speakers** — [docs/speakers.pdf](docs/speakers.pdf): the
+  multi-speaker registry, `install_speaker.py`, the four layers of a
+  switch, provenance chains and the defect catalogue (v1.1.0).
+- **Language pack** — [docs/language_pack.pdf](docs/language_pack.pdf):
+  the six languages, `setup_lang.py`, vowel-target calibration, the
+  JD3 guard (v1.1.0); pack internals:
+  [lang_pack/README.md](lang_pack/README.md),
+  [lang_pack/manual/manual.pdf](lang_pack/manual/manual.pdf),
+  [lang_pack/ARCHITECTURE.md](lang_pack/ARCHITECTURE.md).
+- **Polar visualization** — [docs/polar_visualization.pdf](docs/polar_visualization.pdf):
+  the (ρ, θ) plane, the dissociated vocalic/consonantal branches and
+  the dual-panel video (v1.1.0).
+- **Expressive prosody** — [docs/expressive_prosody.pdf](docs/expressive_prosody.pdf):
+  breathing groups, F0 contour, out-of-band stress, and the
+  interaction with the multi-speakers installation (v1.1.0).
 - **Architecture** — [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md):
   developer map of the engine (module layout, data flow, the
-  B(t) + E_source(t) + E_ortho(t) decomposition).
+  B(t) + E_source(t) + E_ortho(t) decomposition) — including the
+  v1.1.0 add-ons (speakers registry, LANG SECTION, polar video).
 - **Installation (Windows)** — [INSTALLATION.md](INSTALLATION.md):
   step-by-step CMD guide (Download ZIP, pip --user, PATH, Python 3.9
   note, troubleshooting); see also [INSTALL.md](INSTALL.md).
 - **Coding conventions** — [docs/CONVENTIONS.md](docs/CONVENTIONS.md).
+- **v1.1.0 packaging notes** — [MIGRATION_NOTES.md](MIGRATION_NOTES.md):
+  version decision, excluded tests, licensing map.
 
 ## Quick start
 
@@ -47,7 +73,85 @@ vtl-synth run "this is easy for us" -o ./out
 ```
 
 Output: `out/this_is_easy_for_us.tract`, `.wav`, `.mp4` and `.txt`
-(the SAMPA transcript produced by the g2p).
+(the SAMPA transcript produced by the g2p). The default speaker is
+**jd3**; see [Multi-speakers](#multi-speakers) to install another
+voice, and [Languages](#languages) for de/es/fr/it/pt input.
+
+## Multi-speakers
+
+Five speakers ship in the registry `vtl_synth/data/speakers/` and are
+selected with the reversible tool `install_speaker.py` (constants +
+orthogonal branch + wheel resource; backups and rollback automatic,
+smoke-tested in a fresh subprocess):
+
+| name | origin | f0 default |
+|---|---|---|
+| `jd3` | reference (SynthVTL24b original) | 102.2 Hz |
+| `s1` | DVTD MRI subject 1 (male), calibrated constants v3 | 114.9 Hz |
+| `s2` | DVTD MRI subject 2 (female), calibrated constants v3 | 181.0 Hz |
+| `m01` | official VTL 2.4 ZIP (male), pure option A + 2025 glottal mapping | 120.0 Hz |
+| `w02` | official VTL 2.4 ZIP (female), pure option A + 2025 glottal mapping | 232.5 Hz |
+
+```bat
+python install_speaker.py list            :: registered + active
+python install_speaker.py install m01     :: swap speaker (reversible)
+python install_speaker.py status          :: hashes / coherences
+python install_speaker.py restore         :: back to jd3
+```
+
+Notes: the shared `vocaltractlab_cython` wheel resource (audio + SVG
+layer) is swapped **for the next process** — relaunch your program
+after an install. Per-speaker regression baselines
+(`regression_baselines_<name>.json`) are picked automatically by the
+test suite; regenerate them with `scripts/regen_baselines.py` after an
+intentional signal change.
+
+## Languages
+
+`setup_lang.py` + `lang_pack/` add **German, English, Spanish, French,
+Italian and Portuguese** (g2p, Wikipron lexicons, per-language vowel
+sets and prosody profiles). The active language is a managed *LANG
+SECTION* inside `constants.py`, transported across speaker swaps and
+fully reversible:
+
+```bat
+python setup_lang.py list                 :: available + current
+python setup_lang.py install --lang fr    :: install/activate French
+python setup_lang.py setlang de           :: switch language
+python setup_lang.py calibrate fr         :: re-derive vowel targets (JD3 only)
+python setup_lang.py verify               :: integrity check
+python setup_lang.py restore              :: back to native vowels
+```
+
+**Guard-rail**: the pack vowel targets are calibrated *in situ* on
+**JD3** — `calibrate` (re)installs speaker jd3 first and says so; the
+other speakers keep their native vowel targets (a non-jd3 speaker with
+an active language is flagged as an unverified combination). Lexicons
+are CC BY-SA 3.0 (Wikipron) — keep the `README_xx_lexicon.md` notices
+beside the TSV files; details in `lang_pack/LICENSE.md`.
+
+## Polar video
+
+`vtl-synth run --polar "this is easy for us" -o ./out` also writes a
+`.polar` intermediate (100 Hz, format v3: dissociated vocalic /
+consonantal trajectories) and renders a **dual-panel MP4** — sagittal
+cross-section (left) and polar (ρ, θ) plane (right) at 25 Hz, vowels in
+**red**, consonants in **blue**, each branch with a fading trail. See
+`docs/polar_visualization.pdf` and the short demo
+`examples/polar_demo_en.mp4`.
+
+## Expressive prosody
+
+`vtl-synth run --expressive "…" -o ./out` (default **off**, outputs
+bit-identical without it) adds syntactic breathing groups (per-language
+function-word dictionaries, hard 5-word balance, inseparable
+connectors, 130 ms `%` breath pauses) and a sculpted F0 contour
+(declination + block re-attacks + pitch accents + per-language nuclear
+fall; lexical stress travels out-of-band, never in the SAMPA). It only
+touches the glottis f0 column and pause durations — never the tract,
+so it composes with any speaker. Demo: `python examples/demo_prosody.py`;
+measurements: `python scripts/f0_report.py <tract…>`. Guide:
+`docs/expressive_prosody.pdf`.
 
 ## Command line
 
@@ -75,7 +179,7 @@ Engine options (COVTL model parameters) on `run`/`text-to-wav`:
 | `--tvoy MS` | 80 | vowel gesture duration |
 | `--tpause MS` | 200 | short inter-word pause (space) |
 | `--tpause-long MS` | 320 | long pause (end of sentence, `\|`) |
-| `-f0 HZ` | 102.216 | F0 (JD3 default); a French-style declination is applied |
+| `-f0 HZ` | per speaker | F0 (jd3 default 102.216 Hz); a French-style declination is applied |
 | `--no-ortho` | off | disable the orthogonal branch (TS3/VS) |
 | `--engine` | syl | trajectory engine (`syl` recommended, `legacy` = pre-syltraj) |
 | `--fps`, `--scale`, `--no-video` | 25, 2 | video rendering |
@@ -121,22 +225,34 @@ The full engine API (63 symbols: `build_phrase_tract`,
 covtl-pipeline/
 ├── pyproject.toml            # package config (Python ≥ 3.9)
 ├── launch.bat                # Windows quick-launch script
+├── install_speaker.py        # multi-speakers selector (add-on 1)
+├── setup_lang.py             # language pack installer (add-on 2)
+├── lang_pack/                # language pack source (g2p, lexicons, manual)
 ├── vtl_synth/
 │   ├── core/                 # synthesis engine
 │   │   ├── pipeline.py       # Pipeline orchestrator (run/text_to_wav)
 │   │   ├── phonemes.py       # ARPAbet↔SAMPA tables
+│   │   ├── speaker_registry.py  # multi-speakers registry access
 │   │   └── … 26 engine modules (constants, polar, syltraj, timers, …)
 │   ├── cli/main.py           # vtl-synth entry point
-│   ├── video/                # SVG/PNG renderer + MP4 encoder + tract figure
+│   ├── video/                # SVG/PNG renderer + MP4 encoder + polar
+│   │                         # video (dual panel) + tract figure
 │   ├── vtl/api.py            # VocalTractLab API facade
-│   ├── utils/g2p.py          # CMUdict g2p
-│   └── data/vtl_binaries/JD3.speaker
-├── tests/                    # 55 tests (engine non-regression + CLI/g2p)
-├── examples/demo.py
-├── docs/ARCHITECTURE.md      # developer architecture map
-├── docs/CONVENTIONS.md       # coding conventions of the project
-├── docs/manual.pdf|.tex      # user manual (US English, LaTeX)
-└── regression_baselines.json # E2E non-regression baselines
+│   ├── utils/                # g2p (CMUdict) + language profiles
+│   │                         # (chunking, prosody_f0, … — add-ons 2-3)
+│   └── data/
+│       ├── vtl_binaries/JD3.speaker     # legacy fallback speaker file
+│       ├── speakers/                    # registry: 5 .speaker +
+│       │                                # *_constants.py + registry.json
+│       └── *_lexicon.tsv                # installed Wikipron lexicons
+├── scripts/                  # regen_baselines, calibrate_fine_v2, f0_report…
+├── tests/                    # lightweight suite (111 tests, engine
+│                             # non-regression + CLI/g2p + registry)
+├── examples/                 # demo.py, demo_prosody.py, polar_demo_en.mp4
+├── docs/                     # manual, ARCHITECTURE, CONVENTIONS,
+│                             # expressive_prosody.pdf, polar_visualization.pdf
+├── regression_baselines*.json   # E2E non-regression baselines (5 speakers)
+└── MIGRATION_NOTES.md        # v1.1.0 packaging decisions & inventory
 ```
 
 ## Differences with the vtl-pipeline reference repository

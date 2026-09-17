@@ -108,7 +108,17 @@ VV_CLOSURE_PROBE = None
 
 
 def _vv_waypoint() -> list:
-    return list(VOWEL_TARGETS['@'])
+    """Schwa waypoint of closing VV arcs.
+
+    Languages without '@' in their VOWEL_TARGETS (Italian, Spanish:
+    no phonological schwa) fall back to the NEUTRAL anchor, which IS
+    the schwa by definition (constants.NEUTRAL_RHO/NEUTRAL_THETA).
+    """
+    wp = VOWEL_TARGETS.get('@')
+    if wp is None:
+        from vtl_synth.core.constants import NEUTRAL_RHO, NEUTRAL_THETA
+        wp = (NEUTRAL_RHO, NEUTRAL_THETA)
+    return list(wp)
 
 # Nasal vowels: Unicode precomposed → oral key + nasal flag.
 # Also handles: combining tilde U+0303 after the key, and a direct '~' suffix.
@@ -133,6 +143,7 @@ class SylNode:
     in_cluster: bool = False
     long: bool = False           # long pause ('|')
     nasal: bool = False          # nasal vowel (partial VO extension)
+    breath: bool = False         # breath pause ('%', expressive prosody)
 
 
 @dataclass
@@ -145,6 +156,7 @@ class SylAnchor:
     is_vowel_onset: bool = False
     is_word_end: bool = False
     is_syl_vowel_onset: bool = False
+    breath: bool = False         # breath pause anchor ('%')
 
 
 @dataclass
@@ -162,6 +174,7 @@ class SylBlock:
     pre_amp: float = 0.0
     post_amp: float = 0.0
     nasal: bool = False           # nasal vowel plateau (partial VO)
+    breath: bool = False          # breath pause block ('%', v1.0.8)
 
 
 # ==========================================================================
@@ -263,17 +276,29 @@ def _normalize_word(word: str) -> str:
 
 
 def tokenize_phrase(phrase: str) -> list:
-    """Phrase → list of tokens: ('S', key, nasal) | 'GAP' | 'PAUSE' | 'DOT'.
+    """Phrase → list of tokens: ('S', key, nasal) | 'GAP' | 'PAUSE' | 'BREATH' | 'DOT'.
 
-    Punctuation '|' = long pause; space = pause (GAP).
+    Punctuation '|' = long pause; space = pause (GAP); '%' = breath
+    pause (expressive prosody, v1.0.8 — duration T_pause_breath,
+    shorter than the comma pause; see build_phrase_pval).
     Nasal vowels: precomposed (ã ẽ ĩ õ ũ), combining tilde U+0303
     attached to the vowel, or '~' suffix → ('S', oral_key + '~', True).
     Characters outside the inventory are ignored (see preprocess_phrase).
     """
     tokens: list = []
+    prev_marker = False          # previous word was a pause marker
     for wi, word in enumerate(phrase.strip().split()):
-        if wi > 0:
+        if word == '%':
+            # breath marker: standalone word (like '|'), and the
+            # inter-word GAP is NOT emitted around it — a single
+            # pause node results (unlike '|', kept unchanged for
+            # bit-identity with the pre-1.0.8 behaviour)
+            tokens.append('BREATH')
+            prev_marker = True
+            continue
+        if wi > 0 and not prev_marker:
             tokens.append('GAP')
+        prev_marker = False
         if word == '|':
             tokens.append('PAUSE')
             continue
@@ -346,15 +371,15 @@ def _limit_long_sequences(word_toks: list) -> list:
 def build_flat(phrase: str):
     """Phrase → (flat, syllables, syl_boundaries, boundary_info, word_starts).
 
-    flat: list of ('S', key) | 'GAP' | 'PAUSE' | 'DOT'
+    flat: list of ('S', key) | 'GAP' | 'PAUSE' | 'BREATH' | 'DOT'
     syllables: list[list[list[str]]] (words → syllables → keys)
     """
     tokens = tokenize_phrase(phrase)
-    # group into words (GAP/PAUSE separate)
+    # group into words (GAP/PAUSE/BREATH separate)
     words: list[list] = []
     cur: list = []
     for tok in tokens:
-        if tok in ('GAP', 'PAUSE'):
+        if tok in ('GAP', 'PAUSE', 'BREATH'):
             if cur:
                 words.append(cur)
                 cur = []
@@ -371,7 +396,7 @@ def build_flat(phrase: str):
     boundary_info: list = []
 
     for word in words:
-        if word and word[0] in ('GAP', 'PAUSE'):
+        if word and word[0] in ('GAP', 'PAUSE', 'BREATH'):
             flat.append(word[0])
             continue
         word_starts.append(len(flat))
@@ -434,7 +459,7 @@ def build_flat(phrase: str):
                 flat.append(('S', key))
 
     # implicit final pause
-    if flat and flat[-1] not in ('GAP', 'PAUSE'):
+    if flat and flat[-1] not in ('GAP', 'PAUSE', 'BREATH'):
         flat.append('GAP')
     return flat, syllables, syl_bounds, boundary_info, word_starts
 
@@ -534,6 +559,8 @@ def build_nodes(flat, syllables, syl_bounds, boundary_info, word_starts):
             nodes.append(SylNode('pause', long=True))
         elif tok == 'GAP':
             nodes.append(SylNode('pause', long=False))
+        elif tok == 'BREATH':
+            nodes.append(SylNode('pause', long=False, breath=True))
         # 'DOT': not represented (pure boundary)
 
     # clusters: C adjacent to C with no syllable boundary between
@@ -619,7 +646,7 @@ def build_anchors(nodes, word_starts, boundary_info):
                                      hold=not prev_v and not next_v))
         elif nd.kind == 'pause':
             anchors.append(SylAnchor(i=i, kind='pause', pt=None,
-                                     long=nd.long))
+                                     long=nd.long, breath=nd.breath))
 
     # word end: COEFCEN·ρ anchor before a pause that follows a consonant
     inserts = []
@@ -664,7 +691,9 @@ def build_anchors(nodes, word_starts, boundary_info):
         prev_rho, prev_theta = np.pi, np.pi
         for seg in reversed(prev_segs):
             if _is_vowel_key(seg):
-                prev_rho, prev_theta = VOWEL_TARGETS[seg]
+                # nasal keys carry the '~' marker — the polar target is
+                # the oral counterpart (nasality is the VO extension).
+                prev_rho, prev_theta = VOWEL_TARGETS[seg.rstrip('~')]
                 break
         weight = (1 - prev_boolfin) + SYL_COEFCEN * prev_boolfin
         pos = _find_anchor_pos(anchors, flat_idx)
@@ -849,12 +878,25 @@ def _append_background(blocks, block_info, pt_dep, pt_arr, D, nu, K,
 
 def build_global_pval(nodes, anchors, T_cons, T_voy, T_pause_short,
                       T_pause_long, nu=SYL_NU, K=SYL_K, Kvoy=SYL_K,
-                      Pexp=SYL_PEXP):
+                      Pexp=SYL_PEXP, T_pause_breath=None):
+    """T_pause_breath: duration (steps) of the '%' breath pause
+    (expressive prosody, v1.0.8). None → T_pause_short. The breath
+    pauses only occur when the phrase string contains '%' markers —
+    without them this function is bit-identical to the previous
+    behaviour."""
+    if T_pause_breath is None:
+        T_pause_breath = T_pause_short
     blocks: list[np.ndarray] = []
     block_info: list[SylBlock] = []
     n = len(nodes)
     pending_pt = None
     pending_long = False
+    pending_breath = False
+
+    def _pause_steps() -> int:
+        if pending_breath:
+            return T_pause_breath
+        return T_pause_long if pending_long else T_pause_short
 
     for idx in range(len(anchors) - 1):
         A, B = anchors[idx], anchors[idx + 1]
@@ -878,24 +920,29 @@ def build_global_pval(nodes, anchors, T_cons, T_voy, T_pause_short,
 
         if a_term and b_term:
             if pending_pt is not None and B.kind == 'synth':
-                T_use = T_pause_long if pending_long else T_pause_short
+                T_use = _pause_steps()
                 _append_arc(blocks, pending_pt, B.pt or [0.0, 0.0], T_use,
                             nu, K, Pexp)
                 pre = _pre_amp_backward_scan(anchors, idx)
                 block_info.append(SylBlock(n_steps=T_use, kind='terminal',
-                                           pre_amp=pre))
+                                           pre_amp=pre,
+                                           breath=pending_breath))
                 pending_pt = None
+                pending_breath = False
             elif B.kind == 'pause':
                 pending_pt = A.pt or [0.0, 0.0]
                 pending_long = B.long
+                pending_breath = B.breath
             continue
 
         if a_term:
             was_pending = pending_pt is not None
+            was_breath = pending_breath
             if pending_pt is not None:
                 pt_A = pending_pt
-                T_use = T_pause_long if pending_long else T_pause_short
+                T_use = _pause_steps()
                 pending_pt = None
+                pending_breath = False
             else:
                 pt_A = A.pt or [0.0, 0.0]
                 T_use = T_pause_short
@@ -907,7 +954,7 @@ def build_global_pval(nodes, anchors, T_cons, T_voy, T_pause_short,
                     else 0.0
                 block_info.append(SylBlock(
                     n_steps=T_use, kind='initial', long=False,
-                    pre_amp=pre, post_amp=post))
+                    pre_amp=pre, post_amp=post, breath=was_breath))
                 if post > 0.01 and not b_vonset:
                     _append_attack(blocks, block_info, pt_B, T_cons, post)
             else:
@@ -944,20 +991,23 @@ def build_global_pval(nodes, anchors, T_cons, T_voy, T_pause_short,
             if B.kind == 'pause':
                 pending_pt = A.pt or [0.0, 0.0]
                 pending_long = B.long
+                pending_breath = B.breath
             continue
 
         if pending_pt is not None:
-            T_use = T_pause_long if pending_long else T_pause_short
+            T_use = _pause_steps()
             _append_arc(blocks, pending_pt, B.pt or [0.0, 0.0], T_use,
                         nu, K, Pexp)
             pre_a = _amp(a_V)
             block_info.append(SylBlock(n_steps=T_use, kind='pause',
-                                       long=pending_long, pre_amp=pre_a))
+                                       long=pending_long, pre_amp=pre_a,
+                                       breath=pending_breath))
             _append_decay(blocks, block_info, A.pt or [0.0, 0.0], T_cons,
                           pre_amp=pre_a)
             _append_attack(blocks, block_info, B.pt or [0.0, 0.0], T_cons,
                            post_amp=_amp(b_V))
             pending_pt = None
+            pending_breath = False
 
         if m == 0:
             if b_vonset and not b_V:
@@ -991,11 +1041,13 @@ def build_global_pval(nodes, anchors, T_cons, T_voy, T_pause_short,
                                        nasal=nodes[_vi].nasal))
 
     if pending_pt is not None and anchors:
-        T_use = T_pause_long if pending_long else T_pause_short
+        T_use = _pause_steps()
         _append_arc(blocks, pending_pt, anchors[-1].pt or [0.0, 0.0],
                     T_use, nu, K, Pexp)
-        block_info.append(SylBlock(n_steps=T_use, kind='terminal'))
+        block_info.append(SylBlock(n_steps=T_use, kind='terminal',
+                                   breath=pending_breath))
         pending_pt = None
+        pending_breath = False
 
     Pval = np.vstack(blocks) if blocks else \
         np.zeros((T_cons, N_VTL_PARAMS))
@@ -1006,11 +1058,29 @@ def build_global_pval(nodes, anchors, T_cons, T_voy, T_pause_short,
 # Driver: phrase → (Pval 100 Hz, block_info)
 # ==========================================================================
 
+# Last build state (phrase, flat, nodes, anchors, block_info) — set by
+# build_phrase_pval, read back by the expressive-prosody layer
+# (utils/prosody_f0.py) to locate chunks/plateaus in time without
+# changing the return signature. Same pattern as
+# continuous.get_last_pval_state().
+_LAST_BUILD: dict | None = None
+
+
+def get_last_build():
+    """State of the last build_phrase_pval call (or None).
+
+    dict(phrase=..., flat=..., nodes=..., anchors=..., block_info=...)
+    — frames of block_info/n_steps are @100 Hz (TARGET_SR).
+    """
+    return _LAST_BUILD
+
+
 def build_phrase_pval(phrase: str,
                       cons_ms: float = 60.0,
                       vowel_ms: float = 60.0,
                       pause_short_ms: float = 200.0,
                       pause_long_ms: float = 320.0,
+                      pause_breath_ms: float | None = None,
                       t_cons: int | None = None,
                       t_voy: int | None = None):
     """Phrase → (Pval (n,15) @100 Hz, blocks, nodes, anchors).
@@ -1020,7 +1090,11 @@ def build_phrase_pval(phrase: str,
     T_voy : steps of the vocalic plateau; the transition arc equals 2·T_voy
     (synchronized branches: 2·T_cons = 2·T_voy ⇔ T_cons = T_voy in steps).
     t_cons / t_voy: direct override in steps (e.g. 16 = 160 ms).
+    pause_breath_ms: duration of the '%' breath pause (expressive
+    prosody, v1.0.8); None → = pause_short_ms (bit-identical to the
+    pre-1.0.8 behaviour for phrases without '%').
     """
+    global _LAST_BUILD
     flat, syllables, syl_bounds, boundary_info, word_starts = \
         build_flat(phrase)
     nodes = build_nodes(flat, syllables, syl_bounds, boundary_info,
@@ -1033,7 +1107,18 @@ def build_phrase_pval(phrase: str,
         max(1, round(vowel_ms / 10.0 / 3.0))
     T_pause_short = max(1, round(pause_short_ms / 10.0))
     T_pause_long = max(1, round(pause_long_ms / 10.0))
+    T_pause_breath = (max(1, round(pause_breath_ms / 10.0))
+                      if pause_breath_ms is not None else None)
 
     Pval, blocks = build_global_pval(nodes, anchors, T_cons, T_voy,
-                                     T_pause_short, T_pause_long)
+                                     T_pause_short, T_pause_long,
+                                     T_pause_breath=T_pause_breath)
+    _LAST_BUILD = {
+        'phrase': phrase,
+        'flat': flat,
+        'nodes': nodes,
+        'anchors': anchors,
+        'block_info': blocks,
+        't_pause': (T_pause_short, T_pause_long, T_pause_breath),
+    }
     return Pval, blocks, nodes, anchors

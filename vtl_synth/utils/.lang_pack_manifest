@@ -1,0 +1,12 @@
+setlang.py
+g2p_fr.py
+g2p_fr_legacy.py
+g2p_es.py
+g2p_de.py
+g2p_it.py
+g2p_pt.py
+lexicon_loader.py
+language_vowel_sets.py
+calibrate_vowels.py
+chunking.py
+prosody_f0.py

@@ -1,0 +1,48 @@
+{
+  "_meta": {
+    "created": "2026-09-11",
+    "note": "Source unique de verite multi-speakers. Le speaker actif est designe par le marqueur ACTIVE_SPEAKER (nom court) ; install_speaker.py permute constants.py + ressource wheel. s1/s2 constants v2 : phase 2 corrigee (scripts/calibrate_fine_v2.py).",
+    "wheel_default_sha256": "a583bdaaa7ffe216d65b088cc7541664e2633bfff76b79c63861fdd7bc571f00",
+    "jd3_constants_reference_sha256": "75ae0ba837ed106d2b426e484e409e656c9cef4bc6ea37a13d9da7a66cc40003"
+  },
+  "jd3": {
+    "speaker": "jd3.speaker",
+    "constants": "jd3_constants.py",
+    "f0_default": 102.216,
+    "description": "JD3 reference (original SynthVTL24b)",
+    "speaker_sha256": "e1e592dae13991e981c17bcc326cccc7bce3705e3862eb77fdeaeb238418a503",
+    "constants_sha256": "75ae0ba837ed106d2b426e484e409e656c9cef4bc6ea37a13d9da7a66cc40003"
+  },
+  "s1": {
+    "speaker": "s1.speaker",
+    "constants": "s1_constants.py",
+    "f0_default": 114.908,
+    "description": "DVTD sujet 1 male (IRM DVTD, VTL reel ~20 cm) — constants v3 : phase 2 D15 + TTY natif (correctif bunching) + @ multi-criteres",
+    "speaker_sha256": "4384325f55ec4d72d751e90ea5f95435c55ca141febc2abc91d659ef5762f10e",
+    "constants_sha256": "47bd805ea78f7548d26cc7c15f583421986169a3e24e1fa79f9962a1ee67e75c"
+  },
+  "s2": {
+    "speaker": "s2.speaker",
+    "constants": "s2_constants.py",
+    "f0_default": 181.008,
+    "description": "DVTD sujet 2 female (IRM DVTD) — constants v3 : phase 2 D15 + TTY natif (correctif bunching) + @ multi-criteres",
+    "speaker_sha256": "e35b93c75e794bdad1365bc962bc4083efc880a43871dcbbbdfee1a1de4ccb9b",
+    "constants_sha256": "23dd28dd4cf48fed12a4976df0881bf4ec0fa147df85cdf047dfd4dad2059c6c"
+  },
+  "m01": {
+    "speaker": "m01.speaker",
+    "constants": "m01_constants.py",
+    "f0_default": 120.0,
+    "description": "M01 male (ZIP officiel VTL 2.4, Option A + mapping glottal 2025) — constants v3 : phase 2 D15 + TTY natif + @ multi-criteres",
+    "speaker_sha256": "9e5598ea40a362860c818835c7dbafa71907cc687d80c701730e8fb8d4ff1f62",
+    "constants_sha256": "2c9c2a7d52801939a5b558b3764f7fbe144bf5dd1193e3eabbc986a642a46d2d"
+  },
+  "w02": {
+    "speaker": "w02.speaker",
+    "constants": "w02_constants.py",
+    "f0_default": 232.458,
+    "description": "W02 female (ZIP officiel VTL 2.4, Option A + mapping glottal 2025) — constants v3 : phase 2 D15 + TTY natif + @ multi-criteres",
+    "speaker_sha256": "36b87ffb7774e7b89748ea356d7037c9e622b9cfa2db5742fe39ee06dba47cbd",
+    "constants_sha256": "2783c985c09e4851fe7dba5ffa591a72747a91a3ef62f3dd00b5fb7c84dcfe79"
+  }
+}

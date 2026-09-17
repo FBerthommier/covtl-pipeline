@@ -18,6 +18,15 @@ temp_video/
 *.wav
 *.mp4
 *.tract
+*.polar
+
+# Multi-speaker machine state (recréé à l'installation : install_speaker.py)
+vtl_synth/data/speakers/ACTIVE_SPEAKER
+.speaker_backups/
+*.bak
+
+# Exceptions : la démo polaire courte est versionnée
+!examples/*.mp4
 
 # Editors / OS
 .vscode/

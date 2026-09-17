@@ -1,0 +1,2376 @@
+<?xml version='1.0' encoding='utf-8'?>
+<speaker>
+  <vocal_tract_model>
+    <anatomy>
+      <palate>
+        <p0 x="0.0500" z="-2.4500" teeth_height="0.3500" top_teeth_width="1.0200" bottom_teeth_width="1.0200" palate_height="1.2000" palate_angle_deg="80.1000" />
+        <p1 x="0.9250" z="-2.3000" teeth_height="0.4500" top_teeth_width="1.0200" bottom_teeth_width="1.0200" palate_height="1.4000" palate_angle_deg="70.6900" />
+        <p2 x="1.8500" z="-2.1000" teeth_height="0.5100" top_teeth_width="1.1000" bottom_teeth_width="1.1750" palate_height="1.4500" palate_angle_deg="63.8800" />
+        <p3 x="3.0200" z="-1.9200" teeth_height="0.5200" top_teeth_width="1.0200" bottom_teeth_width="0.8130" palate_height="1.6800" palate_angle_deg="60.8000" />
+        <p4 x="3.6000" z="-1.8500" teeth_height="0.5700" top_teeth_width="0.7500" bottom_teeth_width="0.7500" palate_height="1.5000" palate_angle_deg="53.7000" />
+        <p5 x="4.3000" z="-1.6500" teeth_height="0.6000" top_teeth_width="0.7300" bottom_teeth_width="0.3000" palate_height="0.8500" palate_angle_deg="44.9800" />
+        <p6 x="4.9000" z="-1.3000" teeth_height="0.5000" top_teeth_width="0.7500" bottom_teeth_width="0.2000" palate_height="0.1350" palate_angle_deg="42.6100" />
+        <p7 x="5.1000" z="-0.8000" teeth_height="0.6100" top_teeth_width="0.5330" bottom_teeth_width="0.1500" palate_height="0.0000" palate_angle_deg="40.0000" />
+        <p8 x="5.1000" z="0.0000" teeth_height="0.6100" top_teeth_width="0.6000" bottom_teeth_width="0.1500" palate_height="0.0000" palate_angle_deg="0.0000" />
+      </palate>
+      <jaw fulcrum_x="-6.5000" fulcrum_y="2.0000" rest_pos_x="0.0000" rest_pos_y="-1.2000" tooth_root_length="0.8000">
+        <p0 x="0.0500" z="-2.5500" teeth_height="0.4000" top_teeth_width="1.0350" bottom_teeth_width="1.0350" jaw_height="1.6000" jaw_angle_deg="90.0000" />
+        <p1 x="0.8800" z="-2.3500" teeth_height="0.4000" top_teeth_width="1.0350" bottom_teeth_width="1.0350" jaw_height="1.6000" jaw_angle_deg="85.0000" />
+        <p2 x="2.0000" z="-2.2000" teeth_height="0.4500" top_teeth_width="0.9340" bottom_teeth_width="0.9340" jaw_height="1.6000" jaw_angle_deg="82.0000" />
+        <p3 x="3.1000" z="-1.9000" teeth_height="0.4300" top_teeth_width="0.8500" bottom_teeth_width="0.8500" jaw_height="1.6000" jaw_angle_deg="80.8000" />
+        <p4 x="3.7000" z="-1.8000" teeth_height="0.5000" top_teeth_width="0.6400" bottom_teeth_width="0.6900" jaw_height="1.5000" jaw_angle_deg="76.8000" />
+        <p5 x="4.4000" z="-1.6500" teeth_height="0.5300" top_teeth_width="0.3500" bottom_teeth_width="0.5110" jaw_height="1.2000" jaw_angle_deg="83.0000" />
+        <p6 x="4.9000" z="-1.0000" teeth_height="0.5500" top_teeth_width="0.2300" bottom_teeth_width="0.6530" jaw_height="0.3000" jaw_angle_deg="62.0000" />
+        <p7 x="5.1000" z="-0.5500" teeth_height="0.5300" top_teeth_width="0.1400" bottom_teeth_width="0.6150" jaw_height="0.0000" jaw_angle_deg="57.0000" />
+        <p8 x="5.1000" z="0.0000" teeth_height="0.5300" top_teeth_width="0.1400" bottom_teeth_width="0.5700" jaw_height="0.0000" jaw_angle_deg="0.0000" />
+      </jaw>
+      <lips width="1.3000" />
+      <tongue>
+        <tip radius="0.2000" />
+        <body radius_x="1.8000" radius_y="1.8000" />
+        <root automatic_calc="0" trx_slope="1.2300" trx_intercept="-7.5500" try_slope="1.1800" try_intercept="-8.1100" />
+        <tonsil length="0.0000" height="0.0000" />
+      </tongue>
+      <velum uvula_width="0.8000" uvula_height="0.8000" uvula_depth="0.9000" max_nasal_port_area="2.0000">
+        <low points="-1.3 -0.35 -1 -0.1 -0.7 0.25 -0.3 0.6 0 0.85 " />
+        <mid points="-1.75 -0.2 -1.4 0.4 -1.2 0.55 -0.7 0.95 0 1.15 " />
+        <high points="-1.65 0.6 -1.5 0.95 -1.1 1.2 -0.6 1.25 0 1.3 " />
+      </velum>
+      <pharynx fulcrum_x="-2.3720" fulcrum_y="1.2140" rotation_angle_deg="-98.5000" top_rib_y="-1.4000" upper_depth="3.8000" lower_depth="4.0000" back_side_width="1.8000" />
+      <larynx upper_depth="1.4500" lower_depth="0.8500" epiglottis_width="0.5000" epiglottis_height="2.0000" epiglottis_depth="1.0000" epiglottis_angle_deg="100.0000">
+        <narrow points="2.2 0 1.75 -0.55 2.1 -1.5 3.5 -3.2 1.6 -3.2 1.7 -1.5 0 -1.5 0 0 " />
+        <wide points="4.6 0 3.05 -1 3.3 -3 4.1 -5 1.8 -5 2.2 -3 0 -2.6 0 0 " />
+      </larynx>
+      <vocal_folds default_f0="121.0000" />
+      <piriform_fossa length="2.5000" volume="1.5000" />
+      <subglottal_cavity length="20.0000" />
+      <nasal_cavity length="12.0000" />
+      <param index="0" name="HX" min="0.000" max="1.000" neutral="1.000" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Hyoid position (horz.)" unit="cm" />
+      <param index="1" name="HY" min="-5.900" max="-4.000" neutral="-4.750" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Hyoid position (vert.)" unit="cm" />
+      <param index="2" name="JX" min="-0.500" max="0.000" neutral="0.000" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Jaw position (horz.)" unit="cm" />
+      <param index="3" name="JA" min="-7.000" max="0.000" neutral="-2.000" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Jaw angle" unit="deg." />
+      <param index="4" name="LP" min="-1.000" max="1.000" neutral="-0.070" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Lip protrusion" unit="cm" />
+      <param index="5" name="LD" min="-2.000" max="4.000" neutral="0.950" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Lip distance" unit="cm" />
+      <param index="6" name="VS" min="0.000" max="1.000" neutral="0.000" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Velum shape" unit="" />
+      <param index="7" name="VO" min="-0.100" max="1.500" neutral="-0.100" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Velum opening" unit="cm^2" />
+      <param index="8" name="TCX" min="-3.000" max="4.000" neutral="-0.400" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Tongue body (horz.)" unit="cm" />
+      <param index="9" name="TCY" min="-3.000" max="1.000" neutral="-1.460" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Tongue body (vert.)" unit="cm" />
+      <param index="10" name="TTX" min="1.500" max="5.500" neutral="3.500" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Tongue tip (horz.)" unit="cm" />
+      <param index="11" name="TTY" min="-3.000" max="2.500" neutral="-1.000" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Tongue tip (vert.)" unit="cm" />
+      <param index="12" name="TBX" min="-3.000" max="4.000" neutral="2.000" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Tongue blade (horz.)" unit="cm" />
+      <param index="13" name="TBY" min="-3.000" max="5.000" neutral="0.500" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Tongue blade (vert.)" unit="cm" />
+      <param index="14" name="TRX" min="-4.000" max="2.000" neutral="0.000" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Tongue root (horz.)" unit="cm" />
+      <param index="15" name="TRY" min="-6.000" max="0.000" neutral="0.000" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Tongue root (vert.)" unit="cm" />
+      <param index="16" name="TS1" min="0.000" max="1.000" neutral="0.000" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Tongue side elevation 1" unit="cm" />
+      <param index="17" name="TS2" min="0.000" max="1.000" neutral="0.000" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Tongue side elevation 2" unit="cm" />
+      <param index="18" name="TS3" min="-1.000" max="1.000" neutral="0.000" positive_velocity_factor="1.000" negative_velocity_factor="1.000" description="Tongue side elevation 3" unit="cm" />
+    </anatomy>
+    <shapes>
+      <shape name="a">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.6255" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-3.7157" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.1113" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="1.3845" description="Lip distance" unit="cm" />
+        <param name="VS" value="1.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="0.6258" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-2.1409" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.2742" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.7989" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.5378" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-1.0977" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-2.9441" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-4.5755" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.3020" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="e">
+        <param name="HX" value="0.7696" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.4394" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.4991" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.0700" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.5645" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.6000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.1505" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.6774" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.5161" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-0.9231" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.1876" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.6575" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.4527" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-0.9688" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2420" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0400" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.1720" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="i">
+        <param name="HX" value="0.8861" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7532" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.9056" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.7456" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.4673" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.7151" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.5949" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.9964" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.1711" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="4.0000" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.8172" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="0.0867" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.9011" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.3000" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.1160" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0560" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="o">
+        <param name="HX" value="0.6902" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.4865" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.9980" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.0687" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.0856" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.4110" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="-0.0975" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.1330" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="2.7561" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.5306" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.0182" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.0165" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-2.5826" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.0896" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.3000" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.1140" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="u">
+        <param name="HX" value="0.9307" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.1341" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-3.4785" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.2000" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.0910" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.1000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="0.6720" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.7269" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="2.8561" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.2584" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.2451" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.5398" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.9448" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.0987" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.3020" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0320" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="E:">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.9107" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.7437" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2260" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.7421" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.4107" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.1250" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.3929" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.1964" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.2679" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.7997" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.2121" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.6071" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.3393" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.3000" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0287" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.2840" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="2">
+        <param name="HX" value="0.5794" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.1964" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.7905" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.2094" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.3124" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.9286" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.0179" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.6964" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.5893" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.9286" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.4709" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.7679" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.6964" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1120" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.1864" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="y">
+        <param name="HX" value="0.9361" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.5563" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.1652" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.2276" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.1077" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.4244" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.6545" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.5987" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.4409" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.7000" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.6669" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="0.2105" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.2709" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2480" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.1840" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="E">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.6873" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.2044" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.5693" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.9500" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.4126" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.8205" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.5425" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.4892" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.4882" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.5163" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.6413" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.5536" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.4359" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.3000" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="I">
+        <param name="HX" value="0.5078" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7951" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.6637" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2628" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.3275" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0952" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.0679" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.1081" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.7323" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.0497" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.9412" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.4344" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.2843" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.2258" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0599" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.1237" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.1807" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="O">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.5602" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-4.1394" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.1992" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.2000" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0559" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="0.2851" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-2.3789" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="3.0482" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-2.3789" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="1.2119" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.2839" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-3.4637" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.2462" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1380" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="U">
+        <param name="HX" value="0.8684" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.5110" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-3.0560" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.1066" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.0991" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="0.0105" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.6567" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="3.0784" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.9916" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="1.2476" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.0712" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-3.3272" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.6025" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1560" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.3000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.1560" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="Y">
+        <param name="HX" value="0.8681" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.5737" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.1324" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.1940" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.0959" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.6515" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.4504" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.7186" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.5060" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.7314" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.9333" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.5330" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.7566" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0520" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="9">
+        <param name="HX" value="0.0333" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.7658" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.7885" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.1942" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.4394" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.6697" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.4214" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.9765" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="3.8536" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.5552" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.4148" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-1.2791" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.9131" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.6596" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.3000" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0080" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="@">
+        <param name="HX" value="0.5780" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.6103" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.2219" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.3278" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.3074" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.6690" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.2235" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.7940" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-0.8918" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.8513" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.8088" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.3163" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.8520" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0760" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.1240" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="6_mid">
+        <param name="HX" value="0.5920" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.0349" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.8683" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.1728" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.2755" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.4125" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.6690" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.3457" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.3920" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.7099" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.5598" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.6895" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-2.4916" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.0566" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1720" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0360" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="6_low">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.2103" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.8934" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.6377" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="1.1563" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.4705" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.7980" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.0250" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-2.1425" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.1640" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.8945" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.7068" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.1423" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.3000" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="ll-labial-closure(a)">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.3124" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.0216" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.0002" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="-1.3067" description="Lip distance" unit="cm" />
+        <param name="VS" value="1.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.0222" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.6894" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.7662" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.3130" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.7258" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.1640" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-2.9076" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.8752" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2847" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0124" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="-0.0672" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="ll-labial-closure(i)">
+        <param name="HX" value="1.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7500" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.1591" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.0730" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="-0.3894" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.5000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.7020" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.6825" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.7403" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.2237" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="4.0000" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.5665" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.1638" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.9295" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2517" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.1562" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="-0.0651" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="ll-labial-closure(u)">
+        <param name="HX" value="0.9888" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.6857" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.0461" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.7084" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="-0.0100" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0002" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.2410" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.0072" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="3.2973" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.2237" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.0087" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.1652" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.9055" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.1977" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2285" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.1380" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0871" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="ll-dental-fricative(a)">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.4169" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="-0.5000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.0559" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.0273" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.4993" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.1860" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.1928" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-2.0252" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.1463" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.3011" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.2127" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.5960" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-2.8087" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.5686" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0440" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0280" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0440" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="ll-dental-fricative(i)">
+        <param name="HX" value="0.2998" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.3598" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="-0.5000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.6180" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2354" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.6687" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.9931" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.9771" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.0892" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.2630" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.9558" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.3928" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.8651" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.3201" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="-0.0680" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0920" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.1640" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="ll-dental-fricative(u)">
+        <param name="HX" value="0.9888" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.6857" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="-0.5000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.1201" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.2861" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.2870" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0002" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="0.9394" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.0427" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="3.0939" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.4697" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.0939" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.3051" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.4480" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.4984" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2285" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.1380" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0871" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-dental-fricative(a)">
+        <param name="HX" value="0.2773" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.3880" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-0.7257" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2494" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.9500" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.3575" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.0785" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.3773" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.2786" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.1777" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.1174" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.7378" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.9604" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.1014" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2080" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0880" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-dental-fricative(i)">
+        <param name="HX" value="0.4269" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.9405" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-0.7257" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2494" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.6273" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.8979" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.1296" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.2257" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.0719" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.4604" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.7569" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.6174" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.5869" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1960" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0280" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-dental-fricative(u)">
+        <param name="HX" value="0.3756" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.1502" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.0651" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.0910" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.5733" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.1547" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.4535" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.4196" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.1953" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.3651" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.5282" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.6174" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.5015" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2560" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0440" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-alveolar-closure(a)">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7773" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.7769" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2955" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.9670" description="Lip distance" unit="cm" />
+        <param name="VS" value="1.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.1143" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.6295" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.3530" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.4083" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.7700" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.0466" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.0146" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.1761" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0000" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-alveolar-closure(i)">
+        <param name="HX" value="0.2732" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7500" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.2977" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.0730" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.4518" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.5000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.1609" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.8088" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.1100" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-0.0700" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.8925" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.5440" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.4510" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-0.8088" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1320" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0040" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-alveolar-closure(u)">
+        <param name="HX" value="0.4666" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7762" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.3786" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.1090" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.3692" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0002" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.0664" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.1224" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.5000" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.3276" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.0452" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.5333" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.1538" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.8042" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1320" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-alveolar-fricative(a)">
+        <param name="HX" value="0.2773" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.3880" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-0.7257" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2494" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.9500" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.3575" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.0785" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.3773" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.2054" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.2956" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.1174" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.7378" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.9604" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.1014" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2080" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0880" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-alveolar-fricative(i)">
+        <param name="HX" value="0.4269" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.9405" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-0.7257" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2494" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.6273" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.8979" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.1296" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.0913" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.1435" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.4604" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.7569" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.6174" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.5869" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1960" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0280" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-alveolar-fricative(u)">
+        <param name="HX" value="0.3756" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.1502" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.0651" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.0910" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.5733" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.1547" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.4535" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.2080" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.3717" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.3651" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.5282" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.6174" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.5015" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2560" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0440" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-alveolar-lateral(a)">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7500" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.7769" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2955" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.9670" description="Lip distance" unit="cm" />
+        <param name="VS" value="1.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.2937" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.1224" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.5000" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.5489" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.5350" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.6958" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.6434" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.2098" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0880" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="-1.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-alveolar-lateral(i)">
+        <param name="HX" value="0.2732" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7500" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.2977" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.0730" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.4518" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.5000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.1609" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.8088" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.3261" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.0734" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.8925" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.5440" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.4510" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-0.8088" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1320" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="-1.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-alveolar-lateral(u)">
+        <param name="HX" value="0.4666" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7762" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.3786" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.1000" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.2000" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0002" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.0664" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.1224" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.5000" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.3281" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.1012" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.4130" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.1538" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.8042" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1320" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="-1.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tb-palatal-fricative(a)">
+        <param name="HX" value="0.2129" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.5213" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.9490" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.5000" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.5701" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.2790" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.0724" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.7403" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.4177" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.3052" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.4820" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.3506" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.1486" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1560" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.3960" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tb-palatal-fricative(i)">
+        <param name="HX" value="0.3938" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7500" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.1674" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2253" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.5701" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.4123" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.9581" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.9291" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.2411" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.7561" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.6804" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.1220" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.2058" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1560" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.4600" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tb-palatal-fricative(u)">
+        <param name="HX" value="0.3938" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7500" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.1674" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.1693" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.7786" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.1646" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.8438" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.7944" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.4177" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.9840" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.7477" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.1220" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.2058" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1560" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.4600" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-postalveolar-closure(a)">
+        <param name="HX" value="0.5764" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.0000" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-0.4000" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.1000" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.9646" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.4662" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.1128" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.4925" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="1.1053" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.0075" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.7669" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.0938" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.7584" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0600" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0600" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-postalveolar-closure(i)">
+        <param name="HX" value="0.3857" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.6547" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-0.4000" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.1000" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.8426" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.0301" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.9060" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.4361" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.8797" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.1391" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.9361" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.6936" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.3963" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1120" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0440" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-postalveolar-closure(u)">
+        <param name="HX" value="0.3848" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7691" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-0.4000" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.2000" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.8157" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.4474" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.0376" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.8120" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="1.2180" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.9511" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.7669" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.7508" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.4535" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1120" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0440" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-postalveolar-fricative(a)">
+        <param name="HX" value="0.5764" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.0000" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-0.4000" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.3357" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.9646" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.4662" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.1128" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.4173" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="1.0301" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.0075" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.7669" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.0938" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.7584" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0600" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0600" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-postalveolar-fricative(i)">
+        <param name="HX" value="0.3857" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.6547" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-0.4000" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.3053" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.8426" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.0301" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.9060" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.3970" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.8300" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.1391" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.9361" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.6936" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.3963" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1120" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0440" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-postalveolar-fricative(u)">
+        <param name="HX" value="0.3848" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7691" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-0.4000" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.5240" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.8157" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.4474" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.0376" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.4925" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.9737" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.9511" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.7669" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.7508" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.4535" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1120" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0440" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="1.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-postalveolar-lateral(a)">
+        <param name="HX" value="0.8703" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.1112" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.8337" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.1372" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.7101" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.6883" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.1486" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.4703" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="1.6905" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.0221" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.7759" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.1471" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.3748" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0520" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="-0.1000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="-1.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-postalveolar-lateral(i)">
+        <param name="HX" value="1.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7500" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.8221" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.0134" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.4518" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.5000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.6502" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.1486" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.3941" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="1.4238" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.9649" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.7569" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.9720" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.1926" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1560" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="-0.0120" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="-1.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-postalveolar-lateral(u)">
+        <param name="HX" value="1.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.5271" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.2093" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.2222" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.5312" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0002" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.3643" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.4726" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.3750" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="1.7477" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.6601" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.8140" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.3316" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.1303" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.4560" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="-1.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tb-velar-closure(a)">
+        <param name="HX" value="0.1733" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7500" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.7864" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2955" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.9670" description="Lip distance" unit="cm" />
+        <param name="VS" value="1.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="0.7650" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="0.7679" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="3.6468" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-0.8783" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.2412" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.5597" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.7920" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.1873" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0840" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tb-velar-closure(i)">
+        <param name="HX" value="0.3731" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7500" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-0.7024" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.0730" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.4518" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.9930" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.2500" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.1958" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-0.9301" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.4790" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.1154" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.6469" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-0.5105" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2320" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0040" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0040" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tb-velar-closure(u)">
+        <param name="HX" value="0.3729" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7500" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.5242" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.3706" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.1860" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0002" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.6372" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.3000" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="3.8680" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.2102" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.3886" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.6150" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.5787" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-0.9898" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="-0.0320" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0040" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0040" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tb-uvular-fricative(a)">
+        <param name="HX" value="0.0440" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.8131" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-3.2248" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2955" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.9670" description="Lip distance" unit="cm" />
+        <param name="VS" value="1.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="-0.5628" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-2.0714" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="3.9466" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.1515" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="1.6739" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.2554" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-3.3045" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.4502" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2847" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.9960" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="-0.0672" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tb-uvular-fricative(i)">
+        <param name="HX" value="0.0129" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.8491" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.5018" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.3523" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.6220" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.9997" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="-0.8333" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.5303" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="3.9471" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.1154" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="1.3121" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.1986" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.8138" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.1675" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0082" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.9954" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0040" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tb-uvular-fricative(u)">
+        <param name="HX" value="0.0440" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.2327" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.5950" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.0210" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.4424" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.4360" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="-0.6206" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.1241" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="3.1588" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.7555" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.7837" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.5071" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-2.0213" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.4113" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0143" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.9505" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.1791" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="a-raw">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.5255" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-3.1657" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.1113" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.8388" description="Lip distance" unit="cm" />
+        <param name="VS" value="1.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="0.7258" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.9409" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.2742" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.6989" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.5878" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.2977" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-3.2441" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.8512" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2520" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="e-raw">
+        <param name="HX" value="0.5696" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.3394" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.7491" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.3952" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.7499" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.1505" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.6774" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.4274" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-0.9616" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.0376" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.6075" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.7926" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.7647" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2960" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0400" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0720" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="i-raw">
+        <param name="HX" value="0.8861" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.4532" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.2556" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.4860" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.6173" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0169" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.7151" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.5699" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.8464" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.1711" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="4.0000" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.6922" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.5133" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.2011" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.3000" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.1160" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="o-raw">
+        <param name="HX" value="0.4902" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.1865" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.9980" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.0813" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.2856" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.1110" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="0.2025" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.4330" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="2.8561" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.3806" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.0182" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.0335" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-2.2826" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.8896" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1560" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0640" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0240" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="u-raw">
+        <param name="HX" value="0.9307" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.1341" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-3.4285" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.1212" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.1410" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="0.6720" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.0269" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="2.8561" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.2584" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.2451" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.5398" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.9448" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.1487" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1520" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0320" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0520" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="E:-raw">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.8373" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.7039" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2547" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.8504" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.4253" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.2975" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.4679" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.3925" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.4853" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.1350" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.4819" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.6704" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.6550" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.3000" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0640" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.2440" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="2-raw">
+        <param name="HX" value="0.6147" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7325" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.9022" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.1697" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.2352" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.1578" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.9791" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.5496" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.5028" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.7814" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.0557" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.9846" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.0915" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1960" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0160" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.1120" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="y-raw">
+        <param name="HX" value="0.9361" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.2563" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.1652" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.0724" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.1077" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.5244" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.8045" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.8987" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.2409" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="4.0000" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.3827" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="0.0105" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.2709" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2480" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.1840" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0440" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="E-raw">
+        <param name="HX" value="0.0528" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.8373" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.9544" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2693" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.6500" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.5126" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.0705" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.6425" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.4892" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.1882" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.8163" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.8045" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.4036" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.3359" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1120" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.1440" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.2160" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="I-raw">
+        <param name="HX" value="0.6860" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.5929" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.6025" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2540" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.5779" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0587" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.1753" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.0838" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.9162" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.1885" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="4.0000" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.3615" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.2814" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.0042" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1600" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0360" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.2120" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="O-raw">
+        <param name="HX" value="0.1799" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.7102" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-4.0894" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.1992" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.5931" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.6559" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="0.1851" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-2.0789" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="3.0482" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-2.0789" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="1.5119" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.0161" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-3.4637" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.1962" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0880" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0360" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0320" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="U-raw">
+        <param name="HX" value="0.6684" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.3610" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-3.2060" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.1887" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.2491" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.1983" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="0.0105" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.9567" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="2.9784" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.9916" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="1.1976" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.0712" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-3.0272" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.7025" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0560" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.1560" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0560" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="Y-raw">
+        <param name="HX" value="0.6681" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.2737" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.8324" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2440" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.2459" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.6515" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.4504" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.9686" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.2060" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.7814" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.8394" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.6830" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.0566" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0520" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0560" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.2280" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="9-raw">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.4658" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.7385" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.1942" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.4894" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.6697" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.7214" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-2.0265" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="3.9036" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.5552" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.4148" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.9791" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.6131" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.8596" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1600" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0960" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.3000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="@-raw">
+        <param name="HX" value="0.5780" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.6103" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.2219" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.3778" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.6074" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.6690" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.2235" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.7940" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-0.8918" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.8513" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.7696" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.3163" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.8520" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0760" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0400" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.2240" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="6_mid-raw">
+        <param name="HX" value="0.5587" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7849" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.8183" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2728" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.5755" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.5125" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.6690" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.3457" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.8638" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.1536" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.6418" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.5601" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-2.2416" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.0566" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0720" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0360" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.2480" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="6_low-raw">
+        <param name="HX" value="0.0896" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.6103" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.3934" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.3877" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.8563" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.3031" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.0705" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.3980" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.3750" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.6425" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.7640" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.4902" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.1068" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.7423" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0640" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0240" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.1040" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="ll-labial-closure(a)-raw">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.2737" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.5576" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.3079" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="-0.6113" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.4770" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.7123" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.8289" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.2409" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.1704" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.3331" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-2.1892" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.4804" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2847" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0124" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="-0.0672" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="ll-labial-closure(i)-raw">
+        <param name="HX" value="0.2048" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.9420" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.5218" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2783" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="-0.5119" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.5943" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.6997" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.0209" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.0663" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="4.0000" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.4416" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.3387" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.2186" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2640" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="-0.0080" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.1000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="ll-labial-closure(u)-raw">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.9000" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.5296" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.3020" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="-0.5119" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="0.4295" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.9742" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.7416" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.1362" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="1.2849" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.9064" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-2.9923" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.9818" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0360" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.1560" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="-0.0120" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="ll-dental-fricative(a)-raw">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.6054" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="-0.3193" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.8517" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.3715" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.3588" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.1634" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.2675" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.9916" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.3052" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.5028" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.9260" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.4553" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-2.4686" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.8122" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0480" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0840" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="ll-dental-fricative(i)-raw">
+        <param name="HX" value="0.2694" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.3959" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="-0.3193" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.8517" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.0849" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.3588" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.0182" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.0314" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.4274" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.1013" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.7465" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.2128" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.8973" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.7123" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0480" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0840" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="ll-dental-fricative(u)-raw">
+        <param name="HX" value="0.2717" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.9000" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="-0.5000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.7647" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.0625" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.6800" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.0056" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.7123" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.3052" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.3457" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.6816" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="-0.4378" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-2.3464" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-3.7025" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2840" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="-0.1320" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0880" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-alveolar-closure(a)-raw">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.6802" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.0825" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2409" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.4468" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.1110" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.4595" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.8743" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.2479" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.2256" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.2402" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.4874" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.5608" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-0.8743" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1040" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0320" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0320" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-alveolar-closure(i)-raw">
+        <param name="HX" value="0.1878" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.4532" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.4116" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2585" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.3058" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.2277" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.6473" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.3003" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.2779" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.7465" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.7842" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.4560" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-0.6473" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1040" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0240" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0080" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-alveolar-closure(u)-raw">
+        <param name="HX" value="0.1814" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.5007" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.2731" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.0189" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.2989" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.4770" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.4504" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.3352" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.2081" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.2975" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.5747" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.2116" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.0615" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1080" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0880" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0080" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-alveolar-fricative(a)-raw">
+        <param name="HX" value="0.1572" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.6453" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.3898" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2743" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.5617" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.3575" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="0.9183" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.5203" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.2054" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.2956" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.6292" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.7318" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.0461" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.1014" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1080" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0800" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-alveolar-fricative(i)-raw">
+        <param name="HX" value="0.4580" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7849" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.4080" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.3012" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.4648" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.8959" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.1013" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.2054" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.2956" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.6592" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.8017" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.6180" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.4853" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1800" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0200" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-alveolar-fricative(u)-raw">
+        <param name="HX" value="0.3775" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.0119" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.0937" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.1095" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.3475" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.5119" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.3631" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.2054" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.2956" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.5894" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.4525" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.1068" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.3631" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2120" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0240" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-alveolar-lateral(a)-raw">
+        <param name="HX" value="0.7205" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.0642" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.7205" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.3019" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.6786" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.2277" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.1362" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.5000" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.5489" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.7291" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.0635" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.0894" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.3233" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="-0.0200" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0800" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="-1.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-alveolar-lateral(i)-raw">
+        <param name="HX" value="0.8631" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7675" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.7205" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.3282" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.4110" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.2277" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.8394" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.5000" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.5489" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.9211" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.5922" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.0545" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.2409" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1120" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="-0.0200" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="-1.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-alveolar-lateral(u)-raw">
+        <param name="HX" value="0.7779" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.5007" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.5824" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.0001" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.6233" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.7563" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.2060" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.5000" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.5489" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.8862" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.5573" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.4260" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.3408" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2240" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="-0.0120" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="-1.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-postalveolar-closure(a)-raw">
+        <param name="HX" value="0.0813" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.2263" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-0.3296" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2963" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.6209" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.5119" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.7172" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.6892" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.5049" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.8561" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.9763" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.9323" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.5028" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2000" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0400" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0040" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-postalveolar-closure(i)-raw">
+        <param name="HX" value="0.1957" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.6976" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.4116" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.0833" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.3403" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.0182" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.7696" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.1257" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.3827" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.3799" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.9413" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.0021" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-0.7696" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1160" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0200" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0400" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-postalveolar-closure(u)-raw">
+        <param name="HX" value="0.1902" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.9420" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.4116" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.0535" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.2918" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.3897" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.7346" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="5.1257" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.3827" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.2926" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.2381" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.6131" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-0.8219" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="-0.0080" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0040" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0240" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-postalveolar-fricative(a)-raw">
+        <param name="HX" value="0.5171" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.0000" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-0.3493" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.0134" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.8095" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.3722" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.0140" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.5496" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.9413" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.6816" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.0635" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.0370" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.8170" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1280" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0480" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-postalveolar-fricative(i)-raw">
+        <param name="HX" value="0.4376" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.6103" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-0.6533" description="Jaw angle" unit="deg." />
+        <param name="LP" value="0.0378" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.7018" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.3848" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.5775" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.5496" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.9413" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.1006" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.3778" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.8101" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.0140" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0760" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0640" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-postalveolar-fricative(u)-raw">
+        <param name="HX" value="0.4635" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.5405" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-0.6533" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.0316" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.5165" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.5642" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.7696" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.4623" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="1.0635" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.2800" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.4127" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.8275" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.2235" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1240" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0120" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-postalveolar-lateral(a)-raw">
+        <param name="HX" value="0.5106" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.0642" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.8337" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2585" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.6010" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.0531" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.1013" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.6543" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="1.4476" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.2102" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.2886" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.8101" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.4804" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0480" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0040" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="-1.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-postalveolar-lateral(i)-raw">
+        <param name="HX" value="0.5962" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.8024" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.7295" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2291" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.6803" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.1404" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.9092" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.6543" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="1.4476" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.3324" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.4457" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.2863" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.8296" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2360" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0520" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="-1.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tt-postalveolar-lateral(u)-raw">
+        <param name="HX" value="1.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.3785" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.7295" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.0046" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.6637" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.8087" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.8568" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.4099" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="1.5698" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.8212" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.9588" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="0.0279" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.8994" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2040" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="-0.1200" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="-1.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tb-palatal-fricative(a)-raw">
+        <param name="HX" value="0.2212" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.5230" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.5658" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2540" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.4809" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.1229" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.2409" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.7403" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.4177" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.6466" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.4127" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.4085" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.3108" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.1880" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.1040" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tb-palatal-fricative(i)-raw">
+        <param name="HX" value="0.4591" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.4707" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.5576" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.3111" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.4376" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.3673" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.9267" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.7403" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.4177" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.9085" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.6746" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.2339" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.2584" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2200" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.1120" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tb-palatal-fricative(u)-raw">
+        <param name="HX" value="0.3176" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.7500" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.5658" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.3102" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.5407" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="2.3324" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.7696" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.7403" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="0.4177" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.7514" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.7619" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.1466" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.2758" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.3600" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0520" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.9960" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tb-velar-closure(a)-raw">
+        <param name="HX" value="0.0100" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.4008" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.0157" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.4708" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.5787" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.4944" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.2109" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="3.5370" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-0.5251" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.4497" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.2905" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.5258" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-0.3331" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0680" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tb-velar-closure(i)-raw">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.6976" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-1.5415" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.3992" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.5787" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.8436" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.0887" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.1830" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-0.8219" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.6243" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.2381" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-0.7577" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-1.6075" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0680" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tb-velar-closure(u)-raw">
+        <param name="HX" value="0.1528" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.9246" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.0000" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2770" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.4261" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="1.3897" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-0.2982" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="3.9211" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.0140" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="3.0831" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.5698" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-1.1592" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-0.7521" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0840" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.0000" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0000" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tb-uvular-fricative(a)-raw">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.9420" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-3.0659" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.2207" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.7821" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.8268" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="-0.1117" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-2.1313" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="4.0957" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.2060" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="1.5817" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="0.3303" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-2.8177" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.3059" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.2847" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.9960" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="-0.0672" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tb-uvular-fricative(i)-raw">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-4.6278" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.7685" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.3111" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.6720" description="Lip distance" unit="cm" />
+        <param name="VS" value="1.0000" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="-0.0244" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.9916" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="3.9036" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.1536" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="1.7737" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.2207" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-2.2591" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.4281" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="0.0040" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="-0.0160" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.2280" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+      <shape name="tb-uvular-fricative(u)-raw">
+        <param name="HX" value="0.0000" description="Hyoid position (horz.)" unit="cm" />
+        <param name="HY" value="-5.4832" description="Hyoid position (vert.)" unit="cm" />
+        <param name="JX" value="0.0000" description="Jaw position (horz.)" unit="cm" />
+        <param name="JA" value="-2.7685" description="Jaw angle" unit="deg." />
+        <param name="LP" value="-0.1223" description="Lip protrusion" unit="cm" />
+        <param name="LD" value="0.5588" description="Lip distance" unit="cm" />
+        <param name="VS" value="0.3904" description="Velum shape" unit="" />
+        <param name="VO" value="-0.1000" description="Velum opening" unit="cm^2" />
+        <param name="TCX" value="-0.0244" description="Tongue body (horz.)" unit="cm" />
+        <param name="TCY" value="-1.9916" description="Tongue body (vert.)" unit="cm" />
+        <param name="TTX" value="3.2053" description="Tongue tip (horz.)" unit="cm" />
+        <param name="TTY" value="-1.7297" description="Tongue tip (vert.)" unit="cm" />
+        <param name="TBX" value="2.1578" description="Tongue blade (horz.)" unit="cm" />
+        <param name="TBY" value="1.3429" description="Tongue blade (vert.)" unit="cm" />
+        <param name="TRX" value="-2.5908" description="Tongue root (horz.)" unit="cm" />
+        <param name="TRY" value="-2.6550" description="Tongue root (vert.)" unit="cm" />
+        <param name="TS1" value="-0.0200" description="Tongue side elevation 1" unit="cm" />
+        <param name="TS2" value="0.2800" description="Tongue side elevation 2" unit="cm" />
+        <param name="TS3" value="0.0040" description="Tongue side elevation 3" unit="cm" />
+      </shape>
+    </shapes>
+  </vocal_tract_model>
+  <glottis_models>
+    <glottis_model type="Geometric glottis" selected="1">
+      <static_params>
+        <param index="0" name="RT" description="Rest thickness" unit="cm" min="0.300000" max="1.000000" neutral="0.450000" />
+        <param index="1" name="RL" description="Rest length" unit="cm" min="0.500000" max="2.000000" neutral="1.600000" />
+        <param index="2" name="RF0" description="Rest f0" unit="Hz" min="50.000000" max="400.000000" neutral="120.000000" />
+        <param index="3" name="CL" description="Chink length" unit="cm" min="0.100000" max="0.500000" neutral="0.400000" />
+      </static_params>
+      <control_params>
+        <param index="0" name="F0" description="Fundamental frequency" unit="Hz" min="40.000000" max="600.000000" neutral="120.000000" />
+        <param index="1" name="PR" description="Lung pressure" unit="dPa" min="0.000000" max="16000.000000" neutral="8000.000000" />
+        <param index="2" name="XB" description="Lower displacement" unit="cm" min="-0.050000" max="0.300000" neutral="0.020000" />
+        <param index="3" name="XT" description="Upper displacement" unit="cm" min="-0.050000" max="0.300000" neutral="0.020000" />
+        <param index="4" name="CA" description="Chink area" unit="cm^2" min="-0.250000" max="0.250000" neutral="0.030000" />
+        <param index="5" name="PL" description="Phase lag" unit="rad." min="0.000000" max="3.141500" neutral="1.220000" />
+        <param index="6" name="RA" description="Relative amplitude" unit="" min="-1.000000" max="1.000000" neutral="1.000000" />
+        <param index="7" name="DP" description="Double pulsing" unit="" min="0.000000" max="1.000000" neutral="0.050000" />
+        <param index="8" name="PS" description="Pulse skewness" unit="" min="-1.000000" max="1.000000" neutral="0.000000" />
+        <param index="9" name="FL" description="Flutter" unit="%" min="0.000000" max="100.000000" neutral="25.000000" />
+        <param index="10" name="AS" description="Aspiration strength" unit="dB" min="-40.000000" max="0.000000" neutral="-10.000000" />
+      </control_params>
+      <shapes>
+        <shape name="stop">
+          <control_param index="0" name="F0" value="108.672036" />
+          <control_param index="1" name="PR" value="7999.996827" />
+          <control_param index="2" name="XB" value="-0.009750" />
+          <control_param index="3" name="XT" value="-0.010100" />
+          <control_param index="4" name="CA" value="-0.001000" />
+          <control_param index="5" name="PL" value="1.222044" />
+          <control_param index="6" name="RA" value="-0.204000" />
+          <control_param index="7" name="DP" value="0.050000" />
+          <control_param index="8" name="PS" value="0.500000" />
+          <control_param index="9" name="FL" value="25.000000" />
+          <control_param index="10" name="AS" value="-10.000000" />
+        </shape>
+        <shape name="default">
+          <control_param index="0" name="F0" value="120.000000" />
+          <control_param index="1" name="PR" value="8000.000000" />
+          <control_param index="2" name="XB" value="0.054006" />
+          <control_param index="3" name="XT" value="0.071765" />
+          <control_param index="4" name="CA" value="0.000000" />
+          <control_param index="5" name="PL" value="1.222044" />
+          <control_param index="6" name="RA" value="1.000000" />
+          <control_param index="7" name="DP" value="0.050000" />
+          <control_param index="8" name="PS" value="0.502000" />
+          <control_param index="9" name="FL" value="25.000000" />
+          <control_param index="10" name="AS" value="-10.000000" />
+        </shape>
+        <shape name="modal">
+          <control_param index="0" name="F0" value="120.000000" />
+          <control_param index="1" name="PR" value="8000.000000" />
+          <control_param index="2" name="XB" value="0.054006" />
+          <control_param index="3" name="XT" value="0.071765" />
+          <control_param index="4" name="CA" value="0.000000" />
+          <control_param index="5" name="PL" value="1.222044" />
+          <control_param index="6" name="RA" value="1.000000" />
+          <control_param index="7" name="DP" value="0.050000" />
+          <control_param index="8" name="PS" value="0.502000" />
+          <control_param index="9" name="FL" value="25.000000" />
+          <control_param index="10" name="AS" value="-10.000000" />
+        </shape>
+        <shape name="h">
+          <control_param index="0" name="F0" value="138.100000" />
+          <control_param index="1" name="PR" value="0.000000" />
+          <control_param index="2" name="XB" value="0.039600" />
+          <control_param index="3" name="XT" value="0.040300" />
+          <control_param index="4" name="CA" value="0.050000" />
+          <control_param index="5" name="PL" value="1.222044" />
+          <control_param index="6" name="RA" value="0.002000" />
+          <control_param index="7" name="DP" value="0.050000" />
+          <control_param index="8" name="PS" value="0.500000" />
+          <control_param index="9" name="FL" value="25.000000" />
+          <control_param index="10" name="AS" value="-10.000000" />
+        </shape>
+        <shape name="voiced-fricative">
+          <control_param index="0" name="F0" value="116.937731" />
+          <control_param index="1" name="PR" value="8000.000000" />
+          <control_param index="2" name="XB" value="0.079850" />
+          <control_param index="3" name="XT" value="0.080200" />
+          <control_param index="4" name="CA" value="0.050000" />
+          <control_param index="5" name="PL" value="1.222044" />
+          <control_param index="6" name="RA" value="1.000000" />
+          <control_param index="7" name="DP" value="0.050000" />
+          <control_param index="8" name="PS" value="0.500000" />
+          <control_param index="9" name="FL" value="25.000000" />
+          <control_param index="10" name="AS" value="-10.000000" />
+        </shape>
+        <shape name="voiced-plosive">
+          <control_param index="0" name="F0" value="112.217351" />
+          <control_param index="1" name="PR" value="7999.999897" />
+          <control_param index="2" name="XB" value="0.100150" />
+          <control_param index="3" name="XT" value="0.099800" />
+          <control_param index="4" name="CA" value="0.020000" />
+          <control_param index="5" name="PL" value="1.222044" />
+          <control_param index="6" name="RA" value="1.000000" />
+          <control_param index="7" name="DP" value="0.050000" />
+          <control_param index="8" name="PS" value="0.500000" />
+          <control_param index="9" name="FL" value="25.000000" />
+          <control_param index="10" name="AS" value="-10.000000" />
+        </shape>
+        <shape name="voiceless-fricative">
+          <control_param index="0" name="F0" value="151.270000" />
+          <control_param index="1" name="PR" value="0.000000" />
+          <control_param index="2" name="XB" value="0.139700" />
+          <control_param index="3" name="XT" value="0.140050" />
+          <control_param index="4" name="CA" value="0.000000" />
+          <control_param index="5" name="PL" value="1.222044" />
+          <control_param index="6" name="RA" value="0.000000" />
+          <control_param index="7" name="DP" value="0.050000" />
+          <control_param index="8" name="PS" value="0.500000" />
+          <control_param index="9" name="FL" value="25.000000" />
+          <control_param index="10" name="AS" value="-10.000000" />
+        </shape>
+        <shape name="voiceless-plosive">
+          <control_param index="0" name="F0" value="113.302857" />
+          <control_param index="1" name="PR" value="7999.981118" />
+          <control_param index="2" name="XB" value="0.149850" />
+          <control_param index="3" name="XT" value="0.149850" />
+          <control_param index="4" name="CA" value="0.000000" />
+          <control_param index="5" name="PL" value="1.222044" />
+          <control_param index="6" name="RA" value="-1.000000" />
+          <control_param index="7" name="DP" value="0.050000" />
+          <control_param index="8" name="PS" value="0.500000" />
+          <control_param index="9" name="FL" value="25.000000" />
+          <control_param index="10" name="AS" value="-10.000000" />
+        </shape>
+        <shape name="pressed">
+          <control_param index="0" name="F0" value="65.700221" />
+          <control_param index="1" name="PR" value="8000.000000" />
+          <control_param index="2" name="XB" value="0.010550" />
+          <control_param index="3" name="XT" value="0.010550" />
+          <control_param index="4" name="CA" value="0.050000" />
+          <control_param index="5" name="PL" value="1.222044" />
+          <control_param index="6" name="RA" value="1.000000" />
+          <control_param index="7" name="DP" value="0.050000" />
+          <control_param index="8" name="PS" value="0.502000" />
+          <control_param index="9" name="FL" value="25.000000" />
+          <control_param index="10" name="AS" value="-10.000000" />
+        </shape>
+      </shapes>
+    </glottis_model>
+  </glottis_models>
+</speaker>

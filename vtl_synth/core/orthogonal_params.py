@@ -52,8 +52,8 @@ from vtl_synth.core.speaker_jd import (
     get_ts3_context_map,
     get_vowel_orthogonal_defaults,
     get_consonant_orthogonal_targets,
-    DEFAULT_SPEAKER_FILE,
 )
+from vtl_synth.core.speaker_registry import active_speaker_file
 
 
 # ==========================================================================
@@ -154,7 +154,10 @@ class OrthogonalBranch:
         Path to the JD .speaker file.
     """
 
-    def __init__(self, speaker_file: str = DEFAULT_SPEAKER_FILE):
+    def __init__(self, speaker_file: Optional[str] = None):
+        # None -> active speaker of the registry (data/speakers/)
+        if speaker_file is None:
+            speaker_file = active_speaker_file()
         self.speaker_file = speaker_file
         self._load_speaker_data()
 
@@ -480,7 +483,7 @@ class OrthogonalBranch:
 # Utility functions
 # ==========================================================================
 
-def get_ts3_summary(speaker_file: str = DEFAULT_SPEAKER_FILE) -> Dict[str, float]:
+def get_ts3_summary(speaker_file: Optional[str] = None) -> Dict[str, float]:
     """Return the TS3 summary per articulatory type from JD.
 
     Returns
@@ -488,6 +491,8 @@ def get_ts3_summary(speaker_file: str = DEFAULT_SPEAKER_FILE) -> Dict[str, float
     dict[str, float]
         {artic_type: ts3_value} — mean value per type.
     """
+    if speaker_file is None:
+        speaker_file = active_speaker_file()
     ts3_map = get_ts3_context_map(speaker_file)
     summary = {}
     

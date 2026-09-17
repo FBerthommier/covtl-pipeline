@@ -1,0 +1,760 @@
+% covtl-pipeline --- Expressive Prosody Guide
+% SPDX-License-Identifier: GPL-3.0-or-later
+% Copyright (C) 2026 Frédéric Berthommier
+% Plain pdflatex (US English, ASCII only) — no fontspec, no external
+% figures: transportable with the repository alone.
+
+\documentclass[11pt,a4paper]{article}
+
+% --- Packages (same visual language as docs/manual.tex) ---
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{tcolorbox}
+\tcbuselibrary{listings, breakable, skins}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{needspace}
+\usepackage[
+    colorlinks=true,
+    linkcolor=blue!60!black,
+    citecolor=blue!50!black,
+    urlcolor=blue!70!black,
+    bookmarks=true,
+    bookmarksnumbered=true,
+    unicode=true,
+    pdftitle={covtl-pipeline Expressive Prosody Guide},
+    pdfauthor={Frederic Berthommier},
+    pdfsubject={Expressive prosody: syntactic breathing and sculpted F0 for the COVTL articulatory synthesizer},
+    pdfkeywords={expressive prosody, F0 contour, pitch accents, syntactic breathing, chunking, articulatory synthesis, COVTL, VocalTractLab, speaker registry}
+]{hyperref}
+
+\geometry{a4paper, top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+\setlength{\headheight}{14pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\itshape covtl-pipeline --- Expressive Prosody Guide}
+\fancyhead[R]{\small v1.1.0}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\titleformat{\section}{\Large\bfseries\color{blue!50!black}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\bfseries\color{blue!40!black}}{\thesubsection}{0.5em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{0.4em}{}
+
+% --- Listings ---
+\definecolor{codebg}{HTML}{F5F5F5}
+\definecolor{codeframe}{HTML}{CCCCCC}
+\definecolor{codecomment}{HTML}{6A737D}
+\definecolor{codekeyword}{HTML}{D73A49}
+\definecolor{codestring}{HTML}{032F62}
+\lstdefinestyle{shell}{
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeframe},
+    basicstyle=\ttfamily\footnotesize,
+    commentstyle=\color{codecomment}\itshape,
+    keywordstyle=\color{codekeyword}\bfseries,
+    stringstyle=\color{codestring},
+    showstringspaces=false,
+    breaklines=true,
+    breakatwhitespace=true,
+    numbers=none,
+    xleftmargin=4pt,
+    xrightmargin=4pt,
+    framexleftmargin=4pt,
+    framexrightmargin=4pt,
+    language=bash,
+    morekeywords={vtl-synth, run, text-to-wav, pip, python, setlang,
+                  install, show, f0_report, demo_prosody}
+}
+\lstdefinestyle{python}{
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeframe},
+    basicstyle=\ttfamily\footnotesize,
+    commentstyle=\color{codecomment}\itshape,
+    keywordstyle=\color{codekeyword}\bfseries,
+    stringstyle=\color{codestring},
+    showstringspaces=false,
+    breaklines=true,
+    breakatwhitespace=true,
+    numbers=none,
+    xleftmargin=4pt,
+    xrightmargin=4pt,
+    framexleftmargin=4pt,
+    framexrightmargin=4pt,
+    language=Python
+}
+\lstdefinestyle{verbatim}{
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeframe},
+    basicstyle=\ttfamily\footnotesize,
+    showstringspaces=false,
+    breaklines=true,
+    breakatwhitespace=true,
+    numbers=none,
+    xleftmargin=4pt,
+    xrightmargin=4pt,
+    framexleftmargin=4pt,
+    framexrightmargin=4pt
+}
+
+% --- SAMPA token (mono, no hyphenation) ---
+\newcommand{\ks}[1]{\texttt{#1}}
+
+% --- tcolorbox callouts ---
+\newtcolorbox{callout}[1][]{
+    colback=blue!5,
+    colframe=blue!50!black,
+    fonttitle=\bfseries,
+    title={#1},
+    breakable=true
+}
+\newtcolorbox{warning}[1][]{
+    colback=orange!10,
+    colframe=orange!70!black,
+    fonttitle=\bfseries,
+    title={#1},
+    breakable=true
+}
+
+\widowpenalty=10000
+\clubpenalty=10000
+\emergencystretch=1.5em
+\tolerance=2000
+\newcommand{\sectionbreak}{\needspace{0.3\textheight}}
+
+\title{\vspace{-1cm}\Huge\bfseries\color{blue!50!black} Expressive Prosody\\[0.3em]
+\Large\mdseries\color{black!70} Syntactic breathing and sculpted F0\\
+for the COVTL articulatory synthesizer}
+\author{\large Frédéric Berthommier\\[0.3em]
+\small\texttt{fberthommier@users.noreply.github.com}}
+\date{\small Version 1.1.0 --- September 2026\\[0.2em]
+\textit{Licensed under GPL-3.0-or-later}}
+
+\begin{document}
+\maketitle
+\thispagestyle{fancy}
+
+\begin{abstract}
+\noindent
+The expressive prosody option (\texttt{expressive=True} /
+\texttt{-{}-expressive}) gives the covtl-pipeline two
+capabilities that the monotone declination lacks: \emph{syntactic
+breathing} (short pauses at chunk boundaries, so no chain of
+coarticulated words exceeds five words) and a \emph{sculpted F0
+contour} (pitch accents on stressed syllables, per-chunk attack
+reset, downstep, terminal nuclear fall). The option is
+\textbf{off by default}: with it off, the pipeline output is
+bit-identical to the validated monotone chain. The patch acts only
+on the glottis F0 column and on pause durations --- never on the
+vocal tract --- which makes it \emph{speaker-agnostic by
+construction}: it follows whatever speaker is active in the
+multi-speaker registry. This guide explains the mechanics, the
+per-language parameters, how to measure and tune the result, and ---
+in a dedicated chapter --- the exact interaction with the speaker
+setup (\texttt{install\_speaker.py} / \texttt{setup\_lang.py} and
+its JD3 guard).
+\end{abstract}
+
+\tableofcontents
+
+% ==========================================================================
+\section{Why an expressivity option}\label{sec:why}
+
+The monotone chain applies a \emph{linear declination} per phrase
+(\texttt{apply\_f0\_declination}): F0 starts at \emph{onset gain}
+and slides down to \emph{final gain}. A long phrase is therefore a
+flat ramp, perceived as monotonous. Worse, the g2p
+\emph{connects} all words of a phrase with the syllable separator
+\ks{.} (coarticulation): a sentence without punctuation becomes a
+single uninterrupted chain of several seconds, which is hard to
+parse by ear. Compare the German demo:
+
+\begin{lstlisting}[style=verbatim]
+IC.zu.X@.aj.n@.S2.n@.StRa.s@.In.k2.nICs.bE.ak     <- one 6-word chain
+\end{lstlisting}
+
+Two independent problems, one option:
+
+\begin{itemize}[itemsep=2pt]
+\item \textbf{Syntactic breathing} --- cut the phrase into breath
+  groups at plausible syntactic boundaries and insert a short pause
+  (\textasciitilde 130\,ms) between them. No chain exceeds
+  \texttt{max\_chain\_words} (default 5).
+\item \textbf{Sculpted F0} --- keep the declination as the base
+  line, and add pitch accents on stressed syllables, an attack
+  reset at every chunk, optional downstep, and a terminal nuclear
+  fall shaped per language.
+\end{itemize}
+
+\begin{callout}[Design contract (non-negotiable)]
+\begin{enumerate}[itemsep=1pt]
+\item \textbf{Default OFF.} Baselines, scripts and \texttt{launch.bat}
+  keep their exact behaviour. With the option off, outputs are
+  bit-identical (enforced by dedicated tests).
+\item \textbf{Glottis only.} The patch writes the F0 column and the
+  pause durations. It never writes the tract columns, so vowel
+  quality, consonant gestures and the orthogonal branch are
+  untouched.
+\item \textbf{SAMPA stays pure.} Word stress travels in a parallel,
+  out-of-band channel; the engine key inventory is never polluted.
+\item \textbf{Documented heuristics.} The chunking is a lexical
+  heuristic, not a parser; the fallback stress rules are
+  orthographic approximations. Both are stated as such here and in
+  the docstrings.
+\end{enumerate}
+\end{callout}
+
+% ==========================================================================
+\section{Quick start}\label{sec:quickstart}
+
+\subsection{Command line}
+
+\begin{lstlisting}[style=shell]
+# expressive (breathing + sculpted F0); the banner states the mode
+vtl-synth run "je cherche une belle route pour aller au travail" \
+    --lang fr --expressive -o ./out --no-video
+
+# monotone (the default, stated explicitly)
+vtl-synth run "this is easy for us" --lang en --no-expressive -o ./out
+\end{lstlisting}
+
+The \texttt{SUCCESS} banner prints the prosody mode next to the
+language, mirroring the existing language display:
+
+\begin{lstlisting}[style=verbatim]
+============================================================
+SUCCESS
+  langue    : fr (Francais), speaker jd3 -- g2p : text_to_sampa_fr, ...
+  prosodie  : expressive (respiration syntaxique + accents de hauteur)
+  SAMPA     : bO~ZuR.Z@.SERS % yn.bEl.Rut % puR.a.le.o.tRa.vaj
+  ...
+============================================================
+\end{lstlisting}
+
+\subsection{Python API}
+
+\begin{lstlisting}[style=python]
+from vtl_synth import Pipeline
+
+pipe = Pipeline(lang='fr', expressive=True)
+result = pipe.text_to_wav(
+    "je cherche une belle route pour aller au travail "
+    "parce que le train ne marche plus",
+    output_dir="./out", label="demo")
+print(result.sampa)
+# Z@.SERS.yn.bEl.Rut % puR.a.le.o.tRa.vaj % paRs.k@.l@.tRE~ % n@.maRS.py
+\end{lstlisting}
+
+Requirements and fallbacks:
+
+\begin{itemize}[itemsep=2pt]
+\item Expressive mode requires \texttt{use\_g2p=True} (phonetic
+  input has no syntactic structure). With \texttt{--phonetic} the
+  option is ignored, with a warning, and the transcript keeps no
+  \ks{\%} marker.
+\item If the module \texttt{prosody\_f0} is unavailable, or the
+  active language has no \texttt{ExpressivityProfile}, the pipeline
+  prints a notice and falls back to the monotone declination.
+\item The \ks{\%} marker is a regular engine token: you can also
+  hand-write it in SAMPA input (\texttt{ba.na.na \% ba.da.ga}) even
+  with \texttt{--phonetic}; the engine renders the 130\,ms breath
+  pause, only the F0 sculpting is skipped.
+\end{itemize}
+
+% ==========================================================================
+\section{Syntactic breathing (chunking)}\label{sec:breathing}
+
+Module: \texttt{vtl\_synth/utils/chunking.py}.
+
+\subsection{The three passes}
+
+The chunker runs on the \emph{orthographic} words (before g2p) in
+three passes:
+
+\begin{enumerate}[itemsep=2pt]
+\item \textbf{Lexical boundaries} (rule 2): a boundary is inserted
+  \emph{before} every coordination/subordination conjunction,
+  relative pronoun or connective of the language's function-word
+  list (30--50 items per language). Two-word connectives
+  (\emph{parce que}, \emph{so that}, \emph{bien que}\ldots) are
+  treated as inseparable: the boundary falls \emph{before} the
+  pair, never inside it.
+\item \textbf{Balanced hard limit} (rule 3): any boundary-free run
+  longer than \texttt{max\_chain\_words} (default 5) is split into
+  near-equal parts --- a 7-word run yields $4+3$, never $5+2$.
+  Balanced cuts also avoid one-word orphans at the end of the
+  sentence.
+\item \textbf{Dangling function words} (rule 4): a block must not
+  end on a determiner, preposition, auxiliary or clitic when the
+  next block can absorb it without violating the hard limit
+  (\emph{le chien / de mon voisin} $\rightarrow$ \emph{le chien de
+  / mon voisin} is corrected to \emph{le chien / de mon voisin}).
+\end{enumerate}
+
+Already-marked boundaries (commas, semicolons, dashes, sentence
+punctuation) keep their existing g2p behaviour: comma $\rightarrow$
+200\,ms pause, sentence end $\rightarrow$ \ks{|} long pause. The
+breath marker \ks{\%} sits \emph{between} those two: a dedicated
+130\,ms pause (\texttt{T\_pause\_breath} in the syltraj engine).
+
+\begin{callout}[{Heuristic, not a parser}]
+The chunking is lexical: no POS tagging, no parse tree. The word
+lists aim at the 30--50 most frequent function words per language,
+for roughly 80\,\% coverage of useful boundaries. Wrong boundaries
+are possible and benign --- a breath at an imperfect spot is far
+less damaging to intelligibility than a 10-word coarticulated
+chain.
+\end{callout}
+
+\subsection{Engine marker}
+
+In syltraj, \ks{\%} is recognised as a standalone word (like
+\ks{|}) and produces a \emph{single} pause node flagged
+\texttt{breath=True} --- unlike \ks{|}, whose surrounding GAP/PAUSE
+handling was left byte-for-byte untouched. Without any \ks{\%} in
+the phrase, the parameter \texttt{pause\_breath\_ms} has no effect
+whatsoever: this is what makes the mode-off behaviour bit-identical.
+
+\subsection{Worked example (French)}
+
+\begin{lstlisting}[style=verbatim]
+input :  je cherche une belle route pour aller au travail
+         parce que le train ne marche plus
+
+chunks:  [je cherche une belle route]
+         [pour aller au travail]
+         [parce que le train]        <- "parce que" kept together
+         [ne marche plus]
+
+SAMPA :  Z@.SERS.yn.bEl.Rut % puR.a.le.o.tRa.vaj % paRs.k@.l@.tRE~ % n@.maRS.py
+\end{lstlisting}
+
+% ==========================================================================
+\section{The sculpted F0 contour}\label{sec:f0}
+
+Module: \texttt{vtl\_synth/utils/prosody\_f0.py}.
+
+For every breath group (chunk) of the phrase, the contour is the
+product of four components:
+
+\begin{enumerate}[itemsep=2pt]
+\item \textbf{Base declination, chunk-reset.} The linear
+  onset$\rightarrow$final ramp of the language profile is kept, but
+  each chunk recovers part of the attack (\texttt{chunk\_reset},
+  0.6--1.0): the pitch no longer slides down for five seconds
+  without recovering.
+\item \textbf{Pitch accents.} On the stressed syllable of each
+  accent-bearing word, a smooth asymmetric bump is added: rise
+  \textasciitilde 70\,ms, fall 60--90\,ms, amplitude
+  \texttt{accent\_amplitude} as a fraction of \texttt{f0\_base}.
+  There is no discontinuity --- the glottal source follows F0
+  sample by sample, so smoothness is free; a short 5-frame
+  smoothing still removes numerical corners.
+\item \textbf{Downstep.} After each accent, the base level is
+  multiplied by \texttt{downstep} ($<1$ only for German, 0.975 ---
+  Ladd 2008); the other languages keep 1.0.
+\item \textbf{Terminal nuclear fall.} On the last chunk only, the
+  contour is pulled down progressively after the nuclear accent
+  (\texttt{nuclear\_fall\_factor}): deep low terminal for German
+  (0.88) and Portuguese (0.90), contained for French (0.90 on the
+  final accent of the group).
+\end{enumerate}
+
+Between chunks, the pause regions get a linear F0 bridge, which
+guarantees no jump where the voicing of the next attack begins.
+
+\subsection{Where the accents fall}
+
+\begin{itemize}[itemsep=2pt]
+\item \textbf{French}: no lexical accent. One group accent per
+  chunk, on the \emph{last} syllable (Jun \& Fougeron 2002: the
+  accent of the accentual phrase is final).
+\item \textbf{Other languages}: accents on the first and last
+  \emph{lexical} word of the chunk (function words are
+  de-accented; a simple given/new heuristic). The in-word position
+  comes from the stress channel (\S\ref{sec:stress}).
+\item If the engine plateaus cannot be aligned with the planned
+  nuclei (fallback), the chunk degrades gracefully to a single
+  group accent on its last syllable.
+\end{itemize}
+
+\subsection{Per-language parameters}
+
+\begin{small}
+\begin{center}
+\begin{tabularx}{\textwidth}{lcccccX}
+\toprule
+ & \textbf{amp} & \textbf{rise/fall} & \textbf{reset} & \textbf{downstep} & \textbf{nuclear} & \textbf{reference} \\
+\midrule
+en & 0.20 & 70/90\,ms & 0.7 & 0.99 & 0.92 & Pierrehumbert 1980; Beckman \& Ayers 1997 \\
+fr & 0.16 & 70/80\,ms & 0.6 & 1.0 & 0.90 & Jun \& Fougeron 2002; Di Cristo 1998 \\
+es & 0.22 & 70/90\,ms & 0.8 & 1.0 & 0.94 & Face 2003; Sosa 1999; Prieto \& Roseano 2010 \\
+de & 0.24 & 70/60\,ms & 1.0 & 0.975 & 0.88 & F\'ery 1993; Grice et al.\ 2005 (GToBI) \\
+it & 0.22 & 70/90\,ms & 0.8 & 1.0 & 0.93 & Avesani 1995; D'Imperio 2002; Gili Fivela et al.\ 2015 \\
+pt & 0.18 & 70/80\,ms & 0.7 & 1.0 & 0.90 & Frota 2000, 2014; Vig\'ario 2003 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+\end{small}
+
+\begin{callout}[Why these amplitudes]
+\texttt{amp} is a fraction of \texttt{f0\_base}; a fixed fraction
+is a fixed interval in semitones, so 0.16--0.24 corresponds to
+about 3--4 semitones --- the usual range of read-speech pitch
+accents. A first calibration at 0.10--0.18 ($\approx$ 2\,ST) was
+measured as barely audible and produced a \emph{lower} F0 spread
+than the monotone ramp; the shipped values were re-tuned from that
+measurement. Since the fraction multiplies the active speaker's
+\texttt{f0\_base}, the relative relief is identical on every
+speaker (\S\ref{sec:speakers}).
+\end{callout}
+
+\subsection{Pause tuning}
+
+\texttt{pause\_breath\_ms} (default 130) is the duration of the
+\ks{\%} pause. It is deliberately shorter than the comma pause
+(200\,ms) and the sentence pause (320\,ms). Tune it by ear with
+\texttt{-{}-tpause-breath}---style overrides by editing the
+\texttt{ExpressivityProfile}; 110--160\,ms is the useful range.
+
+% ==========================================================================
+\section{Word stress: the out-of-band channel}\label{sec:stress}
+
+The engine never sees the stress: it travels in a parallel dict
+(\texttt{lexicon\_loader.stress\_for}), mapping word $\rightarrow$
+index of the stressed syllable (vowels emitted). Three sources, in
+priority order:
+
+\begin{enumerate}[itemsep=2pt]
+\item \textbf{English}: the CMUdict stress digits (0/1/2). Primary
+  accent 1 wins over secondary 2. Each ARPAbet vowel is exactly one
+  engine nucleus, so the counting is direct.
+\item \textbf{Wikipron lexicons} (fr, es, de, it, pt): the marks
+  stress marks (U+02C8 primary / U+02CC secondary)
+  are consumed by \texttt{ipa\_to\_keys\_stress} and stored in the
+  channel. \emph{Note:} the broad TSV lexicons currently shipped
+  contain no stress marks (they were stripped upstream), so this
+  source activates only with a narrow-transcription lexicon.
+\item \textbf{Orthographic fallback rules} (documented
+  approximations):
+  \begin{itemize}[itemsep=1pt]
+  \item \textbf{es}: written accent ($\acute{a}\acute{e}\acute{i}
+    \acute{o}\acute{u}$) $\rightarrow$ that syllable; otherwise
+    oxytone if the word ends in a consonant other than \emph{n/s},
+    else penultimate.
+  \item \textbf{it}: written accent; otherwise penultimate.
+  \item \textbf{pt}: written accent; otherwise oxytone on final
+    \emph{-l -r -i -u -im -ns}, \emph{-\~ao}, else penultimate.
+  \item \textbf{de}: first syllable of the word (does not model
+    prefixes --- documented approximation).
+  \end{itemize}
+\end{enumerate}
+
+Hiatus handling: a written-accented weak vowel splits the
+diphthong (\emph{t\'ia} = 2 nuclei, accent on the first). If a word
+ends up with no stress information at all, the accent falls on its
+last syllable (group-accent behaviour).
+
+% ==========================================================================
+\section{Measuring and tuning the result}\label{sec:measure}
+
+\subsection{The F0 report}
+
+\begin{lstlisting}[style=shell]
+python scripts/f0_report.py out/demo.tract out2/demo.tract
+\end{lstlisting}
+
+\begin{lstlisting}[style=verbatim]
+fr_long_mono.tract   voiced= 67.4%  dyn= 0.95 ST  span= 25.6 Hz
+                     maxjump=25.55 Hz/fr  peaks>+5%= 0
+fr_long_expr.tract   voiced= 62.3%  dyn= 0.66 ST  span= 24.0 Hz
+                     maxjump= 3.97 Hz/fr  peaks>+5%= 4
+\end{lstlisting}
+
+\begin{description}[itemsep=1pt]
+\item[peaks>\,+5\,\%] number of \emph{sustained} bumps (at least
+  30\,ms above $+5$\,\% of the 400\,ms local base). The expressive
+  files show 3--6; the monotone files show 0. This is the accent
+  counter.
+\item[maxjump] largest F0 step between consecutive \emph{voiced}
+  frames @400\,Hz. The expressive contours stay below
+  $\approx 5$\,Hz/frame; the monotone declination jumps up to
+  25--30\,Hz/frame at voicing edges of pauses (a pre-existing
+  artefact, untouched by this patch).
+\item[dyn] standard deviation of the voiced F0 in semitones. Do
+  \emph{not} use it alone as an expressivity score: the monotone
+  ramp maximises it by crawling for seconds at the bottom of its
+  range. Peaks and span are the informative metrics.
+\end{description}
+
+\subsection{The before/after demo}
+
+\begin{lstlisting}[style=shell]
+python examples/demo_prosody.py            # the six languages
+python examples/demo_prosody.py --summary-only
+\end{lstlisting}
+
+For each language it synthesises a demo pair and a long
+punctuation-free sentence, both monotone and expressive (24 WAV
+files in \texttt{out\_demo\_prosody/}), and prints the chain
+counts and the F0 table. Measured on the reference install
+(JD3, September 2026):
+
+\begin{itemize}[itemsep=1pt]
+\item chains longer than 5 words: 1--2 per long sentence in
+  monotone, \textbf{0 in every expressive file} (12/12);
+\item sustained pitch accents: 0 monotone everywhere, 3--6
+  expressive everywhere;
+\item total duration: expressive adds 4--9\,\% (the breaths).
+\end{itemize}
+
+% ==========================================================================
+\section{Non-regression contract and tests}\label{sec:tests}
+
+\begin{lstlisting}[style=shell]
+python -m pytest tests -m "not slow"      # full fast suite
+\end{lstlisting}
+
+\texttt{tests/test\_expressive.py} (40 tests) covers:
+
+\begin{itemize}[itemsep=1pt]
+\item \textbf{bit-identity}: without the \ks{\%} marker,
+  \texttt{pause\_breath\_ms} changes nothing; the monotone
+  transcript is exactly the language g2p output;
+\item \textbf{chunking}: boundary before conjunctions in the six
+  languages, inseparable bigrams, balanced hard limit, dangling
+  function words, comma parts;
+\item \textbf{stress channel}: stress-mark capture (U+02C8/U+02CC),
+  CMUdict digits, orthographic rules per language;
+\item \textbf{F0} (real synthesis): accents measurable
+  ($>+10\,\%$ above base), smoothness ($<5$\,Hz/frame between
+  voiced frames), nuclear fall at the end of the last chunk,
+  graceful fallback on plan/segment misalignment;
+\item \textbf{pipeline}: expressive transcripts carry \ks{\%};
+  phonetic input ignores the mode with a warning.
+\end{itemize}
+
+\begin{warning}[Baselines per language state]
+The regression baselines (\texttt{regression\_baselines*.json})
+were captured with the \emph{native/en} vowel targets. With the
+\texttt{fr} LANG SECTION active, the 6 baseline checks fail \emph{by
+design} --- switch to \texttt{en} (\texttt{python setup\_lang.py
+setlang en}) to get a fully green suite (112/112 on the reference
+install). This is the same invariant as the language pack's.
+\end{warning}
+
+% ==========================================================================
+\section{Interaction with the speaker setup}\label{sec:speakers}
+
+This chapter describes how the expressive option interacts with the
+multi-speaker registry and the language pack of the integrated
+repository. It explains exactly what the
+expressive patch shares with the speaker machinery, what it does
+not touch, and what the JD3 guard does and does not restrict.
+
+\subsection{The speaker registry in one paragraph}
+
+\texttt{install\_speaker.py} maintains
+\texttt{vtl\_synth/data/speakers/}: one registry
+(\texttt{registry.json}), an \texttt{ACTIVE\_SPEAKER} marker, and
+per-speaker bundles --- a \texttt{.speaker} file (geometry and
+glottis shapes for the orthogonal branch and the VTL wheel) and a
+\texttt{<name>\_constants.py} file (the whole of
+\texttt{core/constants.py}, including \texttt{f0\_default}).
+Activating a speaker swaps \texttt{constants.py} as a whole and
+swaps the wheel's speaker resource (effective in the next
+process); \texttt{speaker\_registry.announce()} states the active
+bundle at every synthesis. The language pack
+(\texttt{setup\_lang.py}) is independent: it edits the managed
+LANG SECTION (vowel targets + effort gains) \emph{inside} the
+installed \texttt{constants.py}, whatever speaker it belongs to.
+
+\subsection{What the expressive patch shares with speakers ---
+  exactly one thing}
+
+The sculpted contour reads \texttt{self.f0\_hz}, which the
+\texttt{Pipeline} resolves from the \emph{active speaker's}
+\texttt{f0\_default} when not overridden. That is the whole
+coupling. Everything else the patch does (chunking, \ks{\%}
+pauses, bump shapes, downstep, nuclear fall) is
+speaker-independent:
+
+\begin{itemize}[itemsep=1pt]
+\item amplitudes are \emph{fractions} of \texttt{f0\_base}: a
+  fixed fraction is a fixed musical interval, so the relief is
+  identical in semitones on a 102\,Hz male voice (jd3) and on a
+  181\,Hz female voice (s2);
+\item the patch writes only the glottis F0 column and pause
+  durations --- it never writes tract columns, so nothing in the
+  speaker-specific geometry is touched;
+\item the \ks{\%} pause and \texttt{get\_last\_build()} alignment
+  live in syltraj, upstream of any speaker resolution.
+\end{itemize}
+
+Validated on the reference install: expressive synthesis with
+jd3 (102.216\,Hz) and with s2 (181.008\,Hz) both produce the
+expected breath groups and follow the speaker's F0.
+
+\subsection{The JD3 guard: scope and behaviour}
+
+\texttt{setup\_lang.py} carries a guard,
+\texttt{\_ensure\_jd3()}, invoked at four sites:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{command} & \textbf{site} & \textbf{why} \\
+\midrule
+\texttt{install} & before writing the LANG SECTION & vowel targets are JD3-calibrated \\
+\texttt{setlang} & before rewriting the section & same, any target language \\
+\texttt{calibrate} & before deriving $\rho$ & in-situ calibration is JD3-only \\
+\texttt{verify} & before the LPC measurement & measurement is JD3-only \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Behaviour: if the active speaker is not jd3, the guard
+\emph{automatically reinstalls jd3} (constants + marker + wheel
+resource) through \texttt{install\_speaker.py}, then performs the
+requested language operation. It is a transport mechanism, not a
+refusal. Its rationale is narrow: the per-language vowel targets
+($\rho, \theta$) of the language pack were calibrated in situ on
+JD3, so installing or verifying them on another speaker's
+constants would silently bake JD3 vowels into that speaker.
+
+\begin{warning}[What the guard does NOT restrict]
+\begin{itemize}[itemsep=1pt]
+\item It does not block \emph{any} synthesis. Expressive or
+  monotone, any language, any speaker: the synthesis path
+  (\texttt{Pipeline} / CLI) has no speaker gate.
+\item It does not prevent \emph{switching speakers}.
+  \texttt{install\_speaker.py install s2} works at any time --- and
+  the speaker swap \emph{carries the active LANG SECTION over} to
+  the new speaker's constants.
+\item It fires on \emph{every} language-management command,
+  including \texttt{setlang en} --- it is not specific to
+  non-English languages.
+\end{itemize}
+\end{warning}
+
+\subsection{The two standard workflows}
+
+\subsubsection*{Workflow A --- language first, then speaker}
+
+\begin{lstlisting}[style=shell]
+python setup_lang.py setlang de        # guard: (re)installs jd3, installs the de section
+python install_speaker.py install s2   # switch to s2; the de section travels with the swap
+vtl-synth run "ich suche eine schoene Strasse" --lang de --expressive -o ./out
+\end{lstlisting}
+
+Result: expressive German on s2. The F0 contour follows s2's
+\texttt{f0\_default}; the breath groups and accents are identical
+to jd3's. The vowel timbre is the one caveat --- see below.
+
+\subsubsection*{Workflow B --- speaker first}
+
+\begin{lstlisting}[style=shell]
+python install_speaker.py install s2
+python setup_lang.py setlang it        # guard reinstalls jd3 (unavoidable by design)
+python install_speaker.py install s2   # re-switch; the it section travels
+vtl-synth run "la famiglia vive in campagna" --lang it --expressive -o ./out
+\end{lstlisting}
+
+The double switch is the price of the guard's simplicity; users
+who alternate languages and speakers should adopt workflow A.
+
+\subsection{Guarantees matrix}
+
+\begin{small}
+\begin{center}
+\begin{tabularx}{\textwidth}{lXX}
+\toprule
+ & \textbf{jd3 active} & \textbf{other speaker active} \\
+\midrule
+Expressive synthesis, any language &
+  fully validated (measurements, demos, tests) &
+  works; F0 relief identical in semitones (validated on s2 by smoke test + measurements planned) \\
+Per-language vowel quality &
+  reference (calibrated in situ) &
+  hypothesis: JD3-calibrated targets applied to another geometry; flagged by \texttt{setup\_lang.py show} \\
+\texttt{calibrate} / \texttt{verify} for the speaker &
+  available &
+  deliberately unavailable (guard reinstalls jd3) \\
+Nuclear fall / accent amplitude &
+  per-language profile, speaker-independent &
+  same profile, scaled to the speaker's \texttt{f0\_default} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+\end{small}
+
+\begin{callout}[One-sentence summary]
+The guard keeps \emph{language calibration} anchored to JD3;
+expressive prosody follows \emph{whichever speaker is active}.
+The two mechanisms coexist without interacting, and the option
+never modifies the speaker setup.
+\end{callout}
+
+% ==========================================================================
+\section{Limitations (documented heuristics)}\label{sec:limits}
+
+\begin{itemize}[itemsep=2pt]
+\item The chunker is lexical: rare conjunction senses
+  (\emph{that} as complementiser vs.\ determiner is handled, but
+  e.g.\ \emph{like} as preposition is not in the list), and the
+  balanced hard-limit cut can fall at an unremarkable spot.
+\item German stress = first syllable: prefixes
+  (\emph{ver-}, \emph{be-}, \emph{ge-}) are not modelled.
+\item The shipped Wikipron TSVs carry no stress marks; the
+  stress-mark-capture path activates with a narrow
+  lexicon.
+\item De-accentuation is a first/last-lexical-word heuristic
+  (a coarse given/new stand-in), not discourse modelling
+  (Pierrehumbert's H*+deaccentuation is cited as the target, not
+  implemented).
+\item The contour is a 2--3-parameter caricature of the cited
+  ToBI systems (one target shape per language), chosen to be
+  tunable rather than exhaustive.
+\end{itemize}
+
+% ==========================================================================
+\section{File map}\label{sec:files}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{file} & \textbf{role} \\
+\midrule
+\texttt{vtl\_synth/utils/chunking.py} & breath-group chunking, per-language word lists \\
+\texttt{vtl\_synth/utils/prosody\_f0.py} & \texttt{ExpressivityProfile}, stress channel consumption, \texttt{apply\_expressive\_f0} \\
+\texttt{vtl\_synth/core/syltraj.py} & \ks{\%} token, \texttt{T\_pause\_breath}, \texttt{get\_last\_build()} \\
+\texttt{vtl\_synth/core/build\_phrase\_tract.py} & \texttt{pause\_breath\_ms} passthrough \\
+\texttt{vtl\_synth/core/pipeline.py} & \texttt{Pipeline(expressive=...)} orchestration \\
+\texttt{vtl\_synth/cli/main.py} & \texttt{-{}-expressive} / \texttt{-{}-no-expressive}, banner \\
+\texttt{vtl\_synth/utils/lexicon\_loader.py} & \texttt{ipa\_to\_keys\_stress}, \texttt{stress\_for} \\
+\texttt{vtl\_synth/utils/setlang.py} & \texttt{LangProfile.expressivity} \\
+\texttt{scripts/f0\_report.py} & F0 measurements (accents, smoothness, span) \\
+\texttt{examples/demo\_prosody.py} & before/after demo, six languages \\
+\texttt{tests/test\_expressive.py} & 40-test battery incl.\ bit-identity \\
+\texttt{lang\_pack/profiles/\{chunking,prosody\_f0\}.py} & shipped copies (single source of truth) \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\end{document}

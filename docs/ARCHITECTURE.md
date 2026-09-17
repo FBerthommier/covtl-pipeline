@@ -75,10 +75,18 @@ vtl_synth/
 ├── video/
 │   ├── renderer.py        read_tract, SVG->PNG frame rasterizer
 │   ├── encoder.py         MP4 H.264/AAC via bundled ffmpeg
+│   ├── polar_video.py     .polar builder + dual-panel polar MP4 (v1.1.0)
 │   └── tract_figure.py    plot-tract per-parameter figure
-├── utils/g2p.py           English g2p (CMUdict -> connected SAMPA)
-└── data/vtl_binaries/
-    └── JD3.speaker        speaker file (package data)
+├── utils/                 g2p (CMUdict) + language-pack modules
+│                          (setlang, g2p_xx, lexicon_loader, chunking,
+│                          prosody_f0, … — installed by setup_lang.py)
+└── data/
+    ├── vtl_binaries/
+    │   └── JD3.speaker    speaker file (legacy fallback, package data)
+    ├── speakers/          v1.1.0 multi-speakers registry: registry.json,
+    │                      ACTIVE_SPEAKER marker, {jd3,s1,s2,m01,w02}.speaker
+    │                      + *_constants.py (see §8)
+    └── xx_lexicon.tsv     installed Wikipron lexicons (language pack)
 ```
 
 ## 3. Data flow (text -> .tract -> .wav -> .mp4)
@@ -182,18 +190,117 @@ repository, the tract sequence is synthesized directly by the COVTL
 model (see manual, "Differences with the vtl-pipeline reference
 repository").
 
-## 8. Extension points
+## 8. v1.1.0 add-ons
+
+### 8.1 Multi-speakers registry (add-on 1)
+
+`core/speaker_registry.py` is the single source of truth; the registry
+data ships as package data in `data/speakers/`:
+
+| file | status |
+|---|---|
+| `jd3.speaker`, `jd3_constants.py` | reference (SynthVTL24b original; hash `75ae0ba837ed106d…`) |
+| `s1.speaker`, `s2.speaker` | built from DVTD MRI (subject anatomies) |
+| `s1_constants.py`, `s2_constants.py` | calibrated v3 (D15: 2D (ρ,θ) area-function occlusives, native TTY + apical bonus, multi-criteria `@`) |
+| `m01.speaker`, `w02.speaker` | retouched from the official **VTL 2.4 ZIP** speaker files (pure option A + 2025→11-code glottal mapping, index 7 = PS) |
+| `m01_constants.py`, `w02_constants.py` | native targets adapted to the mapping |
+| `registry.json` | entries: speaker/constants file names, f0_default, SHA-256 hashes, `_meta.wheel_default_sha256` |
+
+Three layers are driven by the active speaker (`ACTIVE_SPEAKER`
+marker; **default jd3** when absent):
+
+```
+install_speaker.py install <name>
+  ├─ geometry/glottis/f0 : core/constants.py  <- bit-exact copy of the
+  │                        registry *_constants.py (LANG SECTION carried)
+  ├─ orthogonal branch   : ACTIVE_SPEAKER marker -> speaker_registry
+  │                        .active_speaker_file() resolved at EACH call
+  │                        by speaker_jd.py / build_phrase_tract.py
+  │                        (vtl_binaries/JD3.speaker never touched)
+  └─ audio + SVG/video   : shared wheel resource site-packages/
+                           vocaltractlab_cython/resources/JD3.speaker
+                           (swapped with backup; effective in the NEXT
+                           process — the DLL loads it at import; wheel
+                           0.0.13 exposes no vtlInitialize/vtlClose)
+```
+
+`install_speaker.py` (`list|install|restore|status`) journals and
+backs up into `.speaker_backups/` (first use), verifies hashes,
+smoke-tests each install in a fresh subprocess and rolls back on
+error. Per-speaker baselines: `regression_baselines_<name>.json`
+(jd3 uses the reference `regression_baselines.json`);
+`scripts/regen_baselines.py` regenerates the file of the active
+speaker, `scripts/calibrate_fine_v2.py` is the s1/s2 calibration tool.
+
+### 8.2 Language pack (add-on 2)
+
+`setup_lang.py` + `lang_pack/` install a managed **LANG SECTION**
+between the markers `# === LANG SECTION — BEGIN/END` over the native
+`VOWEL_TARGETS..VOWEL_EFFORT_GAIN` block of `constants.py`
+(`ACTIVE_LANG` recorded inside). The two installers are independent:
+a speaker swap **carries** the section over the new constants, a
+language switch re-edits it in place; coherence is checked on a
+**canonical form** of the constants (vowel/lang region neutralized —
+`speaker_registry.canonical_constants_text`). Installed modules are
+tracked by `vtl_synth/utils/.lang_pack_manifest`, lexicons by
+`vtl_synth/data/.lang_pack_data_manifest`; `setup_lang.py restore`
+undoes everything.
+
+**JD3-only calibration guard-rail**: the pack vowel targets are
+calibrated in situ on JD3. `setup_lang.py::_ensure_jd3()` runs before
+every `calibrate` / `install --calibrate`: if another speaker is
+active it says so and reinstalls jd3 (constants + marker + wheel)
+first — the recalibration can therefore never target s1/s2/m01/w02,
+which keep their native vowel targets; `report_current`/`status` flag
+a non-jd3 speaker + active language as « HYPOTHÈSE » (unverified
+combination).
+
+### 8.3 Expressive prosody (add-on 3)
+
+`Pipeline(expressive=True)` / `--expressive`, default **OFF** with
+bit-identical outputs. Two additions: syntactic breathing groups
+(`utils/chunking.py`, per-language function-word dictionaries, 5-word
+hard balance, 130 ms `%` breath pause in `syltraj`) and a sculpted F0
+contour (`utils/prosody_f0.py`, per-language `ExpressivityProfile`
+carried by `LangProfile`): declination + block re-attacks + pitch
+accents (asymmetric gaussian bumps) + nuclear falls; lexical stress
+travels **out-of-band** (`lexicon_loader.ipa_to_keys_stress`, never in
+the SAMPA). Only the glottis f0 column and pause durations change —
+never the tract. Full guide: `docs/expressive_prosody.pdf`.
+
+### 8.4 Polar visualization (add-on 4)
+
+`--polar` builds a `.polar` intermediate (100 Hz, **format v3**: two
+dissociated trajectories `vocalic`/`consonantal` + phoneme timing;
+v2 files stay readable) then renders the dual-panel MP4
+(sagittal | polar) at 25 Hz — red vocalic branch, blue consonantal
+branch, each with a fading trail. The branches are rebuilt from the
+anchor pairs / consonant node targets recorded while the syl engine's
+block helpers are monkeypatched during the build (the blended Pval
+frames are off-manifold inside clusters — v2's single zigzag path is
+kept only as the `polar_from_pval` diagnostic). The work directory is
+purged and the frame count verified before encoding (stale-frame fix).
+Module: `video/polar_video.py`; doc: `docs/polar_visualization.pdf`.
+
+## 9. Extension points
 
 - **New phoneme**: add `(rho, theta, selector)` to
   `CONSONANT_TARGETS` / `VOWEL_TARGETS` in `core/constants.py`
   (tokenizers pick it up from `ALL_PHONEME_KEYS`).
 - **Timing**: `--tcons/--tvoy/--tpause/--tpause-long` (CLI) map to
   `Pipeline` arguments; block schedule in `syltraj.py`.
-- **Speaker**: `JD3.speaker` is parsed by `speaker_jd.py`; presets and
-  orthogonal context maps come from the speaker file (JD2/JD3
-  recalibration is a data problem, not a code change).
-- **Tests**: 55 pytest tests in `tests/`, including end-to-end
-  non-regression against `regression_baselines.json`.
+- **Speaker**: the active speaker comes from the registry
+  (`data/speakers/`, §8.1); `*_constants.py` is a data problem, not a
+  code change — add the files + a `registry.json` entry, then
+  `python install_speaker.py install <name>`. `JD3.speaker` (legacy
+  fallback) is parsed by `speaker_jd.py` exactly as before.
+- **Language**: add a profile in `lang_pack/profiles/` + a vowel block
+  in `lang_pack/lang_blocks/blocks.py`, then
+  `python setup_lang.py install --lang <xx>` (calibration: JD3 only,
+  §8.2).
+- **Tests**: lightweight pytest suite (111 tests) in `tests/`,
+  including end-to-end non-regression against the per-speaker
+  `regression_baselines*.json`.
 
 See also `docs/CONVENTIONS.md` (naming, physical notation) and
 `docs/manual.pdf` (user manual with the full model description).

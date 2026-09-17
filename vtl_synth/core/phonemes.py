@@ -127,7 +127,7 @@ def arpa_to_sampa(word_arpa: list) -> str:
 # token with '.' between syllabic groups, e.g. ``Di.si.zi.zi.fOR.@s``
 # (the '.' is the engine syllable separator, see parsing.py).
 
-def syllabify_keys(keys: list) -> list:
+def syllabify_keys(keys: list, cluster_onset: bool = False) -> list:
     """Group engine keys into syllabic groups (onset maximization).
 
     Each group is a list of keys; rules (the simple default used as a
@@ -138,9 +138,23 @@ def syllabify_keys(keys: list) -> list:
     * a single intervocalic consonant goes to the onset of the next
       syllable (``ba.na.na``);
     * longer intervocalic clusters split coda/onset before the last
-      consonant (``big`` + ``dug`` chain -> ``big.dug``);
+      consonant (``big`` + ``dug`` chain -> ``big.dug``), UNLESS
+      ``cluster_onset`` (see below);
     * word-final consonants are the coda of the last syllable
       (``fOR``, ``@s``).
+
+    ``cluster_onset=True`` — cluster-preserving syllabification for the
+    geminate/cluster languages (it, pt, es, de): an intervocalic
+    consonant sequence stays WHOLE and attaches to the onset of the
+    next nucleus (``fa.mi.LLa``, ``ka.mpa.JJa``). Rationale
+    (F. Berthommier, 2026-09-15): the Berthommier engine interprets a
+    '.' between two consonants as an ambisyllabic split (two separate
+    gestures, ``L.L`` / ``J.J``) and the coda/onset split breaks
+    clusters like ``m.p``; the model expects cluster CC inside ONE
+    group, where ``build_cluster_pval`` renders it as a single
+    coordinated gesture. Parsimony: no extra dots are created. The
+    default (False) keeps the historical English/French behaviour,
+    pinned by the non-regression tests.
     """
     groups = []
     cur = []
@@ -165,6 +179,20 @@ def syllabify_keys(keys: list) -> list:
                     cur.extend(run)
             elif len(run) == 1:
                 cur.append(run[0])       # onset of the next nucleus
+            elif cluster_onset:
+                # leading glides (j/w) close the PREVIOUS nucleus — they
+                # are diphthong offglides (de «ein» a j n @ → aj.n@,
+                # pt «manteiga» → tej.ga), never onset consonants
+                k0 = 0
+                while (k0 < len(run) and run[k0] in ('j', 'w')
+                       and (groups or cur)):
+                    if groups:
+                        groups[-1].append(run[k0])
+                    else:
+                        cur.append(run[k0])
+                    k0 += 1
+                if k0 < len(run):
+                    cur.extend(run[k0:])  # whole cluster -> onset
             else:
                 # cluster: all but last -> coda of the previous
                 # syllable, last -> onset of the next
@@ -179,9 +207,13 @@ def syllabify_keys(keys: list) -> list:
     return groups or [list(keys)]
 
 
-def keys_to_connected(keys: list) -> str:
-    """Engine keys -> connected syllabified token ('ba.na.na')."""
-    groups = syllabify_keys(keys)
+def keys_to_connected(keys: list, cluster_onset: bool = False) -> str:
+    """Engine keys -> connected syllabified token ('ba.na.na').
+
+    ``cluster_onset``: cf. :func:`syllabify_keys` — geminate/cluster
+    languages (it, pt, es, de) pass True.
+    """
+    groups = syllabify_keys(keys, cluster_onset=cluster_onset)
     return '.'.join(''.join(g) for g in groups)
 
 
