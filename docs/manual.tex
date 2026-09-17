@@ -479,7 +479,8 @@ vowel targets (Table~\ref{tab:vowels}); crosses: landmark consonant
 targets (Table~\ref{tab:cons}). The dashed unit circle is the frontier of
 the vowel space; consonant closures live beyond it (\(\rho > 1\)). The
 schwa \(@\) sits at the centroid of the calibrated \(a\!-\!i\!-\!u\)
-triangle. /m/ coincides with /b/; only the selector and the velum differ.}
+triangle. /m/ coincides with /b/ --- same target and same selector; only
+the velum extension (VO, outside the COVTL selector) differs.}
 \label{fig:polar-plane}
 \end{figure}
 
@@ -563,12 +564,17 @@ Two conventions are essential:
       articulation --- hence the same \((\rho,\theta)\) and the same
       selector. The voicing distinction is carried entirely by the glottal
       source (\S\ref{sec:source}).
-\item \textbf{Glides are vowels used as consonants.} \texttt{j} carries
-      the coordinates of \texttt{i} (\(0.8, 300^\circ\)),
-      \texttt{w} those of \texttt{u} (\(0.6, 60^\circ\)) and
-      \texttt{\turnh} those of \texttt{y} (\(0.519, 260.6^\circ\)); they are
+\item \textbf{Glides are consonantal nodes anchored on the reference
+      vowel tree.} \texttt{j} is anchored at the reference coordinates
+      of \texttt{i} (\(0.80, 300^\circ\)),
+      \texttt{w} at those of \texttt{u} (\(0.60, 60^\circ\)) and
+      \texttt{\turnh} at those of \texttt{y} (\(0.519, 260.6^\circ\)); they are
       treated as C nodes (no plateau), with selectors restricted
-      accordingly.
+      accordingly. These anchor radii are the reference-model values,
+      deliberately kept independent of the calibrated vowel plateaus of
+      Table~\ref{tab:vowels} (where \(\rho_i = 0.60\) and
+      \(\rho_u = 0.55\)): a glide is a consonantal target, not a vowel
+      plateau.
 \end{itemize}
 
 \begin{longtable}{@{}llp{4.6cm}p{5.6cm}@{}}
@@ -600,11 +606,11 @@ Two conventions are essential:
 \texttt{X}    & \((1.28, 234^\circ)\)  & JA, TCX, TCY, TBX, TBY, TS2 & uvular fricative \\
 \texttt{m}    & \((1.06, 50^\circ)\)   & JA, LD, LP & labial nasal; velum via VO extension \\
 \texttt{n}    & \((1.10, 7^\circ)\)    & JA, TCX, TCY, TBX, TBY, TTX, TTY & alveolar nasal \\
-\texttt{N}    & \((1.20, 60^\circ)\)   & (empty) & derived velar place \\
-\texttt{J}    & \((1.20, 300^\circ)\)  & (empty) & derived dorsal place (\texttt{NG}) \\
-\texttt{w}    & \((0.60, 60^\circ)\)   & JA, LP, LD, TCX, TCY & glide = \texttt{u} coordinates \\
-\texttt{j}    & \((0.80, 300^\circ)\)  & JA, TCX, TCY & glide = \texttt{i} coordinates \\
-\texttt{\turnh}    & \((0.519, 260.6^\circ)\) & JA, TCX, TCY & glide = \texttt{y} coordinates \\
+\texttt{N}    & \((1.20, 60^\circ)\)   & (empty) & derived velar place (no closure target) \\
+\texttt{J}    & \((1.20, 300^\circ)\)  & (empty) & derived dorsal place; the English velar \texttt{NG} maps here (documented compromise, Table~\ref{tab:arpa}) \\
+\texttt{w}    & \((0.60, 60^\circ)\)   & JA, LP, LD, TCX, TCY & glide node on the reference vowel tree \\
+\texttt{j}    & \((0.80, 300^\circ)\)  & JA, TCX, TCY & glide node on the reference vowel tree \\
+\texttt{\turnh}    & \((0.519, 260.6^\circ)\) & JA, TCX, TCY & glide node on the reference vowel tree \\
 \texttt{h}    & \((0.50, 180^\circ)\)  & (empty) & near-neutral; source-driven \\
 \caption{Consonant targets \texttt{CONSONANT\_TARGETS}
 (\texttt{constants.py}), canonical voiced forms. The selector is the set
@@ -839,7 +845,12 @@ constants distinguish the branches of the reference model: the consonantal
 arcs use \(K_c = 10\), \(\nu = 1\), while the vocalic background uses
 \(K_v = 30\) --- the vocalic handovers are much straighter. The active
 \texttt{syl} engine runs with \(\nu = -1\) and a quasi-straight
-\(K = 1000\) (\S\ref{sec:syltraj}).
+\(K = 1000\) (\S\ref{sec:syltraj}). The reference curvature values
+(\(K_c = 10\), \(K_v = 30\), \(\nu = 1\)) are used by the deprecated
+\texttt{legacy} engine only --- plus, as a display choice, by the
+branch rendering of the polar video --- never by the default synthesis
+path; any fidelity claim to the published constants must be stated
+against this explicit split.
 
 \subsection{Clusters: per-parameter scoping}\label{subsec:clusters}
 
@@ -869,7 +880,7 @@ verified by test). The active parameter set of the block is the
 its full target \(\rho_v\) when it is on the edge of a syllable: the
 departure anchor (anticipatory) and completion anchor are scaled
 (\(\delta_o = \delta_e = 0.70\) in the reference;
-\(\mathrm{COEFCEN} = 0.5\) for word-end and syllabic-onset anchors in the
+\(\mathrm{SYL\_COEFCEN} = 0.5\) for word-end and syllabic-onset anchors in the
 \texttt{syl} engine), and a word-onset anchor is
 \([0.5\,\rho_v, \theta_v]\). This is why a unstressed vowel between two
 consonants is \emph{colored} by its neighbors instead of being fully
@@ -1416,8 +1427,10 @@ synthesize_to_wav("./out/this_is_easy_for_us.tract",
 \item \textbf{Vowels}: \texttt{a e i o u y E O @ 2 6 9}
       (12 targets, Table~\ref{tab:vowels});
 \item \textbf{Consonants}: \texttt{p b t d k g f v s z S Z T D tS dZ m n
-      J l L R r j w h \turnh{} C X} (canonical voiced forms of
-      Table~\ref{tab:cons} plus their voiceless partners);
+      J l L R j w h \turnh{} C X} (canonical voiced forms of
+      Table~\ref{tab:cons} plus their voiceless partners; \texttt{R}
+      is the only rhotic --- a spelled \texttt{r} in the input is
+      normalized to \texttt{R} by \texttt{notation.py});
 \item \textbf{Separators}: \texttt{.} syllable break (coarticulated),
       space short pause, \texttt{|} long pause; \texttt{\~{}} marks
       nasality.
@@ -1458,7 +1471,10 @@ CH, JH & tS, dZ & affricates \\
 F V S Z SH ZH & f v s z S Z & direct \\
 TH, DH & T, D & dental fricatives --- engine targets exist \\
 HH & h & direct \\
-M N NG & m n J & nasals \\
+M N NG & m n J & nasals; \texttt{NG}\(\to\)\texttt{J} is a documented
+  compromise: the English velar nasal [ŋ] is mapped to the derived
+  dorsal node (neither \texttt{N} nor \texttt{J} carries a closure
+  target, Table~\ref{tab:cons}) \\
 L R W Y & l R w j & R is the uvular of the engine inventory \\
 AA AE & a & AE merges to \texttt{a} \\
 AH & @ & schwa \\
