@@ -1,10 +1,9 @@
 # vtl-synth — articulatory synthesis from text (COVTL + VocalTractLab)
 
-**Version 1.1.0** — adds to 1.0.x: **multi-speakers** (5 registered
-voices with a reversible selector), a **language pack** (de/en/es/fr/
-it/pt), an **expressive prosody** option and the **polar-coordinate
-video**. Lightweight test suite: `python -m pytest` (~1 min, no audio
-rendering).
+Version 1.1.0 adds a **multi-speaker registry**, a **6-language pack**
+(de/en/es/fr/it/pt), **expressive prosody** and the **polar-coordinate
+video** — with the default engine outputs unchanged (bit-identical
+baselines).
 
 `vtl-synth` turns English text (or phonetic input) into:
 
