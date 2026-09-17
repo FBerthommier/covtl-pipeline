@@ -67,6 +67,18 @@ SYL_THETA_VELAR: float = np.pi / 3              # g, k outside a cluster (front)
 SYL_THETA_VELAR_BACK: float = 23 * np.pi / 12   # g, k after a back vowel
 SYL_RHO_STOP: float = 1.2
 SYL_RHO_CLUSTER_VELAR: float = 1.1
+# NB (2026-09-17, audit): nu enters arc_B ONLY as the arrival-phase
+# offset -(nu/K)*theta (minus written INSIDE the cosine). With this
+# convention, nu=-1 reproduces the PUBLISHED Eq. (2) of
+# arXiv:2307.02299 — z(t) = ... + rho(t)*rho2*exp(i*(theta2 + nu/K*theta))
+# — with nu=+1. At K=1000 the offset is bounded by pi/1000 rad and the
+# two signs differ by <= 3e-3 Maeda units (verified numerically;
+# endpoints unaffected), so the sign is a NOTATION choice here, not a
+# model deviation. Same convention in the companion repositories
+# (Syllable_Synthesis locusF2F3.py/synthSYL.py, Timit-to-Maeda
+# DEFAULT_NU=-1, DEFAULT_KVOY=1000). The reference curvature domain
+# (K=10/30, legacy engine + polar-video display) uses nu=+1, where the
+# sign DOES matter (0.28 / 0.09 Maeda).
 SYL_NU: int = -1
 SYL_K: float = 1000.0
 SYL_PEXP: int = 2
