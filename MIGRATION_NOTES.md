@@ -249,6 +249,19 @@ backup `fc779fae21dc8894` uniquement par la réécriture des fins de
 ligne lors du transport de la section), marqueur/backups/`.bak`/
 caches/`vtl_synth.egg-info` purgés.
 
+**D35** (2026-09-17, inversion de décision) — La fonte
+`docs/.l_10646.ttf` **est distribuée** avec le dépôt (décision
+inverse de D32/D34) : elle est nécessaire pour recompiler
+`manual.tex` et sa taille réelle est **309 516 octets** (et non
+304 516 o comme consigné en D34) ; SHA-256 inchangé
+(`97226e81…`). `docs/README.md` mis à jour en conséquence.
+
+**D36** (2026-09-17) — `INSTALL.md` (guide pip rapide, 3,3 Ko) et
+`INSTALLATION.md` (guide pas-à-pas CMD, 6,1 Ko) se recouvrent
+partiellement mais restent tous deux référencés (README, notes de
+release publiées) : décision de **conserver les deux** plutôt que de
+supprimer `INSTALL.md`.
+
 ## 8. Intégrité (manifestes SHA-256 avant/après)
 
 | dépôt | fichiers | verdict |
