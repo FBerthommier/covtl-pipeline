@@ -46,7 +46,7 @@ from vtl_synth.utils.setlang import (
     text_to_sampa as _text_to_sampa_lang,
 )
 
-# Expressive prosody (v1.0.8, option — défaut OFF). Import non
+# Expressive prosody (v1.1.0, option — défaut OFF). Import non
 # critique : indisponible → Pipeline(expressive=True) retombe sur la
 # déclinaison monotone avec un avertissement.
 try:
@@ -112,7 +112,7 @@ def apply_f0_declination(glott400: np.ndarray,
       4. Low final fall (-15%)
 
     Detects phrase boundaries from the silences in rel_amp
-    (rel_amp < 0.1 for > 20 frames = 50 ms @400 Hz).
+    (rel_amp < 0.1 for > 80 frames = 200 ms @400 Hz).
 
     Modifies glott400 in place (column 0 = f0).
     """
@@ -201,7 +201,7 @@ class Pipeline:
     pause_short_ms, pause_long_ms :
         Inter-word (space) and end-of-sentence ('|') pause duration.
     expressive : bool
-        Prosodie expressive (v1.0.8) : respiration syntaxique
+        Prosodie expressive (v1.1.0) : respiration syntaxique
         (pauses courtes aux frontières de blocs — aucune chaîne de
         mots coarticulés > ``max_chain_words``) et contour de F0
         sculpté (accents de hauteur sur les syllabes accentuées,
@@ -260,7 +260,7 @@ class Pipeline:
         self.t_voy_ms = t_voy_ms
         self.pause_short_ms = pause_short_ms
         self.pause_long_ms = pause_long_ms
-        # Prosodie expressive (v1.0.8, défaut OFF)
+        # Prosodie expressive (v1.1.0, défaut OFF)
         self.expressive = bool(expressive)
         self._expressivity = getattr(_profile, 'expressivity', None)
         if self.expressive:
