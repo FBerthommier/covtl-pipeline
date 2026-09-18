@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # -*- coding: utf-8 -*-
 """
-Berthommier-VTL Pipeline
-========================
+covtl-pipeline synthesis engine
+===============================
 
 Generation of 400 Hz VTL parameter vectors from text,
 using the Berthommier articulatory model (COVTL) for place

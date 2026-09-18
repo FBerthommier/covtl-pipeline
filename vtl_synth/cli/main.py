@@ -240,6 +240,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument('--ranges', action='store_true',
                    help='print min/max/mean per tract parameter')
     p.set_defaults(func=cmd_inspect)
+
+    # ---- global options (before the subcommand on the command line) ----
+    ap.add_argument('--debug', action='store_true',
+                    help="show the full traceback on error")
     return ap
 
 
@@ -249,7 +253,7 @@ def main(argv=None) -> int:
         return args.func(args)
     except Exception as e:
         import traceback
-        if '--debug' in (sys.argv or []):
+        if getattr(args, 'debug', False) or '--debug' in (sys.argv or []):
             traceback.print_exc()
         print(f'ERROR: {e}', file=sys.stderr)
         return 1

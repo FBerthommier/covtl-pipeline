@@ -92,7 +92,7 @@ def apply_f0_declination(glott400: np.ndarray,
       4. Low final fall (-15%)
 
     Detects phrase boundaries from the silences in rel_amp
-    (rel_amp < 0.1 for > 20 frames = 50 ms @400 Hz).
+    (rel_amp < 0.1 for > 80 frames = 200 ms @400 Hz).
 
     Modifies glott400 in place (column 0 = f0).
     """
