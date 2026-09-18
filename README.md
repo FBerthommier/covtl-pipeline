@@ -87,7 +87,7 @@ from vtl_synth import Pipeline
 
 pipe = Pipeline()                       # validated default settings
 result = pipe.run("this is easy for us", output_dir="./out")
-print(result.sampa)                     # "D i s i z i z i f O R @ s"
+print(result.sampa)                     # "Dis.iz.i.zi.fOR.@s"
 print(result.wav_path, result.duration_s)
 
 # phonetic input, audio only
@@ -95,7 +95,7 @@ result = pipe.text_to_wav("ba da ga | iowa a g",
                           output_dir="./out/phon", use_g2p=False)
 ```
 
-The full engine API (63 symbols: `build_phrase_tract`,
+The full engine API (72 symbols: `build_phrase_tract`,
 `text_to_tract`, timers, envelopes, polar model, …) is available in
 `vtl_synth.core`; the VTL bindings in `vtl_synth.vtl.api`.
 
@@ -125,7 +125,7 @@ covtl-pipeline/
 │   ├── core/                 # synthesis engine
 │   │   ├── pipeline.py       # Pipeline orchestrator (run/text_to_wav)
 │   │   ├── phonemes.py       # ARPAbet↔SAMPA tables
-│   │   └── … 26 engine modules (constants, polar, syltraj, timers, …)
+│   │   └── … 27 modules excl. __init__ (constants, polar, syltraj, timers, …)
 │   ├── cli/main.py           # vtl-synth entry point
 │   ├── video/                # SVG/PNG renderer + MP4 encoder + tract figure
 │   ├── vtl/api.py            # VocalTractLab API facade
