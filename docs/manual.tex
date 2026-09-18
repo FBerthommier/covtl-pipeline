@@ -845,20 +845,11 @@ constants distinguish the branches of the reference model: the consonantal
 arcs use \(K_c = 10\), \(\nu = 1\), while the vocalic background uses
 \(K_v = 30\) --- the vocalic handovers are much straighter. The active
 \texttt{syl} engine runs with \(\nu = -1\) and a quasi-straight
-\(K = 1000\) (\S\ref{sec:syltraj}). At this curvature the end-point
-phase offset \(\nu\theta/K\) is bounded by \(\pi/1000\) rad and is
-practically void; the \(\nu = -1\) sign follows the implementation's
-cosine convention and reproduces Eq.~(2) of arXiv:2307.02299
-(\(+\nu\theta/K\) with \(\nu = 1\)) --- the two writings are strictly
-equivalent (verified numerically to machine precision). The same
-convention (\(\nu = -1\), \(K = 1000\)) is used by the companion
-repositories \texttt{Syllable\_Synthesis} and
-\texttt{Timit-to-Maeda}. The reference curvature values
-(\(K_c = 10\), \(K_v = 30\), \(\nu = 1\)) are used by the deprecated
-\texttt{legacy} engine only --- plus, as a display choice, by the
-branch rendering of the polar video --- never by the default synthesis
-path; any fidelity claim to the published constants must be stated
-against this explicit split.
+\(K = 1000\) (\S\ref{sec:syltraj}); this is a notational convention
+only --- \(\nu = 1\) is recovered when the cosine is written with the
+opposite sign, as in Eq.~(2) of arXiv:2307.02299. The reference values
+(\(K_c = 10\), \(K_v = 30\), \(\nu = 1\)) belong to the deprecated
+\texttt{legacy} engine and the polar-video display.
 
 \subsection{Clusters: per-parameter scoping}\label{subsec:clusters}
 
