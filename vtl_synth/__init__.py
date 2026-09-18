@@ -5,17 +5,20 @@
 vtl_synth
 =========
 Articulatory synthesis from text: Berthommier COVTL model coupled
-with the VocalTractLab 2.4 synthesizer (JD3 speaker).
+with the VocalTractLab 2.4 synthesizer. Five registered speakers
+(jd3, s1, s2, m01, w02 — ``install_speaker.py``), six languages
+(de/en/es/fr/it/pt — ``setup_lang.py``), expressive prosody
+(``--expressive``) and the polar-coordinate video (``--polar``).
 
 Layout (aligned on the vtl-pipeline reference repository)::
 
     vtl_synth/core     synthesis engine (former ``pipeline`` package,
-                       26 modules) + the Pipeline orchestrator
+                       27 modules) + the Pipeline orchestrator
     vtl_synth/cli      ``vtl-synth`` command line
-    vtl_synth/video    sagittal frame rendering + MP4 encoding
+    vtl_synth/video    sagittal + polar frame rendering, MP4 encoding
     vtl_synth/vtl      VocalTractLab API facade (vocaltractlab-cython)
-    vtl_synth/utils    g2p (CMUdict -> engine SAMPA) and helpers
-    vtl_synth/data     JD3.speaker (package data)
+    vtl_synth/utils    g2p (CMUdict + language packs) and helpers
+    vtl_synth/data     speaker registry + lexicons (package data)
 
 Quick start::
 
@@ -25,7 +28,7 @@ Quick start::
 
 from __future__ import annotations
 
-__version__ = '1.0.2'
+__version__ = '1.1.0'
 
 from vtl_synth.core.pipeline import Pipeline, PipelineResult
 from vtl_synth.core.build_phrase_tract import (
