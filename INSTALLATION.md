@@ -160,7 +160,7 @@ vtl-synth --help
 ```
 
 If the help message is displayed, the installation is ready. To run the
-test suite (55 tests):
+test suite (112 tests):
 
 ```
 pip install --user pytest
@@ -194,14 +194,15 @@ The repository ships a `launch.bat` that prepends the Scripts folder to
 setlocal
 set SCRIPTS=%APPDATA%\Python\Python39\Scripts
 set PATH=%SCRIPTS%;%PATH%
-vtl-synth run "She had your dark suit in greasy wash water all year" -o out
+vtl-synth run "this is easy for us" -o out
 echo.
 pause
 endlocal
 ```
 
-Edit the `Python39` suffix to match your Python version, then
-double-click `launch.bat` to run the synthesis.
+(This matches the shipped `launch.bat`; edit the `Python39` suffix to
+match your Python version and the phrase to taste, then double-click
+`launch.bat` to run the synthesis.)
 
 ### Uninstall
 

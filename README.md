@@ -157,11 +157,22 @@ measurements: `python scripts/f0_report.py <tract…>`. Guide:
 ```
 vtl-synth run "this is easy for us" -o ./out      # tract + wav + mp4
 vtl-synth run --phonetic "ba da ga | iowa a g" -o ./out   # direct SAMPA
+vtl-synth run -s m01 -l fr "bonjour" -o ./out     # speaker + language
+vtl-synth run --expressive "this is easy for us" -o ./out
 vtl-synth text-to-wav "hello world" -o ./out      # audio only
 vtl-synth tract-to-mp4 out/x.tract out/x.wav -o out/x.mp4
 vtl-synth inspect out/x.tract --states 2 --ranges
 vtl-synth plot-tract out/x.tract --which all -o out/x.png
+vtl-synth polar-build out/x.tract out/x.wav -o out/x.polar
+vtl-synth polar-video out/x.polar out/x.tract out/x.wav -o out/x.mp4
 ```
+
+Speaker/language options (`-s/--speaker`, `-l/--lang`,
+`--expressive`/`--no-expressive`) act for the run: they switch the
+registry entry / language section first (same machinery as
+`install_speaker.py` / `setup_lang.py`). The timing defaults shown as
+`None` in `--help` (100/80/200/320 ms) are resolved through the active
+language profile.
 
 `plot-tract` is the graphical counterpart of `inspect`: it draws the
 400 Hz trajectory of each tract parameter (optionally the glottis f0
@@ -183,6 +194,13 @@ Engine options (COVTL model parameters) on `run`/`text-to-wav`:
 | `--engine` | syl | trajectory engine (`syl` recommended, `legacy` = pre-syltraj) |
 | `--fps`, `--scale`, `--no-video` | 25, 2 | video rendering |
 
+Note on the arc-shape constants (see `syltraj.py` and the CHANGELOG):
+the `syl` engine uses the convention ν = −1, K = 1000,
+`SYL_COEFCEN` = 0.5 — ν = 1 is recovered when the cosine is written
+with the opposite sign (the published equation's form); the reference
+curvatures K = 10/30 with ν = 1 belong to the `legacy` engine and the
+polar-video display.
+
 ## Python API
 
 ```python
@@ -190,7 +208,7 @@ from vtl_synth import Pipeline
 
 pipe = Pipeline()                       # validated default settings
 result = pipe.run("this is easy for us", output_dir="./out")
-print(result.sampa)                     # "D i s i z i z i f O R @ s"
+print(result.sampa)                     # "Dis.iz.i.zi.fOR.@s"
 print(result.wav_path, result.duration_s)
 
 # phonetic input, audio only
@@ -198,7 +216,7 @@ result = pipe.text_to_wav("ba da ga | iowa a g",
                           output_dir="./out/phon", use_g2p=False)
 ```
 
-The full engine API (63 symbols: `build_phrase_tract`,
+The full engine API (72 symbols: `build_phrase_tract`,
 `text_to_tract`, timers, envelopes, polar model, …) is available in
 `vtl_synth.core`; the VTL bindings in `vtl_synth.vtl.api`.
 
@@ -232,7 +250,7 @@ covtl-pipeline/
 │   │   ├── pipeline.py       # Pipeline orchestrator (run/text_to_wav)
 │   │   ├── phonemes.py       # ARPAbet↔SAMPA tables
 │   │   ├── speaker_registry.py  # multi-speakers registry access
-│   │   └── … 26 engine modules (constants, polar, syltraj, timers, …)
+│   │   └── … 27 modules incl. __init__ (constants, polar, syltraj, timers, …)
 │   ├── cli/main.py           # vtl-synth entry point
 │   ├── video/                # SVG/PNG renderer + MP4 encoder + polar
 │   │                         # video (dual panel) + tract figure
