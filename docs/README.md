@@ -10,6 +10,7 @@ file name.
 | `speakers.pdf` / `.tex` | Multi-speaker registry: the five speakers (jd3, s1, s2, m01, w02), `install_speaker.py`, the four layers of a switch, provenance chains (DVTD construction, adaptation, Option A), defect catalogue D1–D21. |
 | `language_pack.pdf` / `.tex` | Language pack: six languages (en, fr, es, de, it, pt), `setup_lang.py` (install/setlang/calibrate/verify/restore), vowel-target calibration, per-language profiles, JD3 guard, troubleshooting. |
 | `expressive_prosody.pdf` / `.tex` | Expressive prosody option (`--expressive`): syntactic breathing, sculpted F0 contour, out-of-band stress channel, measurements, tests, interaction with speakers/languages. |
+- `PROMPT_prosodie_expressivite.md` — design specification of the expressive-prosody add-on (2026-09-15, French; historical source document referenced by PROVENANCE_PROSODY_CHUNKING.md, not a manual)
 | `polar_visualization.pdf` / `.tex` | Dynamic polar video (`--polar`): two-branch reconstruction (vocalic/consonantal), `.polar` intermediate format, dual-panel MP4, validation, demos. |
 
 Shared developer docs at the repository root and in this folder:

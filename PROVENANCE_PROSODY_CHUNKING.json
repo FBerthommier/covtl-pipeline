@@ -1,0 +1,271 @@
+{
+  "report": "PROVENANCE_PROSODY_CHUNKING",
+  "generated": "2026-09-21",
+  "repository": "FBerthommier/covtl-pipeline",
+  "investigation_scope": "software provenance of vtl_synth/utils/chunking.py and vtl_synth/utils/prosody_f0.py",
+  "evidence_levels": "P0=hypothesis, P1=lead, P2=probable match, P3=strongly supported, P4=established",
+  "components": [
+    {
+      "path": "vtl_synth/utils/chunking.py",
+      "status": "investigated_original_work",
+      "provenance_level": "P3",
+      "copyright_holder": "Frédéric Berthommier (SPDX header, consistent with repository)",
+      "authorship_process": "human-directed, AI-assisted implementation session (2026-09-15), from the author's written specification docs/PROMPT_prosodie_expressivite.md (2026-09-15T18:22); file created 2026-09-15T19:13",
+      "first_public_commit": {
+        "hash": "e991ff9",
+        "date": "2026-09-17",
+        "author": "FBerthommier",
+        "message": "v1.1.0 - multi-speakers registry (jd3 s1 s2 m01 w02), language pack (de en es fr it pt), expressive prosody, polar video v3; 5 manuals; packaging fixes"
+      },
+      "authors": [
+        {
+          "name": "Frédéric Berthommier",
+          "role": "specification author, project principal, copyright holder",
+          "evidence": "SPDX headers; git author; specification file",
+          "level": "P4"
+        }
+      ],
+      "sources": [],
+      "prior_software_sources_found": "none — negative searches over filenames, 22 coined symbols, distinctive French strings, constants (level P3, active-negative)",
+      "internal_code_lineage": [
+        {
+          "relation": "same-repository pattern reuse",
+          "details": "state-module pattern mirrors continuous.get_last_pval_state; pause/voicing-span detection follows pipeline.apply_f0_declination",
+          "license_implications": "none (same author, same license)"
+        }
+      ],
+      "licenses": [
+        {
+          "scope": "file",
+          "license": "GPL-3.0-or-later",
+          "evidence": "SPDX-License-Identifier header"
+        },
+        {
+          "scope": "repository",
+          "license": "GPL-3.0-or-later",
+          "evidence": "LICENSE (GPL-3 full text); README rationale (GPL dependencies)"
+        }
+      ],
+      "license_compatibility": "established — no third-party code involved; stdlib-only dependencies",
+      "scientific_sources": [
+        {
+          "refs": "Selkirk 1984; Nespor & Vogel 1986",
+          "relation": "D — prosodic hierarchy / juncture rationale",
+          "code_shipped": false
+        },
+        {
+          "refs": "Jun 2005, 2014; Ladd 2008",
+          "relation": "D — typology, declination",
+          "code_shipped": false
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "specification_document",
+          "detail": "docs/PROMPT_prosodie_expressivite.md in working copy covtl-languages/covtl-pipeline, mtime 2026-09-15T18:22, contains the full design (chunking rules, breath pause, function-word lists)",
+          "level": "P3"
+        },
+        {
+          "kind": "file_timestamps",
+          "detail": "chunking.py mtime 2026-09-15T19:13 (creation evening)",
+          "level": "P3"
+        },
+        {
+          "kind": "public_git_history",
+          "detail": "single introduction commit e991ff9, 2026-09-17, author FBerthommier (verified on github.com 2026-09-21)",
+          "level": "P4"
+        },
+        {
+          "kind": "negative_search",
+          "detail": "queries: \"chunk_word_list\", \"CHUNK_WORDS\", \"mots han-gants\", \"HEURISTIQUE LEXICALE AVOUÉE\", \"covtl chunking\" — zero code matches",
+          "level": "P3"
+        },
+        {
+          "kind": "imports_audit",
+          "detail": "imports limited to stdlib (re, typing); no external or vendored code",
+          "level": "P3"
+        }
+      ],
+      "required_actions": [
+        {
+          "action": "keep current authorship and SPDX headers unchanged",
+          "priority": "recommended",
+          "status": "no change needed"
+        },
+        {
+          "action": "add AI-assistance disclosure line (implemented with AI coding assistance under the author's direction)",
+          "priority": "recommended",
+          "status": "open"
+        },
+        {
+          "action": "archive the specification document (docs/PROMPT_prosodie_expressivite.md) in the public repository",
+          "priority": "recommended",
+          "status": "done 2026-09-21 (docs/PROMPT_prosodie_expressivite.md copied into the public repo)"
+        },
+        {
+          "action": "optionally cite Boula de Mareüil 1998 (prior scientific art on French prosodic chunking) alongside Selkirk/Nespor & Vogel",
+          "priority": "optional",
+          "status": "open"
+        }
+      ]
+    },
+    {
+      "path": "vtl_synth/utils/prosody_f0.py",
+      "status": "investigated_original_work",
+      "provenance_level": "P3",
+      "copyright_holder": "Frédéric Berthommier (SPDX header, consistent with repository)",
+      "authorship_process": "human-directed, AI-assisted implementation session (2026-09-15), same specification; file created 2026-09-15T19:32",
+      "first_public_commit": {
+        "hash": "e991ff9",
+        "date": "2026-09-17",
+        "author": "FBerthommier",
+        "message": "v1.1.0 - multi-speakers registry (jd3 s1 s2 m01 w02), language pack (de en es fr it pt), expressive prosody, polar video v3; 5 manuals; packaging fixes"
+      },
+      "authors": [
+        {
+          "name": "Frédéric Berthommier",
+          "role": "specification author, project principal, copyright holder",
+          "evidence": "SPDX headers; git author; specification file",
+          "level": "P4"
+        }
+      ],
+      "sources": [],
+      "prior_software_sources_found": "none — negative searches over filenames, 22 coined symbols, distinctive French strings, constants (level P3, active-negative)",
+      "internal_code_lineage": [
+        {
+          "relation": "same-repository pattern reuse",
+          "details": "apply_expressive_f0 extends pipeline.apply_f0_declination; stress channel attached to lexicon_loader caches; get_last_build mirrors continuous.get_last_pval_state",
+          "license_implications": "none (same author, same license)"
+        }
+      ],
+      "licenses": [
+        {
+          "scope": "file",
+          "license": "GPL-3.0-or-later",
+          "evidence": "SPDX-License-Identifier header"
+        },
+        {
+          "scope": "repository",
+          "license": "GPL-3.0-or-later",
+          "evidence": "LICENSE (GPL-3 full text)"
+        },
+        {
+          "scope": "runtime dependency numpy",
+          "license": "BSD-3-Clause",
+          "evidence": "THIRD_PARTY_NOTICES.md"
+        },
+        {
+          "scope": "data consumed via lexicon_loader (Wikipron TSVs, stress channel)",
+          "license": "CC BY-SA 3.0",
+          "evidence": "vtl_synth/data/README_*_lexicon.md; MISSING from central THIRD_PARTY_NOTICES.md (action below)"
+        }
+      ],
+      "license_compatibility": "established for the module itself; Share-Alike of Wikipron applies to the data files, not to the reading code; central notices file must be completed",
+      "scientific_sources": [
+        {
+          "refs": "Pierrehumbert 1980; Beckman & Ayers 1997",
+          "relation": "D — English H*+fall contour parameters",
+          "code_shipped": false
+        },
+        {
+          "refs": "Jun & Fougeron 2002, 2013; Di Cristo 1998",
+          "relation": "D — French group-final accent policy",
+          "code_shipped": false
+        },
+        {
+          "refs": "Face 2003; Sosa 1999; Prieto & Roseano 2010",
+          "relation": "D — Spanish profile",
+          "code_shipped": false
+        },
+        {
+          "refs": "Féry 1993; Grice, Baumann & Benzmüller 2005",
+          "relation": "D — German profile (downstep, low terminal)",
+          "code_shipped": false
+        },
+        {
+          "refs": "Avesani 1995; D'Imperio 2002; Gili Fivela et al. 2015",
+          "relation": "D — Italian profile",
+          "code_shipped": false
+        },
+        {
+          "refs": "Frota 2000, 2014; Vigário 2003",
+          "relation": "D — European Portuguese profile",
+          "code_shipped": false
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "specification_document",
+          "detail": "docs/PROMPT_prosodie_expressivite.md (2026-09-15T18:22) lists the F0 parameters, per-language profiles and the cited references",
+          "level": "P3"
+        },
+        {
+          "kind": "file_timestamps",
+          "detail": "prosody_f0.py mtime 2026-09-15T19:32",
+          "level": "P3"
+        },
+        {
+          "kind": "public_git_history",
+          "detail": "single introduction commit e991ff9, 2026-09-17 (verified 2026-09-21)",
+          "level": "P4"
+        },
+        {
+          "kind": "negative_search",
+          "detail": "queries: \"prosody_f0.py\", \"apply_expressive_f0\", \"ipa_to_keys_stress\", \"plan_expressive_text\", \"ExpressivityProfile\", \"nuclear_fall_factor\" — zero code matches",
+          "level": "P3"
+        },
+        {
+          "kind": "imports_audit",
+          "detail": "imports: numpy + vtl_synth internal modules only",
+          "level": "P3"
+        }
+      ],
+      "required_actions": [
+        {
+          "action": "keep current authorship and SPDX headers unchanged",
+          "priority": "recommended",
+          "status": "no change needed"
+        },
+        {
+          "action": "add Wikipron CC BY-SA 3.0 notice to THIRD_PARTY_NOTICES.md (data consumed through the stress channel)",
+          "priority": "required",
+          "status": "closed 2026-09-21 — already satisfied upstream: the public THIRD_PARTY_NOTICES.md (audited on github.com) carries a \"Language pack\" section with Wikipron CC BY-SA 3.0; the local copy was reconciled to the public version ( Speakers s1/s2 + Language pack sections restored)"
+        },
+        {
+          "action": "add AI-assistance disclosure line",
+          "priority": "recommended",
+          "status": "open"
+        },
+        {
+          "action": "archive the specification document in the public repository",
+          "priority": "recommended",
+          "status": "done 2026-09-21 (docs/PROMPT_prosodie_expressivite.md copied into the public repo)"
+        }
+      ]
+    }
+  ],
+  "hypotheses_tested_and_rejected": [
+    {
+      "hypothesis": "French comments betray a translation of an earlier English module",
+      "level": "P0_rejected",
+      "detail": "distinctive French formulations are project neologisms with zero search matches"
+    },
+    {
+      "hypothesis": "symbols originate from another TTS project",
+      "level": "P1_rejected",
+      "detail": "all 22 coined symbols return zero matches; the closest in-repo patterns are same-author internal lineage"
+    }
+  ],
+  "contacts_sent": "none (mission rule 12 — no third party was identified; no emails/issues/PRs sent)",
+  "open_limits": "negative searches are web-generalist (unauthenticated GitHub code search not used; private forks unknowable); negative provenance is P3, never P4",
+  "regularization_applied": [
+    "THIRD_PARTY_NOTICES.md: Wikipron CC BY-SA 3.0 section added (2026-09-21)",
+    "docs/PROMPT_prosodie_expressivite.md: specification archived in the public repository (2026-09-21)",
+    "CHANGELOG.md: provenance report + AI-assistance disclosure recorded (2026-09-21)"
+  ],
+  "coherence_addendum": {
+    "date": "2026-09-21",
+    "finding": "the public repository is AHEAD of the audited local working copy on licensing hygiene (THIRD_PARTY_NOTICES sections \"Speakers s1/s2 (DVTD MRI)\" and \"Language pack\" incl. Wikipron; MIGRATION_NOTES.md inventory; docs/README.md index of five manuals), and BEHIND on the provenance deliverables (no PROVENANCE_* files, no archived specification)",
+    "consequence": "action 'add Wikipron notice' is already satisfied upstream; the local THIRD_PARTY_NOTICES.md was re-reconciled to the public version to prevent a regression if a commit is prepared from the local copy"
+  }
+}

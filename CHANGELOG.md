@@ -26,6 +26,23 @@ Format: Keep a Changelog — https://keepachangelog.com/
 - **`docs/.l_10646.ttf`** is now shipped, so `manual.pdf` can be
   rebuilt from the repository (xelatex, two passes).
 
+### Added — provenance & design trace (prosody components)
+- `PROVENANCE_PROSODY_CHUNKING.md` / `.json`: software-provenance
+  report for `vtl_synth/utils/chunking.py` and `prosody_f0.py` —
+  original in-project implementation (spec 2026-09-15, human-directed
+  session implemented **with AI coding assistance**; no third-party
+  code source found — negative searches over 22 coined symbols,
+  distinctive strings and constants; scientific references are
+  parameter sources only, no shipped code). Public history: single
+  introduction commit `e991ff9` (v1.1.0, 2026-09-17). Regularization
+  applied: the Wikipron CC BY-SA 3.0 notice (already present in
+  `THIRD_PARTY_NOTICES.md`) re-verified against the local working
+  copy.
+- `docs/PROMPT_prosodie_expressivite.md`: the 2026-09-15 design
+  specification, archived so the design→code chain of the expressive
+  prosody travels with the repository (referenced by the provenance
+  report as the P3 evidence of the genealogy).
+
 ## [1.1.0] — 2026-09-16
 
 Version decision (vs v2.0.0): **no file removed**; the 7 modified

@@ -36,6 +36,9 @@ components are redistributed or relied upon; their licenses apply and
   `README_xx_lexicon.md` notices must travel beside the TSV files and
   redistributed lexicons stay CC BY-SA 3.0
   (<https://creativecommons.org/licenses/by-sa/3.0/>). English g2p
+  The expressive-prosody stress channel (`prosody_f0`) reads these
+  TSVs through `lexicon_loader`; Share-Alike applies to the data
+  files, not to the code that reads them.
   gateway: CMUdict (see below).
 
 ## vocaltractlab-cython
