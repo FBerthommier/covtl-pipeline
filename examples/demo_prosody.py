@@ -1,27 +1,27 @@
 # -*- coding: utf-8 -*-
-"""Démo prosodie expressive : avant/après par langue (v1.0.8).
+"""Expressive prosody demo: before/after per language (v1.0.8).
 
-    python examples/demo_prosody.py            # les 6 langues
-    python examples/demo_prosody.py --lang fr  # une seule
+    python examples/demo_prosody.py            # the six languages
+    python examples/demo_prosody.py --lang fr  # a single one
 
-Pour chaque langue, synthétise dans ``out_demo_prosody/`` :
+For each language, synthesizes into ``out_demo_prosody/``:
 
-  * ``<lang>_mono.wav`` / ``<lang>_expr.wav``   — phrase de démo
-    (l'équivalent orthographique des phrases de ``out_demo/``),
-    paire monotone/expressive ;
-  * ``<lang>_long_mono.wav`` / ``<lang>_long_expr.wav`` — phrase
-    longue SANS ponctuation : la version monotone est une seule
-    chaîne syllabique ininterrompue, l'expressive respire aux
-    frontières syntaxiques.
+  * ``<lang>_mono.wav`` / ``<lang>_expr.wav``   — demo sentence (the
+    orthographic equivalents of the ``out_demo/`` sentences),
+    monotone/expressive pair;
+  * ``<lang>_long_mono.wav`` / ``<lang>_long_expr.wav`` — a long
+    sentence WITHOUT punctuation: the monotone version is one
+    uninterrupted syllabic chain, the expressive one breathes at the
+    syntactic boundaries.
 
-et affiche les mesures objectives : nombre de chaînes de mots >
-max_chain_words (avant/après), dynamique F0 (écart-type en
-demi-tons), bosses de hauteur soutenues (>+5 % de la base locale),
-douceur (saut max/frame voisée), durée totale.
+and prints the objective measurements: number of word chains >
+max_chain_words (before/after), F0 dynamics (standard deviation in
+semitones), sustained pitch bumps (>+5 % of the local base),
+smoothness (max jump per voiced frame), total duration.
 
-La langue est activée via ``setup_lang.py setlang`` (le bloc LANG
-SECTION porte les cibles vocaliques) — la démo pilote elle-même la
-bascule et lance un sous-processus par langue.
+The language is activated via ``setup_lang.py setlang`` (the LANG
+SECTION block carries the vowel targets) — the demo drives the
+switch itself and launches one subprocess per language.
 """
 
 from __future__ import annotations
@@ -36,8 +36,8 @@ sys.path.insert(0, str(ROOT))
 
 OUT = ROOT / 'out_demo_prosody'
 
-#: phrase de démo (équivalents orthographiques d'out_demo/) et phrase
-#: longue sans ponctuation, par langue.
+#: demo sentence (orthographic equivalents of out_demo/) and long
+#: punctuation-free sentence, per language.
 SENTENCES = {
     'en': {
         'demo': 'hello, this is easy for us',
@@ -75,11 +75,11 @@ SENTENCES = {
 
 
 def _chains_over(text: str, lang: str, max_chain: int) -> int:
-    """Nombre de chaînes de mots coarticulés > max_chain mots.
+    """Number of coarticulated word chains longer than max_chain words.
 
-    max_chain=10**6 (sans respiration) : chaque partie sans virgule
-    est UNE seule chaîne = l'état « avant » du g2p monotone ;
-    max_chain=5 : l'état « après » (groupes de souffle).
+    max_chain=10**6 (no breathing): every comma-free part is ONE
+    single chain = the "before" state of the monotone g2p;
+    max_chain=5: the "after" state (breath groups).
     """
     from vtl_synth.utils.chunking import chunk_sentence, split_sentences
     n = 0
@@ -96,8 +96,8 @@ def run_language(lang: str) -> None:
     from vtl_synth.core.constants import ACTIVE_LANG
     if ACTIVE_LANG != lang:
         raise SystemExit(
-            f'LANG SECTION active = {ACTIVE_LANG!r}, demande = {lang!r} ; '
-            f'lancer via "python setup_lang.py setlang {lang}"')
+            f'active LANG SECTION = {ACTIVE_LANG!r}, requested = {lang!r}; '
+            f'run via "python setup_lang.py setlang {lang}"')
     OUT.mkdir(exist_ok=True)
     print(f'=== {lang} ===')
     for kind in ('demo', 'long'):
@@ -108,20 +108,20 @@ def run_language(lang: str) -> None:
             pipe = Pipeline(lang=lang, expressive=expressive)
             result = pipe.text_to_wav(
                 text, output_dir=str(OUT), label=label)
-            # avant : chaînes sans respiration ; après : avec la
-            # limite dure du profil expressif
+            # before: chains without breathing; after: with the hard
+            # limit of the expressive profile
             limit = 5 if expressive else 10 ** 6
             n_over = _chains_over(text, lang, limit)
             print(f'  {label:<18s} dur={result.duration_s:5.2f}s '
-                  f'chaines>5mots={n_over} '
-                  f'{"RESPIRE" if expressive else "monobloc"}')
+                  f'chains>5words={n_over} '
+                  f'{"BREATHES" if expressive else "one-block"}')
 
 
 def _f0_summary() -> None:
     sys.path.insert(0, str(ROOT / 'scripts'))
     from f0_report import report
     print()
-    print(f"{'fichier':<26s} {'dyn ST':>7s} {'peaks':>6s} "
+    print(f"{'file':<26s} {'dyn ST':>7s} {'peaks':>6s} "
           f"{'maxjump':>8s} {'range Hz':>16s}")
     for p in sorted(OUT.glob('*.tract')):
         r = report(str(p))
@@ -133,10 +133,10 @@ def _f0_summary() -> None:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--lang', choices=sorted(SENTENCES), default=None,
-                    help='worker : synthétiser UNE langue (le bloc LANG '
-                         'SECTION doit déjà être actif)')
+                    help='worker: synthesize ONE language (the LANG '
+                         'SECTION block must already be active)')
     ap.add_argument('--summary-only', action='store_true',
-                    help='afficher seulement le tableau F0')
+                    help='print only the F0 table')
     args = ap.parse_args()
 
     if args.summary_only:
@@ -144,15 +144,15 @@ def main() -> None:
         return
 
     if args.lang:
-        # worker single-shot : la langue est déjà active (bascule par
-        # le processus parent) — on synthétise et on rend la main
+        # single-shot worker: the language is already active (switched
+        # by the parent process) — synthesize and return
         run_language(args.lang)
         return
 
     for lang in sorted(SENTENCES):
-        # bascule du bloc LANG SECTION (cibles vocaliques de la
-        # langue) puis sous-processus : constants.py doit être
-        # réimporté pour que la section prenne effet
+        # switch the LANG SECTION block (per-language vowel targets)
+        # then a subprocess: constants.py must be re-imported for the
+        # section to take effect
         subprocess.run([sys.executable, str(ROOT / 'setup_lang.py'),
                         'setlang', lang], check=True,
                        cwd=str(ROOT))

@@ -4,41 +4,43 @@
 """
 prosody_f0.py
 =============
-Prosodie expressive : contour de F0 sculpté + accents de hauteur
-(v1.0.8 — OPTION, défaut OFF).
+Expressive prosody: sculpted F0 contour + pitch accents
+(v1.0.8 — OPTION, default OFF).
 
-Le mode monotone (:func:`vtl_synth.core.pipeline.apply_f0_declination`)
-applique une déclinaison LINÉAIRE par phrase : une phrase longue est
-une rampe plate, perçue comme monotone. Ce module la remplace, en mode
-expressif uniquement, par un contour à trois composantes par groupe de
-souffle (chunk, cf. :mod:`vtl_synth.utils.chunking`) :
+The monotone mode
+(:func:`vtl_synth.core.pipeline.apply_f0_declination`) applies a
+LINEAR declination per phrase: a long phrase is a flat ramp,
+perceived as monotonous. This module replaces it — in expressive mode
+only — with a three-component contour per breath group (chunk, see
+:mod:`vtl_synth.utils.chunking`):
 
-  1. **déclinaison de base conservée** (onset → final du profil de
-     langue) MAIS avec reprise d'attaque à chaque chunk (le profil
-     d'attaque ne se produit plus qu'à la première phrase) ;
-  2. **accents de hauteur locaux** : bosse asymétrique (montée douce
-     ~70 ms, descente ~60–90 ms selon la langue, PAS de saut — le
-     synthétiseur glottal suit f0 échantillon par échantillon) posée
-     sur la syllabe accentuée du mot porteur, avec downstep cumulé
-     optionnel après chaque accent (allemand, Ladd 2008) ;
-  3. **chute nucléaire terminale** sur la dernière syllabe accentuée
-     du dernier chunk (profondeur par langue).
+  1. **base declination kept** (onset → final of the language
+     profile) BUT with an attack reset at every chunk (the attack
+     profile no longer occurs only at the first phrase);
+  2. **local pitch accents**: an asymmetric bump (soft rise ~70 ms,
+     fall ~60–90 ms depending on the language, NO jump — the glottal
+     synthesizer follows f0 sample by sample) placed on the stressed
+     syllable of the bearing word, with optional cumulative downstep
+     after each accent (German, Ladd 2008);
+  3. **terminal nuclear fall** on the last stressed syllable of the
+     last chunk (depth per language).
 
-Le stress lexical voyage HORS BANDE (jamais dans le flux SAMPA) :
-Wikipron ˈ/ˌ via :func:`vtl_synth.utils.lexicon_loader.ipa_to_keys_stress`,
-digits CMUdict (0/1/2) pour l'anglais, puis règles orthographiques de
-repli par langue (accent écrit es/it/pt, pénultième par défaut,
-première syllabe pour de, accent de GROUPE pour fr — Jun & Fougeron
-2002 : pas d'accent lexical interne en français).
+Lexical stress travels OUT OF BAND (never in the SAMPA stream):
+Wikipron ˈ/ˌ via
+:func:`vtl_synth.utils.lexicon_loader.ipa_to_keys_stress`, CMUdict
+digits (0/1/2) for English, then per-language orthographic fallback
+rules (written accent es/it/pt, penultimate by default, first
+syllable for de, GROUP accent for fr — Jun & Fougeron 2002: no
+internal lexical accent in French).
 
-Simplification AVOUÉE à 2–3 paramètres par langue (amplitudes,
-profondeur de chute, reprise), justifiés par les références citées
-dans :mod:`vtl_synth.utils.setlang` (Face 2003 / Grice et al. 2005 /
-Avesani 1995 / Frota 2000 / Pierrehumbert 1980…) : c'est une
-caricature calculable des contours, pas une implémentation ToBI.
+A DOCUMENTED simplification to 2–3 parameters per language
+(amplitudes, fall depth, reset), justified by the references cited in
+:mod:`vtl_synth.utils.setlang` (Face 2003 / Grice et al. 2005 /
+Avesani 1995 / Frota 2000 / Pierrehumbert 1980…): this is a
+computable caricature of the contours, not a ToBI implementation.
 
-Le module ne touche QUE la colonne f0 du glottis et les durées de
-pause (marqueur '%' de syltraj) — jamais le tract.
+The module touches ONLY the glottis f0 column and the pause durations
+(the '%' marker of syltraj) — never the tract.
 """
 
 from __future__ import annotations
@@ -51,7 +53,7 @@ import numpy as np
 
 from vtl_synth.utils.chunking import CHUNK_WORDS, chunk_sentence, split_sentences
 
-# Facteur d'échantillonnage blocs @100 Hz → glottis @400 Hz.
+# Block sampling factor @100 Hz → glottis @400 Hz.
 _SR_STEP = 4
 
 
@@ -61,26 +63,25 @@ _SR_STEP = 4
 
 @dataclass
 class ExpressivityProfile:
-    """Paramètres d'expressivité d'une langue (option, défaut off).
+    """Per-language expressivity parameters (option, default off).
 
-    pause_breath_ms : durée de la pause respiratoire '%' (130 ms,
-        plus courte que la pause virgule 200 ms).
-    max_chain_words : aucun bloc de souffle ne dépasse ce nombre de
-        mots (respiration syntaxique).
-    accent_amplitude : amplitude des bosses de hauteur, en FRACTION de
-        f0_base (0.16 = +16 % ≈ +16 Hz à 102 Hz).
-    accent_rise_ms / accent_fall_ms : demi-largeurs de la bosse
-        (montée / descente) — la douceur est garantie par construction
-        (gaussienne asymétrique, pas de saut).
-    chunk_reset : part de la reprise d'attaque récupérée à chaque
-        chunk (0 = pas de reprise, 1 = attaque complète comme en
-        tête de phrase).
-    downstep : facteur multiplicatif du niveau de base après chaque
-        accent (1.0 = aucun ; de 0.985 — downstep allemand marqué,
-        Ladd 2008).
-    nuclear_fall_factor : multiplicateur terminal SUPPLÉMENTAIRE de la
-        chute nucléaire (0.90 = la fin du dernier chunk descend 10 %
-        sous le niveau final_gain — terminal bas allemand/portugais).
+    pause_breath_ms : duration of the '%' breath pause (130 ms,
+        shorter than the 200 ms comma pause).
+    max_chain_words : no breath group exceeds this number of words
+        (syntactic breathing).
+    accent_amplitude : amplitude of the pitch bumps, as a FRACTION of
+        f0_base (0.16 = +16 % ≈ +16 Hz at 102 Hz).
+    accent_rise_ms / accent_fall_ms : half-widths of the bump
+        (rise / fall) — smoothness is guaranteed by construction
+        (asymmetric Gaussian, no jump).
+    chunk_reset : share of the attack reset recovered at each chunk
+        (0 = no reset, 1 = full attack like at phrase head).
+    downstep : multiplicative factor of the base level after each
+        accent (1.0 = none; 0.985 — marked German downstep, Ladd
+        2008).
+    nuclear_fall_factor : SUPPLEMENTARY terminal multiplier of the
+        nuclear fall (0.90 = the end of the last chunk descends 10 %
+        below the final_gain level — German/Portuguese low terminal).
     """
     pause_breath_ms: float = 130.0
     max_chain_words: int = 5
@@ -92,14 +93,14 @@ class ExpressivityProfile:
     nuclear_fall_factor: float = 0.95
 
 
-#: Paramètres par langue — les amplitudes suivent les plages décrites
-#: dans la littérature d'intonation (cf. docstring du module) :
-#: de (Grice et al. 2005 : accents marqués + downstep + terminal bas
-#: profond) > es (Face 2003 : pré-nucléaires larges) ≈ it (Avesani
-#: 1995) > en (Pierrehumbert 1980) > pt (Frota 2000 : plage plus
-#: étroite) > fr (Jun & Fougeron 2002 : accent final d'AP modéré).
-#: Étalonnage perceptif : +18–24 Hz sur f0_base ≈ 102 Hz = 3–4
-#: demi-tons, la plage usuelle des accents de hauteur lus.
+#: Per-language parameters — the amplitudes follow the ranges described
+#: in the intonation literature (see the module docstring):
+#: de (Grice et al. 2005: marked accents + downstep + deep low
+#: terminal) > es (Face 2003: broad pre-nuclear rises) ≈ it (Avesani
+#: 1995) > en (Pierrehumbert 1980) > pt (Frota 2000: narrower range)
+#: > fr (Jun & Fougeron 2002: moderate final AP accent).
+#: Perceptual calibration: +18–24 Hz on f0_base ≈ 102 Hz = 3–4
+#: semitones, the usual range of read-speech pitch accents.
 EXPRESSIVITY_PROFILES: Dict[str, ExpressivityProfile] = {
     'en': ExpressivityProfile(
         accent_amplitude=0.20, accent_rise_ms=70.0, accent_fall_ms=90.0,
@@ -123,20 +124,20 @@ EXPRESSIVITY_PROFILES: Dict[str, ExpressivityProfile] = {
 
 
 # ===========================================================================
-# Noyaux vocaliques d'un token SAMPA
+# Vowel nuclei of a SAMPA token
 # ===========================================================================
 
 def token_nuclei(token: str) -> List[str]:
-    """Clés vocaliques (une par syllabe) d'un token connecté SAMPA.
+    """Vowel keys (one per syllable) of a connected SAMPA token.
 
-    ``'Di.si.zi'`` → ``['i', 'i', 'i']`` ; les clés nasales sont
-    normalisées sans '~' (comme les plateaux de syltraj). Token non
-    segmentable → [] (l'appelant retombe sur l'accent de groupe).
+    ``'Di.si.zi'`` → ``['i', 'i', 'i']``; nasal keys are normalized
+    without '~' (like the syltraj plateaus). Non-segmentable token →
+    [] (the caller falls back to the group accent).
     """
     from vtl_synth.core.constants import VOWEL_TARGETS
     from vtl_synth.core.phonemes import greedy_sampa_split
-    # '~' (nasalité) retiré avant découpe : les noyaux sont comparés
-    # aux clés de plateaux de syltraj, elles-mêmes sans '~'
+    # '~' (nasality) removed before splitting: the nuclei are compared
+    # with the syltraj plateau keys, which carry no '~' themselves
     residual = token.replace('.', '').replace(' ', '').replace('~', '')
     keys = greedy_sampa_split(residual)
     if not keys:
@@ -145,7 +146,7 @@ def token_nuclei(token: str) -> List[str]:
 
 
 # ===========================================================================
-# Stress lexical hors-bande
+# Out-of-band lexical stress
 # ===========================================================================
 
 _ARPA_VOWELS = frozenset({
@@ -153,8 +154,8 @@ _ARPA_VOWELS = frozenset({
     'OW', 'OY', 'UH', 'UW',
 })
 
-# Lettres vocaliques pour les règles orthographiques (es/it/pt) — les
-# accents écrits marquent la syllabe irrégulière dans ces graphies.
+# Vowel letters for the orthographic rules (es/it/pt) — written
+# accents mark the irregular syllable in these orthographies.
 _ACCENTED_LETTERS = {
     'es': 'áéíóú', 'it': 'àèéìòóù', 'pt': 'áàâãéêíóôõú',
 }
@@ -164,20 +165,20 @@ _VOWEL_LETTERS = {
     'pt': 'aeiouáàâãéêíóôõú',
 }
 _STRONG = frozenset('aeoàèòáéóâêôãõ')
-# finales oxytoniques portugaises (spec §4 : -l -r -i -u -im -ns, et
-# nasales finales -ão/-ães/-ões)
+# Portuguese oxytone endings (spec §4: -l -r -i -u -im -ns, and final
+# nasals -ão/-ães/-ões)
 _PT_OXYTONE_RE = re.compile(
     r'(?:l|r|z|i|u|im|ins|ns|ns|ái|éu|ói)$|ãos?$|ães$|õe?s?$')
-# finales espagnoles : consonne finale ≠ n/s → oxytonique
+# Spanish endings: final consonant ≠ n/s → oxytone
 _ES_OXYTONE_RE = re.compile(r'(?:[^aeiouáéíóúns])$')
 
 
 def _cmu_stress(word: str) -> Optional[int]:
-    """Index de syllabe accentuée depuis les digits CMUdict (0/1/2).
+    """Stressed-syllable index from the CMUdict digits (0/1/2).
 
-    L'accent primaire '1' prime ; à défaut le secondaire '2'.
-    Compte les symboles vocaliques ARPAbet avant le symbole porteur
-    (chaque voyelle ARPAbet = exactement un noyau moteur).
+    Primary accent '1' wins over secondary '2'. Counts the ARPAbet
+    vowel symbols before the bearing symbol (each ARPAbet vowel =
+    exactly one engine nucleus).
     """
     try:
         import cmudict
@@ -199,9 +200,10 @@ def _cmu_stress(word: str) -> Optional[int]:
 
 
 def _vowel_groups(word: str, lang: str) -> List[Tuple[int, int, int]]:
-    """Groupes vocaliques orthographiques : (début, fin, pos_accent).
+    """Orthographic vowel groups: (start, end, accented position).
 
-    pos_accent = index du caractère accentué DANS le groupe, ou -1.
+    accented position = index of the accented character WITHIN the
+    group, or -1.
     """
     vowels = _VOWEL_LETTERS[lang]
     accented = set(_ACCENTED_LETTERS[lang])
@@ -223,11 +225,11 @@ def _vowel_groups(word: str, lang: str) -> List[Tuple[int, int, int]]:
 
 
 def _group_yield(group: Tuple[int, int, int], word: str, lang: str) -> int:
-    """Nombre de noyaux SAMPA produits par un groupe vocalique.
+    """Number of SAMPA nuclei produced by one vowel group.
 
-    1 par défaut (diphtongue ai/ei/ia/ua… = noyau + glide) ; 2 pour
-    un hiatus : voyelle faible accentuée (í a, ú e… — l'accent écrit
-    brise la diphtongue) ou deux fortes adjacentes (le-er).
+    1 by default (diphthong ai/ei/ia/ua… = nucleus + glide); 2 for a
+    hiatus: accented weak vowel (í a, ú e… — the written accent breaks
+    the diphthong) or two adjacent strong vowels (le-er).
     """
     seg = word[group[0]:group[1] + 1].lower()
     if len(seg) >= 2:
@@ -238,22 +240,21 @@ def _group_yield(group: Tuple[int, int, int], word: str, lang: str) -> int:
         if strong_pairs and len(set(seg)) >= 1 and seg[0] != seg[1]:
             return 2
         if len(seg) == 2 and seg[0] == seg[1]:
-            return 2                      # voyelle double (leer, cooperar)
+            return 2                      # doubled vowel (leer, cooperar)
     return 1
 
 
 def orthographic_stress_index(word: str, lang: str,
                               n_nuclei: int) -> Optional[int]:
-    """Index de syllabe accentuée depuis l'orthographe (es/it/pt/de).
+    """Stressed-syllable index from the orthography (es/it/pt/de).
 
-    Hiérarchie : accent écrit → cette syllabe ; sinon règle par
-    langue (es : oxytonique si consonne finale ≠ n/s, sinon
-    pénultième ; it : pénultième ; pt : oxytonique sur finales
-    -l/-r/-i/-u/-im/-ns/-ão, sinon pénultième ; de : première
-    syllabe — approximation documentée, préfixes non traités).
-    L'index est calculé dans l'espace des noyaux SAMPA (n_nuclei),
-    la divergence diphtonge/hiatus étant corrigée par comptage de
-    queue.
+    Hierarchy: written accent → that syllable; otherwise a per-
+    language rule (es: oxytone if the final consonant ≠ n/s, else
+    penultimate; it: penultimate; pt: oxytone on the endings
+    -l/-r/-i/-u/-im/-ns/-ão, else penultimate; de: first syllable —
+    documented approximation, prefixes not handled).
+    The index is computed in the SAMPA-nuclei space (n_nuclei), the
+    diphthong/hiatus divergence being corrected by tail counting.
     """
     if n_nuclei <= 0:
         return None
@@ -269,10 +270,10 @@ def orthographic_stress_index(word: str, lang: str,
     acc = next((gi for gi, g in enumerate(groups) if g[2] >= 0), None)
     if acc is not None:
         tail = sum(yields[acc + 1:])
-        base = n_nuclei - tail - yields[acc]   # 1er noyau du groupe
+        base = n_nuclei - tail - yields[acc]   # first nucleus of the group
         seg = word.lower()[groups[acc][0]:groups[acc][1] + 1]
-        # position du caractère accentué parmi les lettres vocaliques
-        # du groupe (hiatus í-a : accent sur le 1er noyau ; a-í : 2e)
+        # position of the accented character among the vowel letters
+        # of the group (hiatus í-a: accent on the 1st nucleus; a-í: 2nd)
         vow = _VOWEL_LETTERS[lang]
         vow_idx = [j for j, c in enumerate(seg) if c in vow]
         pos_in_group = vow_idx.index(groups[acc][2]) if groups[acc][2] < len(vow_idx) else 0
@@ -291,11 +292,11 @@ def orthographic_stress_index(word: str, lang: str,
 
 
 def word_stress(word: str, lang: str, n_nuclei: int) -> Optional[int]:
-    """Index de syllabe accentuée d'un mot (stress hors-bande).
+    """Stressed-syllable index of a word (out-of-band stress).
 
-    Ordre : CMUdict digits (en) → marque Wikipron ˈ/ˌ du lexique
-    chargé → règle orthographique par langue → None (l'appelant
-    retombe sur l'accent de groupe). Jamais ≥ n_nuclei.
+    Order: CMUdict digits (en) → Wikipron ˈ/ˌ mark of the loaded
+    lexicon → per-language orthographic rule → None (the caller falls
+    back to the group accent). Never ≥ n_nuclei.
     """
     if n_nuclei <= 0:
         return None
@@ -321,12 +322,12 @@ def word_stress(word: str, lang: str, n_nuclei: int) -> Optional[int]:
 
 
 # ===========================================================================
-# Plan expressif : texte → SAMPA respiré + plans par chunk
+# Expressive plan: text → breathed SAMPA + per-chunk plans
 # ===========================================================================
 
 @dataclass
 class WordPlan:
-    """Un mot : token SAMPA connecté, noyaux, accent hors-bande."""
+    """One word: connected SAMPA token, nuclei, out-of-band stress."""
     word: str
     token: str
     nuclei: List[str] = field(default_factory=list)
@@ -335,10 +336,10 @@ class WordPlan:
 
 @dataclass
 class ChunkPlan:
-    """Un groupe de souffle : mots, SAMPA ('.'-joint), noyaux, accents.
+    """One breath group: words, SAMPA ('.'-joined), nuclei, accents.
 
-    accents : liste (index_noyau, poids) — l'accent nucléaire est
-    déterminé par position (dernier accent du dernier chunk).
+    accents: list of (nucleus index, weight) — the nuclear accent is
+    determined by position (last accent of the last chunk).
     """
     words: List[WordPlan] = field(default_factory=list)
     sampa: str = ''
@@ -352,16 +353,16 @@ def _norm(word: str) -> str:
 
 
 def _make_chunk_plan(wps: Sequence[WordPlan], lang: str) -> ChunkPlan:
-    """Assemble le plan d'un chunk et choisit les accents de hauteur.
+    """Assemble a chunk plan and choose the pitch accents.
 
-    Politique (simplification documentée) :
+    Policy (documented simplification):
 
-      * fr : pas d'accent lexical — accent de GROUPE sur la dernière
-        syllabe du chunk (Jun & Fougeron 2002 : finale d'AP) ;
-      * autres : accents sur la syllabe accentuée du PREMIER et du
-        DERNIER mot lexical du chunk (déaccentuation des mots-outils
-        et des mots intermédiaires — heuristique given/new) ;
-      * aucun mot lexical (mots-outils seuls) : accent de groupe.
+      * fr: no lexical accent — a GROUP accent on the last syllable
+        of the chunk (Jun & Fougeron 2002: AP-final accent);
+      * others: accents on the stressed syllable of the FIRST and
+        LAST lexical word of the chunk (de-accentuation of function
+        words and intermediate words — a given/new heuristic);
+      * no lexical word (function words only): group accent.
     """
     chunk = ChunkPlan(words=list(wps), sampa='.'.join(wp.token for wp in wps))
     off = 0
@@ -404,19 +405,19 @@ def plan_expressive_text(text: str,
                          expr: ExpressivityProfile,
                          warnings: Optional[list] = None,
                          ) -> Tuple[str, Optional[List[List[ChunkPlan]]]]:
-    """Texte → (SAMPA respiré, plans par phrase).
+    """Text → (breathed SAMPA, per-phrase plans).
 
-    Le SAMPA assemblé est IDENTIQUE à celui du g2p de la langue à
-    ceci près que les groupes de souffle sont séparés par le marqueur
-    ``' % '`` (pause respiratoire) : mots joints par ``.``, parties
-    (virgules) par ``' '``, phrases par ``' | '`` — mêmes conventions
-    que ``text_to_sampa``. Le g2p est appelé MOT PAR MOT (les g2p du
-    paquet sont strictement mot-à-mots : lexique → exceptions →
-    règles), ce qui donne le plan mots↔tokens vérifiable.
+    The assembled SAMPA is IDENTICAL to the language g2p output except
+    that breath groups are separated by the ``' % '`` marker (breath
+    pause): words joined by ``.``, parts (commas) by ``' '``, phrases
+    by ``' | '`` — the same conventions as ``text_to_sampa``. The g2p
+    is called WORD BY WORD (the package g2p modules are strictly
+    word-level: lexicon → exceptions → rules), which yields a
+    verifiable words↔tokens plan.
 
-    Retourne (sampa, plans) ; plans[i] = chunks (aplanis) de la
-    phrase i, ou None si AUCUNE phrase n'a pu être planifiée
-    (l'appelant retombe sur la déclinaison monotone).
+    Returns (sampa, plans); plans[i] = the flattened chunks of phrase
+    i, or None if NO phrase could be planned (the caller falls back to
+    the monotone declination).
     """
     own = warnings is None
     if own:
@@ -454,14 +455,14 @@ def plan_expressive_text(text: str,
 
 
 # ===========================================================================
-# Sculpture du contour F0
+# F0 contour sculpting
 # ===========================================================================
 
 def _segments_from_blocks(block_info) -> List[Tuple[int, int]]:
-    """Segments de contenu (pas @100 Hz) séparés par les blocs pause.
+    """Content segments (steps @100 Hz) separated by pause blocks.
 
-    Les blocs 'pause' / 'initial' / 'terminal' sont des séparateurs ;
-    le 'initial' de tête de phrase est sauté (silence initial).
+    The 'pause' / 'initial' / 'terminal' blocks are separators; the
+    phrase-head 'initial' block is skipped (leading silence).
     """
     segs: List[Tuple[int, int]] = []
     off = 0
@@ -481,7 +482,7 @@ def _segments_from_blocks(block_info) -> List[Tuple[int, int]]:
 
 
 def _plateaus_from_blocks(block_info, seg: Tuple[int, int]):
-    """Plateaux vocaliques (pas @100 Hz, clé) d'un segment."""
+    """Vowel plateaus (steps @100 Hz, key) of one segment."""
     out: List[Tuple[int, int, str]] = []
     off = 0
     s, e = seg
@@ -501,22 +502,22 @@ def apply_expressive_f0(glott400: np.ndarray,
                         expr: ExpressivityProfile,
                         chunk_plans: Sequence[ChunkPlan],
                         block_info) -> bool:
-    """Sculpte le F0 expressif d'une phrase (colonne 0 du glottis).
+    """Sculpt the expressive F0 of one phrase (glottis column 0).
 
-    Retourne True si le contour a pu être appliqué, False si
-    l'alignement chunks↔segments échoue (l'appelant retombe sur la
-    déclinaison monotone). Ne modifie AUCUNE autre colonne : le tract
-    et l'amplitude restent ceux du moteur.
+    Returns True when the contour could be applied, False when the
+    chunks↔segments alignment fails (the caller falls back to the
+    monotone declination). Modifies NO other column: the tract and the
+    amplitude remain the engine's.
     """
     n = len(glott400)
     segs = _segments_from_blocks(block_info)
     if not segs or len(segs) != len(chunk_plans):
         return False
 
-    # f0 écrit par chunk (pour ponte des trous inter-segments) :
-    # les zones de pause gardent le f0 moteur, mais leurs bords
-    # peuvent rester voisés (attaque/arc post-pause) — sans pont,
-    # la jonction avec la reprise d'attaque du chunk suivant saute.
+    # f0 written per chunk (for bridging the inter-segment gaps): the
+    # pause regions keep the engine f0, but their edges may remain
+    # voiced (post-pause attack/arc) — without a bridge, the junction
+    # with the next chunk's attack reset jumps.
     written: List[Tuple[int, int]] = []
     K = len(segs)
     for k, (seg, plan) in enumerate(zip(segs, chunk_plans)):
@@ -525,7 +526,7 @@ def apply_expressive_f0(glott400: np.ndarray,
         L = e400 - s400
         if L <= 12:
             continue
-        # --- déclinaison de base + reprise d'attaque ----------------
+        # --- base declination + attack reset -------------------------
         start_gain = onset_gain if k == 0 else \
             1.0 + (onset_gain - 1.0) * expr.chunk_reset
         end_gain = onset_gain + (final_gain - onset_gain) * (k + 1) / K
@@ -535,31 +536,31 @@ def apply_expressive_f0(glott400: np.ndarray,
         if ramp_len > 0:
             decl[:ramp_len] = np.linspace(1.0, decl[ramp_len - 1], ramp_len)
 
-        # --- alignement plateaux ↔ noyaux ----------------------------
+        # --- plateau ↔ nucleus alignment ------------------------------
         plateaus = _plateaus_from_blocks(block_info, seg)
         keys_engine = [p[2] for p in plateaus]
         aligned = keys_engine == list(plan.nuclei)
         if aligned:
             accents = plan.accents
         else:
-            # repli : accent de groupe (dernière syllabe du chunk)
+            # fallback: group accent (last syllable of the chunk)
             accents = [(len(plateaus) - 1, 1.0)] if plateaus else []
         accents = [(i, w) for i, w in accents
                    if plateaus and 0 <= i < len(plateaus)]
         if not plateaus:
-            # pas de noyau localisé : déclinaison seule
+            # no localized nucleus: declination only
             glott400[s400:e400, 0] = f0_base * decl
             continue
 
-        # --- bosses de hauteur + downstep ---------------------------
+        # --- pitch bumps + downstep -----------------------------------
         bumps = np.zeros(L)
         down_count = np.zeros(L)
         accent_ends: List[int] = []
         t = np.arange(L)
         for nuc_idx, weight in accents:
             p0, p1, _ = plateaus[nuc_idx]
-            # centre de la bosse : 35 % dans le plateau (pic H* sur la
-            # syllabe accentuée), positions relatives au chunk @400 Hz
+            # bump center: 35 % into the plateau (H* peak on the
+            # stressed syllable), positions relative to the chunk @400 Hz
             c = int((p0 - seg[0] + 0.35 * (p1 - p0)) * _SR_STEP)
             c = max(0, min(L - 1, c))
             amp = expr.accent_amplitude * weight
@@ -572,7 +573,7 @@ def apply_expressive_f0(glott400: np.ndarray,
             down_count[fe:] += 1
         decl = decl * (expr.downstep ** down_count)
 
-        # --- chute nucléaire (dernier chunk) -------------------------
+        # --- nuclear fall (last chunk) --------------------------------
         nuclear_mult = np.ones(L)
         if k == K - 1 and accents:
             p0, p1, _ = plateaus[accents[-1][0]]
@@ -584,19 +585,19 @@ def apply_expressive_f0(glott400: np.ndarray,
                 nuclear_mult = 1.0 - (1.0 - expr.nuclear_fall_factor) * s_term
 
         f0 = f0_base * decl * (1.0 + bumps) * nuclear_mult
-        # lissage court (anti-coin numérique) sur le chunk
+        # short smoothing (anti numerical corner) over the chunk
         if L > 3:
             kernel = np.ones(5) / 5.0
             f0 = np.convolve(f0, kernel, mode='same')
-            # bordes : recoller les extrémités non lissées
+            # edges: re-stick the unsmoothed extremities
             f0[:2] = f0[2]
             f0[-2:] = f0[-3]
         glott400[s400:e400, 0] = f0
         written.append((s400, e400))
 
-    # --- ponts inter-chunks : rampe linéaire sur les zones de pause
-    # (f0 ignoré quand rel_amp ≈ 0, continu quand l'attaque est
-    # déjà voisée) — garantit l'absence de saut à la jonction.
+    # --- inter-chunk bridges: linear ramp over the pause regions
+    # (f0 is ignored when rel_amp ≈ 0, and continuous when the attack
+    # is already voiced) — guarantees no jump at the junction.
     for (s0, e0), (s1, e1) in zip(written, written[1:]):
         gap = s1 - e0
         if gap > 0:

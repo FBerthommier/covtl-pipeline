@@ -109,8 +109,9 @@ def _make_pipeline(args: argparse.Namespace):
                              ('pause_long_ms', 320.0)):
             if kwargs[key] is None:
                 kwargs[key] = default
-    # expressive= n'existe que lorsque le language pack (>= v1.0.8) est
-    # installe (Pipeline natif multi-speakers sans prosodie expressive)
+    # expressive= only exists when the language pack (>= v1.0.8) is
+    # installed (the native multi-speaker Pipeline has no expressive
+    # prosody)
     if getattr(args, 'expressive', False):
         kwargs['expressive'] = True
     return Pipeline(**kwargs)
@@ -120,7 +121,7 @@ def _print_lang(args: argparse.Namespace) -> None:
     try:
         from vtl_synth.utils.setlang import get_profile
     except ImportError:
-        return          # language pack non installe : rien a afficher
+        return          # language pack not installed: nothing to print
     from vtl_synth.core import speaker_registry as sr
     lang = _resolve_lang(args)
     profile = get_profile(lang)
@@ -129,18 +130,18 @@ def _print_lang(args: argparse.Namespace) -> None:
         from vtl_synth.utils.lexicon_loader import LEXICONS, has_lexicon
         if lang in LEXICONS and has_lexicon(lang):
             from vtl_synth.utils.lexicon_loader import lexicon_size
-            extra = f", lexique : {lexicon_size(lang)} entrées"
+            extra = f", lexicon: {lexicon_size(lang)} entries"
         elif lang in LEXICONS:
-            extra = ', lexique : ABSENT (règles seules)'
+            extra = ', lexicon: ABSENT (rules only)'
     except Exception:
-        extra = ', lexique : ERREUR de chargement'
-    print(f'  langue    : {lang} ({profile.display_name}), '
-          f'speaker {sr.active_name()} — g2p : '
+        extra = ', lexicon: LOAD ERROR'
+    print(f'  language  : {lang} ({profile.display_name}), '
+          f'speaker {sr.active_name()} — g2p: '
           f'{profile.g2p_callable.__name__}{extra}')
-    prosody = ('expressive (respiration syntaxique + accents de hauteur)'
+    prosody = ('expressive (syntactic breathing + pitch accents)'
                if getattr(args, 'expressive', False)
-               else 'monotone (déclinaison, défaut)')
-    print(f'  prosodie  : {prosody}')
+               else 'monotone (declination, default)')
+    print(f'  prosody   : {prosody}')
 
 
 # ==========================================================================
@@ -176,7 +177,7 @@ def cmd_text_to_wav(args: argparse.Namespace) -> int:
                               use_g2p=not args.phonetic, label=args.label)
     prosody = 'expressive' if getattr(args, 'expressive', False) else 'monotone'
     print()
-    print(f'SUCCESS ({_resolve_lang(args)}, prosodie : {prosody}): '
+    print(f'SUCCESS ({_resolve_lang(args)}, prosody: {prosody}): '
           f'{result.wav_path} ({result.duration_s:.2f} s)')
     return 0
 

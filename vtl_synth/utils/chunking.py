@@ -4,41 +4,40 @@
 """
 chunking.py
 ===========
-Respiration syntaxique (expressive prosody, v1.0.8 — option, défaut OFF).
+Syntactic breathing (expressive prosody, v1.0.8 — option, default OFF).
 
-Découpe une phrase en *groupes de souffle* (breath groups) et insère
-une pause courte à chaque frontière, pour qu'aucune chaîne de mots
-coarticulés ne dépasse ``max_chain_words`` (défaut 5). Sans ce
-découpage, le g2p relie tous les mots d'une phrase sans ponctuation
-par ``.`` (coarticulation v1.0.2) : une phrase longue devient UNE
-chaîne syllabique inintelligible de plusieurs secondes.
+Splits a sentence into *breath groups* and inserts a short pause at
+each boundary, so that no chain of coarticulated words exceeds
+``max_chain_words`` (default 5). Without this splitting, the g2p
+connects all words of an unpunctuated sentence with ``.`` (v1.0.2
+coarticulation): a long phrase becomes ONE unintelligible syllabic
+chain lasting several seconds.
 
-HEURISTIQUE LEXICALE AVOUÉE — ceci n'est PAS un parseur syntaxique.
-Le chunking opère sur les mots orthographiques (avant g2p) avec trois
-règles par ordre de priorité (cf. docs/PROMPT_prosodie_expressivite.md
-§3.1) :
+DOCUMENTED LEXICAL HEURISTIC — this is NOT a syntactic parser.
+The chunking operates on orthographic words (before g2p) with three
+rules by order of priority (see docs/PROMPT_prosodie_expressivite.md
+§3.1 — the archived design specification, in French):
 
-  1. frontières déjà marquées : virgules / points-virgules /
-     deux-points / tirets (le g2p les convertit déjà en pause) ;
-  2. mots fonctionnels de frontière : conjonctions de coordination et
-     de subordination, pronoms relatifs, connecteurs → pause AVANT le
-     bloc introduit (dictionnaires de 30–50 mots-outils par langue,
-     couverture typique ~80 % des frontières utiles) ;
-  3. limite dure : toute course de mots sans frontière est découpée
-     en parts équilibrées de sorte qu'aucune ne dépasse
-     ``max_chain_words`` mots (7 mots avec max=5 → 4+3) ; si la
-     frontière tombe sur le début d'un groupe prépositionnel, elle
-     est d'autant plus naturelle ;
-  4. pas de pause à un endroit impossible : un mot-outil final
-     (déterminant, préposition, auxiliaire) n'est jamais laissé en
-     fin de bloc lorsqu'il peut rattraper le bloc suivant (passe de
-     correction « mot han-gant »), et la limite dure reste stricte.
+  1. already-marked boundaries: commas / semicolons / colons / dashes
+     (the g2p already converts them to pauses);
+  2. boundary function words: coordinating and subordinating
+     conjunctions, relative pronouns, connectives → pause BEFORE the
+     introduced block (30–50 function-word dictionaries per language,
+     typical coverage ~80 % of useful boundaries);
+  3. hard limit: any boundary-free run of words is split into
+     near-equal parts so that none exceeds ``max_chain_words`` words
+     (7 words with max=5 → 4+3); when the boundary falls on the start
+     of a prepositional group it is all the more natural;
+  4. no pause at an impossible spot: a final function word
+     (determiner, preposition, auxiliary) is never left at the end of
+     a block when it can be absorbed by the next one (the "dangling
+     word" repair pass), and the hard limit stays strict.
 
-Références (hiérarchie prosodique, joncture) : Selkirk (1984), Nespor
-& Vogel (1986) ; typologie des contours : Jun (2005, 2014).
+References (prosodic hierarchy, juncture): Selkirk (1984), Nespor &
+Vogel (1986); contour typology: Jun (2005, 2014).
 
-Le module ne dépend d'aucun autre module du paquet : il est utilisable
-seul (tests, outillage) et est consommé par
+The module depends on no other module of the package: it is usable
+standalone (tests, tooling) and is consumed by
 :mod:`vtl_synth.utils.prosody_f0`.
 """
 
@@ -48,17 +47,17 @@ import re
 from typing import Dict, List, Sequence, Set, Tuple
 
 # ===========================================================================
-# Ponctuation — miroir exact des conventions des g2p
+# Punctuation — exact mirror of the g2p conventions
 # ===========================================================================
-# Phrase : [.!?;:]+ → '|' (pause longue) ; virgule/tiret → pause courte.
+# Sentence: [.!?;:]+ → '|' (long pause); comma/dash → short pause.
 SENT_SPLIT_RE = re.compile(r'[.!?;:]+\s*')
 COMMA_SPLIT_RE = re.compile(r'\s*[,–—]\s*')
 
-# Expressions régulières de mot par langue — miroir des ``_WORD_RE`` des
-# g2p (g2p.py, g2p_fr_legacy.py, g2p_es/de/it/pt.py). L'équivalence est
-# vérifiée par la non-régression (le plan expressif recompte les tokens
-# produits par le g2p et retombe sur la déclinaison monotone en cas
-# d'écart).
+# Per-language word regexes — mirror of the g2p ``_WORD_RE`` patterns
+# (g2p.py, g2p_fr_legacy.py, g2p_es/de/it/pt.py). Equivalence is
+# enforced by the non-regression tests (the expressive plan re-counts
+# the tokens produced by the g2p and falls back to the monotone
+# declination on any mismatch).
 WORD_RES: Dict[str, re.Pattern] = {
     'en': re.compile(r"[A-Za-z']+"),
     'fr': re.compile(r"[A-Za-zÀ-ÿ'’]+"),
@@ -69,51 +68,51 @@ WORD_RES: Dict[str, re.Pattern] = {
 }
 
 # ===========================================================================
-# Dictionnaires de mots fonctionnels par langue
+# Per-language function-word dictionaries
 # ===========================================================================
-# Chaque langue fournit :
-#   boundary_before : la pause se place AVANT ce mot (conjonctions,
-#                     relatifs, connecteurs) ;
-#   bigrams         : paires (w1, w2) jouant le rôle de connecteur
-#                     (« parce que », « so that ») — pause avant w1 ;
-#   never_start     : mots qui ne devraient pas RESTER en fin de bloc
-#                     (déterminants, prépositions, auxiliaires,
-#                     pronoms clitiques) — passe de correction ;
-#   prepositions    : pour la limite dure, la coupure privilégie le
-#                     début d'un groupe prépositionnel ;
-#   unaccentable    : mots qui ne portent jamais l'accent de hauteur
-#                     (consommé par prosody_f0).
+# Each language provides:
+#   boundary_before : the pause is placed BEFORE this word (conjunctions,
+#                     relatives, connectives);
+#   bigrams         : (w1, w2) pairs acting as one connective
+#                     ("parce que", "so that") — pause before w1;
+#   never_start     : words that should not REMAIN at the end of a block
+#                     (determiners, prepositions, auxiliaries, clitic
+#                     pronouns) — repair pass;
+#   prepositions    : for the hard limit, a cut at the start of a
+#                     prepositional group is preferred;
+#   unaccentable    : words that never carry a pitch accent
+#                     (consumed by prosody_f0).
 #
-# Choix lexicaux : les 30–50 mots-outils les plus fréquents par langue
-# (heuristique documentée, pas une grammaire).
+# Lexical choices: the 30–50 most frequent function words per language
+# (documented heuristic, not a grammar).
 
 _CHUNK_EN: Dict[str, Set[str]] = {
     'boundary_before': {
         # coordination
         'and', 'or', 'but', 'nor', 'so', 'yet',
-        # subordination / complétives
+        # subordination / complementizers
         'because', 'although', 'though', 'while', 'when', 'whenever',
         'if', 'unless', 'since', 'after', 'before', 'until', 'once',
         'whereas', 'whether',
-        # relatifs
+        # relatives
         'that', 'which', 'who', 'whom', 'whose', 'where', 'why',
-        # connecteurs
+        # connectives
         'however', 'therefore', 'moreover', 'instead', 'then',
     },
     'bigrams': {('so', 'that'), ('even', 'though'), ('as', 'if'),
                 ('in', 'order'), ('so', 'as')},
     'never_start': {
-        # déterminants / quantifieurs
+        # determiners / quantifiers
         'the', 'a', 'an', 'this', 'that', 'these', 'those', 'my',
         'your', 'his', 'her', 'its', 'our', 'their', 'some', 'any',
         'each', 'every', 'no', 'all', 'both', 'several', 'many',
         'few', 'one', 'two', 'three',
-        # prépositions
+        # prepositions
         'of', 'to', 'in', 'on', 'at', 'for', 'with', 'from', 'by',
         'as', 'into', 'onto', 'over', 'under', 'about', 'between',
         'during', 'without', 'within', 'across', 'through', 'near',
         'above', 'below', 'off', 'up', 'down', 'out',
-        # auxiliaires / copule / négation
+        # auxiliaries / copula / negation
         'is', 'are', 'was', 'were', 'am', 'be', 'been', 'being',
         'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would',
         'can', 'could', 'should', 'shall', 'may', 'might', 'must',
@@ -141,10 +140,10 @@ _CHUNK_FR: Dict[str, Set[str]] = {
         # subordination
         'si', 'comme', 'lorsque', 'quand', 'puisque', 'quoique',
         'avant', 'après', 'pendant', 'dès',
-        # relatifs
+        # relatives
         'qui', 'que', 'quoi', 'dont', 'où', 'lequel', 'laquelle',
         'lesquels', 'lesquelles',
-        # connecteurs
+        # connectives
         'alors', 'cependant', 'toutefois', 'pourtant', 'ensuite',
         'enfin', 'aussi',
     },
@@ -152,15 +151,15 @@ _CHUNK_FR: Dict[str, Set[str]] = {
                 ('pour', 'que'), ('afin', 'que'), ('avant', 'que'),
                 ('après', 'que'), ('pendant', 'que')},
     'never_start': {
-        # déterminants
+        # determiners
         'le', 'la', 'les', 'un', 'une', 'des', 'du', 'au', 'aux',
         'ce', 'cet', 'cette', 'ces', 'mon', 'ma', 'mes', 'ton', 'ta',
         'tes', 'son', 'sa', 'ses', 'notre', 'nos', 'votre', 'vos',
         'leur', 'leurs', 'quelque', 'plusieurs',
-        # prépositions
+        # prepositions
         'de', 'à', 'en', 'dans', 'sur', 'sous', 'par', 'avec', 'sans',
         'pour', 'chez', 'vers', 'entre', 'depuis', 'jusque',
-        # clitiques / auxiliaires / négation
+        # clitics / auxiliaries / negation
         'je', 'tu', 'il', 'elle', 'on', 'nous', 'vous', 'ils', 'elles',
         'me', 'te', 'se', 'lui', 'leur', 'y', "l'", "d'", "qu'", "n'",
         'est', 'sont', 'était', 'étaient', 'été', 'être', 'a', 'ont',
@@ -186,22 +185,22 @@ _CHUNK_ES: Dict[str, Set[str]] = {
         # subordination
         'porque', 'aunque', 'cuando', 'si', 'como', 'mientras',
         'pues', 'según', 'aunque', 'apenas',
-        # relatifs
+        # relatives
         'que', 'quien', 'quienes', 'cual', 'cuales', 'donde', 'cuyo',
-        # connecteurs
+        # connectives
         'entonces', 'además', 'también', 'tampoco',
     },
     'bigrams': {('para', 'que'), ('así', 'que'), ('por', 'lo'),
                 ('sin', 'embargo')},
     'never_start': {
-        # déterminants
+        # determiners
         'el', 'la', 'los', 'las', 'un', 'una', 'unos', 'unas', 'lo',
         'mi', 'tu', 'su', 'nuestro', 'nuestra', 'vuestro', 'vuestra',
         'este', 'esta', 'estos', 'estas', 'ese', 'esa', 'esos', 'esas',
-        # prépositions
+        # prepositions
         'de', 'a', 'en', 'con', 'por', 'para', 'sin', 'sobre',
         'entre', 'hacia', 'desde', 'hasta',
-        # clitiques / auxiliaires / négation
+        # clitics / auxiliaries / negation
         'me', 'te', 'se', 'le', 'les', 'nos', 'os', 'lo',
         'es', 'son', 'era', 'eran', 'fue', 'fueron', 'sea', 'sean',
         'ha', 'han', 'he', 'hemos', 'había', 'habían', 'ser', 'estar',
@@ -226,23 +225,23 @@ _CHUNK_DE: Dict[str, Set[str]] = {
         # subordination
         'weil', 'dass', 'wenn', 'als', 'ob', 'wie', 'obwohl', 'da',
         'denn', 'damit', 'bevor', 'nachdem', 'während', 'bis', 'falls',
-        # relatifs ('der/die/das' exclus : articles dans l'immense
-        # majorité des contextes — faux positifs systématiques)
+        # relatives ('der/die/das' excluded: articles in the vast
+        # majority of contexts — systematic false positives)
         'welcher', 'welche', 'welches', 'wessen', 'wem', 'wo',
-        # connecteurs
+        # connectives
         'doch', 'jedoch', 'deshalb', 'daher', 'außerdem', 'dann',
     },
     'bigrams': {('zum', 'beispiel'), ('so', 'dass'), ('an', 'statt')},
     'never_start': {
-        # déterminants / articles
+        # determiners / articles
         'ein', 'eine', 'einen', 'einem', 'einer', 'eines', 'dem',
         'den', 'des', 'mein', 'meine', 'dein', 'deine', 'sein', 'seine',
         'ihr', 'ihre', 'unser', 'unsere', 'dieser', 'diese', 'dieses',
-        # prépositions
+        # prepositions
         'in', 'an', 'auf', 'mit', 'von', 'zu', 'zur', 'zum', 'bei',
         'nach', 'aus', 'für', 'über', 'unter', 'vor', 'durch', 'gegen',
         'um', 'ohne', 'bis', 'um',
-        # clitiques / auxiliaires / négation
+        # clitics / auxiliaries / negation
         'ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr', 'mich', 'dich',
         'ihm', 'uns', 'nicht', 'kein', 'keine', 'ist', 'sind', 'war',
         'waren', 'bin', 'haben', 'hat', 'hatte', 'sein', 'haben',
@@ -267,22 +266,22 @@ _CHUNK_IT: Dict[str, Set[str]] = {
         # subordination
         'perché', 'se', 'come', 'mentre', 'quando', 'poiché', 'siccome',
         'affinché', 'benché', 'dato',
-        # relatifs
+        # relatives
         'che', 'chi', 'cui', 'quale', 'quali', 'dove',
-        # connecteurs
+        # connectives
         'dunque', 'quindi', 'inoltre', 'allora', 'anche',
     },
     'bigrams': {('per', 'quanto'), ('dato', 'che'), ('per', 'ciò')},
     'never_start': {
-        # déterminants
+        # determiners
         'il', 'lo', 'la', 'i', 'gli', 'le', 'un', 'uno', 'una', 'mi',
         'tu', 'su', 'mio', 'mia', 'tuo', 'tua', 'suo', 'sua', 'nostro',
         'nostra', 'questo', 'questa', 'questi', 'queste',
-        # prépositions (article + préposition included)
+        # prepositions (preposition + article forms included)
         'di', 'a', 'da', 'in', 'con', 'su', 'per', 'tra', 'fra',
         'senza', 'sotto', 'sopra', 'del', 'della', 'dei', 'delle',
         'al', 'alla', 'ai', 'alle', 'nel', 'nella', 'sul', 'sulla',
-        # clitiques / auxiliaires / négation
+        # clitics / auxiliaries / negation
         'mi', 'ti', 'si', 'ci', 'vi', 'lo', 'gli',
         'è', 'sono', 'era', 'erano', 'fosse', 'ha', 'hanno', 'ho',
         'abbiamo', 'aveva', 'avevano', 'essere', 'non', 'molto',
@@ -306,23 +305,23 @@ _CHUNK_PT: Dict[str, Set[str]] = {
         # subordination
         'porque', 'pois', 'quando', 'se', 'como', 'enquanto', 'embora',
         'caso', 'logo',
-        # relatifs
+        # relatives
         'que', 'quem', 'onde', 'qual', 'quais', 'cujo', 'cuja',
-        # connecteurs
+        # connectives
         'então', 'também', 'contudo',
     },
     'bigrams': {('para', 'que'), ('já', 'que'), ('por', 'isso'),
                 ('no', 'entanto')},
     'never_start': {
-        # déterminants
+        # determiners
         'o', 'a', 'os', 'as', 'um', 'uma', 'uns', 'umas', 'meu', 'minha',
         'teu', 'tua', 'seu', 'sua', 'nosso', 'nossa', 'este', 'esta',
         'estes', 'estas', 'esse', 'essa', 'isso',
-        # prépositions
+        # prepositions
         'de', 'a', 'em', 'com', 'por', 'para', 'sem', 'sobre', 'entre',
         'até', 'desde', 'após', 'do', 'da', 'dos', 'das', 'no', 'na',
         'nos', 'nas', 'ao', 'à', 'aos', 'às',
-        # clitiques / auxiliaires / négation
+        # clitics / auxiliaries / negation
         'me', 'te', 'se', 'lhe', 'nos', 'vos', 'é', 'são', 'era',
         'eram', 'foi', 'foram', 'ser', 'estar', 'tem', 'têm', 'ter',
         'não', 'muito',
@@ -349,12 +348,12 @@ CHUNK_WORDS: Dict[str, Dict[str, Set[str]]] = {
 
 
 def _norm(word: str) -> str:
-    """Normalisation pour recherche lexicale (minuscules, apostrophes)."""
+    """Normalization for lexical lookup (lowercase, apostrophes)."""
     return word.lower().replace('’', "'").strip()
 
 
 def _words_of(text: str, lang: str) -> List[str]:
-    """Mots orthographiques selon la regex miroir de la langue."""
+    """Orthographic words according to the language's mirror regex."""
     return WORD_RES.get(lang, WORD_RES['en']).findall(text)
 
 
@@ -365,25 +364,23 @@ def _words_of(text: str, lang: str) -> List[str]:
 def chunk_word_list(words: Sequence[str],
                     lang: str,
                     max_chain: int = 5) -> List[List[str]]:
-    """Découpe une liste de mots (sans ponctuation) en groupes de souffle.
+    """Split a word list (no punctuation) into breath groups.
 
-    Trois passes :
+    Three passes:
 
-      1. bornage lexical (règle 2) : frontière avant chaque
-         conjonction / connecteur / relatif, en traitant les
-         connecteurs bisyllabiques (« parce que », « so that ») comme
-         un bloc insécable ;
-      2. limite dure équilibrée (règle 3) : toute course de mots sans
-         frontière plus longue que ``max_chain`` est découpée en
-         parts voisines de la même taille (une course de 7 mots avec
-         max=5 donne 4+3, pas 5+2) — si la frontière tombe sur le
-         début d'un groupe prépositionnel, elle est d'autant plus
-         naturelle ;
-      3. correction « mot han-gant » (règle 4) : un mot-outil final
-         (déterminant, préposition, auxiliaire, clitique) rattrape le
-         bloc suivant lorsque la limite dure n'est pas violée.
+      1. lexical bounding (rule 2): a boundary before every
+         conjunction / connective / relative, treating two-word
+         connectives ("parce que", "so that") as an inseparable block;
+      2. balanced hard limit (rule 3): any boundary-free run longer
+         than ``max_chain`` is split into near-equal parts (a 7-word
+         run with max=5 yields 4+3, not 5+2) — when the boundary falls
+         on the start of a prepositional group it is all the more
+         natural;
+      3. "dangling word" repair (rule 4): a final function word
+         (determiner, preposition, auxiliary, clitic) is absorbed by
+         the next block whenever the hard limit is not violated.
 
-    Aucun bloc ne dépasse ``max_chain`` mots (un bloc d'un mot reste
+    No block exceeds ``max_chain`` words (a one-word block remains
     possible).
     """
     spec = CHUNK_WORDS.get(lang, CHUNK_WORDS['en'])
@@ -391,22 +388,22 @@ def chunk_word_list(words: Sequence[str],
     bigrams = spec['bigrams']
     never_start = spec['never_start']
 
-    # --- passe 1 : courses de mots entre frontières lexicales --------
+    # --- pass 1: word runs between lexical boundaries -----------------
     runs: List[List[str]] = [[]]
     i = 0
     while i < len(words):
         wl = _norm(words[i])
         nxt = _norm(words[i + 1]) if i + 1 < len(words) else ''
         if runs[-1] and (wl, nxt) in bigrams:
-            runs.append([])                       # frontière avant w1
+            runs.append([])                       # boundary before w1
         elif runs[-1] and wl in boundary and not (
                 i > 0 and (_norm(words[i - 1]), wl) in bigrams
         ):
-            runs.append([])                       # frontière avant wl
+            runs.append([])                       # boundary before wl
         runs[-1].append(words[i])
         i += 1
 
-    # --- passe 2 : limite dure, découpe équilibrée --------------------
+    # --- pass 2: hard limit, balanced split ----------------------------
     chunks: List[List[str]] = []
     for run in runs:
         if len(run) <= max_chain or len(run) <= 1:
@@ -420,7 +417,7 @@ def chunk_word_list(words: Sequence[str],
             chunks.append(list(run[start:start + size]))
             start += size
 
-    # --- passe 3 : mots han-gants -------------------------------------
+    # --- pass 3: dangling function words -------------------------------
     moved = True
     while moved:
         moved = False
@@ -435,7 +432,7 @@ def chunk_word_list(words: Sequence[str],
 
 def chunk_part(part: str, lang: str,
                max_chain: int = 5) -> List[List[str]]:
-    """Découpe un fragment sans ponctuation (une « partie sans virgule »)."""
+    """Split a punctuation-free fragment (a "comma-free part")."""
     words = _words_of(part, lang)
     if not words:
         return []
@@ -444,12 +441,12 @@ def chunk_part(part: str, lang: str,
 
 def chunk_sentence(sentence: str, lang: str,
                    max_chain: int = 5) -> List[List[List[str]]]:
-    """Une phrase (sans ponctuation de fin) → blocs, groupés par partie
-    séparée par virgule (chaque sous-liste = les blocs d'une partie).
+    """One sentence (no final punctuation) → blocks, grouped by
+    comma-separated part (each sub-list = the blocks of one part).
 
-    La structure « parties » est conservée pour que l'assemblage SAMPA
-    reproduise la convention du g2p : virgule → pause courte (' '),
-    frontière de souffle → marqueur '%' (cf. prosody_f0).
+    The "parts" structure is kept so that the SAMPA assembly mirrors
+    the g2p conventions: comma → short pause (' '), breath boundary →
+    '%' marker (see prosody_f0).
     """
     out: List[List[List[str]]] = []
     for part in COMMA_SPLIT_RE.split(sentence):
@@ -463,13 +460,13 @@ def chunk_sentence(sentence: str, lang: str,
 
 
 def split_sentences(text: str) -> List[str]:
-    """Phrase-texte → liste de phrases (miroir de la ponctuation g2p)."""
+    """Raw text → sentence list (mirror of the g2p punctuation)."""
     return [s.strip() for s in SENT_SPLIT_RE.split(text) if s.strip()]
 
 
 def chunk_text(text: str, lang: str,
                max_chain: int = 5) -> List[List[List[List[str]]]]:
-    """Texte complet → phrases → parties (virgules) → blocs de souffle."""
+    """Full text → sentences → parts (commas) → breath groups."""
     return [chunk_sentence(s, lang, max_chain=max_chain)
             for s in split_sentences(text)]
 

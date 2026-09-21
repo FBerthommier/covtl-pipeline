@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
-"""Expressive prosody tests (v1.0.8 — option, défaut OFF).
+"""Expressive prosody tests (v1.0.8 — option, default OFF).
 
-Couvre le cahier des charges docs/PROMPT_prosodie_expressivite.md §6.5 :
+Covers the specification docs/PROMPT_prosodie_expressivite.md §6.5
+(archived design document, in French):
 
-  (a) mode off = sorties bit-identiques (sampa des g2p inchangé,
-      syltraj inchangé sans marqueur '%') ;
-  (b) chunking : frontières attendues par langue, aucune chaîne >
-      max_chain_words, connecteurs insécables, mots han-gants ;
-  (c) stress hors-bande : capture Wikipron ˈ/ˌ, digits CMUdict,
-      règles orthographiques es/it/pt/de ;
-  (d) contour F0 expressif : accents mesurables (bosse soutenue),
-      douceur (pas de saut > 5 Hz/frame), chute nucléaire ;
-  (e) assemblage SAMPA : le plan expressif sans frontière est le
-      SAMPA du g2p au caractère près (conventions préservées).
+  (a) off mode = bit-identical outputs (g2p sampa unchanged, syltraj
+      unchanged without the '%' marker);
+  (b) chunking: expected boundaries per language, no chain >
+      max_chain_words, inseparable connectives, dangling words;
+  (c) out-of-band stress: Wikipron ˈ/ˌ capture, CMUdict digits,
+      es/it/pt/de orthographic rules;
+  (d) expressive F0 contour: measurable accents (sustained bump),
+      smoothness (no jump > 5 Hz/frame), nuclear fall;
+  (e) SAMPA assembly: the boundary-free expressive plan is the g2p
+      SAMPA to the character (conventions preserved).
 """
 import sys
 from pathlib import Path
@@ -38,12 +39,12 @@ ALL_LANGS = ('en', 'fr', 'es', 'de', 'it', 'pt')
 
 
 # ===========================================================================
-# (a) bit-identity mode off
+# (a) bit-identity, mode off
 # ===========================================================================
 
 def test_syltraj_unchanged_without_breath_marker():
-    """Sans '%' dans la phrase, pause_breath_ms ne change RIEN
-    (mêmes blocs, mêmes durées — bit-identité du mode off)."""
+    """Without '%' in the phrase, pause_breath_ms changes NOTHING
+    (same blocks, same durations — bit-identity of the off mode)."""
     import vtl_synth.core.syltraj as sj
     p1, b1, _, _ = sj.build_phrase_pval('ba.na.na ba')
     p2, b2, _, _ = sj.build_phrase_pval('ba.na.na ba', pause_breath_ms=130)
@@ -58,7 +59,7 @@ def test_syltraj_breath_marker_shorter_pause():
                                            pause_breath_ms=130)
     breaths = [b for b in blocks if b.breath]
     assert len(breaths) == 1
-    # 130 ms = 13 pas @100 Hz — plus court que la pause virgule (20)
+    # 130 ms = 13 steps @100 Hz — shorter than the comma pause (20)
     assert breaths[0].n_steps == 13
     assert breaths[0].n_steps < 20
 
@@ -68,15 +69,15 @@ def test_syltraj_breath_marker_shorter_pause():
     ('fr', 'bonjour je cherche une route'),
 ])
 def test_pipeline_off_bit_identical(lang, text, tmp_path):
-    """Pipeline(expressive=False) — chemin de code inchangé : le SAMPA
-    transcript est exactement celui du g2p de la langue (aucun '%')."""
+    """Pipeline(expressive=False) — unchanged code path: the SAMPA
+    transcript is exactly the language g2p output (no '%')."""
     from vtl_synth import Pipeline
     from vtl_synth.utils.setlang import get_profile
     out1 = tmp_path / 'off'
     r = Pipeline(lang=lang, expressive=False).text_to_wav(
         text, output_dir=str(out1), label='off')
     assert '%' not in r.sampa
-    # le transcript est celui du g2p de la langue
+    # the transcript is the language g2p output
     plain = get_profile(lang).g2p_callable(text)
     assert r.sampa == plain
 
@@ -96,11 +97,11 @@ def test_chunk_boundary_before_conjunction():
     ]:
         chunks = chunk_part(text, lang)
         starts = [c[0].lower() for c in chunks]
-        assert conj in starts, f'{lang}: pas de frontière avant {conj!r}'
+        assert conj in starts, f'{lang}: no boundary before {conj!r}'
 
 
 def test_chunk_bigram_inseparable():
-    """« parce que » (fr) : frontière AVANT la paire, jamais dedans."""
+    """« parce que » (fr): boundary BEFORE the pair, never inside."""
     chunks = chunk_part('je reste parce que tu chantes', 'fr')
     starts = [c[0].lower() for c in chunks]
     assert 'parce' in starts
@@ -110,15 +111,15 @@ def test_chunk_bigram_inseparable():
 
 
 def test_chunk_hard_limit_balanced():
-    """Course sans frontière > max : découpe équilibrée, aucune
-    chaîne > max_chain_words."""
+    """Boundary-free run > max: balanced split, no chain >
+    max_chain_words."""
     words = ('one two three four five six seven'.split())
     for max_chain in (3, 4, 5):
         chunks = chunk_word_list(words, 'en', max_chain=max_chain)
         assert all(len(c) <= max_chain for c in chunks), \
             f'max_chain={max_chain}: {[len(c) for c in chunks]}'
         flat = [w for c in chunks for w in c]
-        assert flat == words                      # rien de perdu/permuté
+        assert flat == words                      # nothing lost/reordered
 
 
 @pytest.mark.parametrize('lang', ALL_LANGS)
@@ -139,12 +140,12 @@ def test_chunk_no_chain_over_limit(lang):
 
 def test_chunk_comma_splits_parts():
     sent = chunk_sentence('je viens, je pars', 'fr')
-    assert len(sent) == 2                        # deux parties (virgules)
+    assert len(sent) == 2                        # two parts (commas)
     assert all(isinstance(part, list) for part in sent)
 
 
 def test_chunk_dangling_function_word_moves():
-    """Un déterminant final rattrape le bloc suivant (règle 4)."""
+    """A final determiner is absorbed by the next block (rule 4)."""
     chunks = chunk_part('je vois le chien de mon voisin', 'fr')
     for c in chunks[:-1]:
         assert c[-1].lower() not in chunking.CHUNK_WORDS['fr']['never_start'] \
@@ -157,24 +158,24 @@ def test_split_sentences_mirrors_g2p_punctuation():
 
 
 # ===========================================================================
-# (c) stress hors-bande
+# (c) out-of-band stress
 # ===========================================================================
 
 def test_ipa_to_keys_stress_capture():
-    """ˈ primaire / ˌ secondaire → index de syllabe, clés pures."""
+    """ˈ primary / ˌ secondary → syllable index, pure keys."""
     keys, stress = ipa_to_keys_stress('m u ˈn i ð o', 'es')
     assert keys == ['m', 'u', 'n', 'i', 'D', 'o']
     assert stress == 1
     keys, stress = ipa_to_keys_stress('ˌa ˈb a', 'es')
-    assert stress == 1                           # le primaire prime
+    assert stress == 1                           # primary wins
     keys, stress = ipa_to_keys_stress('r e i', 'es')
-    assert stress is None                        # pas de marque
-    # le stress ne pollue JAMAIS les clés moteur
+    assert stress is None                        # no mark
+    # stress NEVER pollutes the engine keys
     assert 'ˈ' not in ''.join(ipa_to_keys_stress('ˈa ˈb', 'es')[0])
 
 
 def test_lexicon_stress_channel_synthetic(tmp_path, monkeypatch):
-    """Un TSV Wikipron AVEC marques ˈ alimente le canal hors-bande."""
+    """A Wikipron TSV WITH ˈ marks feeds the out-of-band channel."""
     from vtl_synth.utils import lexicon_loader as ll
     tsv = tmp_path / 'mini_es.tsv'
     tsv.write_text('mundo\tm u ˈn i ð o\n', encoding='utf-8')
@@ -188,27 +189,27 @@ def test_lexicon_stress_channel_synthetic(tmp_path, monkeypatch):
 @pytest.mark.skipif(not __import__('cmudict', fromlist=['x']).__dict__,
                     reason='cmudict absent')
 def test_word_stress_english_cmu():
-    # abandon: AH0 B AE1 N D AH0 N → accent sur la 2e syllabe
+    # abandon: AH0 B AE1 N D AH0 N → accent on the 2nd syllable
     assert word_stress('abandon', 'en', 3) == 1
-    # table: T EY1 B AH0 L → accent sur la 1re
+    # table: T EY1 B AH0 L → accent on the 1st
     assert word_stress('table', 'en', 2) == 0
 
 
 @pytest.mark.parametrize('lang,word,n,expected', [
-    # es : pénultième par défaut, oxytonique sur consonne finale ≠ n/s
-    ('es', 'señor', 2, 1),      # se-ñor : finale -r → oxytonique
-    ('es', 'gato', 2, 0),       # ga-to : pénultième
-    ('es', 'ciudad', 2, 1),     # termina par -d → oxytonique
-    # es : accent écrit (teléfono = 4 groupes vocaliques te-lé-fo-no)
+    # es: penultimate by default, oxytone on final consonant ≠ n/s
+    ('es', 'señor', 2, 1),      # se-ñor: final -r → oxytone
+    ('es', 'gato', 2, 0),       # ga-to: penultimate
+    ('es', 'ciudad', 2, 1),     # ends in -d → oxytone
+    # es: written accent (teléfono = 4 vowel groups te-lé-fo-no)
     ('es', 'teléfono', 4, 1),
     ('es', 'cámara', 3, 0),
-    # pt : finales -l/-r/-i/-u oxytoniques, sinon pénultième
+    # pt: -l/-r/-i/-u endings are oxytone, else penultimate
     ('pt', 'papel', 2, 1),
     ('pt', 'pao', 1, 0),
-    # it : pénultième
+    # it: penultimate
     ('it', 'famiglia', 3, 1),
     ('it', 'città', 2, 1),
-    # de : première syllabe
+    # de: first syllable
     ('de', 'Strasse', 2, 0),
 ])
 def test_orthographic_stress_rules(lang, word, n, expected):
@@ -218,17 +219,17 @@ def test_orthographic_stress_rules(lang, word, n, expected):
 def test_token_nuclei():
     assert token_nuclei('Di.si.zi') == ['i', 'i', 'i']
     assert token_nuclei('tRa.vaj') == ['a', 'a']
-    assert token_nuclei('a~.tRa') == ['a', 'a']   # nasale normalisée
-    assert token_nuclei('quack') == []            # non segmentable
+    assert token_nuclei('a~.tRa') == ['a', 'a']   # nasal normalized
+    assert token_nuclei('quack') == []            # non-segmentable
 
 
 # ===========================================================================
-# (e) assemblage SAMPA du plan expressif
+# (e) SAMPA assembly of the expressive plan
 # ===========================================================================
 
 def test_plan_sampa_equals_g2p_without_boundaries():
-    """Phrase assez courte (aucune frontière insérée) : le SAMPA du
-    plan est EXACTEMENT celui du g2p — mêmes conventions '.'/' '/'|'."""
+    """Short-enough sentence (no boundary inserted): the plan SAMPA is
+    EXACTLY the g2p one — same '.'/' '/'|' conventions."""
     from vtl_synth.utils.setlang import get_profile
     for lang, text in [('fr', 'bonjour'), ('en', 'hello')]:
         expr = EXPRESSIVITY_PROFILES[lang]
@@ -245,12 +246,12 @@ def test_plan_inserts_breath_markers_and_chunks():
     sampa, plans = plan_expressive_text(
         text, 'fr', get_profile('fr').g2p_callable, expr)
     assert '%' in sampa
-    assert sampa.count(' | ') == 0                # une seule phrase
+    assert sampa.count(' | ') == 0                # a single phrase
     chunks = plans[0]
     assert len(chunks) >= 3
-    # chaque chunk porte au moins un accent (fr : accent de groupe)
+    # every chunk carries at least one accent (fr: group accent)
     assert all(c.accents for c in chunks)
-    # les mots des chunks reconstituent la phrase
+    # the chunk words re-assemble the sentence
     words = [wp.word for c in chunks for wp in c.words]
     assert ' '.join(words) == text
 
@@ -260,12 +261,12 @@ def test_make_chunk_plan_group_accent_french():
            WordPlan('cherche', 'SERS', ['E'], None)]
     plan = _make_chunk_plan(wps, 'fr')
     assert plan.nuclei == ['@', 'E']
-    assert plan.accents == [(1, 1.0)]             # dernière syllabe
+    assert plan.accents == [(1, 1.0)]             # last syllable
 
 
 def test_make_chunk_plan_lexical_accents_english():
-    # 'the' = mot-outil : seuls cat (1re lexicale) et dog (dernière)
-    # portent l'accent ; cat → CMUdict K AE1 T = syllabe 0
+    # 'the' = function word: only cat (first lexical) and dog (last)
+    # carry an accent; cat → CMUdict K AE1 T = syllable 0
     wps = [WordPlan('the', 'D@', ['@'], None),
            WordPlan('cat', 'kAt', ['a'], 0),
            WordPlan('sees', 'siz', ['i'], 0),
@@ -276,7 +277,7 @@ def test_make_chunk_plan_lexical_accents_english():
 
 
 # ===========================================================================
-# (d) contour F0 expressif (synthèse réelle, moteur syl)
+# (d) expressive F0 contour (real synthesis, syl engine)
 # ===========================================================================
 
 def _build_phrase(phrase, **kw):
@@ -292,12 +293,12 @@ def _voiced_stats(glott400):
 
 
 def test_apply_expressive_f0_accents_and_smoothness():
-    """Accents mesurables (max local > base +10 %) et douceur
-    (aucun saut > 5 Hz/frame entre frames voisées)."""
+    """Measurable accents (local max > base +10 %) and smoothness
+    (no jump > 5 Hz/frame between voiced frames)."""
     from vtl_synth.core.syltraj import get_last_build
     tract, glott = _build_phrase('ba.na.na % ba.da.ga', pause_breath_ms=130)
     blocks = get_last_build()['block_info']
-    # plan factice : 2 chunks, accent nucléaire sur la dernière syllabe
+    # dummy plan: 2 chunks, nuclear accent on the last syllable
     plan = [ChunkPlan(sampa='ba.na.na', nuclei=['a', 'a', 'a'],
                       accents=[(2, 1.0)]),
             ChunkPlan(sampa='ba.da.ga', nuclei=['a', 'a', 'a'],
@@ -306,18 +307,18 @@ def test_apply_expressive_f0_accents_and_smoothness():
                                nuclear_fall_factor=0.88)
     ok = apply_expressive_f0(glott, 102.216, 1.06, 0.85, expr, plan,
                              blocks)
-    assert ok, 'alignement chunks↔segments attendu'
+    assert ok, 'chunks↔segments alignment expected'
     f0, voiced = _voiced_stats(glott)
-    # (1) accents : le maximum du 1er chunk dépasse la base locale de
-    # base +10 % (amplitude 0.20)
+    # (1) accents: the maximum of the 1st chunk exceeds the local base
+    # by base +10 % (amplitude 0.20)
     seg_voiced = f0[voiced]
     assert seg_voiced.max() > 1.10 * np.median(seg_voiced)
-    # (2) douceur : saut max entre frames voisées consécutives
+    # (2) smoothness: max jump between consecutive voiced frames
     vv = voiced[:-1] & voiced[1:]
     assert np.abs(np.diff(f0))[vv].max() < 5.0
-    # (3) chute nucléaire : la FIN du dernier segment écrit descend
-    # sous 0.9×base (les dernières frames voisées s'arrêtent avant
-    # la chute, portée par la queue essentiellement non voisée)
+    # (3) nuclear fall: the END of the last written segment descends
+    # below 0.9×base (the last voiced frames stop before the fall,
+    # which is carried by the mostly unvoiced tail)
     from vtl_synth.utils.prosody_f0 import _segments_from_blocks
     segs = _segments_from_blocks(blocks)
     f0_end = float(f0[segs[-1][1] * 4 - 1])
@@ -325,8 +326,8 @@ def test_apply_expressive_f0_accents_and_smoothness():
 
 
 def test_apply_expressive_f0_fallback_on_misalignment():
-    """Plans ≠ segments (comptes différents) → False : l'appelant
-    retombe sur la déclinaison monotone."""
+    """Plans ≠ segments (different counts) → False: the caller falls
+    back to the monotone declination."""
     from vtl_synth.core.syltraj import get_last_build
     tract, glott = _build_phrase('ba.na.na')
     blocks = get_last_build()['block_info']
@@ -338,8 +339,9 @@ def test_apply_expressive_f0_fallback_on_misalignment():
 
 
 def test_build_phrase_tract_breath_passthrough():
-    """pause_breath_ms traverse build_phrase_tract : bloc breath de la
-    bonne durée ; sans marqueur, blocs strictement identiques."""
+    """pause_breath_ms passes through build_phrase_tract: breath block
+    of the right duration; without the marker, strictly identical
+    blocks."""
     from vtl_synth.core.syltraj import get_last_build
     _build_phrase('ba.na.na ba')
     blocks_plain = list(get_last_build()['block_info'])
@@ -347,12 +349,12 @@ def test_build_phrase_tract_breath_passthrough():
     blocks_breath = get_last_build()['block_info']
     breaths = [b for b in blocks_breath if b.breath]
     assert len(breaths) == 1 and breaths[0].n_steps == 13
-    # sans marqueur, aucun bloc breath n'apparaît
+    # without the marker, no breath block appears
     assert not any(b.breath for b in blocks_plain)
 
 
 # ===========================================================================
-# pipeline expressif de bout en bout (audio)
+# end-to-end expressive pipeline (audio)
 # ===========================================================================
 
 @pytest.mark.parametrize('lang', ['en', 'fr'])
@@ -365,21 +367,21 @@ def test_pipeline_expressive_end_to_end(lang, tmp_path):
     r = Pipeline(lang=lang, expressive=True).text_to_wav(
         text, output_dir=str(tmp_path / lang), label='expr')
     assert '%' in r.sampa
-    # aucun groupe de mots coarticulés > 5 mots : les chaînes entre
-    # séparateurs ('.', ' ', '|', '%')
+    # no coarticulated word group > 5 words: the chains between
+    # separators ('.', ' ', '|', '%')
     import re
     chains = re.split(r'[ %|.]+', r.sampa)
     words = [c for c in chains if c]
-    # chaque élément = UN mot connecté (le '.' interne relie les
-    # syllabes, pas les mots) — la vérification de la limite de
-    # chaîne se fait sur le plan (test chunking) ; ici on vérifie la
-    # présence des séparateurs et l'audio produit
+    # each element = ONE connected word (the internal '.' joins
+    # syllables, not words) — the chain-limit check is done on the
+    # plan (chunking tests); here we check the presence of the
+    # separators and the produced audio
     assert r.wav_path.exists() and r.duration_s > 1.0
 
 
 def test_pipeline_expressive_requires_g2p(tmp_path):
-    """Entrée phonétique : le mode expressif est ignoré (averti),
-    pas de marqueur '%' dans le transcript."""
+    """Phonetic input: the expressive mode is ignored (with a
+    warning), no '%' marker in the transcript."""
     from vtl_synth import Pipeline
     r = Pipeline(lang='fr', expressive=True).text_to_wav(
         'ba.na.na', output_dir=str(tmp_path / 'ph'), use_g2p=False,

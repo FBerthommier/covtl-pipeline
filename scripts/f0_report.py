@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-"""Mesure objective du contour F0 d'un .tract (prosodie expressive).
+"""Objective measurement of the F0 contour of a .tract file
+(expressive prosody).
 
-    python scripts/f0_report.py fichier.tract [fichier2.tract ...]
+    python scripts/f0_report.py file.tract [file2.tract ...]
 
-Affiche : part voisée, F0 moyen, écart-type du contour en semi-tons
-(dynamique expressive), saut max par échantillon @400 Hz (douceur),
-plage.
+Prints: voiced fraction, mean F0, standard deviation of the contour
+in semitones (expressive dynamics), max jump per sample @400 Hz
+(smoothness), range.
 """
 import sys
 from pathlib import Path
@@ -23,13 +24,13 @@ def report(path: str) -> dict:
     voiced = glottis[:, 6] > 0.1
     f0v = f0[voiced]
     st = 12.0 * np.log2(f0v / f0v.mean())
-    # douceur : sauts entre frames VOISÉES consécutives (les zones de
-    # silence portent des valeurs par défaut sans signification)
+    # smoothness: jumps between consecutive VOICED frames (silence
+    # regions carry default values with no meaning)
     vv = voiced[:-1] & voiced[1:]
     jumps = np.abs(np.diff(f0))[vv]
-    # pics d'accents : bosses SOUTENUES (≥ 30 ms au-dessus de +5 % de
-    # la base locale glissante 400 ms) — élimine les artefacts d'un
-    # contour accidenté (les sauts d'une frame ne comptent pas)
+    # accent peaks: SUSTAINED bumps (>= 30 ms above +5 % of the 400 ms
+    # moving local base) — removes the artefacts of a ragged contour
+    # (one-frame jumps do not count)
     k = int(0.4 * sr)
     if k % 2 == 0:
         k += 1
