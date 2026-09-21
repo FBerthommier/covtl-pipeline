@@ -1,0 +1,4 @@
+# Speaker definitions are validated by SHA-256 against
+# vtl_synth/data/speakers/registry.json — git must never normalize
+# their line endings (a CRLF smudge changes the hash).
+*.speaker -text

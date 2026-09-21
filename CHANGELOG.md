@@ -43,6 +43,18 @@ Format: Keep a Changelog — https://keepachangelog.com/
   prosody travels with the repository (referenced by the provenance
   report as the P3 evidence of the genealogy).
 
+### Fixed — speaker registry hashes are platform-independent
+- `data/speakers/registry.json`: the `speaker_sha256` values of
+  s1/s2/m01/w02 were computed on CRLF disk files and never matched
+  the committed (LF) blobs — installs of those speakers failed the
+  hash check on any LF checkout (Linux CI). The four hashes now
+  describe the committed bytes; jd3 already did (its hash is the
+  pristine `paul-krug` wheel content, LF). `*.speaker` is excluded
+  from end-of-line normalization via `.gitattributes`, so the hashed
+  bytes survive checkout on every platform. `vtl_binaries/JD3.speaker`
+  is realigned with the pristine original (2 stray bytes removed — a
+  twice-misspelled `description=` attribute, no functional impact).
+
 ## [1.1.0] — 2026-09-16
 
 Version decision (vs v2.0.0): **no file removed**; the 7 modified

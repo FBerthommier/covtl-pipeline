@@ -17,6 +17,17 @@ components are redistributed or relied upon; their licenses apply and
 - License: GPL-3.0 (Ursache/usage: research). See
   https://www.vocaltractlab.de
 
+- Provenance of the shipped copies (`vtl_synth/data/vtl_binaries/
+  JD3.speaker` and `vtl_synth/data/speakers/jd3.speaker`): both are
+  byte-identical (LF) to `resources/JD3.speaker` of the
+  `vocaltractlab-cython` 0.0.13 wheel on PyPI
+  (SHA-256 `e1e592da…418a503` LF-normalized; the wheel ships the file
+  with CRLF endings, SHA-256 `a583bdaa…b571f00`). Unmodified upstream
+  file; the registry hashes in `data/speakers/registry.json` refer to
+  the LF form. `*.speaker` is excluded from git end-of-line
+  normalization (`.gitattributes`) so checkouts preserve the hashed
+  bytes.
+
 ## Speakers s1/s2 (DVTD MRI)
 
 - Origin: research MRI data of the DVTD subjects (male s1, female s2),
