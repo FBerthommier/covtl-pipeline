@@ -183,6 +183,28 @@ VOWEL_EFFORT_GAIN: Dict[str, float] = {{
 """
 
 
+def _lang_section(lang: str) -> str:
+    """Marker-only LANG SECTION (v1.0.9+, 2026-09-23).
+
+    The language selects pronunciation modules, lexicons, G2P and
+    notation — NOT the vowel targets. The per-language VOWEL_TARGETS /
+    VOWEL_EFFORT_GAIN overrides are REMOVED: they were calibrated on
+    JD3 and silently clobbered the active speaker's own calibration
+    (defect D24 — cf. covtl_m01_w02/rapport_triangle_vocalique.md).
+    The vowel region of the installed constants stays the speaker's
+    own, in place.
+    """
+    return f"""{LANG_SECTION_BEGIN} (managed by setup_lang.py — do not edit by hand)
+# Language selection ONLY since v1.0.9: pronunciation modules, lexicons,
+# G2P and notation. The vowel targets (VOWEL_TARGETS) and the effort gain
+# (VOWEL_EFFORT_GAIN) below this section are the ACTIVE SPEAKER's own
+# calibration — no per-language override any more (the former JD3-copied
+# overrides clobbered the per-speaker calibration, defect D24).
+ACTIVE_LANG: str = '{lang}'
+{LANG_SECTION_END} =============================================================
+"""
+
+
 # fr/en fallback blocks — MUST stay identical to the corresponding
 # entries of lang_pack/lang_blocks/blocks.py (guarded by
 # tests/test_multilang.py::test_fallback_blocks_match_pack).
@@ -394,30 +416,16 @@ def _active_speaker_name() -> str | None:
 
 
 def _ensure_jd3() -> None:
-    """Garde-fou multi-speakers : les cibles vocaliques du pack sont
-    calibrées in situ sur JD3 — toute activation/measure de langue
-    réinstalle d'abord le speaker jd3 (constants + marqueur + wheel).
+    """OBSOLETE (v1.0.9, 2026-09-23) : conservé comme no-op pour
+    compatibilité des appels internes.
 
-    Ne fait rien dans les dépôts sans registre speaker, ou quand jd3
-    est déjà actif. Après réinstallation, constants.py est remplacé en
-    entier : la LANG SECTION doit être ré-amorcée (cf.
-    _replace_lang_section, chemin de première intervention).
+    L'ancien garde-fou réinstallait jd3 avant toute opération de langue
+    parce que le pack écrasait les cibles vocaliques avec des valeurs
+    calibrées sur JD3. La section LANG ne porte plus de cibles
+    (marqueur ACTIVE_LANG seul) : l'opération est sûre sur TOUT speaker
+    actif — les cibles du speaker ne sont plus touchées (D24 résolu).
     """
-    speaker = _active_speaker_name()
-    if speaker is None or speaker == 'jd3':
-        return
-    _info(f"garde-fou speaker : '{speaker}' est actif — les cibles du pack "
-          f"sont calibrées in situ sur JD3 ; réinstallation du speaker jd3…")
-    r = subprocess.run(
-        [sys.executable, str(PIPELINE_ROOT / 'install_speaker.py'),
-         'install', 'jd3'],
-        cwd=str(PIPELINE_ROOT), capture_output=True, text=True)
-    tail = '\n'.join((r.stdout or '').splitlines()[-6:])
-    if r.returncode != 0:
-        _die("échec de la réinstallation du speaker jd3 "
-             "(install_speaker.py install jd3) :\n" + tail)
-    _info(f"  speaker jd3 réinstallé (langue transportée par "
-          f"install_speaker : {get_current_lang() or 'native'})")
+    return
 
 
 def _backup(path: Path) -> None:
@@ -429,29 +437,35 @@ def _backup(path: Path) -> None:
 
 
 def _replace_lang_section(src: str, lang: str, block: str | None = None) -> str:
-    """Rewrite the managed LANG SECTION of constants.py for ``lang``."""
-    block = block or LANG_BLOCKS[lang]
+    """Rewrite the managed LANG SECTION of constants.py for ``lang``.
+
+    Since v1.0.9 the section is a MARKER ONLY (ACTIVE_LANG): the
+    speaker's own VOWEL_TARGETS / VOWEL_EFFORT_GAIN region is never
+    touched. ``block`` is accepted for backward compatibility and
+    ignored.
+    """
+    section = _lang_section(lang)
     if LANG_SECTION_BEGIN in src:
+        # Section présente (ancien style avec cibles, ou marqueur seul) :
+        # remplacée in place — toute définition de cibles qu'elle
+        # contenait disparaît au profit de la région native restée
+        # en dessous (cas d'un fichier écrit par une version < 1.0.9 :
+        # la région native a alors été consommée — ré-amorçage via
+        # `restore` ou réinstallation du speaker).
         pattern = re.compile(
             re.escape(LANG_SECTION_BEGIN) + r'.*?' + re.escape(LANG_SECTION_END) +
             r'[^\r\n]*\n', re.S)
         if not pattern.search(src):
             _die("marqueurs LANG SECTION incohérents dans constants.py")
-        return pattern.sub(lambda _m: block, src, count=1)
-    # First intervention: replace the original static definitions with
-    # the generated LANG SECTION, so exactly one definition remains.
-    # The BARE region (VOWEL_TARGETS through VOWEL_EFFORT_GAIN) is used
-    # — not the commented header box — so the installed file stays
-    # canonically identical to its speaker source outside the managed
-    # region (speaker_registry.canonical_constants_text compares the
-    # same bare region on the source side).
+        return pattern.sub(lambda _m: section, src, count=1)
+    # Première intervention : INSÉRER la section marqueur APRÈS la région
+    # vocalique native (VOWEL_TARGETS .. VOWEL_EFFORT_GAIN), qui reste
+    # intégralement en place (v1.0.9 : la région n'est plus remplacée).
     region = re.compile(
         r'(?ms)^VOWEL_TARGETS:.*?^VOWEL_EFFORT_GAIN:.*?^\}\n')
     if not region.search(src):
         _die("section VOWEL_TARGETS/VOWEL_EFFORT_GAIN introuvable dans constants.py")
-    # le bloc se termine deja par \n et la region en consomme un :
-    # pas de \n supplementaire (alignement canonique, cf. plus haut)
-    return region.sub(lambda _m: block, src, count=1)
+    return region.sub(lambda m: m.group(0) + section, src, count=1)
 
 
 # ===========================================================================
@@ -589,23 +603,14 @@ def cmd_calibrate(lang: str, fine: bool = False,
     balayage de ρ par voyelle avec synthèse réelle + mesure LPC
     (cf. ``refine_in_situ``), le critère de ``verify``.
     """
-    _ensure_jd3()   # garde-fou : calibrage in situ sur JD3 uniquement
-    try:
-        entries, display_name, _corners = calibrate_targets(
-            lang, rho_step=0.01 if fine else 0.02)
-    except ImportError:
-        _die("language pack non installé — lancez d'abord : "
-             "python setup_lang.py install")
-    _info(f"Calibration mécanique de {lang} ({display_name}) sur VTL/JD3…")
-    if in_situ:
-        _info("Raffinement in situ (synthèse + LPC par voyelle)…")
-        entries = refine_in_situ(lang, entries)
-    block = render_calibrated_block(lang, entries, display_name,
-                                    in_situ=in_situ)
-    write_lang_section(lang, block)
-    _info(f"Section langue réécrite avec les cibles calibrées : {lang}")
-    _info("Rappel : vérifier in situ via  python setup_lang.py verify")
-    report_current()
+    _ensure_jd3()   # no-op depuis v1.0.9 (les cibles ne sont plus
+    #                 écrasées — l'opération est sûre sur tout speaker)
+    _info("OBSOLETE (v1.0.9) : les cibles vocaliques appartiennent au "
+          "SPEAKER actif — la calibration par langue n'écrit plus rien.\n"
+          "         Pour recalibrer un speaker, modifier ses "
+          "VOWEL_TARGETS dans vtl_synth/data/speakers/<spk>_constants.py "
+          "(procédure covtl_m01_w02/).")
+    return
 
 
 # ===========================================================================
@@ -902,21 +907,19 @@ def cmd_install(pack_dir: Path, lang: str, calibrate: bool = False) -> None:
     _info("Étape 3/4 : lexiques de prononciation → vtl_synth/data/")
     _install_lexicons(pack_dir)
 
-    _info("Étape 4/4 : section langue de constants.py")
-    _ensure_jd3()   # garde-fou : cibles calibrées in situ sur JD3
+    _info("Étape 4/4 : section langue de constants.py (marqueur seul — "
+          "les cibles du speaker ne sont pas touchées, v1.0.9)")
+    _ensure_jd3()   # no-op depuis v1.0.9
     _backup(CONSTANTS)
     src = CONSTANTS.read_text(encoding='utf-8')
+    if calibrate:
+        _info("  NOTE : --calibrate ignoré (v1.0.9) — les cibles "
+              "vocaliques appartiennent au speaker actif")
     current = get_current_lang()
     target = current if (current in blocks and LANG_SECTION_BEGIN in src) else lang
-    if calibrate:
-        entries, display_name, _corners = calibrate_targets(lang)
-        block = render_calibrated_block(lang, entries, display_name)
-        target = lang
-    else:
-        block = blocks[target]
-    CONSTANTS.write_text(_replace_lang_section(src, target, block=block),
+    CONSTANTS.write_text(_replace_lang_section(src, target),
                          encoding='utf-8')
-    _info(f"  section langue réécrite : {target}")
+    _info(f"  section langue réécrite : {target} (marqueur seul)")
 
     verify_imports()
     report_current()

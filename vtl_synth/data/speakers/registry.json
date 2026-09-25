@@ -17,32 +17,32 @@
     "speaker": "s1.speaker",
     "constants": "s1_constants.py",
     "f0_default": 114.908,
-    "description": "DVTD sujet 1 male (IRM DVTD, VTL reel ~20 cm) — constants v3 : phase 2 D15 + TTY natif (correctif bunching) + @ multi-criteres",
-    "speaker_sha256": "64ec4db032ed32b8f8a052fc00ed76676a6b8f1c57c2650dde8262924f681bbd",
-    "constants_sha256": "47bd805ea78f7548d26cc7c15f583421986169a3e24e1fa79f9962a1ee67e75c"
+    "description": "DVTD sujet 1 male (IRM DVTD, VTL reel ~20 cm) — constants v3 : phase 2 D15 + TTY natif (correctif bunching) + @ multi-criteres ; triangle vocalique 23/09 : port repertoire gestuel jd3 (c0/c1/c2) + cibles jd3 recalees",
+    "speaker_sha256": "4384325f55ec4d72d751e90ea5f95435c55ca141febc2abc91d659ef5762f10e",
+    "constants_sha256": "33daef7c42b85bbe1825d1c5299f5b84c9a4b4810b66186eb318512c4d22ea07"
   },
   "s2": {
     "speaker": "s2.speaker",
     "constants": "s2_constants.py",
     "f0_default": 181.008,
-    "description": "DVTD sujet 2 female (IRM DVTD) — constants v3 : phase 2 D15 + TTY natif (correctif bunching) + @ multi-criteres",
-    "speaker_sha256": "46c0b3042b584b9672fc7a7e6d2d7e53f468c079c9f955f50439bb2521c7de0b",
-    "constants_sha256": "23dd28dd4cf48fed12a4976df0881bf4ec0fa147df85cdf047dfd4dad2059c6c"
+    "description": "DVTD sujet 2 female (IRM DVTD) — constants v3 : phase 2 D15 + TTY natif (correctif bunching) + @ multi-criteres ; triangle vocalique 23/09 : port repertoire gestuel jd3 (c0/c1/c2) + cibles jd3 recalees",
+    "speaker_sha256": "e35b93c75e794bdad1365bc962bc4083efc880a43871dcbbbdfee1a1de4ccb9b",
+    "constants_sha256": "7011ceac8ad6ee8a6af7a00effbf425ceb611abf80473fce02562c780ee3989d"
   },
   "m01": {
     "speaker": "m01.speaker",
     "constants": "m01_constants.py",
     "f0_default": 120.0,
-    "description": "M01 male (ZIP officiel VTL 2.4, Option A + mapping glottal 2025) — constants v3 : phase 2 D15 + TTY natif + @ multi-criteres",
-    "speaker_sha256": "adfd4bf1380ed4afe3c46b6d85c328831495be19b4edce060f961bd72a6cff17",
-    "constants_sha256": "2c9c2a7d52801939a5b558b3764f7fbe144bf5dd1193e3eabbc986a642a46d2d"
+    "description": "M01 male (ZIP officiel VTL 2.4, Option A + mapping glottal 2025) — constants v3 : phase 2 D15 + TTY natif + @ multi-criteres ; COVTL c0/c1 22/09 : TTY c1 occlusion apicale (cible in-situ (1.2, 258.75 deg)) ; triangle vocalique 23/09 : port repertoire gestuel jd3 (c0/c1/c2) + cibles jd3 recalees",
+    "speaker_sha256": "9e5598ea40a362860c818835c7dbafa71907cc687d80c701730e8fb8d4ff1f62",
+    "constants_sha256": "f17ef4dfb2555e4007ccdc2bdba7e0a437e76e60b5afac9a154e25a5beec5579"
   },
   "w02": {
     "speaker": "w02.speaker",
     "constants": "w02_constants.py",
     "f0_default": 232.458,
-    "description": "W02 female (ZIP officiel VTL 2.4, Option A + mapping glottal 2025) — constants v3 : phase 2 D15 + TTY natif + @ multi-criteres",
-    "speaker_sha256": "fc9c369bc451d70ea0b563ec2f459f4059f5dc9f0e165443bf7231e40153b3ef",
-    "constants_sha256": "2783c985c09e4851fe7dba5ffa591a72747a91a3ef62f3dd00b5fb7c84dcfe79"
+    "description": "W02 female (ZIP officiel VTL 2.4, Option A + mapping glottal 2025) — constants v3 : phase 2 D15 + TTY natif + @ multi-criteres ; COVTL c0/c1 22/09 : TTY c1 occlusion apicale (cible in-situ (1.2, 258.75 deg)) ; triangle vocalique 23/09 : port repertoire gestuel jd3 (c0/c1/c2) + cibles jd3 recalees",
+    "speaker_sha256": "36b87ffb7774e7b89748ea356d7037c9e622b9cfa2db5742fe39ee06dba47cbd",
+    "constants_sha256": "8ebeddf421841a0a27058863bfe2ecdb543fc00d657c5e5c3849e5c1a6586d5d"
   }
 }

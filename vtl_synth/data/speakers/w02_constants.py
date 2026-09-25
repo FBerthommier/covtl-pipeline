@@ -17,6 +17,8 @@ Journal de la dérivation COVTL :
 #   TTY : c0=(0.8−(-2.0519))/2.3=1.239957 ; c1=-2.0519+c0+0.15=-0.661943 (contact/occlusion apicale)
 #   TCY : c1 -1.262000 → -1.012000 (occlusion vélaire /g,k/)
 #   TTY : c0/c2 natifs conservés, c1 += 0.15 (règle JD3 (0.80−Va)/2.3 non transférée, correctif bunching)
+#   TTY : c1 -1.332400 -> -0.282400 (mission COVTL 22/09 : occlusion apicale d/t a la cible in-situ (1.2, 23pi/16), onset solveur +1.00 + marge 0.05, cout vocalique <= 5 % — cf. covtl_m01_w02/tty_sweep.json)
+#   MISSION TRIANGLE 23/09 : matrice INCHANGEE (deja conforme, triangle 53 %) ; cibles o->(0.80, 104.7 deg), O->(0.85, 149.9 deg) (realignment arriere : o/O entasses avec /a/ et o/u inverses) ; cf. covtl_m01_w02/
 """
 
 from __future__ import annotations
@@ -113,7 +115,7 @@ CO_VTL: Dict[str, Tuple[float, float, float]] = {
     'TCX':  ( 0.506367,  1.407554, 5.500680),
     'TCY':  (-1.012000,  0.994943, 6.266240),
     'TTX':  ( 3.268133,  1.076827, 4.255484),
-    'TTY':  (-1.332400,  0.633525, 5.829728),
+    'TTY':  (-0.282400,  0.633525, 5.829728),
     'TBX':  ( 2.471800,  1.379350, 5.281837),
     'TBY':  (-0.563067,  1.069271, 0.117221),
     'TS1':  ( 0.199333,  0.114364, 5.730436),
@@ -143,16 +145,16 @@ for _idx, _pname in enumerate(COVTL_PARAMS):
 
 VOWEL_TARGETS: Dict[str, Tuple[float, float]] = {
     'a': (1.000, np.pi),
-    'i': (0.622, 5 * np.pi / 3),
+    'i': (0.559800, 5 * np.pi / 3),
     'u': (0.599, np.pi / 3),
-    'e': (0.899, 5.393067),
+    'e': (0.306800, 5.393067),
     'E': (0.333, 5.166175),
-    'o': (0.536, 2.046399),
-    'O': (0.660, 3.364122),
+    'o': ((0.800, 1.827360)),
+    'O': ((0.850, 2.616249)),
     '9': (0.602, 4.555309),
     '@': (0.750, 4.084070),
-    'y': (0.706, 5.890486),
-    '2': (0.761, 5.969026),
+    'y': (0.192720, 5.890486),
+    '2': (0.207740, 5.969026),
 }
 
 # =============================================================================

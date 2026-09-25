@@ -17,6 +17,8 @@ Journal de la dérivation COVTL :
 #   TTY : c0=(0.8−(-1.2986))/2.3=0.912435 ; c1=-1.2986+c0+0.15=-0.236165 (contact/occlusion apicale)
 #   TCY : c1 -1.805600 → -1.555600 (occlusion vélaire /g,k/)
 #   TTY : c0/c2 natifs conservés, c1 += 0.15 (règle JD3 (0.80−Va)/2.3 non transférée, correctif bunching)
+#   PORT VOCALIQUE HYBRIDE (mission triangle 23/09) : LP/LD <- jd3 (c1_jd3, 0.7494*c0_jd3, c2_jd3 — le defect labial avant vient des directions LP/LD propres) ; langue {HX,HY,TCX,TCY,TTX,TTY,TBX,TBY} <- propre ×1.2 en c0 ; JA/TS propres ; cibles jd3 avec rho_i=0.80 ; cf. covtl_m01_w02/
+#   CONSONNES sur matrice portee (23/09) : b/m theta 280.5 -> 50 deg (direction labiale jd3 dans l'espace LP/LD porte — fermeture 0.0001 x a/i/u) ; g_vel rho 1.2 -> 1.45 (onset 1.40 + marge) ; d/t fermes par le correctif theta dental 270 deg (residu u 0.042 cm2 documente)
 """
 
 from __future__ import annotations
@@ -104,22 +106,23 @@ SUSTAIN_FRACTION_MIN: float = 0.0
 # décalages LD/TTY/TCY (fermeture labiale, contact apical, occlusion vélaire).
 
 CO_VTL: Dict[str, Tuple[float, float, float]] = {
-    'HX':  ( 0.784400,  0.431200, 0.000000),
-    'HY':  (-5.314533,  0.266218, 3.359312),
-    'JX':  (-0.092800,  0.098347, 0.709730),
-    'JA':  (-3.387667,  0.658891, 4.415484),
-    'LP':  ( 0.605700,  0.550437, 0.203310),
-    'LD':  ( 0.220222,  0.275277, 1.762732),
-    'TCX':  ( 0.847500,  1.417187, 5.400294),
-    'TCY':  (-1.555600,  0.587167, 0.407014),
-    'TTX':  ( 4.043367,  0.927450, 4.145138),
-    'TTY':  (-1.588867,  0.637012, 2.333867),
-    'TBX':  ( 2.050800,  0.751791, 4.324290),
-    'TBY':  (-0.357233,  1.169258, 6.166936),
-    'TS1':  ( 0.534833,  0.060755, 5.492521),
-    'TS2':  ( 0.055200,  0.067495, 0.633457),
-    'TS3':  (-0.135400,  0.193221, 2.322870),
+    'HX':  (0.784400, 0.517440, 0.000000),
+    'HY':  (-5.314533, 0.319462, 3.359312),
+    'JX':  (-0.092800, 0.098347, 0.709730),
+    'JA':  (-3.387667, 0.658891, 4.415484),
+    'LP':  (0.382967, 0.462411, 1.042238),
+    'LD':  (0.466400, 0.436900, 4.092457),
+    'TCX':  (0.847500, 1.700624, 5.400294),
+    'TCY':  (-1.555600, 0.704600, 0.407014),
+    'TTX':  (4.043367, 1.112940, 4.145138),
+    'TTY':  (-1.588867, 0.764414, 2.333867),
+    'TBX':  (2.050800, 0.902149, 4.324290),
+    'TBY':  (-0.357233, 1.403110, 6.166936),
+    'TS1':  (0.534833, 0.060755, 5.492521),
+    'TS2':  (0.055200, 0.067495, 0.633457),
+    'TS3':  (-0.135400, 0.193221, 2.322870),
 }
+
 
 COVTL_TO_FULL: Dict[str, int] = {
     'HX': 0, 'HY': 1, 'JX': 2, 'JA': 3, 'LP': 4, 'LD': 5,
@@ -145,18 +148,19 @@ for _idx, _pname in enumerate(COVTL_PARAMS):
 
 VOWEL_TARGETS: Dict[str, Tuple[float, float]] = {
     'a': (1.000, np.pi),
-    'i': (0.550, 5 * np.pi / 3),
-    'u': (0.589, np.pi / 3),
-    'e': (1.000, 4.838925),
-    'E': (0.368, 0.030543),
-    'o': (1.000, 1.492257),
-    'O': (1.000, 1.732239),
-    '6': (0.690, 2.792527),
-    '9': (0.578, 1.326450),
-    '@': (0.350, 2.967060),
-    'y': (0.618, 5.672320),
-    '2': (0.707, 0.514872),
+    'i': (0.800, 5 * np.pi / 3),
+    'u': (0.550, np.pi / 3),
+    'e': (0.988, 4.581),   # 262.5°
+    'E': (0.594, 3.563),   # 204.1°
+    'o': (1.000, 1.827),   # 104.7°
+    'O': (1.000, 2.616),   # 149.9°
+    '6': (0.894, 3.053),   # 174.9°
+    '9': (0.722, 3.105),   # 177.9°
+    'y': (0.519, 4.548),   # 260.6°
+    '2': (0.396, 3.946),   # 226.1°
+    '@': (0.7167, np.pi),         # centre du triangle (jd3)
 }
+
 
 # =============================================================================
 # VOWEL_EFFORT_GAIN — gain d'effort par voyelle (calibrage acoustique JD3,
@@ -173,11 +177,11 @@ VOWEL_EFFORT_GAIN: Dict[str, float] = {
 # Sélecteurs = décisions phonétiques (parité Maeda, allégements r11/r13/r14).
 
 CONSONANT_TARGETS: Dict[str, Tuple[float, float, List[str]]] = {
-    'b': (0.96, 4.895320,
+    'b': (0.96, 0.872665,
               ['JA', 'LD', 'LP']),
     'd': (1.49, 4.537856,
               ['JA', 'TCX', 'TCY', 'TBX', 'TBY', 'TTX', 'TTY']),
-    'g': (1.20, 0.523599,
+    'g': (1.450000, 0.523599,
               ['JA', 'TCX', 'TCY', 'TBX', 'TBY']),
     'v': (0.82, 6.265732,
               ['JA', 'JX', 'LP', 'LD']),
@@ -201,7 +205,7 @@ CONSONANT_TARGETS: Dict[str, Tuple[float, float, List[str]]] = {
               ['JA', 'TCX', 'TCY']),
     'X': (1.61, 4.415683,
               ['JA', 'TCX', 'TCY', 'TBX', 'TBY', 'TS2']),
-    'm': (0.96, 4.895320,
+    'm': (0.96, 0.872665,
               ['JA', 'LD', 'LP']),
     'n': (1.49, 0.122173,
               ['JA', 'TCX', 'TCY', 'TBX', 'TBY', 'TTX', 'TTY']),
@@ -217,9 +221,9 @@ CONSONANT_TARGETS: Dict[str, Tuple[float, float, List[str]]] = {
               ['JA', 'TCX', 'TCY']),
     'h': (0.50, np.pi,
               []),
-    'g_vel': (1.20, 0.523599,
+    'g_vel': (1.450000, 0.523599,
               ['JA', 'TCX', 'TCY', 'TBX', 'TBY']),
-    'g_pal': (1.41, 5.934119,
+    'g_pal': (1.750000, 5.934119,
               ['JA', 'TCY', 'TBX', 'TBY']),
 }
 

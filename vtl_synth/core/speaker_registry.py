@@ -101,15 +101,19 @@ def hash12(path) -> str:
 def canonical_constants_text(text: str) -> str:
     """Neutralize the vowel/language region of a constants source.
 
-    The managed LANG SECTION (when present) or the native
-    VOWEL_TARGETS..VOWEL_EFFORT_GAIN block is replaced by a
-    ``<VOWEL-LANG-REGION>`` placeholder, so a constants.py whose only
+    Two managed forms are neutralized so a constants.py whose only
     difference is the installed language hashes equal to its speaker
-    source file.
+    source file:
+
+      - the managed LANG SECTION (marker-only since v1.0.9 — with or
+        without embedded vowel targets for pre-1.0.9 files), AND
+      - the native VOWEL_TARGETS..VOWEL_EFFORT_GAIN block, which stays
+        in place since v1.0.9 (the language pack no longer overwrites
+        it — D24) and therefore also differs between an installed file
+        (section present) and its section-less source.
     """
-    if LANG_SECTION_BEGIN in text:
-        return _LANG_SECTION_RE.sub('<VOWEL-LANG-REGION>\n', text, count=1)
-    return _NATIVE_VOWEL_RE.sub('<VOWEL-LANG-REGION>\n', text, count=1)
+    text = _LANG_SECTION_RE.sub('', text, count=1)
+    return _NATIVE_VOWEL_RE.sub('', text, count=1)
 
 
 def canonical_hash12(path) -> str:

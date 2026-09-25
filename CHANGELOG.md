@@ -5,110 +5,8 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
-### Documentation / hygiene
-- **Manual audit fixes (A/C/D/E)** — no functional change: glides
-  documented as consonantal nodes anchored on the *reference* vowel
-  tree, deliberately independent of the calibrated vowel plateaus
-  (ρᵢ = 0.60, ρᵤ = 0.55); the spelled-`r` input alias removed from the
-  engine-SAMPA inventory (only `R` exists, normalized in
-  `notation.py`); the Fig. 1 caption corrected (m vs b: same target
-  and selector, only the velum VO extension differs); the two
-  constant sets explicitly split — reference curvature (Kc=10, Kv=30,
-  ν=1) belongs to the deprecated `legacy` engine (plus the polar-video
-  branch display), the `syl` engine runs ν=−1, K=1000,
-  `SYL_COEFCEN=0.5`. The ARPAbet `NG → J` mapping is now documented as
-  a compromise (the English velar nasal has no closure target); the
-  `NG → N` alternative was left to a dedicated property test.
-- **`constants.py`**: removed the shadowed duplicate `'j'` key (the
-  former palatal entry (1.22, 1°) never took effect — the FIX-2 glide
-  definition always won); effective targets unchanged (verified:
-  j = 0.80/300°, w = 0.60/60°). Glide comment updated accordingly.
-- **`docs/.l_10646.ttf`** is now shipped, so `manual.pdf` can be
-  rebuilt from the repository (xelatex, two passes).
-
-### Added — provenance & design trace (prosody components)
-- `PROVENANCE_PROSODY_CHUNKING.md` / `.json`: software-provenance
-  report for `vtl_synth/utils/chunking.py` and `prosody_f0.py` —
-  original in-project implementation (spec 2026-09-15, human-directed
-  session implemented **with AI coding assistance**; no third-party
-  code source found — negative searches over 22 coined symbols,
-  distinctive strings and constants; scientific references are
-  parameter sources only, no shipped code). Public history: single
-  introduction commit `e991ff9` (v1.1.0, 2026-09-17). Regularization
-  applied: the Wikipron CC BY-SA 3.0 notice (already present in
-  `THIRD_PARTY_NOTICES.md`) re-verified against the local working
-  copy.
-- `docs/PROMPT_prosodie_expressivite.md`: the 2026-09-15 design
-  specification, archived so the design→code chain of the expressive
-  prosody travels with the repository (referenced by the provenance
-  report as the P3 evidence of the genealogy).
-
-### Fixed — speaker registry hashes are platform-independent
-- `data/speakers/registry.json`: the `speaker_sha256` values of
-  s1/s2/m01/w02 were computed on CRLF disk files and never matched
-  the committed (LF) blobs — installs of those speakers failed the
-  hash check on any LF checkout (Linux CI). The four hashes now
-  describe the committed bytes; jd3 already did (its hash is the
-  pristine `paul-krug` wheel content, LF). `*.speaker` is excluded
-  from end-of-line normalization via `.gitattributes`, so the hashed
-  bytes survive checkout on every platform. `vtl_binaries/JD3.speaker`
-  is realigned with the pristine original (2 stray bytes removed — a
-  twice-misspelled `description=` attribute, no functional impact).
-
-## [1.1.0] — 2026-09-16
-
-Version decision (vs v2.0.0): **no file removed**; the 7 modified
-`core/` files are **additive** changes (registry-driven speaker
-resolution with unchanged JD3 fallback, `--expressive` default OFF with
-bit-identical outputs, marked LANG SECTION carrying the native vowel
-block), and the JD3 `regression_baselines.json` phrases are
-**bit-identical to 1.0.2** (only the `meta` key gained a `speaker`
-field) — the default-speaker behaviour did not change, so minor
-version. Full inventory: `MIGRATION_NOTES.md` §1.
-
-### Added — multi-speakers registry (add-on 1)
-- **5-speaker registry** `vtl_synth/data/speakers/`
-  (`registry.json` + `ACTIVE_SPEAKER` marker): `jd3` (reference,
-  SynthVTL24b original), `s1`/`s2` (DVTD MRI subjects, constants v3)
-  and `m01`/`w02` (official VTL 2.4 ZIP speakers, pure option A +
-  2025→11-code glottal mapping, index 7 = **PS not DP**).
-- **`install_speaker.py`** selector (`list|install|restore|status`):
-  swaps `core/constants.py` (bit-exact copy of the registry source),
-  the orthogonal branch (dynamic `ACTIVE_SPEAKER` resolution in
-  `speaker_jd.py` / `build_phrase_tract.py` — `vtl_binaries/JD3.speaker`
-  is never touched) and the shared `vocaltractlab_cython` wheel
-  resource (audio + SVG/video layer; backup/restore, automatic
-  rollback, per-install smoke test in a fresh subprocess).
-- **Per-speaker regression baselines**
-  `regression_baselines_{s1,s2,m01,w02}.json` (16/16 green per
-  speaker; `scripts/regen_baselines.py` regenerates the file matching
-  the active speaker), and `scripts/calibrate_fine_v2.py`
-  (s1/s2 fine calibration, D15 corrections: 2D (ρ, θ) area-function
-  occlusive targets, s_L² fricative-gap rescaling, native TTY rule +
-  +0.15 apical bonus, multi-criteria `@` target).
-- `tests/test_speaker_registry.py` — registry integrity (hashes,
-  f0_default consistency with the constants sources).
-
-### Added — language pack (add-on 2)
-- **`setup_lang.py` + `lang_pack/`**: de/en/es/fr/it/pt with
-  `install|setlang|calibrate|verify|restore`; a managed **LANG
-  SECTION** (markers `LANG SECTION — BEGIN/END`) replaces the native
-  `VOWEL_TARGETS..VOWEL_EFFORT_GAIN` block of `constants.py`, is
-  transported across speaker swaps (canonical-form coherence), and is
-  fully reversible. 13 g2p/profile modules land in `vtl_synth/utils/`
-  (tracked by `.lang_pack_manifest`), Wikipron lexicons in
-  `vtl_synth/data/` (CC BY-SA 3.0, notices beside each TSV).
-- **JD3-only calibration guard-rail** (`setup_lang.py::_ensure_jd3`):
-  the pack vowel targets are calibrated in situ on JD3 — any
-  `calibrate` (or `install --calibrate`) first reinstalls speaker jd3
-  (constants + marker + wheel) and says so; a non-jd3 speaker with an
-  active language is flagged « cibles calibrées JD3 — HYPOTHÈSE ».
-  s1/s2/m01/w02 keep their native vowel targets (only jd3 follows the
-  pack). Per-component licensing: `lang_pack/LICENSE.md`.
-- `lang_pack/manual/manual.pdf|.tex`, `lang_pack/ARCHITECTURE.md`.
-
-### Added — expressive prosody (add-on 3)
-- **Expressive prosody option** (défaut OFF, sorties
+### Added
+- **Expressive prosody option** (v1.0.8 — défaut OFF, sorties
   bit-identiques au mode monotone; portée depuis covtl-languages dans
   la branche multi-speakers, compatible bascule de speakers):
   `Pipeline(expressive=True)` / CLI `--expressive` (bandeau
@@ -137,6 +35,9 @@ version. Full inventory: `MIGRATION_NOTES.md` §1.
   `python scripts/f0_report.py <tract...>`. Tests :
   `tests/test_expressive.py` (bit-identité off, chunking par langue,
   stress, accents mesurables, douceur, chute nucléaire).
+  `lang_pack/profiles/` enrichi (`chunking.py`, `prosody_f0.py`;
+  `setlang.py`, `lexicon_loader.py`, `integration/pipeline.py`
+  synchronisés ; `setup_lang.LANG_MODULES` → 13 modules).
 - **`docs/expressive_prosody.tex/.pdf`** : guide didactique
   (anglais US, pdflatex pur, transportable) — démarrage rapide,
   respiration syntaxique, contour F0, stress hors-bande, mesures
@@ -145,31 +46,36 @@ version. Full inventory: `MIGRATION_NOTES.md` §1.
   (registre, transport de la LANG SECTION, garde-fou JD3,
   workflows langue-d'abord/locuteur-d'abord, matrice de
   garanties).
+- **`PROVENANCE_PROSODY_CHUNKING.md` / `.json`** : rapport de
+  traçabilité des modules `chunking.py` / `prosody_f0.py` —
+  implémentation originale du projet (spécification du 2026-09-15,
+  session humain-dirigée **assistée par IA** ; aucune source
+  logicielle tierce trouvée ; références scientifiques = sources de
+  paramétrage, sans code) ; historique public : commit `e991ff9`
+  (v1.1.0, 2026-09-17). Actions de régularisation appliquées :
+  notice Wikipron (CC BY-SA 3.0) dans `THIRD_PARTY_NOTICES.md`,
+  archivage de la spécification dans `docs/`.
 
-### Added — polar visualization (add-on 4)
-- **Polar video v3** — CLI `--polar` on `run`: writes a `.polar`
-  intermediate (100 Hz, format v3) and renders a **dual-panel MP4**
-  sagittal cross-section | polar plane at 25 Hz, where the vocalic
-  branch is drawn **red** and the consonantal branch **blue** (each
-  with its fading trail and current position; inventory dots,
-  orientation θ=0 East/CCW, transient labels). New module
-  `vtl_synth/video/polar_video.py`; doc
-  **`docs/polar_visualization.pdf`** (LaTeX source included) and
-  `docs/figures/`. Short demo: `examples/polar_demo_en.mp4`.
-
-### Added — packaging
-- **`plot-tract` command**: graphical counterpart of `inspect` —
-  draws the 400 Hz trajectory of every `.tract` parameter into a PNG
-  figure (shared time axis; `--which all` adds the glottis f0 and
-  pressure, `--params` selects a subset, `--ranges` prints the
-  min/max/mean table). New module `vtl_synth/video/tract_figure.py`,
-  optional `plot` extra (`pip install .[plot]`, matplotlib).
-- `scripts/check_vowel_area.py`, `scripts/f0_report.py`.
-- `MIGRATION_NOTES.md` — packaging decisions inventory
-  (v1.1.0 justification, excluded tests, licensing map).
-
-### Changed — polar video v3 engine
-- **Dissociated vocalic/consonantal branches**: the
+### Changed
+- **Triangle vocalique des 4 locuteurs de production** (v1.0.9) :
+  matrices CO_VTL recalibrées au niveau paramétrique (port du répertoire
+  gestuel jd3 : c1_jd3, s_L·c0_jd3, c2_jd3 — s1 complet ; s2 hybride
+  lèvres jd3 + langue ×1.2 ; m01 conservé après arbitrage in-situ ;
+  w02 inchangé), cibles vocaliques jd3-référencées recalées par
+  locuteur, correctif `SYL_THETA_DENTAL` 23π/16 → 3π/2 (270° —
+  l'occlusion apicale d/t était ouverte chez tous les locuteurs, jd3
+  compris : 13/18 → 18/18 occlusives réalisées). Triangles a-i-u :
+  s1 4 → 70 %, s2 11 → 44 % de l'aire jd3 ; registre et 5 baselines
+  régénérés.
+- **Pack langue : la LANG SECTION est un marqueur seul** (résolution
+  D24) : `setup_lang.py` n'écrit plus de cibles vocaliques —
+  `VOWEL_TARGETS`/`VOWEL_EFFORT_GAIN` restent la propriété du speaker
+  actif ; `_ensure_jd3` devient no-op, `calibrate`/`--calibrate`
+  dépréciés, `install_speaker.py` transporte le marqueur sans toucher
+  la région native ; hachage canonique neutralisant section et région
+  (`speaker_registry`).
+### Changed
+- **Polar video v3 — dissociated vocalic/consonantal branches**: the
   polar figure is no longer an inversion of the blended Pval parameter
   frames (v2 `polar_from_pval`, which produced a single zigzag path:
   during a cluster the parameter frames are off-manifold so the two
@@ -185,11 +91,16 @@ version. Full inventory: `MIGRATION_NOTES.md` §1.
   vocalic branch (red) = continuous anchor-to-anchor background +
   vowel plateaus, flowing under the clusters; consonantal branch
   (blue) = cluster sub-arcs anchor → C₁ → … → C_m → anchor, peaking
-  exactly on the consonant node targets. `.polar` format **version 3**:
-  two 100 Hz trajectories `vocalic` / `consonantal` (null while a
-  branch is inactive) + phoneme timing as before; v2 files remain
-  readable by `read_polar`. `polar_from_pval` is kept as a diagnostic
-  only.
+  exactly on the consonant node targets. Each branch has its own
+  fading trail (~0.75 s) and current position; inventory dots,
+  orientation (θ=0 East, CCW), transient labels and the sagittal
+  panel are unchanged. `.polar` format **version 3**: two 100 Hz
+  trajectories `vocalic` / `consonantal` (null while a branch is
+  inactive) + phoneme timing as before; v2 files remain readable by
+  `read_polar`. `polar_from_pval` is kept as a diagnostic only.
+  Demos regenerated: `out/polar_demo_en.mp4` ("this is easy for us",
+  en/JD3, dissociation visible on /z/, /f/, /R/) and
+  `out/polar_e2e.mp4` ("ba.da.ga").
 - **Polar video fix — stale work-dir frames**: the dual-panel encoder
   silently appended leftover `frame_*.png` from a previous LONGER
   render in the persistent `temp_video` work directory (observed: a
@@ -198,8 +109,6 @@ version. Full inventory: `MIGRATION_NOTES.md` §1.
   purges `frame_*.png` in the sagittal/polar/compo work
   subdirectories before rendering and verifies the composed frame
   count before encoding; the log reports the actual encoded count.
-
-### Changed — speakers s1/s2 (constants v3)
 - **s1/s2 bunching fix (constants v3)**: root cause of the raised tongue
   tip / "bunch" (worst on schwa) found in the stage-2 TTY rule of the
   adapter — it substitutes c0 = (0.80−Va)/2.3, calibrated on JD3 only, which
@@ -210,31 +119,27 @@ version. Full inventory: `MIGRATION_NOTES.md` §1.
   additionally chosen by multi-criteria area-function cost instead of the
   a-i-u centroid (s1 (0.70, 160°), s2 (0.35, 170°)). Result: no vowel
   background has a lingual occlusion any more (s2 /a/ 0.00 → 0.71 cm²,
-  /6/ 0.04 → 1.04; all ≥ 0.59), humps reduced. Baselines regenerated.
+  /6/ 0.04 → 1.04; all ≥ 0.59), humps reduced. Baselines regenerated;
+  previous constants in `data/speakers/sauvegarde/`.
 - **Fine calibration v2 of s1/s2 (`s1_constants.py`, `s2_constants.py`)**:
   redone with `scripts/calibrate_fine_v2.py` implementing the D15
-  corrections from the DVTD transfer report. Occlusive targets now come
-  from a 2D (ρ, θ) area-function cost centered on the canonical JD3 place
-  angle (exact closure + place margin when it exists, documented
-  compromise otherwise — closure is not reachable on every vowel
-  background for these anatomies); fricative gap windows are rescaled by
-  s_L² (subglottal length ratio: s1 1.179, s2 0.887).
+  corrections from the DVTD transfer report (covtl-speaker). Occlusive
+  targets now come from a 2D (ρ, θ) area-function cost centered on the
+  canonical JD3 place angle (exact closure + place margin when it exists,
+  documented compromise otherwise — closure is not reachable on every
+  vowel background for these anatomies); fricative gap windows are
+  rescaled by s_L² (subglottal length ratio: s1 1.179, s2 0.887). New
+  baseline files `regression_baselines_s1/s2.json`; reports under
+  `out/fine/<spk>_fine_v2/`. Previous constants kept in
+  `data/speakers/sauvegarde/*_pre_v2.py`.
 
-### Fixed — packaging
-- `vtl_synth/data/vtl_binaries/JD3.speaker`: restored the pristine
-  wheel original (92938 o, SHA-256 `a583bdaaa7ffe216…`, identical to
-  the 1.0.2 release) — the development tree carried a 1-character
-  corruption (`escription=` line 1801) in this dormant fallback file.
-- `pyproject.toml`: the new package data (`data/speakers/` registry,
-  per-speaker `.speaker`/`*_constants.py`, Wikipron `data/*.tsv`
-  lexicons) is now declared in `[tool.setuptools.package-data]` —
-  a plain `pip install .` previously would not have shipped it.
-- `install_speaker.py` is repository-portable: backups/journals live
-  in `.speaker_backups/` inside the clone (created on first use,
-  git-ignored); the editable-pointer guard now compares against the
-  repository root instead of a hard-coded development path; the
-  original-constants backup check accepts the canonical (LANG SECTION)
-  form of the JD3 reference.
+### Added
+- **`plot-tract` command**: graphical counterpart of `inspect` —
+  draws the 400 Hz trajectory of every `.tract` parameter into a PNG
+  figure (shared time axis; `--which all` adds the glottis f0 and
+  pressure, `--params` selects a subset, `--ranges` prints the
+  min/max/mean table). New module `vtl_synth/video/tract_figure.py`,
+  optional `plot` extra (`pip install .[plot]`, matplotlib).
 
 ## [1.0.2] — 2026-09-08
 

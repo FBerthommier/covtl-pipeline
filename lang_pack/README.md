@@ -4,6 +4,18 @@
 English, Français, Español (Castilian), Deutsch, Italiano, Português
 (European) — installed by one command, switched by one command,
 uninstalled without residue. The JD3 speaker and `vtl_binaries/` are
+
+> **v1.0.9 (2026-09-23) — changement de sémantique (résolution D24)** :
+> la LANG SECTION installée dans `constants.py` est désormais un
+> **marqueur seul** (`ACTIVE_LANG`). Le package sélectionne la langue
+> (modules de prononciation, lexiques, G2P, notation) mais **n'écrit
+> plus de cibles vocaliques** : `VOWEL_TARGETS` et `VOWEL_EFFORT_GAIN`
+> restent ceux du speaker actif, dans ses propres constants. Les
+> anciennes surcharges par langue (calibrées sur JD3) sont supprimées ;
+> `setup_lang.py calibrate` est déprécié, et le garde-fou de
+> réinstallation jd3 est levé (l'opération est sûre sur tout speaker).
+> Les blocs de `lang_blocks/blocks.py` restent la source historique ;
+> leur contenu vocalique n'est plus consommé.
 never touched.
 
 This package reorganizes the multilingual extension (v1.0.7) of the
