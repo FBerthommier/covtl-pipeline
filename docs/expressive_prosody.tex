@@ -169,7 +169,7 @@ per-language parameters, how to measure and tune the result, and ---
 in a dedicated chapter --- the exact interaction with the speaker
 setup (\texttt{install\_speaker.py} /
 \texttt{setup\_lang.py}, whose LANG SECTION is marker-only
-since v1.0.9).
+since v1.2.0).
 \end{abstract}
 
 \tableofcontents
@@ -551,8 +551,8 @@ python -m pytest tests -m "not slow"      # full fast suite
   phonetic input ignores the mode with a warning.
 \end{itemize}
 
-\begin{warning}[Baselines and language state (v1.0.9)]
-Since v1.0.9 the LANG SECTION is a \emph{marker only}
+\begin{warning}[Baselines and language state (v1.2.0)]
+Since v1.2.0 the LANG SECTION is a \emph{marker only}
 (\texttt{ACTIVE\_LANG}); it has no acoustic effect (the tract is
 bit-identical with or without it), so the regression baselines
 (\texttt{regression\_baselines*.json}) are language-independent
@@ -581,7 +581,7 @@ Activating a speaker swaps \texttt{constants.py} as a whole and
 swaps the wheel's speaker resource (effective in the next
 process); \texttt{speaker\_registry.announce()} states the active
 bundle at every synthesis. The language pack
-(\texttt{setup\_lang.py}) is independent: since v1.0.9 it edits a managed LANG
+(\texttt{setup\_lang.py}) is independent: since v1.2.0 it edits a managed LANG
 SECTION that is a \emph{marker only} (\texttt{ACTIVE\_LANG})
 --- the vowel targets and effort gains remain the active
 speaker's own (the former per-language overrides, calibrated
@@ -613,7 +613,7 @@ Validated on the reference install: expressive synthesis with
 jd3 (102.216\,Hz) and with s2 (181.008\,Hz) both produce the
 expected breath groups and follow the speaker's F0.
 
-\subsection{The former JD3 guard (removed in v1.0.9)}
+\subsection{The former JD3 guard (removed in v1.2.0)}
 
 Up to v1.0.8, \texttt{setup\_lang.py} carried a guard,
 \texttt{\_ensure\_jd3()}, that automatically reinstalled jd3
@@ -622,13 +622,13 @@ targets ($\rho, \theta$) of the pack were calibrated in situ on
 JD3 --- installing them on another speaker's constants would
 silently bake JD3 vowels into that speaker (defect D24).
 
-Since v1.0.9 the LANG SECTION carries no vowel targets at all, the
+Since v1.2.0 the LANG SECTION carries no vowel targets at all, the
 guard is a no-op, \texttt{calibrate} is deprecated, and language
 operations are safe on \emph{every} speaker: the vowel targets
 and the effort gains are the active speaker's own, and the
 speaker swap still carries the (marker-only) LANG SECTION over.
 
-\subsection{Language and speaker switching (v1.0.9 workflow)}
+\subsection{Language and speaker switching (v1.2.0 workflow)}
 
 \begin{lstlisting}[style=shell]
 python setup_lang.py setlang de        # marker only: targets untouched
@@ -639,7 +639,7 @@ vtl-synth run "ich suche eine schoene Strasse" --lang de --expressive -o ./out
 Result: expressive German on s2. The F0 contour follows s2's
 \texttt{f0\_default}; the breath groups and accents are identical
 to jd3's, and the vowel timbre is s2's own calibration (no JD3
-bake-in since v1.0.9). Language and speaker switches are now
+bake-in since v1.2.0). Language and speaker switches are now
 order-independent --- no double switch is needed.
 
 \subsection{Guarantees matrix}
@@ -654,7 +654,7 @@ Expressive synthesis, any language &
   fully validated (measurements, demos, tests) &
   works; F0 relief identical in semitones (validated on s2 by smoke test + measurements planned) \\
 Per-language vowel quality &
-  superseded in v1.0.9: vowel targets are the active
+  superseded in v1.2.0: vowel targets are the active
   speaker's own (no per-language override any more) \\
 \texttt{calibrate} / \texttt{verify} for the speaker &
   \texttt{calibrate} deprecated; \texttt{verify} measures
@@ -668,7 +668,7 @@ Nuclear fall / accent amplitude &
 \end{small}
 
 \begin{callout}[One-sentence summary]
-Since v1.0.9 the language pack selects pronunciation only
+Since v1.2.0 the language pack selects pronunciation only
 (marker section) and the vowel targets are the active
 speaker's own;
 expressive prosody follows \emph{whichever speaker is active}.

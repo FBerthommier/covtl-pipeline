@@ -1,6 +1,6 @@
 # Caractéristiques des locuteurs du registre covtl-pipeline
 
-**Version :** 1.0.9 (état du 24/09/2026) · **Source :** missions
+**Version :** v1.2.0 (état du 24/09/2026) · **Source :** missions
 triangle/consonnes 22-23/09/2026 + audit croisé de l'étude externe
 (`vowel_spaces_covtl_pipeline.pdf`, `vowel_spaces_rho_refit_report.pdf`).
 Mesures : statique Route A (solveur tube sans perte, normalisation par

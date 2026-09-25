@@ -41,12 +41,7 @@ Repository: <https://github.com/fberthommier/covtl-pipeline>
 - **Speakers** — [docs/speakers.pdf](docs/speakers.pdf): the
   multi-speaker registry, `install_speaker.py`, the four layers of a
   switch, provenance chains and the defect catalogue (v1.1.0).
-- **Language pack** --- [docs/language_pack.pdf](docs/language_pack.pdf), covering the six languages, `setup_lang.py` and the **marker-only LANG SECTION (v1.0.9)**: the language selects pronunciation modules, lexicons, G2P and notation, while vowel targets stay the active speaker’s own (the former per-language overrides and JD3 guard were removed, defect D24). Pack internals: [lang_pack/README.md](lang_pack/README.md), [lang_pack/manual/manual.pdf](lang_pack/manual/manual.pdf), [lang_pack/ARCHITECTURE.md](lang_pack/ARCHITECTURE.md). Speaker characteristics: [docs/SPEAKERS.md](docs/SPEAKERS.md).
-  the six languages, `setup_lang.py`, vowel-target calibration, the
-  JD3 guard (v1.1.0); pack internals:
-  [lang_pack/README.md](lang_pack/README.md),
-  [lang_pack/manual/manual.pdf](lang_pack/manual/manual.pdf),
-  [lang_pack/ARCHITECTURE.md](lang_pack/ARCHITECTURE.md).
+- **Language pack** --- [docs/language_pack.pdf](docs/language_pack.pdf), covering the six languages, `setup_lang.py` and the **marker-only LANG SECTION (v1.2.0)**: the language selects pronunciation modules, lexicons, G2P and notation, while vowel targets stay the active speaker’s own (the former per-language overrides and JD3 guard were removed, defect D24). Pack internals: [lang_pack/README.md](lang_pack/README.md), [lang_pack/manual/manual.pdf](lang_pack/manual/manual.pdf), [lang_pack/ARCHITECTURE.md](lang_pack/ARCHITECTURE.md). Speaker characteristics: [docs/SPEAKERS.md](docs/SPEAKERS.md).
 - **Polar visualization** — [docs/polar_visualization.pdf](docs/polar_visualization.pdf):
   the (ρ, θ) plane, the dissociated vocalic/consonantal branches and
   the dual-panel video (v1.1.0).

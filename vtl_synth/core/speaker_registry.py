@@ -105,10 +105,10 @@ def canonical_constants_text(text: str) -> str:
     difference is the installed language hashes equal to its speaker
     source file:
 
-      - the managed LANG SECTION (marker-only since v1.0.9 — with or
-        without embedded vowel targets for pre-1.0.9 files), AND
+      - the managed LANG SECTION (marker-only since v1.2.0 — with or
+        without embedded vowel targets for pre-v1.2.0 files), AND
       - the native VOWEL_TARGETS..VOWEL_EFFORT_GAIN block, which stays
-        in place since v1.0.9 (the language pack no longer overwrites
+        in place since v1.2.0 (the language pack no longer overwrites
         it — D24) and therefore also differs between an installed file
         (section present) and its section-less source.
     """

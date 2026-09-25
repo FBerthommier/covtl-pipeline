@@ -35,7 +35,7 @@
 
 \begin{document}
 
-\noindent\textbf{\color{red} v1.0.9 update --- parts of this manual superseded.} Since v1.0.9 (2026-09-23) the LANG SECTION is a \emph{marker only} (\code{ACTIVE\_LANG}): the language pack no longer installs per-language vowel targets, the JD3 guard is removed (defect D24 resolved), and \code{calibrate} is deprecated. Vowel targets and effort gains are the \emph{active speaker’s own}; they were recalibrated per speaker in v1.0.9 (see \code{docs/SPEAKERS.md}). The sections below that describe per-language targets, the guard, and the calibration commands describe the pre-1.0.9 behaviour.
+\noindent\textbf{\color{red} v1.2.0 update --- parts of this manual superseded.} Since v1.2.0 (2026-09-23) the LANG SECTION is a \emph{marker only} (\code{ACTIVE\_LANG}): the language pack no longer installs per-language vowel targets, the JD3 guard is removed (defect D24 resolved), and \code{calibrate} is deprecated. Vowel targets and effort gains are the \emph{active speaker’s own}; they were recalibrated per speaker in v1.2.0 (see \code{docs/SPEAKERS.md}). The sections below that describe per-language targets, the guard, and the calibration commands describe the pre-v1.2.0 behaviour.
 
 
 \maketitle
@@ -408,11 +408,11 @@ profiles (\code{chunking.py}, \code{prosody\_f0.py}) are part of the
 shipped modules; the option they power is documented in
 \code{docs/expressive\_prosody.pdf}.
 
-v1.0.9 update: the LANG SECTION is now a \emph{marker only} and the
+v1.2.0 update: the LANG SECTION is now a \emph{marker only} and the
 guard (\code{\_ensure\_jd3()}) has been removed as a no-op. The
 per-language vowel targets no longer exist: \code{VOWEL\_TARGETS}
 and \code{VOWEL\_EFFORT\_GAIN} are the active speaker's own, and
-all five speakers now ship recalibrated targets (v1.0.9 vowel
+all five speakers now ship recalibrated targets (v1.2.0 vowel
 recalibration, see \code{docs/SPEAKERS.md}). Language and speaker
 switches are order-independent: any order of \code{setlang} and
 \code{install\_speaker.py install <spk>} yields the same state, and
@@ -457,7 +457,7 @@ Spanish /i/ sitting at the same spoke but at very different radii,
 each matching its own language's F1/F2 reference. Copying vowel
 targets between languages was tried and rejected during the original
 in-situ calibration; the pipeline therefore carries one derivation per
-language and refuses to guess. v1.0.9 generalizes this
+language and refuses to guess. v1.2.0 generalizes this
 lesson to the speaker axis: targets do not transfer across
 speakers either, which is why the per-language overrides
 were removed and every speaker now carries its own
@@ -465,10 +465,10 @@ recalibrated targets.
 
 \subsection{Calibrating a language on the engine}
 
-v1.0.9: these two commands are \emph{deprecated} --- vowel
+v1.2.0: these two commands are \emph{deprecated} --- vowel
 targets belong to the speaker, not to the language, and
 \code{calibrate} no longer writes anything. They are kept
-here as historical documentation of the pre-1.0.9 behaviour.
+here as historical documentation of the pre-v1.2.0 behaviour.
 
 Two commands derived $\rho$ mechanically (never by hand):
 

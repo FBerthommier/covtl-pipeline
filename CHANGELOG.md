@@ -57,7 +57,7 @@ Format: Keep a Changelog — https://keepachangelog.com/
   archivage de la spécification dans `docs/`.
 
 ### Changed
-- **Triangle vocalique des 4 locuteurs de production** (v1.0.9) :
+- **Triangle vocalique des 4 locuteurs de production** (v1.2.0) :
   matrices CO_VTL recalibrées au niveau paramétrique (port du répertoire
   gestuel jd3 : c1_jd3, s_L·c0_jd3, c2_jd3 — s1 complet ; s2 hybride
   lèvres jd3 + langue ×1.2 ; m01 conservé après arbitrage in-situ ;

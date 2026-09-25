@@ -5,7 +5,7 @@ English, Français, Español (Castilian), Deutsch, Italiano, Português
 (European) — installed by one command, switched by one command,
 uninstalled without residue. The JD3 speaker and `vtl_binaries/` are
 
-> **v1.0.9 (2026-09-23) — changement de sémantique (résolution D24)** :
+> **v1.2.0 (2026-09-23) — changement de sémantique (résolution D24)** :
 > la LANG SECTION installée dans `constants.py` est désormais un
 > **marqueur seul** (`ACTIVE_LANG`). Le package sélectionne la langue
 > (modules de prononciation, lexiques, G2P, notation) mais **n'écrit

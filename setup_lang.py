@@ -184,7 +184,7 @@ VOWEL_EFFORT_GAIN: Dict[str, float] = {{
 
 
 def _lang_section(lang: str) -> str:
-    """Marker-only LANG SECTION (v1.0.9+, 2026-09-23).
+    """Marker-only LANG SECTION (v1.2.0+, 2026-09-23).
 
     The language selects pronunciation modules, lexicons, G2P and
     notation — NOT the vowel targets. The per-language VOWEL_TARGETS /
@@ -195,7 +195,7 @@ def _lang_section(lang: str) -> str:
     own, in place.
     """
     return f"""{LANG_SECTION_BEGIN} (managed by setup_lang.py — do not edit by hand)
-# Language selection ONLY since v1.0.9: pronunciation modules, lexicons,
+# Language selection ONLY since v1.2.0: pronunciation modules, lexicons,
 # G2P and notation. The vowel targets (VOWEL_TARGETS) and the effort gain
 # (VOWEL_EFFORT_GAIN) below this section are the ACTIVE SPEAKER's own
 # calibration — no per-language override any more (the former JD3-copied
@@ -416,7 +416,7 @@ def _active_speaker_name() -> str | None:
 
 
 def _ensure_jd3() -> None:
-    """OBSOLETE (v1.0.9, 2026-09-23) : conservé comme no-op pour
+    """OBSOLETE (v1.2.0, 2026-09-23) : conservé comme no-op pour
     compatibilité des appels internes.
 
     L'ancien garde-fou réinstallait jd3 avant toute opération de langue
@@ -439,7 +439,7 @@ def _backup(path: Path) -> None:
 def _replace_lang_section(src: str, lang: str, block: str | None = None) -> str:
     """Rewrite the managed LANG SECTION of constants.py for ``lang``.
 
-    Since v1.0.9 the section is a MARKER ONLY (ACTIVE_LANG): the
+    Since v1.2.0 the section is a MARKER ONLY (ACTIVE_LANG): the
     speaker's own VOWEL_TARGETS / VOWEL_EFFORT_GAIN region is never
     touched. ``block`` is accepted for backward compatibility and
     ignored.
@@ -449,7 +449,7 @@ def _replace_lang_section(src: str, lang: str, block: str | None = None) -> str:
         # Section présente (ancien style avec cibles, ou marqueur seul) :
         # remplacée in place — toute définition de cibles qu'elle
         # contenait disparaît au profit de la région native restée
-        # en dessous (cas d'un fichier écrit par une version < 1.0.9 :
+        # en dessous (cas d'un fichier écrit par une version < v1.2.0 :
         # la région native a alors été consommée — ré-amorçage via
         # `restore` ou réinstallation du speaker).
         pattern = re.compile(
@@ -460,7 +460,7 @@ def _replace_lang_section(src: str, lang: str, block: str | None = None) -> str:
         return pattern.sub(lambda _m: section, src, count=1)
     # Première intervention : INSÉRER la section marqueur APRÈS la région
     # vocalique native (VOWEL_TARGETS .. VOWEL_EFFORT_GAIN), qui reste
-    # intégralement en place (v1.0.9 : la région n'est plus remplacée).
+    # intégralement en place (v1.2.0 : la région n'est plus remplacée).
     region = re.compile(
         r'(?ms)^VOWEL_TARGETS:.*?^VOWEL_EFFORT_GAIN:.*?^\}\n')
     if not region.search(src):
@@ -603,9 +603,9 @@ def cmd_calibrate(lang: str, fine: bool = False,
     balayage de ρ par voyelle avec synthèse réelle + mesure LPC
     (cf. ``refine_in_situ``), le critère de ``verify``.
     """
-    _ensure_jd3()   # no-op depuis v1.0.9 (les cibles ne sont plus
+    _ensure_jd3()   # no-op depuis v1.2.0 (les cibles ne sont plus
     #                 écrasées — l'opération est sûre sur tout speaker)
-    _info("OBSOLETE (v1.0.9) : les cibles vocaliques appartiennent au "
+    _info("OBSOLETE (v1.2.0) : les cibles vocaliques appartiennent au "
           "SPEAKER actif — la calibration par langue n'écrit plus rien.\n"
           "         Pour recalibrer un speaker, modifier ses "
           "VOWEL_TARGETS dans vtl_synth/data/speakers/<spk>_constants.py "
@@ -908,12 +908,12 @@ def cmd_install(pack_dir: Path, lang: str, calibrate: bool = False) -> None:
     _install_lexicons(pack_dir)
 
     _info("Étape 4/4 : section langue de constants.py (marqueur seul — "
-          "les cibles du speaker ne sont pas touchées, v1.0.9)")
-    _ensure_jd3()   # no-op depuis v1.0.9
+          "les cibles du speaker ne sont pas touchées, v1.2.0)")
+    _ensure_jd3()   # no-op depuis v1.2.0
     _backup(CONSTANTS)
     src = CONSTANTS.read_text(encoding='utf-8')
     if calibrate:
-        _info("  NOTE : --calibrate ignoré (v1.0.9) — les cibles "
+        _info("  NOTE : --calibrate ignoré (v1.2.0) — les cibles "
               "vocaliques appartiennent au speaker actif")
     current = get_current_lang()
     target = current if (current in blocks and LANG_SECTION_BEGIN in src) else lang

@@ -250,11 +250,11 @@ def _carry_lang_section(old_src: str, dest: Path, name: str, log) -> None:
     """Reinjecte la section de langue de l'ancien constants dans dest.
 
     Sans section dans l'ancien fichier : ne fait rien (etat natif).
-    v1.0.9 (2026-09-23, D24 résolu) : la section est un MARQUEUR SEUL
+    v1.2.0 (2026-09-23, D24 résolu) : la section est un MARQUEUR SEUL
     (ACTIVE_LANG) — elle est INSÉRÉE APRÈS la région vocalique native
     du constants cible, qui reste intégralement en place (les cibles
     appartiennent au speaker). Une ancienne section riche (avec cibles,
-    < v1.0.9) n'est PAS transportée : c'est justement l'effet de bord
+    < v1.2.0) n'est PAS transportée : c'est justement l'effet de bord
     supprimé — ré-amorcer la langue via `setup_lang.py setlang <lang>`.
     """
     section = _extract_lang_section(old_src)
