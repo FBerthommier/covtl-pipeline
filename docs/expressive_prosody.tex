@@ -45,7 +45,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\small\itshape covtl-pipeline --- Expressive Prosody Guide}
-\fancyhead[R]{\small v1.0.8}
+\fancyhead[R]{\small v1.1.0}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0.3pt}
 \renewcommand{\footrulewidth}{0pt}
@@ -143,7 +143,7 @@
 for the COVTL articulatory synthesizer}
 \author{\large Frédéric Berthommier\\[0.3em]
 \small\texttt{fberthommier@users.noreply.github.com}}
-\date{\small Version 1.0.8 --- September 2026\\[0.2em]
+\date{\small Version 1.1.0 --- September 2026\\[0.2em]
 \textit{Licensed under GPL-3.0-or-later}}
 
 \begin{document}
@@ -153,7 +153,7 @@ for the COVTL articulatory synthesizer}
 \begin{abstract}
 \noindent
 The expressive prosody option (\texttt{expressive=True} /
-\texttt{-{}-expressive}, v1.0.8) gives the covtl-pipeline two
+\texttt{-{}-expressive}) gives the covtl-pipeline two
 capabilities that the monotone declination lacks: \emph{syntactic
 breathing} (short pauses at chunk boundaries, so no chain of
 coarticulated words exceeds five words) and a \emph{sculpted F0
@@ -167,8 +167,9 @@ construction}: it follows whatever speaker is active in the
 multi-speaker registry. This guide explains the mechanics, the
 per-language parameters, how to measure and tune the result, and ---
 in a dedicated chapter --- the exact interaction with the speaker
-setup (\texttt{install\_speaker.py} / \texttt{setup\_lang.py},
-whose LANG SECTION is marker-only since v1.0.9).
+setup (\texttt{install\_speaker.py} /
+\texttt{setup\_lang.py}, whose LANG SECTION is marker-only
+since v1.0.9).
 \end{abstract}
 
 \tableofcontents
@@ -179,7 +180,7 @@ whose LANG SECTION is marker-only since v1.0.9).
 The monotone chain applies a \emph{linear declination} per phrase
 (\texttt{apply\_f0\_declination}): F0 starts at \emph{onset gain}
 and slides down to \emph{final gain}. A long phrase is therefore a
-flat ramp, perceived as monotonous. Worse, since v1.0.2 the g2p
+flat ramp, perceived as monotonous. Worse, the g2p
 \emph{connects} all words of a phrase with the syllable separator
 \ks{.} (coarticulation): a sentence without punctuation becomes a
 single uninterrupted chain of several seconds, which is hard to
@@ -554,15 +555,16 @@ python -m pytest tests -m "not slow"      # full fast suite
 Since v1.0.9 the LANG SECTION is a \emph{marker only}
 (\texttt{ACTIVE\_LANG}); it has no acoustic effect (the tract is
 bit-identical with or without it), so the regression baselines
-(\texttt{regression\_baselines*.json}) are language-independent and
-the suite stays green whatever language is active.
+(\texttt{regression\_baselines*.json}) are language-independent
+and the suite stays green whatever language is active.
 \end{warning}
 
 % ==========================================================================
 \section{Interaction with the speaker setup}\label{sec:speakers}
 
-This chapter is for the unified repository (\texttt{covtl-pipeline}
-with the multi-speaker registry). It explains exactly what the
+This chapter describes how the expressive option interacts with the
+multi-speaker registry and the language pack of the integrated
+repository. It explains exactly what the
 expressive patch shares with the speaker machinery, what it does
 not touch, and what the JD3 guard does and does not restrict.
 
@@ -579,11 +581,11 @@ Activating a speaker swaps \texttt{constants.py} as a whole and
 swaps the wheel's speaker resource (effective in the next
 process); \texttt{speaker\_registry.announce()} states the active
 bundle at every synthesis. The language pack
-(\texttt{setup\_lang.py}) is independent: since v1.0.9 it edits a
-managed LANG SECTION that is a \emph{marker only}
-(\texttt{ACTIVE\_LANG}) --- the vowel targets and effort gains
-remain the active speaker's own (the former per-language overrides,
-calibrated on JD3, are removed; defect D24 resolved).
+(\texttt{setup\_lang.py}) is independent: since v1.0.9 it edits a managed LANG
+SECTION that is a \emph{marker only} (\texttt{ACTIVE\_LANG})
+--- the vowel targets and effort gains remain the active
+speaker's own (the former per-language overrides, calibrated
+on JD3, are removed; defect D24 resolved).
 
 \subsection{What the expressive patch shares with speakers ---
   exactly one thing}
@@ -614,17 +616,17 @@ expected breath groups and follow the speaker's F0.
 \subsection{The former JD3 guard (removed in v1.0.9)}
 
 Up to v1.0.8, \texttt{setup\_lang.py} carried a guard,
-\texttt{\_ensure\_jd3()}, that automatically reinstalled jd3 before
-any language operation, because the per-language vowel targets
-($\rho, \theta$) of the pack were calibrated in situ on JD3 ---
-installing them on another speaker's constants would silently bake
-JD3 vowels into that speaker (defect D24).
+\texttt{\_ensure\_jd3()}, that automatically reinstalled jd3
+before any language operation, because the per-language vowel
+targets ($\rho, \theta$) of the pack were calibrated in situ on
+JD3 --- installing them on another speaker's constants would
+silently bake JD3 vowels into that speaker (defect D24).
 
 Since v1.0.9 the LANG SECTION carries no vowel targets at all, the
 guard is a no-op, \texttt{calibrate} is deprecated, and language
-operations are safe on \emph{every} speaker: the vowel targets and
-the effort gains are the active speaker's own, and the speaker swap
-still carries the (marker-only) LANG SECTION over.
+operations are safe on \emph{every} speaker: the vowel targets
+and the effort gains are the active speaker's own, and the
+speaker swap still carries the (marker-only) LANG SECTION over.
 
 \subsection{Language and speaker switching (v1.0.9 workflow)}
 
@@ -652,9 +654,11 @@ Expressive synthesis, any language &
   fully validated (measurements, demos, tests) &
   works; F0 relief identical in semitones (validated on s2 by smoke test + measurements planned) \\
 Per-language vowel quality &
-  superseded in v1.0.9: vowel targets are the active speaker's own (no per-language override any more) \\
+  superseded in v1.0.9: vowel targets are the active
+  speaker's own (no per-language override any more) \\
 \texttt{calibrate} / \texttt{verify} for the speaker &
-  \texttt{calibrate} deprecated; \texttt{verify} measures the active speaker's own targets \\
+  \texttt{calibrate} deprecated; \texttt{verify} measures
+  the active speaker's own targets \\
 Nuclear fall / accent amplitude &
   per-language profile, speaker-independent &
   same profile, scaled to the speaker's \texttt{f0\_default} \\
@@ -664,8 +668,9 @@ Nuclear fall / accent amplitude &
 \end{small}
 
 \begin{callout}[One-sentence summary]
-Since v1.0.9 the language pack selects pronunciation only (marker
-section) and the vowel targets are the active speaker's own;
+Since v1.0.9 the language pack selects pronunciation only
+(marker section) and the vowel targets are the active
+speaker's own;
 expressive prosody follows \emph{whichever speaker is active}.
 The two mechanisms coexist without interacting, and the option
 never modifies the speaker setup.

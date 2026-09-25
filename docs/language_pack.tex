@@ -35,6 +35,9 @@
 
 \begin{document}
 
+\noindent\textbf{\color{red} v1.0.9 update --- parts of this manual superseded.} Since v1.0.9 (2026-09-23) the LANG SECTION is a \emph{marker only} (\code{ACTIVE\_LANG}): the language pack no longer installs per-language vowel targets, the JD3 guard is removed (defect D24 resolved), and \code{calibrate} is deprecated. Vowel targets and effort gains are the \emph{active speaker’s own}; they were recalibrated per speaker in v1.0.9 (see \code{docs/SPEAKERS.md}). The sections below that describe per-language targets, the guard, and the calibration commands describe the pre-1.0.9 behaviour.
+
+
 \maketitle
 
 \begin{center}
@@ -405,24 +408,15 @@ profiles (\code{chunking.py}, \code{prosody\_f0.py}) are part of the
 shipped modules; the option they power is documented in
 \code{docs/expressive\_prosody.pdf}.
 
-Because the per-language vowel targets are calibrated in situ on JD3,
-every language-management command carries a guard
-(\code{\_ensure\_jd3()}): \code{install}, \code{setlang},
-\code{calibrate} and \code{verify} first check the active speaker
-and, if it is not jd3, reinstall jd3 (constants + marker + wheel
-resource) through \code{install\_speaker.py} before performing the
-operation. It is a transport mechanism, not a refusal: synthesis is
-never gated, and switching speakers afterwards remains free --- the
-speaker swap \emph{carries the active LANG SECTION over} to the new
-speaker's constants.
-
-Only \textbf{JD3 follows the pack}. The four other speakers of the
-registry (s1, s2, m01, w02) ship and are validated with their
-\emph{native} vowel targets; to work in that native regime, keep the
-default language (\code{en}) and install the speaker with
-\code{install\_speaker.py} (\code{docs/speakers.pdf}). Users who
-alternate languages and speakers should install the language first,
-then the speaker (workflow A of \code{docs/expressive\_prosody.pdf}).
+v1.0.9 update: the LANG SECTION is now a \emph{marker only} and the
+guard (\code{\_ensure\_jd3()}) has been removed as a no-op. The
+per-language vowel targets no longer exist: \code{VOWEL\_TARGETS}
+and \code{VOWEL\_EFFORT\_GAIN} are the active speaker's own, and
+all five speakers now ship recalibrated targets (v1.0.9 vowel
+recalibration, see \code{docs/SPEAKERS.md}). Language and speaker
+switches are order-independent: any order of \code{setlang} and
+\code{install\_speaker.py install <spk>} yields the same state, and
+the speaker swap carries the (marker-only) LANG SECTION over.
 
 % ===========================================================================
 \section{Vowel geometry: polar targets and why they do not transfer}
@@ -463,11 +457,20 @@ Spanish /i/ sitting at the same spoke but at very different radii,
 each matching its own language's F1/F2 reference. Copying vowel
 targets between languages was tried and rejected during the original
 in-situ calibration; the pipeline therefore carries one derivation per
-language and refuses to guess.
+language and refuses to guess. v1.0.9 generalizes this
+lesson to the speaker axis: targets do not transfer across
+speakers either, which is why the per-language overrides
+were removed and every speaker now carries its own
+recalibrated targets.
 
 \subsection{Calibrating a language on the engine}
 
-Two commands derive $\rho$ mechanically (never by hand):
+v1.0.9: these two commands are \emph{deprecated} --- vowel
+targets belong to the speaker, not to the language, and
+\code{calibrate} no longer writes anything. They are kept
+here as historical documentation of the pre-1.0.9 behaviour.
+
+Two commands derived $\rho$ mechanically (never by hand):
 
 \begin{enumerate}
 \item \code{python setup\_lang.py calibrate <lang>} runs
