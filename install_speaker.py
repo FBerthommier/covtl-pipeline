@@ -15,18 +15,16 @@ ACTIVE_SPEAKER du registre vtl_synth/data/speakers/ (resolution
 dynamique dans speaker_jd.py / build_phrase_tract.py — aucun .speaker
 n'est copie dans vtl_binaries/, qui garde son JD3.speaker d'origine).
 
-Usage (depuis la racine du depot) :
+Usage (depuis P:\\covtl-pipeline) :
     python install_speaker.py list
-    python install_speaker.py install jd3|s1|s2|m01|w02
+    python install_speaker.py install s1|s2|jd3
     python install_speaker.py restore [--check-baselines]
     python install_speaker.py status
 
-Journaux : .speaker_backups/install_<nom>.log et restore.log (cree dans
-le depot au premier usage) ; backups originaux dans
-.speaker_backups/backup_install/ (manifeste SHA-256, crees au premier
-install — ils refletent l'etat initial de CE depot et de la wheel de
-l'environnement Python courant). Toute erreur -> rollback automatique de
-l'etat precedent, jamais d'etat a moitie installe.
+Journaux : P:\\covtl-speaker\\upgrade_speaker\\install_<nom>.log et
+restore.log ; backups originaux dans upgrade_speaker\\backup_install\\
+(manifeste SHA-256). Toute erreur -> rollback automatique de l'etat
+precedent, jamais d'etat a moitie installe.
 """
 from __future__ import annotations
 
@@ -44,13 +42,10 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-PIPE_ROOT = Path(__file__).resolve().parent          # racine du depot
+PIPE_ROOT = Path(__file__).resolve().parent          # P:\covtl-pipeline
 sys.path.insert(0, str(PIPE_ROOT))                   # import vtl_synth local
 
-# Sauvegardes/journaux LOCAUX au depot (cres au premier usage ;
-# a exclure du versionnage — cf. .gitignore). La ressource wheel
-# sauvegardee est celle de l'environnement Python qui execute l'outil.
-UP_DIR = PIPE_ROOT / ".speaker_backups"
+UP_DIR = Path(r"P:\covtl-speaker\upgrade_speaker")
 BACKUP_DIR = UP_DIR / "backup_install"
 BACKUP_MANIFEST = BACKUP_DIR / "backup_manifest.json"
 
@@ -92,17 +87,25 @@ def sha256_of(path) -> str:
 # ==========================================================================
 
 def editable_target() -> str:
-    """Lit la cartographie editable des site-packages ACTIFS du processus.
+    """Lit la cartographie editable de site-packages (sans influer dessus).
 
     Retourne le chemin pointe par le MAPPING editable de vtl_synth
-    (chaine vide si introuvable). Seuls les repertoires reellement
-    presents dans sys.path sont scanned : un finder editable d'un
-    user-site non actif (p. ex. celui d'un --user system Python quand
-    on tourne dans un venv) n'influence PAS ce processus et ne doit
-    pas declencher le garde-fou.
+    (chaine vide si introuvable).
     """
-    dirs = [d for d in sys.path if d and os.path.isdir(d)]
+    import site
+    import sysconfig
+    dirs = set()
+    try:
+        dirs.add(sysconfig.get_path("purelib"))
+    except Exception:
+        pass
+    try:
+        dirs.add(site.getusersitepackages())
+    except Exception:
+        pass
     for d in dirs:
+        if not d or not os.path.isdir(d):
+            continue
         for p in glob.glob(os.path.join(d, "__editable___vtl_synth*finder*.py")):
             try:
                 content = open(p, encoding="utf-8").read()
@@ -111,8 +114,7 @@ def editable_target() -> str:
             m = re.search(r"'vtl_synth'\s*:\s*'([^']+)'", content)
             if m:
                 return m.group(1).replace("\\\\", "\\")
-    # dist-info direct_url.json (secours)
-    for d in dirs:
+        # dist-info direct_url.json (secours)
         for p in glob.glob(os.path.join(d, "vtl_synth-*.dist-info", "direct_url.json")):
             try:
                 url = json.load(open(p, encoding="utf-8")).get("url", "")
@@ -124,40 +126,15 @@ def editable_target() -> str:
 
 
 def check_editable_pointer(log) -> None:
-    """Garde-fou : la cartographie editable des site-packages actifs.
-
-    Si vtl_synth y est installe en editable, le pointeur DOIT designer
-    ce depot (la racine ou son sous-dossier vtl_synth/) ; sinon tout
-    script de l'environnement resoudrait vtl_synth vers un autre depot.
-    Sans installation editable (pip install . classique), le pointeur
-    est introuvable et la coherence est verifiee plus bas par l'import
-    effectif (pas 7).
-    """
     target = editable_target()
     log(f"[garde-fou] pointeur editable vtl_synth -> {target or 'INTROUVABLE'}")
-    if not target:
-        return
-    norm = os.path.normcase(os.path.normpath(target))
-    mine = os.path.normcase(os.path.normpath(str(PIPE_ROOT)))
-    mine_pkg = os.path.normcase(os.path.normpath(str(PIPE_ROOT / "vtl_synth")))
-    same = False
-    if os.path.isdir(target):
-        # pip peut enregistrer le chemin en forme lettre de lecteur alors
-        # que PIPE_ROOT se resout en forme UNC (lecteur reseau) : comparer
-        # aussi par identite reelle du dossier.
-        try:
-            same = os.path.samefile(target, str(PIPE_ROOT)) \
-                or os.path.samefile(target, str(PIPE_ROOT / "vtl_synth"))
-        except OSError:
-            same = False
-    if norm not in (mine, mine_pkg) and not same:
+    if "covtl-pipeline" not in target.lower():
         raise RuntimeError(
-            "Le pointeur editable de site-packages ne pointe PAS vers ce "
-            "depot (%s) mais vers : %s.\n"
-            "Correction : pip install -e \"%s\" (dans l'environnement "
-            "courant) puis reessayer. (La cartographie editable est "
-            "GLOBALE : un editable vers un autre depot redirigerait tous "
-            "les scripts de l'environnement.)" % (PIPE_ROOT, target, PIPE_ROOT)
+            "Le pointeur editable de site-packages ne pointe PAS vers "
+            "P:\\covtl-pipeline (actuel : %s).\\n"
+            "Correction : pip install -e P:\\covtl-pipeline  puis reessayer. "
+            "(cf. conditions §0-2 : la cartographie est GLOBALE ; un editable "
+            "vers un autre depot redirigerait tous les scripts.)" % (target or "?")
         )
 
 
@@ -209,18 +186,10 @@ def backup_originals(log) -> None:
     BACKUP_MANIFEST.write_text(
         json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8")
     h0 = manifest["pipeline/vtl_synth/core/constants.py"]
-    # Etat initial attendu : jd3 natif (hash brut de reference) OU jd3 +
-    # LANG SECTION du pack de langues (transportee par les installs) —
-    # dans ce cas la comparaison se fait en forme canonique (region
-    # vowel/langue neutralisee, cf. speaker_registry).
     if not h0.startswith(JD3_CONSTANTS_HASH_PREFIX):
-        backed = BACKUP_DIR / r"pipeline\vtl_synth\core\constants.py"
-        if (sr.canonical_hash12(backed)
-                != sr.canonical_hash12(sr.constants_source_path("jd3"))):
-            raise RuntimeError(
-                f"Le constants.py original sauvegarde ({h0[:16]}) n'est pas "
-                f"la reference JD3 attendue ({JD3_CONSTANTS_HASH_PREFIX}), "
-                f"ni sa forme canonique avec section de langue.")
+        raise RuntimeError(
+            f"Le constants.py original sauvegarde ({h0[:16]}) n'est pas la "
+            f"reference JD3 attendue ({JD3_CONSTANTS_HASH_PREFIX}).")
 
 
 # ==========================================================================
@@ -228,34 +197,20 @@ def backup_originals(log) -> None:
 # ==========================================================================
 
 class Stash:
-    """Snapshot binaire de l'etat installe (constants, marqueur, wheel).
-
-    Le marqueur ACTIVE_SPEAKER peut etre ABSENT (etat neutre d'un
-    depot fraichement clone : active_name() retombe sur jd3) — le
-    rollback supprime alors un marqueur eventuellement cree entre-temps
-    au lieu de le restaurer.
-    """
+    """Snapshot binaire de l'etat installe (constants, marqueur, wheel)."""
 
     def __init__(self, tmpdir: Path):
         self.dir = tmpdir
         self.dir.mkdir(parents=True, exist_ok=True)
         shutil.copy2(PIPE_ROOT / r"vtl_synth\core\constants.py",
                      self.dir / "constants.py")
-        self.had_marker = sr.ACTIVE_MARKER.is_file()
-        if self.had_marker:
-            shutil.copy2(sr.ACTIVE_MARKER, self.dir / "ACTIVE_SPEAKER")
+        shutil.copy2(sr.ACTIVE_MARKER, self.dir / "ACTIVE_SPEAKER")
         shutil.copy2(wheel_resource(), self.dir / "wheel_JD3.speaker")
 
     def rollback(self) -> None:
         shutil.copy2(self.dir / "constants.py",
                      PIPE_ROOT / r"vtl_synth\core\constants.py")
-        if self.had_marker:
-            shutil.copy2(self.dir / "ACTIVE_SPEAKER", sr.ACTIVE_MARKER)
-        elif sr.ACTIVE_MARKER.exists():
-            try:
-                sr.ACTIVE_MARKER.unlink()
-            except OSError:
-                pass
+        shutil.copy2(self.dir / "ACTIVE_SPEAKER", sr.ACTIVE_MARKER)
         shutil.copy2(self.dir / "wheel_JD3.speaker", wheel_resource())
         _purge_constants_pyc()
 
@@ -295,44 +250,35 @@ def _carry_lang_section(old_src: str, dest: Path, name: str, log) -> None:
     """Reinjecte la section de langue de l'ancien constants dans dest.
 
     Sans section dans l'ancien fichier : ne fait rien (etat natif).
-    La cible peut etre soit un constants natif (bloc VOWEL_TARGETS..
-    VOWEL_EFFORT_GAIN), soit un constants contenant DEJA une LANG
-    SECTION (p. ex. le backup d'origine d'un depot expedie avec le
-    pack actif) : dans ce dernier cas on remplace la section existante
-    par la nouvelle, par ses marqueurs — jamais par la regex du bloc
-    natif, dont la borne `^}` peut deborder au-dela de la section et
-    corrompre le fichier.
-    Avec un speaker != jd3 : avertissement — les cibles du pack sont
-    calibrees in situ sur JD3 (toute autre combinaison = hypothese).
+    v1.0.9 (2026-09-23, D24 résolu) : la section est un MARQUEUR SEUL
+    (ACTIVE_LANG) — elle est INSÉRÉE APRÈS la région vocalique native
+    du constants cible, qui reste intégralement en place (les cibles
+    appartiennent au speaker). Une ancienne section riche (avec cibles,
+    < v1.0.9) n'est PAS transportée : c'est justement l'effet de bord
+    supprimé — ré-amorcer la langue via `setup_lang.py setlang <lang>`.
     """
     section = _extract_lang_section(old_src)
     if not section:
         log("      (pas de section de langue a transporter)")
         return
+    if "ACTIVE_LANG" not in section or "VOWEL_TARGETS" in section:
+        log("      (section de langue ancienne format (avec cibles) NON "
+            "transportee — effet de bord D24 supprime ; reactiver la "
+            "langue par : python setup_lang.py setlang <lang>)")
+        return
     new_src = dest.read_text(encoding="utf-8")
-    if sr.LANG_SECTION_BEGIN in new_src:
-        sect_re = re.compile(
-            re.escape(sr.LANG_SECTION_BEGIN) + r".*?"
-            + re.escape(sr.LANG_SECTION_END) + r"[^\r\n]*\n?", re.S)
-        dest.write_text(sect_re.sub(lambda _m: section, new_src, count=1),
-                        encoding="utf-8")
-    else:
-        native = re.compile(
-            r"(?ms)^VOWEL_TARGETS:.*?^VOWEL_EFFORT_GAIN:.*?^\}\n?")
-        if not native.search(new_src):
-            raise RuntimeError(
-                "transport de la section de langue impossible : bloc "
-                "VOWEL_TARGETS/VOWEL_EFFORT_GAIN introuvable dans le "
-                "constants cible")
-        dest.write_text(native.sub(lambda _m: section, new_src, count=1),
-                        encoding="utf-8")
+    native = re.compile(r"(?ms)^VOWEL_TARGETS:.*?^VOWEL_EFFORT_GAIN:.*?^\}\n?")
+    if not native.search(new_src):
+        raise RuntimeError(
+            "transport de la section de langue impossible : bloc "
+            "VOWEL_TARGETS/VOWEL_EFFORT_GAIN introuvable dans le "
+            "constants cible")
+    dest.write_text(native.sub(lambda m: m.group(0) + section, new_src,
+                               count=1),
+                    encoding="utf-8")
     _purge_constants_pyc()
     lang = sr.active_lang()
-    log(f"      section de langue transportee : {lang}")
-    if name != "jd3":
-        log(f"      !! ATTENTION speaker {name} + langue {lang} : les "
-            f"cibles vocaliques du pack sont calibrees in situ sur JD3 "
-            f"— combinaison HYPOTHESE (non verifiee)")
+    log(f"      section de langue transportee (marqueur seul) : {lang}")
 
 
 # ==========================================================================
@@ -443,12 +389,8 @@ def do_install(name: str, log) -> None:
         log(f"[7/7] verifications finales (nouveau processus)")
         import vtl_synth  # local (le smoke test couvre le mapping editable)
         log(f"      import vtl_synth -> {vtl_synth.__file__}")
-        if (os.path.normcase(os.path.normpath(str(vtl_synth.__file__)))
-                != os.path.normcase(os.path.normpath(
-                    str(PIPE_ROOT / "vtl_synth" / "__init__.py")))):
-            raise RuntimeError(
-                f"import vtl_synth ne resout pas ce depot ({vtl_synth.__file__}) "
-                f"— verifier l'installation (pip install -e \"{PIPE_ROOT}\")")
+        if "covtl-pipeline" not in str(vtl_synth.__file__).lower():
+            raise RuntimeError("import vtl_synth ne resout pas covtl-pipeline")
         smoke_test(name, log)
         log(f"=== install {name} : OK ===")
     except Exception as e:
@@ -613,7 +555,7 @@ def main(argv=None) -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("list", help="speakers disponibles + actif")
     p_inst = sub.add_parser("install", help="substituer un speaker")
-    p_inst.add_argument("name", help="jd3 | s1 | s2 | m01 | w02")
+    p_inst.add_argument("name", help="jd3 | s1 | s2")
     p_res = sub.add_parser("restore", help="revenir a jd3 (etat d'origine)")
     p_res.add_argument("--check-baselines", action="store_true",
                        help="lance aussi pytest baselines (15/15 attendu)")

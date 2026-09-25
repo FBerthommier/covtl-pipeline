@@ -17,6 +17,7 @@ Journal de la dérivation COVTL :
 #   TTY : c0=(0.8−(-1.7989))/2.3=1.129957 ; c1=-1.7989+c0+0.15=-0.518943 (contact/occlusion apicale)
 #   TCY : c1 -1.154233 → -0.904233 (occlusion vélaire /g,k/)
 #   TTY : c0/c2 natifs conservés, c1 += 0.15 (règle JD3 (0.80−Va)/2.3 non transférée, correctif bunching)
+#   CONSONNES 22/09 (conserve) : TTY c1 -1.259467 -> -0.149467 (Delta+1.11, arbitrage in-situ — cf. compromis_m01.json) ; port vocalique jd3 ESSAYE puis REVOQUE le 23/09 : statique 57 % mais /i/ realisee degradee (D25) — cf. covtl_m01_w02/
 """
 
 from __future__ import annotations
@@ -113,7 +114,7 @@ CO_VTL: Dict[str, Tuple[float, float, float]] = {
     'TCX':  ( 1.337633,  1.377725, 5.255350),
     'TCY':  (-0.904233,  0.989606, 6.206098),
     'TTX':  ( 4.042233,  1.257287, 4.526828),
-    'TTY':  (-1.259467,  0.392681, 6.154475),
+    'TTY':  (-0.149467,  0.392681, 6.154475),
     'TBX':  ( 2.927633,  1.085600, 5.079687),
     'TBY':  ( 0.086433,  1.194915, 6.148749),
     'TS1':  ( 0.301333,  0.001333, 2.094395),
@@ -143,15 +144,15 @@ for _idx, _pname in enumerate(COVTL_PARAMS):
 
 VOWEL_TARGETS: Dict[str, Tuple[float, float]] = {
     'a': (1.000, np.pi),
-    'i': (0.654, 5 * np.pi / 3),
+    'i': (0.523200, 5 * np.pi / 3),
     'u': (0.550, np.pi / 3),
-    'e': (0.873, 5.781403),
+    'e': (0.283725, 5.781403),
     'E': (0.753, 4.145157),
     'o': (0.990, 1.339540),
     'O': (1.000, 2.063852),
     '9': (0.512, 3.804818),
     '@': (0.750, 2.146755),
-    'y': (0.720, 5.676683),
+    'y': (0.304200, 5.676683),
     '2': (0.459, 4.585853),
 }
 
