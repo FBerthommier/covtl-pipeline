@@ -45,7 +45,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\small\itshape covtl-pipeline --- Expressive Prosody Guide}
-\fancyhead[R]{\small v1.1.0}
+\fancyhead[R]{\small v1.0.8}
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0.3pt}
 \renewcommand{\footrulewidth}{0pt}
@@ -143,7 +143,7 @@
 for the COVTL articulatory synthesizer}
 \author{\large Frédéric Berthommier\\[0.3em]
 \small\texttt{fberthommier@users.noreply.github.com}}
-\date{\small Version 1.1.0 --- September 2026\\[0.2em]
+\date{\small Version 1.0.8 --- September 2026\\[0.2em]
 \textit{Licensed under GPL-3.0-or-later}}
 
 \begin{document}
@@ -153,7 +153,7 @@ for the COVTL articulatory synthesizer}
 \begin{abstract}
 \noindent
 The expressive prosody option (\texttt{expressive=True} /
-\texttt{-{}-expressive}) gives the covtl-pipeline two
+\texttt{-{}-expressive}, v1.0.8) gives the covtl-pipeline two
 capabilities that the monotone declination lacks: \emph{syntactic
 breathing} (short pauses at chunk boundaries, so no chain of
 coarticulated words exceeds five words) and a \emph{sculpted F0
@@ -167,8 +167,8 @@ construction}: it follows whatever speaker is active in the
 multi-speaker registry. This guide explains the mechanics, the
 per-language parameters, how to measure and tune the result, and ---
 in a dedicated chapter --- the exact interaction with the speaker
-setup (\texttt{install\_speaker.py} / \texttt{setup\_lang.py} and
-its JD3 guard).
+setup (\texttt{install\_speaker.py} / \texttt{setup\_lang.py},
+whose LANG SECTION is marker-only since v1.0.9).
 \end{abstract}
 
 \tableofcontents
@@ -179,7 +179,7 @@ its JD3 guard).
 The monotone chain applies a \emph{linear declination} per phrase
 (\texttt{apply\_f0\_declination}): F0 starts at \emph{onset gain}
 and slides down to \emph{final gain}. A long phrase is therefore a
-flat ramp, perceived as monotonous. Worse, the g2p
+flat ramp, perceived as monotonous. Worse, since v1.0.2 the g2p
 \emph{connects} all words of a phrase with the syllable separator
 \ks{.} (coarticulation): a sentence without punctuation becomes a
 single uninterrupted chain of several seconds, which is hard to
@@ -550,21 +550,19 @@ python -m pytest tests -m "not slow"      # full fast suite
   phonetic input ignores the mode with a warning.
 \end{itemize}
 
-\begin{warning}[Baselines per language state]
-The regression baselines (\texttt{regression\_baselines*.json})
-were captured with the \emph{native/en} vowel targets. With the
-\texttt{fr} LANG SECTION active, the 6 baseline checks fail \emph{by
-design} --- switch to \texttt{en} (\texttt{python setup\_lang.py
-setlang en}) to get a fully green suite (112/112 on the reference
-install). This is the same invariant as the language pack's.
+\begin{warning}[Baselines and language state (v1.0.9)]
+Since v1.0.9 the LANG SECTION is a \emph{marker only}
+(\texttt{ACTIVE\_LANG}); it has no acoustic effect (the tract is
+bit-identical with or without it), so the regression baselines
+(\texttt{regression\_baselines*.json}) are language-independent and
+the suite stays green whatever language is active.
 \end{warning}
 
 % ==========================================================================
 \section{Interaction with the speaker setup}\label{sec:speakers}
 
-This chapter describes how the expressive option interacts with the
-multi-speaker registry and the language pack of the integrated
-repository. It explains exactly what the
+This chapter is for the unified repository (\texttt{covtl-pipeline}
+with the multi-speaker registry). It explains exactly what the
 expressive patch shares with the speaker machinery, what it does
 not touch, and what the JD3 guard does and does not restrict.
 
@@ -581,9 +579,11 @@ Activating a speaker swaps \texttt{constants.py} as a whole and
 swaps the wheel's speaker resource (effective in the next
 process); \texttt{speaker\_registry.announce()} states the active
 bundle at every synthesis. The language pack
-(\texttt{setup\_lang.py}) is independent: it edits the managed
-LANG SECTION (vowel targets + effort gains) \emph{inside} the
-installed \texttt{constants.py}, whatever speaker it belongs to.
+(\texttt{setup\_lang.py}) is independent: since v1.0.9 it edits a
+managed LANG SECTION that is a \emph{marker only}
+(\texttt{ACTIVE\_LANG}) --- the vowel targets and effort gains
+remain the active speaker's own (the former per-language overrides,
+calibrated on JD3, are removed; defect D24 resolved).
 
 \subsection{What the expressive patch shares with speakers ---
   exactly one thing}
@@ -611,73 +611,34 @@ Validated on the reference install: expressive synthesis with
 jd3 (102.216\,Hz) and with s2 (181.008\,Hz) both produce the
 expected breath groups and follow the speaker's F0.
 
-\subsection{The JD3 guard: scope and behaviour}
+\subsection{The former JD3 guard (removed in v1.0.9)}
 
-\texttt{setup\_lang.py} carries a guard,
-\texttt{\_ensure\_jd3()}, invoked at four sites:
+Up to v1.0.8, \texttt{setup\_lang.py} carried a guard,
+\texttt{\_ensure\_jd3()}, that automatically reinstalled jd3 before
+any language operation, because the per-language vowel targets
+($\rho, \theta$) of the pack were calibrated in situ on JD3 ---
+installing them on another speaker's constants would silently bake
+JD3 vowels into that speaker (defect D24).
 
-\begin{center}
-\begin{tabular}{lll}
-\toprule
-\textbf{command} & \textbf{site} & \textbf{why} \\
-\midrule
-\texttt{install} & before writing the LANG SECTION & vowel targets are JD3-calibrated \\
-\texttt{setlang} & before rewriting the section & same, any target language \\
-\texttt{calibrate} & before deriving $\rho$ & in-situ calibration is JD3-only \\
-\texttt{verify} & before the LPC measurement & measurement is JD3-only \\
-\bottomrule
-\end{tabular}
-\end{center}
+Since v1.0.9 the LANG SECTION carries no vowel targets at all, the
+guard is a no-op, \texttt{calibrate} is deprecated, and language
+operations are safe on \emph{every} speaker: the vowel targets and
+the effort gains are the active speaker's own, and the speaker swap
+still carries the (marker-only) LANG SECTION over.
 
-Behaviour: if the active speaker is not jd3, the guard
-\emph{automatically reinstalls jd3} (constants + marker + wheel
-resource) through \texttt{install\_speaker.py}, then performs the
-requested language operation. It is a transport mechanism, not a
-refusal. Its rationale is narrow: the per-language vowel targets
-($\rho, \theta$) of the language pack were calibrated in situ on
-JD3, so installing or verifying them on another speaker's
-constants would silently bake JD3 vowels into that speaker.
-
-\begin{warning}[What the guard does NOT restrict]
-\begin{itemize}[itemsep=1pt]
-\item It does not block \emph{any} synthesis. Expressive or
-  monotone, any language, any speaker: the synthesis path
-  (\texttt{Pipeline} / CLI) has no speaker gate.
-\item It does not prevent \emph{switching speakers}.
-  \texttt{install\_speaker.py install s2} works at any time --- and
-  the speaker swap \emph{carries the active LANG SECTION over} to
-  the new speaker's constants.
-\item It fires on \emph{every} language-management command,
-  including \texttt{setlang en} --- it is not specific to
-  non-English languages.
-\end{itemize}
-\end{warning}
-
-\subsection{The two standard workflows}
-
-\subsubsection*{Workflow A --- language first, then speaker}
+\subsection{Language and speaker switching (v1.0.9 workflow)}
 
 \begin{lstlisting}[style=shell]
-python setup_lang.py setlang de        # guard: (re)installs jd3, installs the de section
-python install_speaker.py install s2   # switch to s2; the de section travels with the swap
+python setup_lang.py setlang de        # marker only: targets untouched
+python install_speaker.py install s2   # switch to s2; the marker travels with the swap
 vtl-synth run "ich suche eine schoene Strasse" --lang de --expressive -o ./out
 \end{lstlisting}
 
 Result: expressive German on s2. The F0 contour follows s2's
 \texttt{f0\_default}; the breath groups and accents are identical
-to jd3's. The vowel timbre is the one caveat --- see below.
-
-\subsubsection*{Workflow B --- speaker first}
-
-\begin{lstlisting}[style=shell]
-python install_speaker.py install s2
-python setup_lang.py setlang it        # guard reinstalls jd3 (unavoidable by design)
-python install_speaker.py install s2   # re-switch; the it section travels
-vtl-synth run "la famiglia vive in campagna" --lang it --expressive -o ./out
-\end{lstlisting}
-
-The double switch is the price of the guard's simplicity; users
-who alternate languages and speakers should adopt workflow A.
+to jd3's, and the vowel timbre is s2's own calibration (no JD3
+bake-in since v1.0.9). Language and speaker switches are now
+order-independent --- no double switch is needed.
 
 \subsection{Guarantees matrix}
 
@@ -691,11 +652,9 @@ Expressive synthesis, any language &
   fully validated (measurements, demos, tests) &
   works; F0 relief identical in semitones (validated on s2 by smoke test + measurements planned) \\
 Per-language vowel quality &
-  reference (calibrated in situ) &
-  hypothesis: JD3-calibrated targets applied to another geometry; flagged by \texttt{setup\_lang.py show} \\
+  superseded in v1.0.9: vowel targets are the active speaker's own (no per-language override any more) \\
 \texttt{calibrate} / \texttt{verify} for the speaker &
-  available &
-  deliberately unavailable (guard reinstalls jd3) \\
+  \texttt{calibrate} deprecated; \texttt{verify} measures the active speaker's own targets \\
 Nuclear fall / accent amplitude &
   per-language profile, speaker-independent &
   same profile, scaled to the speaker's \texttt{f0\_default} \\
@@ -705,7 +664,8 @@ Nuclear fall / accent amplitude &
 \end{small}
 
 \begin{callout}[One-sentence summary]
-The guard keeps \emph{language calibration} anchored to JD3;
+Since v1.0.9 the language pack selects pronunciation only (marker
+section) and the vowel targets are the active speaker's own;
 expressive prosody follows \emph{whichever speaker is active}.
 The two mechanisms coexist without interacting, and the option
 never modifies the speaker setup.
