@@ -53,7 +53,7 @@ def _add_engine_options(p: argparse.ArgumentParser) -> None:
                    help='fundamental frequency in Hz (default: f0_default '
                         'of the active speaker constants, e.g. 102.216 '
                         'for JD3, 114.908 for s1, 181.008 for s2)')
-    g.add_argument('-s', '--speaker', default='JD3',
+    g.add_argument('-s', '--speaker', default='jd3',
                    help='speaker name (default: JD3)')
     g.add_argument('--no-ortho', action='store_true',
                    help='disable the orthogonal branch')

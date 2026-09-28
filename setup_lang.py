@@ -446,17 +446,25 @@ def _replace_lang_section(src: str, lang: str, block: str | None = None) -> str:
     """
     section = _lang_section(lang)
     if LANG_SECTION_BEGIN in src:
-        # Section présente (ancien style avec cibles, ou marqueur seul) :
-        # remplacée in place — toute définition de cibles qu'elle
-        # contenait disparaît au profit de la région native restée
-        # en dessous (cas d'un fichier écrit par une version < v1.2.0 :
-        # la région native a alors été consommée — ré-amorçage via
-        # `restore` ou réinstallation du speaker).
+        # Section presente : remplacee par le marqueur seul. Si l'ancienne
+        # section etait RICHE (v < v1.2.0 : elle contenait
+        # VOWEL_TARGETS/VOWEL_EFFORT_GAIN — la region native avait ete
+        # consommee), ces definitions sont EXTRAITES et reecrites apres le
+        # marqueur ; sinon le fichier perd VOWEL_TARGETS et l'import de
+        # vtl_synth casse (audit externe BUG-001, 2026-09-25).
         pattern = re.compile(
             re.escape(LANG_SECTION_BEGIN) + r'.*?' + re.escape(LANG_SECTION_END) +
             r'[^\r\n]*\n', re.S)
-        if not pattern.search(src):
-            _die("marqueurs LANG SECTION incohérents dans constants.py")
+        m = pattern.search(src)
+        if not m:
+            _die("marqueurs LANG SECTION incoherents dans constants.py")
+        ancienne = m.group(0)
+        region = re.search(
+            r'(?ms)^VOWEL_TARGETS:.*?^VOWEL_EFFORT_GAIN:.*?^\}\n',
+            ancienne)
+        if region:
+            return (src[:m.start()] + section + region.group(0)
+                    + src[m.end():])
         return pattern.sub(lambda _m: section, src, count=1)
     # Première intervention : INSÉRER la section marqueur APRÈS la région
     # vocalique native (VOWEL_TARGETS .. VOWEL_EFFORT_GAIN), qui reste
@@ -958,8 +966,21 @@ def cmd_list() -> None:
     report_current()
 
 
+def _purge_pycache() -> None:
+    """Invalide les caches d'import apres reecriture des sources
+    (audit externe BUG-009 : ACTIVE_LANG perime apres restore)."""
+    import shutil as _sh
+    for base in ('vtl_synth',):
+        for root, dirs, files in os.walk(PIPELINE_ROOT / base):
+            if '__pycache__' in dirs:
+                _sh.rmtree(os.path.join(root, '__pycache__'),
+                           ignore_errors=True)
+                dirs.remove('__pycache__')
+
+
 def cmd_restore(purge: bool) -> None:
     """Restore the original pipeline files from the .bak backups."""
+    _purge_pycache()
     _info("Restauration des fichiers originaux…")
     restored = False
     # constants.py : restauration SPEAKER-AWARE. Le .bak peut être

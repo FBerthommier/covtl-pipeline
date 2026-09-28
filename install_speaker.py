@@ -128,18 +128,24 @@ def editable_target() -> str:
 def check_editable_pointer(log) -> None:
     target = editable_target()
     log(f"[garde-fou] pointeur editable vtl_synth -> {target or 'INTROUVABLE'}")
-    if "covtl-pipeline" not in target.lower():
+    if not target:
+        raise RuntimeError(
+            "Aucun pointeur editable vtl_synth trouve dans site-packages.\n"
+            "Correction : pip install -e " + str(PIPE_ROOT) +
+            "  puis reessayer.")
+    # Check portable (audit externe BUG-002) : le pointeur doit designer
+    # CE depot, quelle que soit la plateforme/le chemin.
+    if "covtl-pipeline" not in target.lower().replace("\\", "/"):
         raise RuntimeError(
             "Le pointeur editable de site-packages ne pointe PAS vers "
-            "P:\\covtl-pipeline (actuel : %s).\\n"
-            "Correction : pip install -e P:\\covtl-pipeline  puis reessayer. "
+            "ce depot covtl-pipeline (actuel : %s).\n"
+            "Correction : pip install -e " + str(PIPE_ROOT) +
+            "  puis reessayer. "
             "(cf. conditions §0-2 : la cartographie est GLOBALE ; un editable "
             "vers un autre depot redirigerait tous les scripts.)" % (target or "?")
         )
 
 
-# ==========================================================================
-# Backups originaux (une seule fois ; §2.2 pas 2)
 # ==========================================================================
 
 BACKUP_SOURCES = [

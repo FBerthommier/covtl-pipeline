@@ -5,6 +5,19 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
+### Fixed
+- **BUG-001 (critique, audit externe 25/09)** : `setup_lang.py` cassait
+  `constants.py` sur un clone frais — l'ancienne LANG SECTION « riche »
+  (v1.1.0) contient les `VOWEL_TARGETS` ; leur remplacement par le
+  marqueur seul supprimait la définition et l'import de `vtl_synth`
+  échouait (`NameError`). La migration extrait désormais la région
+  vocalique de l'ancienne section et la réécrit après le marqueur.
+- **BUG-002 (majeur)** : `install_speaker.py` — garde-fou du pointeur
+  editable rendu portable (message OS-neutre, chemins POSIX préservés).
+- **BUG-009 (mineur)** : `setup_lang.py restore` invalide désormais les
+  `__pycache__` (ACTIVE_LANG périmé).
+- **BUG-011 (mineur)** : défaut CLI `-s/--speaker` = `jd3` (minuscule,
+  conforme au registre).
 ### Added
 - **Expressive prosody option** (v1.0.8 — défaut OFF, sorties
   bit-identiques au mode monotone; portée depuis covtl-languages dans
