@@ -33,16 +33,16 @@
     "speaker": "m01.speaker",
     "constants": "m01_constants.py",
     "f0_default": 120.0,
-    "description": "M01 male (ZIP officiel VTL 2.4, Option A + mapping glottal 2025) — constants v3 : phase 2 D15 + TTY natif + @ multi-criteres ; COVTL c0/c1 22/09 : TTY c1 occlusion apicale (cible in-situ (1.2, 258.75 deg)) ; triangle vocalique 23/09 : port repertoire gestuel jd3 (c0/c1/c2) + cibles jd3 recalees",
+    "description": "M01 male (ZIP officiel VTL 2.4, Option A + mapping glottal 2025) — constants v3 : phase 2 D15 + TTY natif + @ multi-criteres ; COVTL c0/c1 22/09 : TTY c1 occlusion apicale (cible in-situ (1.2, 258.75 deg)) ; triangle vocalique 23/09 : port repertoire gestuel jd3 (c0/c1/c2) + cibles jd3 recalees ; TTY 25/09 (c0,c1) : pointe descendue en voyelles, occlusion apicale conservee",
     "speaker_sha256": "9e5598ea40a362860c818835c7dbafa71907cc687d80c701730e8fb8d4ff1f62",
-    "constants_sha256": "f17ef4dfb2555e4007ccdc2bdba7e0a437e76e60b5afac9a154e25a5beec5579"
+    "constants_sha256": "283df7c2359421bcdc6067c064f9d59eb655b6b40c695cb448b2437f356e915f"
   },
   "w02": {
     "speaker": "w02.speaker",
     "constants": "w02_constants.py",
     "f0_default": 232.458,
-    "description": "W02 female (ZIP officiel VTL 2.4, Option A + mapping glottal 2025) — constants v3 : phase 2 D15 + TTY natif + @ multi-criteres ; COVTL c0/c1 22/09 : TTY c1 occlusion apicale (cible in-situ (1.2, 258.75 deg)) ; triangle vocalique 23/09 : port repertoire gestuel jd3 (c0/c1/c2) + cibles jd3 recalees",
+    "description": "W02 female (ZIP officiel VTL 2.4, Option A + mapping glottal 2025) — constants v3 : phase 2 D15 + TTY natif + @ multi-criteres ; COVTL c0/c1 22/09 : TTY c1 occlusion apicale (cible in-situ (1.2, 258.75 deg)) ; triangle vocalique 23/09 : port repertoire gestuel jd3 (c0/c1/c2) + cibles jd3 recalees ; TTY 25/09 (c0,c1) : pointe descendue en voyelles, occlusion apicale conservee",
     "speaker_sha256": "36b87ffb7774e7b89748ea356d7037c9e622b9cfa2db5742fe39ee06dba47cbd",
-    "constants_sha256": "8ebeddf421841a0a27058863bfe2ecdb543fc00d657c5e5c3849e5c1a6586d5d"
+    "constants_sha256": "6d0135c4c82f9d089bd342b651cd89aa4694bd45b796306f84265e3c400eb5d5"
   }
 }

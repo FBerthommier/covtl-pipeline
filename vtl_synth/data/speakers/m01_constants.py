@@ -18,6 +18,7 @@ Journal de la dérivation COVTL :
 #   TCY : c1 -1.154233 → -0.904233 (occlusion vélaire /g,k/)
 #   TTY : c0/c2 natifs conservés, c1 += 0.15 (règle JD3 (0.80−Va)/2.3 non transférée, correctif bunching)
 #   CONSONNES 22/09 (conserve) : TTY c1 -1.259467 -> -0.149467 (Delta+1.11, arbitrage in-situ — cf. compromis_m01.json) ; port vocalique jd3 ESSAYE puis REVOQUE le 23/09 : statique 57 % mais /i/ realisee degradee (D25) — cf. covtl_m01_w02/
+#   TTY 25/09 (pointe relevee, tract externe « j'arrive a Valence ») : balayage 2-D (c0,c1) — c0 0.392681 -> 0.900000, c1 -0.149467 -> -0.300000 (lecon JD3 : grande excursion c0 + c1 bas = pointe descendue en voyelles ET occlusion apicale conservee) ; validation in-situ : phrase TTY moy -0.673 (avant -0.298), trames voisees >= 0.296 cm2, d/t 0.0001, /i/ [173,1984] — cf. tty2d.json/tty2d_validation.json
 """
 
 from __future__ import annotations
@@ -114,7 +115,7 @@ CO_VTL: Dict[str, Tuple[float, float, float]] = {
     'TCX':  ( 1.337633,  1.377725, 5.255350),
     'TCY':  (-0.904233,  0.989606, 6.206098),
     'TTX':  ( 4.042233,  1.257287, 4.526828),
-    'TTY':  (-0.149467,  0.392681, 6.154475),
+    'TTY':  ( -0.300000, 0.900000, 6.154475 ),
     'TBX':  ( 2.927633,  1.085600, 5.079687),
     'TBY':  ( 0.086433,  1.194915, 6.148749),
     'TS1':  ( 0.301333,  0.001333, 2.094395),

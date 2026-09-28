@@ -1,7 +1,7 @@
 {
   "meta": {
     "schema": 2,
-    "date": "2026-09-23",
+    "date": "2026-09-28",
     "engine": "syl",
     "quant_decimals": 6,
     "speaker": "m01",
@@ -76,9 +76,9 @@
           "mean": 4.064239
         },
         "TTY": {
-          "min": -0.5389,
-          "max": -0.024754,
-          "mean": -0.200085
+          "min": -1.192555,
+          "max": -0.014165,
+          "mean": -0.416013
         },
         "TBX": {
           "min": 2.537799,
@@ -173,7 +173,7 @@
           "mean": 0.0
         }
       },
-      "tract_sha256": "8bd4b71832bcdf11eb34e71efb071a20e9c1af5188f33af5d966105be13d1244"
+      "tract_sha256": "3d6fb1e61cc9d88b569e01d9bcaae6bb1effef03cf6602e90b1c06d181aef926"
     },
     "ba": {
       "ipa": "ba",
@@ -243,9 +243,9 @@
           "mean": 4.166145
         },
         "TTY": {
-          "min": -0.5389,
-          "max": -0.149467,
-          "mean": -0.357157
+          "min": -1.192555,
+          "max": -0.3,
+          "mean": -0.776011
         },
         "TBX": {
           "min": 2.537799,
@@ -340,7 +340,7 @@
           "mean": 0.0
         }
       },
-      "tract_sha256": "071be1144f5747857c4ce49edaba02fb8370a1587dd973f48acf2e23ddc5ac4b"
+      "tract_sha256": "8323a7ac65e26966ab282eace4cd6c8bdb3c83e01697cf91bb24c1e5b5d0dbd5"
     },
     "ba_da_ga": {
       "ipa": "ba da ga",
@@ -410,9 +410,9 @@
           "mean": 4.258012
         },
         "TTY": {
-          "min": -0.5389,
-          "max": -0.088984,
-          "mean": -0.402084
+          "min": -1.192555,
+          "max": -0.161376,
+          "mean": -0.878982
         },
         "TBX": {
           "min": 2.108594,
@@ -507,7 +507,7 @@
           "mean": 0.0
         }
       },
-      "tract_sha256": "1251a10d91eafa90ecd8f4c2d8c57a71432ef7b11650adbc71fb59bf1214cebe"
+      "tract_sha256": "45cc77de8c0c1c92057a865f73222b2fceff9130521ac5be80fec169922e97f5"
     }
   }
 }
