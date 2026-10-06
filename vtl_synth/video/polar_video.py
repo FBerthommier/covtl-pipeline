@@ -61,16 +61,21 @@ from pathlib import Path
 
 import numpy as np
 
+from vtl_synth.core.polar import K_CONSONANT_DEFAULT
+
 POLAR_SR = 100          # Hz, native sampling of the .polar trajectories
 POLAR_VERSION = 3
 STEP_MS = 10.0          # 1 gesture step = 10 ms @ 100 Hz
 
-# Display curvature: the reference-model geometry (K_VOWEL_DEFAULT =
-# 30, Berthommier v15g) gives visibly curved arcs, while the engine
-# drives the parameters with SYL_K = 1000 (quasi-rectilinear in the
-# z-plane).  nu = +1 bows the vocalic arcs one way, −1 the consonantal
-# sub-arcs the other way, as in the reference CV superposition.
-K_DISPLAY = 30.0
+# Display curvature (arXiv:2307.02299 §2.1: "K = 30 for vowel arcs and
+# K = 10 for consonant arcs") — the same convention as
+# trajectory_legacy's K_v / K_c = K_CONSONANT_DEFAULT.  The engine
+# itself drives the parameters with SYL_K = 1000 (quasi-rectilinear in
+# the z-plane).  nu = +1 bows the vocalic arcs one way, −1 the
+# consonantal sub-arcs the other way, as in the reference CV
+# superposition.
+K_DISPLAY = 30.0                  # vocalic (z_v) display curvature (Kvoy)
+K_C_DISPLAY = K_CONSONANT_DEFAULT  # consonantal (z_c) display curvature = 10
 NU_VOCALIC = 1
 NU_CONSONANTAL = -1
 ORIENTATION = 'inverse'     # polar_arc sweep giving dep → arr
@@ -276,8 +281,10 @@ def build_phrase_polar(phrase: str,
                                         background keeps flowing;
                                        z_c = sub-arcs dep → C₁ → ⋯ →
                                         C_m → arr, T steps each,
-                                        K=30, nu=−1 (blue), peaking
-                                        exactly on the node targets.
+                                        K=10, nu=−1 (blue), peaking
+                                        exactly on the node targets
+                                        (article §2.1: K = 10 for
+                                        consonant arcs)
     """
     from vtl_synth.core.constants import VOWEL_TARGETS
     from vtl_synth.core.polar import polar_arc, stationary_point
@@ -288,10 +295,10 @@ def build_phrase_polar(phrase: str,
     q_arc, q_bg, q_hold, q_cluster = (ev['arc'], ev['bg'], ev['hold'],
                                       ev['cluster'])
 
-    def arc_z(dep, arr, n, nu):
+    def arc_z(dep, arr, n, nu, k_display=K_DISPLAY):
         """(n, 2) curved polar arc dep → arr (reference geometry)."""
         return polar_arc(dep[0], dep[1], arr[0], arr[1],
-                         n * STEP_MS, sr=POLAR_SR, K=K_DISPLAY, nu=nu,
+                         n * STEP_MS, sr=POLAR_SR, K=k_display, nu=nu,
                          orientation=ORIENTATION)[1]
 
     def hold_z(pt, n):
@@ -338,7 +345,8 @@ def build_phrase_polar(phrase: str,
             zv_parts.append(arc_z(dep, arr, n, NU_VOCALIC))
             # blue: dep → C₁ → ⋯ → C_m → arr, T steps per sub-arc
             pts = [tuple(p) for p in [dep] + targets + [arr]]
-            zc = np.vstack([arc_z(pts[k], pts[k + 1], T, NU_CONSONANTAL)
+            zc = np.vstack([arc_z(pts[k], pts[k + 1], T, NU_CONSONANTAL,
+                                  k_display=K_C_DISPLAY)
                             for k in range(m + 1)])
             zc_spans.append((step, step + n, zc))
             for k, (ck, tgt) in enumerate(zip(b.cons_keys, targets)):
@@ -470,9 +478,9 @@ def write_polar(path, polar: dict) -> Path:
                           'anchors and consonant node targets '
                           '(core.polar.polar_arc / stationary_point at '
                           '100 Hz; display curvature K=30, nu=+1 vocalic '
-                          '/ -1 consonantal — reference-model geometry, '
-                          'not the quasi-rectilinear SYL_K=1000 parameter '
-                          'arcs)',
+                          '/ K=10, nu=-1 consonantal — arXiv:2307.02299 '
+                          '§2.1, not the quasi-rectilinear SYL_K=1000 '
+                          'parameter arcs)',
         notation='internal input notation (engine keys, e.g. tS, a~)',
         trajectory=dict(
             vocalic=dict(rho=polar['traj_v'][:, 0].tolist(),
