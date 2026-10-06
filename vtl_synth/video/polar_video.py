@@ -332,7 +332,21 @@ def build_phrase_polar(phrase: str,
         elif b.kind in ('pause', 'initial', 'terminal'):
             dep, arr, ne = q_arc.pop(0)
             _check(b.kind, ne, n)
-            zv_parts.append(arc_z(dep, arr, ne, NU_VOCALIC))
+            # Utterance-edge arcs connect the NEUTRAL terminal anchor
+            # (0, 0) to the boundary vowel, which would pull the vocalic
+            # branch to the origin at the start/end of the phrase. The
+            # reference planning display (arXiv:2307.02299, Fig. 4)
+            # stays on the periphery: render those arcs as a stationary
+            # hold at the boundary vowel. Pause arcs (Ve -> Vo) are
+            # unaffected.
+            def _neutral(p):
+                return abs(p[0]) < 1e-9 and abs(p[1]) < 1e-9
+            if _neutral(dep) and not _neutral(arr):
+                zv_parts.append(hold_z(arr, ne))
+            elif _neutral(arr) and not _neutral(dep):
+                zv_parts.append(hold_z(dep, ne))
+            else:
+                zv_parts.append(arc_z(dep, arr, ne, NU_VOCALIC))
         elif b.kind in ('decay', 'attack'):
             pt, ne = q_hold.pop(0)
             _check(b.kind, ne, n)
@@ -480,7 +494,11 @@ def write_polar(path, polar: dict) -> Path:
                           '100 Hz; display curvature K=30, nu=+1 vocalic '
                           '/ K=10, nu=-1 consonantal — arXiv:2307.02299 '
                           '§2.1, not the quasi-rectilinear SYL_K=1000 '
-                          'parameter arcs)',
+                          'parameter arcs; utterance-edge arcs to the '
+                          'neutral terminal are rendered as stationary '
+                          'holds at the boundary vowel so the vocalic '
+                          'branch stays on the periphery, as in the '
+                          'article Fig. 4)',
         notation='internal input notation (engine keys, e.g. tS, a~)',
         trajectory=dict(
             vocalic=dict(rho=polar['traj_v'][:, 0].tolist(),
