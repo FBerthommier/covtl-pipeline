@@ -99,6 +99,13 @@ from vtl_synth.core.phonemes import (
     arpa_to_sampa,
     is_sampa_token,
 )
+from vtl_synth.core.sampa_guard import (
+    SampaGuardError,
+    UnknownSegmentWarning,
+    guard_input,
+    resolve_policy,
+    unknown_symbols,
+)
 from vtl_synth.core.pipeline import (
     Pipeline,
     PipelineResult,
@@ -184,6 +191,12 @@ __all__ = [
     'SAMPA_CONSONANTS',
     'arpa_to_sampa',
     'is_sampa_token',
+    # SAMPA input guard (CORRECTIONS v2.1 s.2)
+    'SampaGuardError',
+    'UnknownSegmentWarning',
+    'guard_input',
+    'resolve_policy',
+    'unknown_symbols',
     # High-level orchestration
     'Pipeline',
     'PipelineResult',

@@ -347,6 +347,7 @@ def build_phrase_tract(
     pause_short_ms: Optional[float] = None,
     pause_long_ms: Optional[float] = None,
     pause_breath_ms: Optional[float] = None,
+    sampa_guard: Optional[str] = None,
 ) -> Optional[Tuple[np.ndarray, np.ndarray]]:
     """Assemble the complete 400 Hz VTL vector for a phrase.
 
@@ -418,6 +419,11 @@ def build_phrase_tract(
         Breath pause ('%', expressive prosody v1.0.8) duration (ms),
         engine='syl' only. None → = pause_short_ms (phrases without
         '%' are bit-identical whatever this value).
+    sampa_guard : str, optional
+        Input guard policy (CORRECTIONS v2.1 s.2): 'warn' (default,
+        ``UnknownSegmentWarning`` listing the dropped symbols),
+        'error' (``SampaGuardError`` before synthesis) or 'off'.
+        ``None`` resolves through ``VTL_SAMPA_GUARD``.
     verbose : bool
         Display progress information.
 
@@ -463,6 +469,15 @@ def build_phrase_tract(
     from vtl_synth.core.syltraj import _normalize_word as _syl_normalize_word
     ipa = _syl_normalize_word(ipa)
     ipa = _normalize_ipa(ipa)
+
+    # SAMPA guard (CORRECTIONS v2.1 s.2): single guard point for the
+    # whole engine (covers the syl and legacy trajectories). Fires on
+    # the normalized string; the inner parsers below receive
+    # sampa_guard='off' so exactly one diagnostic is emitted per call.
+    from vtl_synth.core.sampa_guard import guard_input
+    guard_input(ipa, source='build_phrase_tract', policy=sampa_guard,
+                stacklevel=2)
+
     # Spaces are kept: they are treated as inter-word
     # pauses by parse_to_segments() / parse_to_tract_trajectory()
 
@@ -470,7 +485,8 @@ def build_phrase_tract(
         print(f'[build_phrase_tract] IPA: {ipa}')
 
     # Use the continuous parsing pipeline
-    segments, chain_elements = parse_to_segments(ipa, add_phrase_anchors=add_phrase_anchors)
+    segments, chain_elements = parse_to_segments(
+        ipa, add_phrase_anchors=add_phrase_anchors, sampa_guard='off')
 
     if not segments:
         raise ValueError(f"No phonemic segments found in '{text_or_ipa}'")
@@ -515,7 +531,8 @@ def build_phrase_tract(
             ipa, t_cons=t_cons, t_voy=t_voy,
             pause_short_ms=pause_short_ms or 200.0,
             pause_long_ms=pause_long_ms or 320.0,
-            pause_breath_ms=pause_breath_ms)
+            pause_breath_ms=pause_breath_ms,
+            sampa_guard='off')
         _syltraj.VV_CLOSURE_PROBE = None
         tract_100 = Pval
         n_steps = tract_100.shape[0]

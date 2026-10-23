@@ -376,6 +376,7 @@ def parse_ipa_with_markers(
     consonant_durations: Optional[Dict[str, float]] = None,
     phrase_pause_duration_ms: Optional[float] = None,
     add_phrase_anchors: bool = True,
+    sampa_guard: Optional[str] = None,
 ) -> List[ParseToken]:
     """Parse an IPA string with markers.
 
@@ -418,6 +419,15 @@ def parse_ipa_with_markers(
         Parsed tokens in order.
     """
     ipa_str = _normalize_ipa(ipa_str)
+
+    # SAMPA guard (CORRECTIONS v2.1 s.2): report the symbols that the
+    # tokenization loop below will silently drop. The input is guarded
+    # once here, on the normalized string; already-guarded callers
+    # (e.g. build_phrase_tract) pass sampa_guard='off' to avoid
+    # duplicate diagnostics.
+    from vtl_synth.core.sampa_guard import guard_input
+    guard_input(ipa_str, source='parse_ipa_with_markers',
+                policy=sampa_guard, stacklevel=3)
 
     if phrase_pause_duration_ms is None:
         phrase_pause_duration_ms = pause_duration_ms
@@ -2364,6 +2374,7 @@ def parse_to_segments(
     vowel_duration_ms: float = DEFAULT_VOWEL_DURATION_MS,
     consonant_durations: Optional[Dict[str, float]] = None,
     add_phrase_anchors: bool = True,
+    sampa_guard: Optional[str] = None,
 ) -> Tuple[List, List[ChainElement]]:
     """Parse IPA and return the segments AND the chain elements.
 
@@ -2404,6 +2415,7 @@ def parse_to_segments(
         vowel_duration_ms=vowel_duration_ms,
         consonant_durations=consonant_durations,
         add_phrase_anchors=add_phrase_anchors,
+        sampa_guard=sampa_guard,
     )
 
     elements = syllabify_continuous(tokens)

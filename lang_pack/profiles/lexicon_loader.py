@@ -161,7 +161,14 @@ _DE_IPA_TO_KEYS: List[Tuple[str, str]] = (
         ('ç', 'C'),          # ich-laut → fricative palatale moteur 'C'
         ('x', 'X'), ('χ', 'X'),   # ach-laut → fricative uvulaire 'X'
         ('ʔ', ''),           # coup de glotte : absent de l'inventaire
-        ('ɪ', 'I'), ('ʊ', 'U'), ('ʏ', 'Y'),
+        # CORRECTIONS v2.1 (fuite g2p-de, 2026-10-23) : ɪ/ʊ/ʏ lax ->
+        # i/u/y tendues de l'inventaire cœur. Les clés 'I'/'U'/'Y'
+        # existent côté pack langue (language_vowel_sets, calibration
+        # formantique) mais PAS dans l'inventaire moteur (constants.
+        # ALL_PHONEME_KEYS) : avant ce correctif les voyelles étaient
+        # émises puis droppées en silence par les parseurs
+        # (« Butter » -> /bt@/, « Mütter » -> /mt@/, « ist » -> /st/).
+        ('ɪ', 'i'), ('ʊ', 'u'), ('ʏ', 'y'),
         ('ʋ', 'v'), ('ɱ', 'm'), ('ɘ', '@'), ('ɒ', 'O'),
         (_SYLL, ''),         # autres syllabiques résiduels
         ('̥', ''), ('ʰ', ''), ('̊', ''), ('̍', ''),

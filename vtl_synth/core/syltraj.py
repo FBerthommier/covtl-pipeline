@@ -1082,7 +1082,8 @@ def build_phrase_pval(phrase: str,
                       pause_long_ms: float = 320.0,
                       pause_breath_ms: float | None = None,
                       t_cons: int | None = None,
-                      t_voy: int | None = None):
+                      t_voy: int | None = None,
+                      sampa_guard: str | None = None):
     """Phrase → (Pval (n,15) @100 Hz, blocks, nodes, anchors).
 
     T_cons: steps per consonant sub-arc = consonant duration / 10 ms
@@ -1094,6 +1095,16 @@ def build_phrase_pval(phrase: str,
     prosody, v1.0.8); None → = pause_short_ms (bit-identical to the
     pre-1.0.8 behaviour for phrases without '%').
     """
+    # SAMPA guard (CORRECTIONS v2.1 s.2): mirror the word-level
+    # normalization applied by tokenize_phrase(), then report the
+    # symbols that the regex tokenizer will silently drop.
+    # build_phrase_tract passes sampa_guard='off' because its input
+    # has already been guarded upstream (single diagnostic per run).
+    from vtl_synth.core.sampa_guard import guard_input
+    guard_input(' '.join(_normalize_word(w) for w in phrase.strip().split()),
+                source='build_phrase_pval', policy=sampa_guard,
+                stacklevel=2)
+
     global _LAST_BUILD
     flat, syllables, syl_bounds, boundary_info, word_starts = \
         build_flat(phrase)

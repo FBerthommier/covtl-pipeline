@@ -29,7 +29,10 @@ Approximations documentées :
   * l vélaire final (-al, -el, -ol : 'sol') → ``l`` simple ;
   * e/o atones NON finaux non réduits (européen : e → [ɨ], o → [u]
     selon le contexte ; le lexique porte les réductions exactes) ;
-  * pas de distinction /b/ vs /β/ (moteur sans approximante).
+  * pas de distinction /b/ vs /β/ (moteur sans approximante) ;
+  * « qu » résiduel (non couvert par que/qui/qua/quo, ex.
+    « quente ») -> /k/ (CORRECTIONS v2.1, fuite g2p-pt — avant :
+    'q' fuyait dans la sortie SAMPA).
 """
 
 from __future__ import annotations
@@ -168,6 +171,12 @@ _PT_RULES: list = [
     ('que', 'k e'), ('qui', 'k i'),
     ('ge', 'Z e'), ('gi', 'Z i'),
     ('qua', 'k w a'), ('quo', 'k w o'),
+    # CORRECTIONS v2.1 (fuite g2p-pt, 2026-10-23) : repli « qu »
+    # pour les graphies non couvertes par que/qui/qua/quo (qu +
+    # voyelle nasalisée : « quente » -> placeholder AN, donc « qu »
+    # nu ; quê, quá…) — 'q' fuyait dans la sortie SAMPA (clé
+    # absente de l'inventaire moteur, droppée en silence).
+    ('qu', 'k'),
     ('gua', 'g w a'), ('guo', 'g w o'),
     ('ç', 's'), ('ch', 'S'), ('ss', 's'),
     ('lh', 'L'), ('nh', 'J'),

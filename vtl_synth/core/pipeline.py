@@ -285,7 +285,8 @@ class Pipeline:
             fps: int = 25,
             scale: int = 2,
             label: Optional[str] = None,
-            polar: bool = False) -> PipelineResult:
+            polar: bool = False,
+            sampa_guard: Optional[str] = None) -> PipelineResult:
         """Synthesize ``text`` into .tract + .wav (+ .mp4).
 
         Parameters
@@ -303,6 +304,10 @@ class Pipeline:
             imageio-ffmpeg).
         label : str, optional
             File stem (default: derived from the first phrase).
+        sampa_guard : str, optional
+            Input guard policy (CORRECTIONS v2.1 s.2): 'warn'
+            (default), 'error' or 'off'; ``None`` resolves through
+            the ``VTL_SAMPA_GUARD`` environment variable.
         """
         from vtl_synth.core.speaker_registry import announce
         announce(f0_used=self.f0_hz)
@@ -361,6 +366,7 @@ class Pipeline:
                 speaker=self.speaker,
                 use_orthogonal=self.use_orthogonal,
                 return_data=True,
+                sampa_guard=sampa_guard,
                 verbose=False,
                 t_cons=t_cons_steps,
                 t_voy=t_voy_steps,
@@ -459,10 +465,11 @@ class Pipeline:
 
     def text_to_wav(self, text: str, output_dir: str = 'out',
                     use_g2p: bool = True,
-                    label: Optional[str] = None) -> PipelineResult:
+                    label: Optional[str] = None,
+                    sampa_guard: Optional[str] = None) -> PipelineResult:
         """Same as :meth:`run` without the video step."""
         return self.run(text, output_dir=output_dir, use_g2p=use_g2p,
-                        video=False, label=label)
+                        video=False, label=label, sampa_guard=sampa_guard)
 
     # ------------------------------------------------------------------
     # Video from existing files

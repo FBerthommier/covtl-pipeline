@@ -64,7 +64,7 @@ import numpy as np
 from vtl_synth.core.polar import K_CONSONANT_DEFAULT
 
 POLAR_SR = 100          # Hz, native sampling of the .polar trajectories
-POLAR_VERSION = 3
+POLAR_VERSION = 4
 STEP_MS = 10.0          # 1 gesture step = 10 ms @ 100 Hz
 
 # Display curvature (arXiv:2307.02299 §2.1: "K = 30 for vowel arcs and
@@ -79,6 +79,41 @@ K_C_DISPLAY = K_CONSONANT_DEFAULT  # consonantal (z_c) display curvature = 10
 NU_VOCALIC = 1
 NU_CONSONANTAL = -1
 ORIENTATION = 'inverse'     # polar_arc sweep giving dep → arr
+
+
+def _z_leg_arcplot(p_dep, p_arr, n, nu, K, Pexp=1.0):
+    """(n, 2) display sub-arc in the ORIGINAL arcplot anchoring.
+
+    Reference form (Syllable_Synthesis ``arcplot``, the code behind the
+    article's planning figures; cf. big.bi-supplement
+    ``polar_sync.z_leg_orig``):
+
+        z(th) = rho(th) * pa * exp(i*nu*th/K) + (1 - rho(th)) * pd,
+        rho(th) = cos(th/2)**Pexp
+
+    where the phase carrier ``pa`` is the endpoint with the SHORTER
+    radius and ``pd`` the other — the phase perturbation then sits on
+    the vowel side of every consonantal leg.  A closed V->C->V pair
+    renders as the article's TEARDROP (belly at the vowel, pointed at
+    the consonant: rho -> 0 kills the phase term exactly at the C
+    end), not as a symmetric lens bulging consonant-side — the
+    artifact of carrying the phase on the (longer) arrival radius, as
+    ``polar.polar_arc`` does.
+
+    The sweep runs th in [0, pi] when the departure carries the phase
+    (z(0) = dep) and th in [pi, 0] otherwise (z(pi) = pd = dep); the
+    first sample is dropped so consecutive legs do not duplicate their
+    shared endpoint, mirroring the reference opint = -1.
+    """
+    dep = complex(p_dep[0] * np.exp(1j * p_dep[1]))
+    arr = complex(p_arr[0] * np.exp(1j * p_arr[1]))
+    if p_dep[0] <= p_arr[0]:
+        pa, pd, th = dep, arr, np.linspace(0.0, np.pi, n + 1)[1:]
+    else:
+        pa, pd, th = arr, dep, np.linspace(np.pi, 0.0, n + 1)[1:]
+    rho = np.cos(th / 2.0) ** Pexp
+    z = rho * pa * np.exp(1j * nu * th / K) + (1.0 - rho) * pd
+    return np.column_stack([np.abs(z), np.angle(z)])
 
 
 # --------------------------------------------------------------------------
@@ -357,10 +392,13 @@ def build_phrase_polar(phrase: str,
             _check(b.kind, (m + 1) * T, n)
             # red: the vocalic background keeps flowing anchor→anchor
             zv_parts.append(arc_z(dep, arr, n, NU_VOCALIC))
-            # blue: dep → C₁ → ⋯ → C_m → arr, T steps per sub-arc
+            # blue: dep → C₁ → ⋯ → C_m → arr, T steps per sub-arc,
+            # in the ORIGINAL arcplot anchoring (phase on the shorter
+            # radius — teardrop loops, v4; was polar_arc arrival-phase
+            # anchoring, which bulged every leg consonant-side)
             pts = [tuple(p) for p in [dep] + targets + [arr]]
-            zc = np.vstack([arc_z(pts[k], pts[k + 1], T, NU_CONSONANTAL,
-                                  k_display=K_C_DISPLAY)
+            zc = np.vstack([_z_leg_arcplot(pts[k], pts[k + 1], T,
+                                           NU_CONSONANTAL, K_C_DISPLAY)
                             for k in range(m + 1)])
             zc_spans.append((step, step + n, zc))
             for k, (ck, tgt) in enumerate(zip(b.cons_keys, targets)):

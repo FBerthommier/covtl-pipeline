@@ -6,6 +6,24 @@ Format: Keep a Changelog — https://keepachangelog.com/
 ## [Unreleased]
 
 ### Fixed
+- **Polar display teardrop** : les sous-arcs consonantiques (branche
+  bleue) étaient tracés avec la phase ν/K portée par le point
+  d'*arrivée* (`polar.polar_arc`) — sur une jambe d'approche V→C ce
+  point est la consonne de grand rayon, donc le renflement se
+  produisait côté consonne et une boucle fermée V→C→V rendait comme
+  une lentille symétrique, et non comme la « larme » des figures de
+  planification de l'article (arXiv:2307.02299, Fig. 4).
+  `polar_video.py` trace désormais les sous-arcs bleus dans
+  l'ancrage *arcplot* original de Syllable_Synthesis
+  (`_z_leg_arcplot` : porteur de phase = l'extrémité de plus court
+  rayon, ρ = cos(θ/2), premier échantillon abandonné ; cf. le
+  correctif homologue de big.bi-supplement) : ventre mesuré à
+  0,34–0,36 de la corde depuis la voyelle (référence : 0,35),
+  effilement exact vers la cible consonantique. Format `.polar`
+  bumpé 3 → 4 (géométrie des trajectoires modifiée) ; branche rouge
+  inchangée ; aucun test moteur ne couvre le rendu, la validation
+  est métrique + visuelle (16/16 sur `-k "video or pipeline or cli
+  or polar"`).
 - **BUG-001 (critique, audit externe 25/09)** : `setup_lang.py` cassait
   `constants.py` sur un clone frais — l'ancienne LANG SECTION « riche »
   (v1.1.0) contient les `VOWEL_TARGETS` ; leur remplacement par le
@@ -19,6 +37,33 @@ Format: Keep a Changelog — https://keepachangelog.com/
 - **BUG-011 (mineur)** : défaut CLI `-s/--speaker` = `jd3` (minuscule,
   conforme au registre).
 ### Added
+- **SAMPA guard (CORRECTIONS v2.1 s.2, correctif moteur)** : les
+  parseurs (`continuous.parse_ipa_with_markers`, `parsing._tokenize_word`,
+  `syltraj.tokenize_phrase`) laissaient tomber les symboles inconnus
+  *en silence* (ex. `klincan` : le `c` n'est pas une clef moteur et
+  disparaissait sans diagnostic). Nouvelle garde aux frontieres
+  publiques (`vtl_synth/core/sampa_guard.py`) : `build_phrase_tract`,
+  `parse_to_segments`, `parse_input`, `build_phrase_pval`,
+  `Pipeline.run`/`text_to_wav` et CLI `--sampa-guard {warn,error,off}`
+  (+ variable d'environnement `VTL_SAMPA_GUARD`). Defaut `warn` :
+  avertissement `UnknownSegmentWarning` listant symboles et positions,
+  sorties bit-identiques ; `error` : `SampaGuardError` avant synthese ;
+  `off` : comportement antérieur. Tests : `tests/test_sampa_guard.py`
+  (neutralite bitwise incluse). Un seul diagnostic par synthese
+  (plumbing 'off' interne).
+- **Correctifs g2p (CORRECTIONS v2.1, fuites de synthèse de/pt, 2026-10-23)** :
+  deux fuites PRÉEXISTANTES révélées par la garde SAMPA (qui n'a
+  elle-même changé aucune sortie) — (a) g2p-de : le lexique
+  Wikipron (table `_DE_IPA_TO_KEYS`) et les exceptions émettaient
+  les clés `I`/`U`/`Y` (ɪ/ʊ/ʏ lax), absentes de l'inventaire
+  moteur : voyelles droppées en silence (« Butter » -> /bt@/,
+  « Mütter » -> /mt@/, « ist » -> /st/) ; désormais mappées sur
+  i/u/y (approximation lax->tense documentée, cohérente avec
+  « ö/ü toujours tendues ») ; (b) g2p-pt : « qu » non couvert par
+  que/qui/qua/quo fuyait `q` (« quente » -> /@~t@/) ; règle de
+  repli « qu » -> « k » ajoutée. Sorties en/fr/es/it inchangées
+  (tests de non-régression) ; miroirs `lang_pack/profiles`
+  synchronisés. Tests : `tests/test_g2p_leaks.py`.
 - **Expressive prosody option** (v1.0.8 — défaut OFF, sorties
   bit-identiques au mode monotone; portée depuis covtl-languages dans
   la branche multi-speakers, compatible bascule de speakers):
