@@ -331,7 +331,13 @@ cluster, $n = (m{+}1)\,T$ steps &
 red: arc$(\mathit{dep}, \mathit{arr})$ over the whole block (the
 background keeps flowing anchor to anchor); blue: sub-arcs
 $\mathit{dep} \to C_1 \to \dots \to C_m \to \mathit{arr}$, $T$ steps
-each, $K{=}30$, $\nu{=}{-}1$ \\
+each, drawn in the \emph{original arcplot anchoring}
+($z(\theta) = \rho(\theta)\,p_a\,e^{i\nu\theta/K} +
+(1{-}\rho(\theta))\,p_d$, $\rho = \cos(\theta/2)$, with the phase
+carrier $p_a$ = the \emph{shorter-radius} endpoint of each leg,
+$K{=}10$, $\nu{=}{-}1$) --- a closed V$\to$C$\to$V pair renders as
+the teardrop of the article's planning figures, not as a
+consonant-side lens \\
 \bottomrule
 \end{tabularx}
 \end{center}
@@ -345,14 +351,14 @@ approach sub-arc --- on the validation corpus \code{ba.da.ga} the
 reconstructed peaks coincide with the engine targets to within
 $10^{-9}$ (Table~\ref{tab:targets}).
 
-\subsection{The .polar intermediate file (version 3)}
+\subsection{The .polar intermediate file (version 4)}
 
 The result is stored in a self-documented JSON file with
-\code{format}~=~\code{covtl-polar} and \code{version}~=~3:
+\code{format}~=~\code{covtl-polar} and \code{version}~=~4:
 
 \begin{lstlisting}[style=json]
 {
-  "format": "covtl-polar", "version": 3,
+  "format": "covtl-polar", "version": 4,
   "sample_rate": 100, "speaker": "JD3",
   "n_steps": 176, "duration_s": 1.76,
   "columns": { "vocalic_rho": "...", "consonantal_theta": "...", ... },
@@ -516,9 +522,15 @@ Automated checks:
 \item \textbf{Background continuity.} the red branch is finite on
       every step of the utterance and rests exactly on the vowel
       target during plateaus.
-\item \textbf{Curvature.} the sagitta of every sub-arc is between
+\item \textbf{Curvature.} the sagitta of every red arc is between
       $2\,\%$ and $2.4\,\%$ of its chord ($K = 30$; the engine's
-      $K = 1000$ would give $\approx 0.07\,\%$, invisible).
+      $K = 1000$ would give $\approx 0.07\,\%$, invisible). The blue
+      sub-arcs (arcplot anchoring, $K = 10$, phase on the
+      shorter-radius endpoint) show the teardrop profile: belly at
+      $\approx 0.35$ of the chord from the shorter-radius endpoint,
+      tapering into the node target (measured $0.34$--$0.36$ on
+      \code{bi}/\code{ba}, matching the reference display
+      implementation of arXiv:2307.02299's figures).
 \item \textbf{Timeline.} \code{.polar} duration $=$ \code{.tract}
       duration $=$ MP4 duration (within one 25~Hz frame); the test
       selection \code{pytest tests -k "video or pipeline or cli or

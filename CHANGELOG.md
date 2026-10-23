@@ -6,6 +6,24 @@ Format: Keep a Changelog — https://keepachangelog.com/
 ## [Unreleased]
 
 ### Fixed
+- **Polar display teardrop** : les sous-arcs consonantiques (branche
+  bleue) étaient tracés avec la phase ν/K portée par le point
+  d'*arrivée* (`polar.polar_arc`) — sur une jambe d'approche V→C ce
+  point est la consonne de grand rayon, donc le renflement se
+  produisait côté consonne et une boucle fermée V→C→V rendait comme
+  une lentille symétrique, et non comme la « larme » des figures de
+  planification de l'article (arXiv:2307.02299, Fig. 4).
+  `polar_video.py` trace désormais les sous-arcs bleus dans
+  l'ancrage *arcplot* original de Syllable_Synthesis
+  (`_z_leg_arcplot` : porteur de phase = l'extrémité de plus court
+  rayon, ρ = cos(θ/2), premier échantillon abandonné ; cf. le
+  correctif homologue de big.bi-supplement) : ventre mesuré à
+  0,34–0,36 de la corde depuis la voyelle (référence : 0,35),
+  effilement exact vers la cible consonantique. Format `.polar`
+  bumpé 3 → 4 (géométrie des trajectoires modifiée) ; branche rouge
+  inchangée ; aucun test moteur ne couvre le rendu, la validation
+  est métrique + visuelle (16/16 sur `-k "video or pipeline or cli
+  or polar"`).
 - **BUG-001 (critique, audit externe 25/09)** : `setup_lang.py` cassait
   `constants.py` sur un clone frais — l'ancienne LANG SECTION « riche »
   (v1.1.0) contient les `VOWEL_TARGETS` ; leur remplacement par le
