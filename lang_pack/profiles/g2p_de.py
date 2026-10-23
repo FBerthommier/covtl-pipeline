@@ -27,7 +27,11 @@ Approximations documentées :
   * ʁ → ``R`` (seule rhotique du moteur) ; ɐ → ``@`` ;
   * pas de coup de glotte (ʔ absent de l'inventaire) ;
   * pas de réduction e → ə en dehors des finales -e/-er/-en/-el ;
-  * les consonnes doubles sont émises deux fois (géminées).
+  * les consonnes doubles sont émises deux fois (géminées) ;
+  * ɪ/ʊ/ʏ (lax) du lexique et des exceptions -> i/u/y (tendues) :
+    les clés I/U/Y ne sont pas dans l'inventaire moteur
+    (CORRECTIONS v2.1, fuite g2p-de — avant : voyelles droppées
+    en silence par les parseurs).
 
 Le prétraitement utilise des PLACEHOLDRES MAJUSCULES (ACH, ICH, TSCH,
 SCH, SDT, SDP, SZ, SCHWA, ERFIN, ENFIN, ELFIN, IQ) : le mot est
@@ -70,14 +74,14 @@ _DE_EXCEPTIONS: dict = {
     # mots-outils (voyelles pleines, pas de réduction finale)
     'der': 'd e R', 'die': 'd i', 'das': 'd a s', 'den': 'd e n',
     'dem': 'd e m', 'des': 'd e s', 'ein': 'a j n', 'eine': 'a j n @',
-    'einen': 'a j n @ n', 'und': 'U n t', 'ist': 'I s t',
-    'sind': 'z I n t', 'war': 'v a R', 'waren': 'v a R @ n',
-    'von': 'f O n', 'mit': 'm I t', 'auf': 'a w f', 'aus': 'a w s',
+    'einen': 'a j n @ n', 'und': 'u n t', 'ist': 'i s t',
+    'sind': 'z i n t', 'war': 'v a R', 'waren': 'v a R @ n',
+    'von': 'f O n', 'mit': 'm i t', 'auf': 'a w f', 'aus': 'a w s',
     'bei': 'b a j', 'für': 'f y R', 'wie': 'v i', 'wo': 'v o',
     'was': 'v a s', 'wer': 'v e R', 'sehr': 'z e R',
-    'ja': 'j a', 'nein': 'n a j n', 'nicht': 'n I C t',
+    'ja': 'j a', 'nein': 'n a j n', 'nicht': 'n i C t',
     'noch': 'n O X', 'schon': 'S o n', 'auch': 'a w X',
-    'wieder': 'v i d e R', 'über': 'y b e R', 'unter': 'U n t e R',
+    'wieder': 'v i d e R', 'über': 'y b e R', 'unter': 'u n t e R',
 }
 
 
