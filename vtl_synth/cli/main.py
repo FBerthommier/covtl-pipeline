@@ -69,6 +69,13 @@ def _add_engine_options(p: argparse.ArgumentParser) -> None:
                    action='store_false',
                    help='monotone declination (the default, stated '
                         'explicitly)')
+    g.add_argument('--sampa-guard', dest='sampa_guard', default=None,
+                   choices=['warn', 'error', 'off'],
+                   help="phonetic input guard (CORRECTIONS v2.1 s.2): "
+                        "'warn' (default) warns when symbols outside "
+                        "the engine inventory are dropped; 'error' "
+                        "aborts before synthesis; 'off' disables the "
+                        "diagnostic. Env var: VTL_SAMPA_GUARD")
 
 
 def _resolve_lang(args: argparse.Namespace) -> str:
@@ -153,7 +160,8 @@ def cmd_run(args: argparse.Namespace) -> int:
     result = pipe.run(args.text, output_dir=args.output_dir,
                       use_g2p=not args.phonetic, video=not args.no_video,
                       fps=args.fps, scale=args.scale, label=args.label,
-                      polar=args.polar)
+                      polar=args.polar,
+                      sampa_guard=args.sampa_guard)
     print()
     print('=' * 60)
     print('SUCCESS')
@@ -174,7 +182,8 @@ def cmd_run(args: argparse.Namespace) -> int:
 def cmd_text_to_wav(args: argparse.Namespace) -> int:
     pipe = _make_pipeline(args)
     result = pipe.text_to_wav(args.text, output_dir=args.output_dir,
-                              use_g2p=not args.phonetic, label=args.label)
+                              use_g2p=not args.phonetic, label=args.label,
+                              sampa_guard=args.sampa_guard)
     prosody = 'expressive' if getattr(args, 'expressive', False) else 'monotone'
     print()
     print(f'SUCCESS ({_resolve_lang(args)}, prosody: {prosody}): '
@@ -225,6 +234,13 @@ def cmd_polar_build(args: argparse.Namespace) -> int:
         (profile.pause_long_ms if profile is not None else 320.0)
     f0 = args.f0 if args.f0 is not None else SpeakerConfig().f0_default
     del f0      # speaker/f0 do not change the polar geometry
+
+    # polar-build synthesizes through video.polar_video, which calls
+    # build_phrase_pval with the default (env-resolved) policy: honor
+    # the CLI flag through the environment channel.
+    import os as _os
+    if args.sampa_guard is not None:
+        _os.environ['VTL_SAMPA_GUARD'] = args.sampa_guard
 
     phrases = [p.strip() for p in args.phrase.split('|') if p.strip()]
     polar = build_polar(

@@ -229,7 +229,10 @@ def _finalize_parse(
 # Public API
 # ======================================================================
 
-def parse_input(text: str) -> ParseResult:
+def parse_input(
+    text: str,
+    sampa_guard: Optional[str] = None,
+) -> ParseResult:
     """Parse phonetic input text into a structured representation.
 
     The input text uses COVTL notation: IPA segments separated by
@@ -247,6 +250,11 @@ def parse_input(text: str) -> ParseResult:
     ----------
     text : str
         Phonetic text. E.g. ``'dug bat aji big.bi'``
+    sampa_guard : str, optional
+        Input guard policy: 'warn' (default; emit
+        ``UnknownSegmentWarning`` for dropped symbols), 'error' (raise
+        ``SampaGuardError``) or 'off'. ``None`` resolves through the
+        ``VTL_SAMPA_GUARD`` environment variable.
 
     Returns
     -------
@@ -266,6 +274,14 @@ def parse_input(text: str) -> ParseResult:
     >>> pr.syllables_per_word
     [[['a', 'b'], ['d', 'a']], [['a', 'b', 'd', 'a']]]
     """
+    # SAMPA guard (CORRECTIONS v2.1 s.2): report the symbols that
+    # _tokenize_word() will silently skip. This reference parser
+    # applies no case/IPA normalization, so the raw text is guarded
+    # exactly as given.
+    from vtl_synth.core.sampa_guard import guard_input
+    guard_input(text, source='parse_input', policy=sampa_guard,
+                stacklevel=2)
+
     words_raw = text.strip().split()
 
     flat: List[str] = []

@@ -37,6 +37,33 @@ Format: Keep a Changelog — https://keepachangelog.com/
 - **BUG-011 (mineur)** : défaut CLI `-s/--speaker` = `jd3` (minuscule,
   conforme au registre).
 ### Added
+- **SAMPA guard (CORRECTIONS v2.1 s.2, correctif moteur)** : les
+  parseurs (`continuous.parse_ipa_with_markers`, `parsing._tokenize_word`,
+  `syltraj.tokenize_phrase`) laissaient tomber les symboles inconnus
+  *en silence* (ex. `klincan` : le `c` n'est pas une clef moteur et
+  disparaissait sans diagnostic). Nouvelle garde aux frontieres
+  publiques (`vtl_synth/core/sampa_guard.py`) : `build_phrase_tract`,
+  `parse_to_segments`, `parse_input`, `build_phrase_pval`,
+  `Pipeline.run`/`text_to_wav` et CLI `--sampa-guard {warn,error,off}`
+  (+ variable d'environnement `VTL_SAMPA_GUARD`). Defaut `warn` :
+  avertissement `UnknownSegmentWarning` listant symboles et positions,
+  sorties bit-identiques ; `error` : `SampaGuardError` avant synthese ;
+  `off` : comportement antérieur. Tests : `tests/test_sampa_guard.py`
+  (neutralite bitwise incluse). Un seul diagnostic par synthese
+  (plumbing 'off' interne).
+- **Correctifs g2p (CORRECTIONS v2.1, fuites de synthèse de/pt, 2026-10-23)** :
+  deux fuites PRÉEXISTANTES révélées par la garde SAMPA (qui n'a
+  elle-même changé aucune sortie) — (a) g2p-de : le lexique
+  Wikipron (table `_DE_IPA_TO_KEYS`) et les exceptions émettaient
+  les clés `I`/`U`/`Y` (ɪ/ʊ/ʏ lax), absentes de l'inventaire
+  moteur : voyelles droppées en silence (« Butter » -> /bt@/,
+  « Mütter » -> /mt@/, « ist » -> /st/) ; désormais mappées sur
+  i/u/y (approximation lax->tense documentée, cohérente avec
+  « ö/ü toujours tendues ») ; (b) g2p-pt : « qu » non couvert par
+  que/qui/qua/quo fuyait `q` (« quente » -> /@~t@/) ; règle de
+  repli « qu » -> « k » ajoutée. Sorties en/fr/es/it inchangées
+  (tests de non-régression) ; miroirs `lang_pack/profiles`
+  synchronisés. Tests : `tests/test_g2p_leaks.py`.
 - **Expressive prosody option** (v1.0.8 — défaut OFF, sorties
   bit-identiques au mode monotone; portée depuis covtl-languages dans
   la branche multi-speakers, compatible bascule de speakers):

@@ -31,6 +31,10 @@ from __future__ import annotations
 __version__ = '1.1.0'
 
 from vtl_synth.core.pipeline import Pipeline, PipelineResult
+from vtl_synth.core.sampa_guard import (
+    SampaGuardError,
+    UnknownSegmentWarning,
+)
 from vtl_synth.core.build_phrase_tract import (
     build_phrase_tract,
     build_batch_tract,
@@ -56,6 +60,9 @@ __all__ = [
     # orchestration
     'Pipeline',
     'PipelineResult',
+    # SAMPA input guard (CORRECTIONS v2.1 s.2)
+    'SampaGuardError',
+    'UnknownSegmentWarning',
     # engine entry points (full API in vtl_synth.core)
     'build_phrase_tract',
     'build_batch_tract',
