@@ -396,7 +396,7 @@ audio muxed from the synthesized \code{.wav}):
       from the \code{.tract} file (the standard video of the pipeline).
 \item \textbf{Right panel}: the polar figure, in trigonometric
       orientation ($\theta = 0$ East, counter-clockwise), with:
-      the two branch curves; a fading trail of $\approx 0.75$~s per
+      the two branch curves; a fading trail of $\approx 0.30$~s per
       branch (red and blue independently); a current-position dot
       per active branch; the phoneme inventory as small permanent
       dots (red vowels, blue consonants); a thin segment from the
@@ -412,8 +412,9 @@ audio muxed from the synthesized \code{.wav}):
 \caption{Rendered frame at $t = 0.24$~s in \code{ba.da.ga}, during
 the /b/ cluster: the blue branch has detached from the red background
 and reaches the /b/ target (upper right, $\rho = 1.06$,
-$\theta \approx 0.87$~rad), while the red background continues its
-progression toward the vowel anchor.}
+$\theta \approx 0.87$~rad), while the red background holds on the
+vowel anchor /a/ on the periphery (utterance-edge arcs are rendered
+as stationary holds).}
 \label{fig:frameb}
 \end{figure}
 
@@ -421,9 +422,9 @@ progression toward the vowel anchor.}
 \centering
 \includegraphics[width=0.58\textwidth]{figures/fig_frame_da.png}
 \caption{Rendered frame at $t = 0.64$~s, during the /d/ cluster:
-the fading blue trail of the /b/ excursion is still visible
-(memory $\approx 0.75$~s) while a new blue excursion approaches the
-/d/ target (bottom, $\rho = 1.2$, $\theta \approx -1.77$~rad);
+with the short trail memory ($\approx 0.30$~s) the earlier /b/
+excursion has already faded out, and the current blue excursion
+approaches the /d/ target (bottom, $\rho = 1.2$, $\theta = -\pi/2$);
 the red background stays on the vowel axis. The two branches are
 simultaneous and dissociated.}
 \label{fig:frameda}

@@ -596,7 +596,7 @@ def read_polar(path) -> dict:
 
 _COLOR_V = '#d62728'      # vocalic branch / vowel targets: red
 _COLOR_C = '#1f77b4'      # consonantal branch / consonant targets: blue
-_TRAIL_S = 0.75           # s of visible fading trail
+_TRAIL_S = 0.30           # s of visible fading trail (300 ms)
 _LABEL_S = 0.5            # s of transient label display
 
 

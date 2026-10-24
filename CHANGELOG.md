@@ -5,6 +5,24 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
+### Changed
+- **Traînée du polar vidéo portée à 300 ms par défaut** : la trace
+  estompée de chaque branche (vocalique rouge / consonantique bleue)
+  passe de $\approx$ 0,75 s à $\approx$ 0,30 s (`_TRAIL_S`), pour
+  raccourcir la rémanence visuelle — les trajectoires passées
+  s'effacent plus vite et ne masquent plus les gestes brefs (clusters,
+  vues proches de la figure 4 de l'article). Changement
+  d'affichage uniquement : moteur, `.tract`, audio, format `.polar`
+  et géométrie des branches inchangés. **Figures du manuel polaire
+  régénérées** (`fig_branches_full`, `fig_frame_b`, `fig_frame_da` +
+  démo `examples/polar_demo_en.mp4`) : elles dataient de v1.1.0 et
+  montraient encore la géométrie pré-correctifs (lentilles
+  symétriques au lieu des larmes arcplot, plongée de la branche
+  vocalique vers l'origine aux bords, angle dental /d/ pré-recalibrage
+  23π/16) ; elles montrent désormais le rendu v4 courant (larmes,
+  périphérie, traînée 300 ms) et les légendes sont alignées
+  (`docs/polar_visualization.tex` + PDF recompilé).
+
 ### Documentation
 - **Alignement de la documentation sur le chemin de trajectoire
   unique** : `docs/manual.tex` (et `manual.pdf` recompilé) — la
