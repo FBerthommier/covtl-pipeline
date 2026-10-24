@@ -5,11 +5,12 @@ TestRegistry — pure checks on vtl_synth/data/speakers/ (files present,
 hashes match registry.json, f0_default consistent with the constants
 sources, s1/s2 differ from the JD3 102.216 Hz default).
 
-NOTE (v1.1.0, tests allégés) : la classe TestInstallRestore du dépôt de
-développement (idempotence install/restore en sous-processus réels,
-swap de la ressource wheel partagée) n'est PAS migrée ici : elle est
-lente (plusieurs installs + smoke de synthèse) et dépendait de backups
-machine locaux. Elle reste disponible dans le dépôt de développement
+NOTE (v1.1.0, slimmed-down tests): the TestInstallRestore class from
+the development repository (install/restore idempotence in real
+subprocesses, swap of the shared wheel resource) is NOT migrated
+here: it is slow (several installs + synthesis smoke tests) and
+depended on local machine backups. It remains available in the
+development repository
 P:\covtl-pipeline\tests\test_speaker_registry.py.
 """
 import hashlib
@@ -87,6 +88,6 @@ class TestRegistry:
 
     def test_announce_lists_all_layers(self):
         text = sr.describe()
-        assert 'Speaker actif :' in text
+        assert 'Active speaker:' in text
         assert 'geometry:' in text and 'ortho:' in text
         assert 'audio wheel:' in text and 'video:' in text

@@ -33,18 +33,18 @@ Six profiles are bundled (v1.0.7):
     (delegates to :mod:`vtl_synth.utils.g2p_fr`); Jun & Fougeron (2002)
     declarative contour (onset +3 %, final fall −15 %) — already the
     pipeline default; the profile makes it explicit per-language.
-  * ``'es'`` — Español (castillan): lexique Wikipron + règles
-    (:mod:`vtl_synth.utils.g2p_es`); montée pré-nucléaire large puis
-    descente contenue (Face 2003 : onset +8 %, final −15 %).
-  * ``'de'`` — Deutsch: lexique Wikipron + règles
-    (:mod:`vtl_synth.utils.g2p_de`); chute nucléaire tardive et
-    profonde (Grice et al. 2005 : onset +3 %, final −20 %).
-  * ``'it'`` — Italiano: lexique Wikipron + règles
-    (:mod:`vtl_synth.utils.g2p_it`); montée accentuelle H+ puis chute
-    douce (Avesani 1995 : onset +6 %, final −15 %).
-  * ``'pt'`` — Português (européen): lexique Wikipron + règles
-    (:mod:`vtl_synth.utils.g2p_pt`); chute nucléaire précoce à
-    terminal bas (Frota 2000 : onset +4 %, final −20 %).
+  * ``'es'`` — Español (Castilian): Wikipron lexicon + rules
+    (:mod:`vtl_synth.utils.g2p_es`); broad pre-nuclear rise then a
+    contained descent (Face 2003: onset +8 %, final −15 %).
+  * ``'de'`` — Deutsch: Wikipron lexicon + rules
+    (:mod:`vtl_synth.utils.g2p_de`); late and deep nuclear fall
+    (Grice et al. 2005: onset +3 %, final −20 %).
+  * ``'it'`` — Italiano: Wikipron lexicon + rules
+    (:mod:`vtl_synth.utils.g2p_it`); H+ accentual rise then a gentle
+    fall (Avesani 1995: onset +6 %, final −15 %).
+  * ``'pt'`` — Português (European): Wikipron lexicon + rules
+    (:mod:`vtl_synth.utils.g2p_pt`); early nuclear fall to a low
+    terminal (Frota 2000: onset +4 %, final −20 %).
 
 The active language is selected via :func:`setlang` and queried via
 :func:`get_active_lang` / :func:`get_active_profile`. The Pipeline and
@@ -82,9 +82,9 @@ from typing import Callable, Dict, Optional
 
 from vtl_synth.utils.g2p import text_to_sampa as _g2p_en
 
-# Expressive prosody (v1.0.8, option — défaut OFF) : paramètres par
-# langue (accents de hauteur, respiration syntaxique). Import non
-# critique : sans numpy le profil expressif est simplement absent.
+# Expressive prosody (v1.0.8, option — default OFF): per-language
+# parameters (pitch accents, syntactic breathing). Non-critical
+# import: without numpy the expressive profile is simply absent.
 try:
     from vtl_synth.utils.prosody_f0 import (
         ExpressivityProfile as _ExpressivityProfile,
@@ -165,9 +165,9 @@ class LangProfile:
     display_name : str
         Human-readable name (e.g. ``'English'``).
     expressivity : ExpressivityProfile, optional
-        Paramètres de prosodie expressive (v1.0.8, option — défaut
-        off) : accents de hauteur, respiration syntaxique. None si
-        le module prosody_f0 n'est pas disponible.
+        Expressive-prosody parameters (v1.0.8, option — default
+        off): pitch accents, syntactic breathing. None when the
+        prosody_f0 module is not available.
     """
 
     lang: str
@@ -186,9 +186,9 @@ class LangProfile:
     def __post_init__(self) -> None:
         if not self.display_name:
             self.display_name = self.lang.upper()
-        # Profil expressif par défaut de la langue : None reste None
-        # pour les langues sans profil (langues personnalisées ou
-        # prosody_f0 indisponible).
+        # Default expressive profile of the language: None stays None
+        # for languages without a profile (custom languages or
+        # prosody_f0 unavailable).
         if self.expressivity is None and _EXPRESSIVITY:
             self.expressivity = _EXPRESSIVITY.get(self.lang)
 
@@ -236,12 +236,13 @@ def _make_fr_profile() -> LangProfile:
         # the profile makes it language-explicit.
         onset_gain=1.03,
         final_gain=0.85,
-        # French syllable-timed rhythm: par défaut Tcons=140 ms et
-        # Tvoy=120 ms (v1.0.5). Ces valeurs allongent les transitions
-        # consonantiques et vocaliques par rapport au profil anglais
-        # (100/80 ms) pour une diction plus posée, conforme au rythme
-        # syllabé français. Elles éliminent aussi les clicks résiduels
-        # observés aux transitions trop rapides (cf. audit v1.0.4).
+        # French syllable-timed rhythm: default Tcons=140 ms and
+        # Tvoy=120 ms (v1.0.5). These values lengthen the consonantal
+        # and vocalic transitions compared to the English profile
+        # (100/80 ms) for a more deliberate delivery, in line with
+        # the French syllable-timed rhythm. They also eliminate the
+        # residual clicks observed on too-fast transitions
+        # (cf. audit v1.0.4).
         t_cons_ms=140.0,
         t_voy_ms=120.0,
         pause_short_ms=200.0,
@@ -274,16 +275,16 @@ def _make_es_profile() -> LangProfile:
         # contained (no low-terminal compression like German).
         onset_gain=1.08,
         final_gain=0.85,
-        # Syllable-timed rhythm: transitions à mi-chemin entre en
-        # (100/80) et fr (140/120) — consonnes nettes sans allonger
-        # la voyelle.
+        # Syllable-timed rhythm: transitions halfway between en
+        # (100/80) and fr (140/120) — crisp consonants without
+        # lengthening the vowel.
         t_cons_ms=120.0,
         t_voy_ms=100.0,
         pause_short_ms=200.0,
         pause_long_ms=320.0,
         notation_alias={
             'ñ': 'J', 'Ñ': 'J',
-            '¿': '', '¡': '',      # ponctuation inversée
+            '¿': '', '¡': '',      # inverted punctuation
             'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u', 'ü': 'u',
         },
         display_name='Español',
@@ -307,9 +308,9 @@ def _make_de_profile() -> LangProfile:
         # onset, deep final (−20 %).
         onset_gain=1.03,
         final_gain=0.80,
-        # Stress-timed language with dense clusters: consonant
-        # transitions énergiques (100 ms), voyelles légèrement plus
-        # longues que l'anglais (90 ms).
+        # Stress-timed language with dense clusters: energetic
+        # consonant transitions (100 ms), vowels slightly longer
+        # than English (90 ms).
         t_cons_ms=100.0,
         t_voy_ms=90.0,
         pause_short_ms=200.0,
@@ -370,13 +371,13 @@ def _make_pt_profile() -> LangProfile:
         # (−20 %).
         onset_gain=1.04,
         final_gain=0.80,
-        # Syllable-timed avec géminées et voyelles réduites : Cf cf es.
+        # Syllable-timed with geminates and reduced vowels: cf. es.
         t_cons_ms=110.0,
         t_voy_ms=100.0,
         pause_short_ms=200.0,
         pause_long_ms=320.0,
         notation_alias={
-            'ã': '@~', 'õ': 'o~',          # EP : ã = /ɐ̃/
+            'ã': '@~', 'õ': 'o~',          # EP: ã = /ɐ̃/
             'ç': 's', 'á': 'a', 'à': 'a', 'â': '@',
             'é': 'e', 'ê': 'e', 'í': 'i', 'ó': 'o', 'ô': 'o', 'ú': 'u',
         },

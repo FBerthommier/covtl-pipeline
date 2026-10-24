@@ -22,6 +22,23 @@ Format: Keep a Changelog — https://keepachangelog.com/
   23π/16) ; elles montrent désormais le rendu v4 courant (larmes,
   périphérie, traînée 300 ms) et les légendes sont alignées
   (`docs/polar_visualization.tex` + PDF recompilé).
+- **Traduction anglais US des commentaires, docstrings et affichages
+  restants** : messages utilisateur du noyau (annonce du locuteur
+  actif `describe()`/`announce()`, replis de la prosodie expressive
+  dans `Pipeline`, avertissement TSV du chargeur de lexiques, sorties
+  du calibreur vocalique et de sa CLI), docstrings et commentaires
+  des g2p multilingues (de/es/it/pt + legacy fr) et du chargeur
+  commun, notes de calibration COVTL des speakers DVTD
+  (s1/s2/m01/w02 — `jd3_constants.py` volontairement intact : son
+  hachage est doublement épinglé (registre + préfixe de test) et déjà
+  l'objet de l'incohérence amont connue) ; `registry.json` limité au
+  rafraîchissement mécanique des 4 `constants_sha256` correspondants.
+  Changement d'affichage uniquement, prouvé par égalité AST (chaînes
+  normalisées) sur les 18 fichiers modifiés ; suite de tests
+  inchangée (152 passed + échec amont jd3 identique). Données
+  légitimes non traduites : lexiques et dictionnaires g2p, symboles
+  IPA, noms de langue natifs, entrées du dictionnaire français legacy
+  annotées en terminologie phonétique française.
 
 ### Documentation
 - **Alignement de la documentation sur le chemin de trajectoire

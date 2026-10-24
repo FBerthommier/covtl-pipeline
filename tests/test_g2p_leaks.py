@@ -16,7 +16,7 @@ never changed any synthesis output):
   dropped them silently ("Butter" -> /bt@/, "Mütter" -> /mt@/,
   "ist" -> /st/). The table now maps ɪ/ʊ/ʏ to the tense i/u/y
   (documented lax -> tense approximation, consistent with the module's
-  "ö/ü toujours tendues" policy).
+  "ö/ü always tense" policy).
 * **g2p-pt** — 'qu' spellings not covered by que/qui/qua/quo (e.g.
   "quente", where the nasalization placeholder breaks the 'que'
   pattern) leaked a raw ``q`` key, absent from the inventory. A
@@ -41,11 +41,11 @@ from vtl_synth.utils.g2p_pt import text_to_sampa_pt
 
 
 # ---------------------------------------------------------------------------
-# g2p-de : table IPA (branche lexique, conversion pure — sans TSV)
+# g2p-de: IPA table (lexicon branch, pure conversion — no TSV)
 # ---------------------------------------------------------------------------
 
 def test_de_ipa_table_lax_to_tense():
-    """ɪ/ʊ/ʏ (lax) -> i/u/y (tendues) : clés I/U/Y inexistantes au cœur."""
+    """ɪ/ʊ/ʏ (lax) -> i/u/y (tense): I/U/Y keys absent from the core."""
     assert ipa_to_keys('mʏtɐ', 'de') == ['m', 'y', 't', '@']
     assert ipa_to_keys('bʊtɐ', 'de') == ['b', 'u', 't', '@']
     assert ipa_to_keys('zɪnt', 'de') == ['z', 'i', 'n', 't']
@@ -54,25 +54,25 @@ def test_de_ipa_table_lax_to_tense():
 
 
 def test_de_exceptions_no_inventory_invalid_keys():
-    """Aucune exception n'émet les clés I/U/Y (inventaire moteur)."""
+    """No exception emits the I/U/Y keys (engine inventory)."""
     for word, pron in _DE_EXCEPTIONS.items():
         assert not ({'I', 'U', 'Y'} & set(pron.split())), (word, pron)
 
 
 def test_de_documented_leak_examples():
-    """Les exemples documentés de la fuite (avant -> après)."""
+    """The documented examples of the leak (before -> after)."""
     w: list = []
-    assert text_to_sampa_de('Butter', w) == 'bu.t@'      # était bUt@
-    assert text_to_sampa_de('Mütter', w) == 'my.t@'      # était mYt@
-    assert text_to_sampa_de('ist', w) == 'ist'           # était Ist
-    assert text_to_sampa_de('und', w) == 'unt'           # était Unt
-    assert text_to_sampa_de('sind', w) == 'zint'         # était zInt
+    assert text_to_sampa_de('Butter', w) == 'bu.t@'      # was bUt@
+    assert text_to_sampa_de('Mütter', w) == 'my.t@'      # was mYt@
+    assert text_to_sampa_de('ist', w) == 'ist'           # was Ist
+    assert text_to_sampa_de('und', w) == 'unt'           # was Unt
+    assert text_to_sampa_de('sind', w) == 'zint'         # was zInt
     assert text_to_sampa_de('Die Butter ist gut.', w) == 'di.bu.t@.ist.gut'
-    assert w == []                                       # zéro fuite muette
+    assert w == []                                       # zero silent leak
 
 
 def test_de_g2p_output_passes_guard():
-    """Oracle garde : toute sortie g2p-de est couverte par l'inventaire."""
+    """Guard oracle: every g2p-de output is covered by the inventory."""
     for txt in ['ist', 'und', 'sind', 'mit', 'nicht', 'unter',
                 'Butter', 'Mütter', 'Die Butter ist gut.',
                 'König und Glück', 'schön', 'über']:
@@ -83,34 +83,34 @@ def test_de_g2p_output_passes_guard():
 
 
 # ---------------------------------------------------------------------------
-# g2p-pt : repli « qu » -> « k »
+# g2p-pt: "qu" fallback -> "k"
 # ---------------------------------------------------------------------------
 
 def test_pt_qu_fallback():
-    """« qu » non couvert par que/qui/qua/quo -> /k/ (plus de fuite 'q')."""
+    """"qu" not covered by que/qui/qua/quo -> /k/ (no more 'q' leak)."""
     w: list = []
-    assert text_to_sampa_pt('quente', w) == 'k@~t@'      # était qu.@~t@
+    assert text_to_sampa_pt('quente', w) == 'k@~t@'      # was qu.@~t@
     assert w == []
     w = []
     assert text_to_sampa_pt('o pão quente', w) == 'o.p@~w.k@~t@'
     assert w == []
-    # non-mot : repli brut (qu + voyelle accentuée, sans nasalisation)
+    # non-word: raw fallback (qu + accented vowel, no nasalization)
     w = []
     s = text_to_sampa_pt('aquêloro', w)
     assert s == 'a.ke.lo.Ru' and w == [], (s, w)
 
 
 def test_pt_qu_covered_paths_unchanged():
-    """que/qui/qua/quo restent prioritaires sur le repli."""
+    """que/qui/qua/quo keep priority over the fallback."""
     w: list = []
-    assert text_to_sampa_pt('aqui', w) == '@.ki'         # lexique (ɐˈki)
+    assert text_to_sampa_pt('aqui', w) == '@.ki'         # lexicon (ɐˈki)
     assert text_to_sampa_pt('quando', w) == 'kw@~du'     # exception
-    assert text_to_sampa_pt('o quê', w) == 'o.ke'        # lexique
+    assert text_to_sampa_pt('o quê', w) == 'o.ke'        # lexicon
     assert w == []
 
 
 def test_pt_g2p_output_passes_guard():
-    """Oracle garde : toute sortie g2p-pt est couverte par l'inventaire."""
+    """Guard oracle: every g2p-pt output is covered by the inventory."""
     for txt in ['quente', 'o pão quente', 'aqui', 'quando', 'o quê',
                 'a casa branca', 'o gato come peixe']:
         w: list = []
@@ -120,11 +120,11 @@ def test_pt_g2p_output_passes_guard():
 
 
 # ---------------------------------------------------------------------------
-# Non-régression : en / fr / es / it inchangés et couverts par l'inventaire
+# Non-regression: en / fr / es / it unchanged and covered by the inventory
 # ---------------------------------------------------------------------------
 
 def test_other_languages_unchanged_and_guard_clean():
-    """Les correctifs de/pt ne touchent pas les autres langues."""
+    """The de/pt fixes do not touch the other languages."""
     cases = [
         (text_to_sampa_en, 'the cat sat on the mat'),
         (text_to_sampa_en, 'clean pan'),

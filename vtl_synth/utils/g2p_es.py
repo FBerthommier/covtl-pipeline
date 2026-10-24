@@ -4,33 +4,32 @@
 """
 g2p_es.py
 =========
-Graphème-phonème espagnol (castillan) : texte orthographique → SAMPA
-moteur. Même architecture que ``g2p_fr.py`` (v2) :
+Spanish (Castilian) grapheme-to-phoneme: orthographic text → engine
+SAMPA. Same architecture as ``g2p_fr.py`` (v2):
 
-  lexique externe (priorité absolue) → dictionnaire d'exceptions →
-  prétraitement contextuel → table de règles (motif le plus long
-  d'abord).
+  external lexicon (absolute priority) → exceptions dictionary →
+  contextual preprocessing → rule table (longest pattern first).
 
-Lexique : ``vtl_synth/data/es_lexicon.tsv`` (Wikipron
-``spa_latn_ca_broad_filtered.tsv`` — castillan AVEC distinción : c/z
-devant e,i → /θ/ ; variable : ``$COVTL_ES_LEXICON``), chargé par le
-module commun :mod:`vtl_synth.utils.lexicon_loader`.
+Lexicon: ``vtl_synth/data/es_lexicon.tsv`` (Wikipron
+``spa_latn_ca_broad_filtered.tsv`` — Castilian WITH distinción: c/z
+before e,i → /θ/; variable: ``$COVTL_ES_LEXICON``), loaded by the
+shared module :mod:`vtl_synth.utils.lexicon_loader`.
 
-Conventions phonétiques (approximations documentées) :
-  * /ɾ/ et /r/ (vibrante simple et roulée) → clé unique ``R`` : le
-    moteur n'a qu'une rhotique (uvulaire, cf. notation.py) ;
-  * /x/ (j, g+e/i) → ``X`` (fricative uvulaire du moteur) ;
-  * /ʝ/ (ll, y) → ``j`` (approximante palatale) — yeísmo ;
-  * h TOUJOURS muet ; v → /b/ (clé ``b``) ;
-  * voyelles : système à 5 phonèmes /a e i o u/ — les cibles ``E``/``O``
-    de l'inventaire (language_vowel_sets) ne sont émises par aucune
-    règle (elles servent de références de calibrage) ;
-  * accents orthographiques = hiatus (tía, baúl) : les règles « à +
-    voyelle atone » ne s'appliquent qu'aux voyelles non accentuées.
+Phonetic conventions (documented approximations):
+  * /ɾ/ and /r/ (tap and trill) → single key ``R``: the engine
+    has only one rhotic (uvular, cf. notation.py);
+  * /x/ (j, g+e/i) → ``X`` (the engine's uvular fricative);
+  * /ʝ/ (ll, y) → ``j`` (palatal approximant) — yeísmo;
+  * h ALWAYS mute; v → /b/ (key ``b``);
+  * vowels: 5-phoneme system /a e i o u/ — the ``E``/``O`` targets
+    of the inventory (language_vowel_sets) are emitted by no rule
+    (they serve as calibration references);
+  * orthographic accents = hiatus (tía, baúl): the "unstressed
+    vowel + vowel" rules only apply to unaccented vowels.
 
-Limitations assumées (mots hors lexique) : pas de resyllabification,
-pas de distinction /b/ occlusif vs /β/ spirant (Wikipron les transcrit
-β mais l'inventaire moteur n'a pas d'approximante labiale).
+Known limitations (words outside the lexicon): no resyllabification,
+no stop /b/ vs spirant /β/ distinction (Wikipron transcribes them
+β but the engine inventory has no labial approximant).
 """
 
 from __future__ import annotations
@@ -44,7 +43,7 @@ from vtl_synth.utils.lexicon_loader import lexicon_for
 
 
 # ===========================================================================
-# Tokenisation (miroir de g2p_fr.py)
+# Tokenization (mirror of g2p_fr.py)
 # ===========================================================================
 
 _SENT_PUNCT_RE = re.compile(r'[.!?;:]+\s*')
@@ -59,18 +58,18 @@ def _normalize_input(text: str) -> str:
 
 
 # ===========================================================================
-# Exceptions (mots fréquents irréguliers pour les règles)
+# Exceptions (frequent words irregular for the rules)
 # ===========================================================================
 
 _ES_EXCEPTIONS: dict = {
-    # conjonction / mots-outils
+    # conjunction / function words
     'y': 'i',
     'más': 'm a s',
     'mí': 'm i',
     'sí': 's i',
     'sé': 's e',
-    'en': 'e n',          # variante 'em' du Wiktionnaire écartée
-    # x exotiques (x = /s/ ou /x/, pas /ks/)
+    'en': 'e n',          # 'em' Wiktionary variant rejected
+    # exotic x (x = /s/ or /x/, not /ks/)
     'méxico': 'X e k o s',
     'méjico': 'X e k o s',
     'mexicana': 'm e X i k a n a',
@@ -81,11 +80,11 @@ _ES_EXCEPTIONS: dict = {
 
 
 # ===========================================================================
-# Table de règles (motif le plus long d'abord)
+# Rule table (longest pattern first)
 # ===========================================================================
 
 _ES_RULES: list = [
-    # --- trigraphes et contextes longs ---
+    # --- trigraphs and long contexts ---
     ('güe', 'g w e'), ('güi', 'g w i'),
     ('gue', 'g e'), ('gui', 'g i'),
     ('que', 'k e'), ('qui', 'k i'),
@@ -105,19 +104,19 @@ _ES_RULES: list = [
     ('je', 'X e'), ('ji', 'X i'),
     ('ce', 'T e'), ('ci', 'T i'),
     ('ñ', 'J'),
-    # --- hiatus accentués (la voyelle accentuée reste pleine) ---
+    # --- accented hiatus (the accented vowel stays full) ---
     ('ía', 'i a'), ('úa', 'u a'), ('aí', 'a i'), ('eí', 'e i'),
     ('oí', 'o i'), ('aú', 'a u'), ('oú', 'o u'), ('úe', 'u e'),
-    # --- diphtongues (i/u atones devant voyelle → glide) ---
+    # --- diphthongs (atonic i/u before a vowel → glide) ---
     ('ia', 'j a'), ('ie', 'j e'), ('io', 'j o'), ('iu', 'j u'),
     ('ua', 'w a'), ('ue', 'w e'), ('uo', 'w o'), ('ui', 'w i'),
     ('ai', 'a j'), ('ei', 'e j'), ('oi', 'o j'),
     ('au', 'a w'), ('eu', 'e w'),
     ('ay', 'a j'), ('ey', 'e j'), ('oy', 'o j'), ('uy', 'w i'),
-    # --- accents → voyelle de base ---
+    # --- accents → base vowel ---
     ('á', 'a'), ('é', 'e'), ('í', 'i'), ('ó', 'o'), ('ú', 'u'),
     ('ü', 'u'),
-    # --- lettres simples ---
+    # --- single letters ---
     ('h', ''),            # h muet
     ('j', 'X'),           # jota /x/ (ja, jo, ju ; je/ji pris ci-dessus)
     ('v', 'b'),           # v → /b/ (pas d'approximante dans le moteur)
@@ -136,14 +135,14 @@ _ES_RULES_SORTED: list = sorted(_ES_RULES, key=lambda r: -len(r[0]))
 
 
 # ===========================================================================
-# Conversion mot → clés
+# Word → keys conversion
 # ===========================================================================
 
 def _word_to_keys(word: str, warnings: list) -> list:
-    """Convertit un mot espagnol en liste de clés SAMPA moteur."""
+    """Converts a Spanish word to a list of engine SAMPA keys."""
     word_lc = word.lower().replace('’', "'")
 
-    # (0) lexique externe — priorité absolue
+    # (0) external lexicon — absolute priority
     lex_keys = lexicon_for('es').get(word_lc)
     if lex_keys:
         return list(lex_keys)
@@ -152,7 +151,7 @@ def _word_to_keys(word: str, warnings: list) -> list:
     if word_lc in _ES_EXCEPTIONS:
         return _ES_EXCEPTIONS[word_lc].split()
 
-    # (b) table de règles (motif le plus long d'abord)
+    # (b) rule table (longest pattern first)
     keys: list = []
     i = 0
     n = len(word_lc)
@@ -173,7 +172,7 @@ def _word_to_keys(word: str, warnings: list) -> list:
 
 
 def _phrase_to_sampa(phrase: str, warnings: list) -> str:
-    """Convertit un syntagme (mots seuls) en SAMPA."""
+    """Converts a phrase (single words) to SAMPA."""
     words = _WORD_RE.findall(phrase)
     if not words:
         return ''
@@ -187,11 +186,11 @@ def _phrase_to_sampa(phrase: str, warnings: list) -> str:
 
 
 def text_to_sampa_es(text: str, warnings: list = None, **kwargs) -> str:
-    """Convertit un texte espagnol en séquence SAMPA moteur.
+    """Converts a Spanish text to an engine SAMPA sequence.
 
-    Même contrat que ``g2p.text_to_sampa`` (anglais) et
-    ``text_to_sampa_fr`` : ponctuation de phrase → ``|``, virgule →
-    pause courte, mots adjacents reliés par ``.`` (coarticulation).
+    Same contract as ``g2p.text_to_sampa`` (English) and
+    ``text_to_sampa_fr``: sentence punctuation → ``|``, comma →
+    short pause, adjacent words linked with ``.`` (coarticulation).
     """
     own = warnings is None
     if own:

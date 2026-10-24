@@ -4,27 +4,27 @@
 """
 g2p_it.py
 =========
-Graphème-phonème italien : texte orthographique → SAMPA moteur.
-Même architecture que ``g2p_fr.py`` (v2) :
+Italian grapheme-to-phoneme: orthographic text → engine SAMPA.
+Same architecture as ``g2p_fr.py`` (v2):
 
-  lexique externe (priorité absolue) → dictionnaire d'exceptions →
-  prétraitement contextuel (s sonore intervocalique / devant
-  consonne sonore) → table de règles (motif le plus long d'abord).
+  external lexicon (absolute priority) → exceptions dictionary →
+  contextual preprocessing (intervocalic / pre-voiced-consonant
+  voiced s) → rule table (longest pattern first).
 
-Lexique : ``vtl_synth/data/it_lexicon.tsv`` (Wikipron
-``ita_latn_broad_filtered.tsv`` ; variable : ``$COVTL_IT_LEXICON``),
-chargé par :mod:`vtl_synth.utils.lexicon_loader`.
+Lexicon: ``vtl_synth/data/it_lexicon.tsv`` (Wikipron
+``ita_latn_broad_filtered.tsv``; variable: ``$COVTL_IT_LEXICON``),
+loaded by :mod:`vtl_synth.utils.lexicon_loader`.
 
-Couverture graphémique : gn /ɲ/, gli /ʎ/ (+gli- final), c(e,i) /tʃ/,
-g(e,i) /dʒ/, ch/gh (h muet), sc(e,i) /ʃ/, z /ts~dz/, doubles
-consonnes (géminées, émises deux fois), diphtongues en glides.
+Graphemic coverage: gn /ɲ/, gli /ʎ/ (+final -gli), c(e,i) /tʃ/,
+g(e,i) /dʒ/, ch/gh (mute h), sc(e,i) /ʃ/, z /ts~dz/, double
+consonants (geminated, emitted twice), diphthongs as glides.
 
-Approximations documentées :
-  * z → ``t s`` par défaut (zero/zona /dz/ passent par le lexique ou
-    les exceptions) ; zz → géminée ``t t s`` ;
-  * /ʎ/ → clé ``L``, /ɲ/ → ``J`` (inventaire moteur) ;
-  * e/o non accentués → mi-femmes ``e``/``o`` (é→e, è→E, ò→O) ;
-  * pas de raffinement vocalique par harmonicité (e atone /e/).
+Documented approximations:
+  * z → ``t s`` by default (zero/zona /dz/ go through the lexicon
+    or the exceptions); zz → geminate ``t t s``;
+  * /ʎ/ → key ``L``, /ɲ/ → ``J`` (engine inventory);
+  * unstressed e/o → mid ``e``/``o`` (é→e, è→E, ò→O);
+  * no vowel refinement by harmony (atonic e /e/).
 """
 
 from __future__ import annotations
@@ -45,44 +45,44 @@ _SENT_PUNCT_RE = re.compile(r'[.!?;:]+\s*')
 _COMMA_RE = re.compile(r'\s*[,–—]\s*')
 _WORD_RE = re.compile(r"[A-Za-zÀÈÉÌÒÙàèéìòóù]+")
 
-_V = 'aeiouàèéìòóù'     # voyelles orthographiques
+_V = 'aeiouàèéìòóù'     # orthographic vowels
 
 
 def _normalize_input(text: str) -> str:
-    """NFC + apostrophes typographiques normalisés."""
+    """NFC + typographic apostrophes normalized."""
     text = unicodedata.normalize('NFC', text)
     return text.replace('’', "'")
 
 
 # ===========================================================================
-# Exceptions (mots fréquents irréguliers pour les règles)
+# Exceptions (frequent words irregular for the rules)
 # ===========================================================================
 
 _IT_EXCEPTIONS: dict = {
-    # h initiale muette (formes du verbe avere)
+    # initial mute h (forms of the verb avere)
     'ho': 'o', 'hai': 'a j', 'ha': 'a', 'hanno': 'a n o',
-    # mots-outils
+    # function words
     'e': 'e', 'ed': 'e d', 'è': 'E', 'o': 'o', 'od': 'o d',
     'più': 'p j u', 'può': 'p w O', 'già': 'dZ a', 'giù': 'dZ u',
     'perché': 'p e R k e', 'poiché': 'p w O i k e',
     'comunque': 'k o m u n k w e', 'questo': 'k w e s t o',
     'quello': 'k w e l l o',
-    # z sonore /dz/ initiale fréquente
+    # frequent initial voiced /dz/ z
     'zero': 'd z e R o', 'zona': 'd z o n a', 'zaino': 'd z a j n o',
     'zucchero': 'd z u k k e R o',
 }
 
 
 # ===========================================================================
-# Prétraitement contextuel
+# Contextual preprocessing
 # ===========================================================================
 
 def _preprocess(word: str) -> str:
-    """Normalisations contextuelles de l'orthographie italienne.
+    """Contextual normalizations of the Italian orthography.
 
-    s sonore /z/ : intervocalique ('casa') ou devant consonde sonore
-    (sb, sd, sg, sl, sm, sn, sv… 'slavo'). Le placeholder SZ est
-    traduit par la règle ('SZ', 'z').
+    Voiced /z/ s: intervocalic ('casa') or before a voiced consonant
+    (sb, sd, sg, sl, sm, sn, sv… 'slavo'). The SZ placeholder is
+    translated by the ('SZ', 'z') rule.
     """
     word = re.sub(r'(?<=[' + _V + r'])s(?=[' + _V + r'])', 'SZ', word)
     word = re.sub(r'(?<!s)s(?=[bdglmnrvjw])', 'SZ', word)
@@ -90,15 +90,15 @@ def _preprocess(word: str) -> str:
 
 
 # ===========================================================================
-# Table de règles (motif le plus long d'abord)
+# Rule table (longest pattern first)
 # ===========================================================================
 
 _IT_RULES: list = [
-    # --- groupes avec glide contextuel (c/g + i atone + voyelle) ---
+    # --- groups with contextual glide (c/g + atonic i + vowel) ---
     ('cia', 'tS a'), ('cio', 'tS o'), ('ciu', 'tS u'),
     ('gia', 'dZ a'), ('gio', 'dZ o'), ('giu', 'dZ u'),
     ('glie', 'L e'), ('glia', 'L a'), ('glio', 'L o'),
-    # --- digraphes / trigraphes ---
+    # --- digraphs / trigraphs ---
     ('ce', 'tS e'), ('ci', 'tS i'),
     ('ge', 'Z e'), ('gi', 'Z i'),
     ('sch', 's k'),        # scherno, scoglio → /sk/
@@ -106,15 +106,15 @@ _IT_RULES: list = [
     ('sc', 's k'),         # sca sco scu → /sk/
     ('gn', 'J'),
     ('ch', 'k'), ('gh', 'g'),
-    ('gli', 'L i'),        # gli final ('figli') ; devant voyelle pris
-                           # par les motifs 4 lettres ci-dessus
+    ('gli', 'L i'),        # final gli ('figli'); before a vowel taken
+                            # by the 4-letter patterns above
     ('gua', 'g w a'), ('guo', 'g w o'),
     ('qu', 'k w'),
     ('zz', 't t s'), ('tz', 't s'), ('z', 't s'),
-    ('h', ''),             # h muet résiduel (hors ch/gh déjà pris)
-    # --- hiatus accentués (voyelle accentuée pleine) ---
+    ('h', ''),             # residual mute h (outside ch/gh already taken)
+    # --- accented hiatus (full accented vowel) ---
     ('í', 'i'), ('ú', 'u'),
-    # --- diphtongues (i/u atones devant voyelle → glide) ---
+    # --- diphthongs (atonic i/u before a vowel → glide) ---
     ('ia', 'j a'), ('ie', 'j e'), ('io', 'j o'), ('iu', 'j u'),
     ('ua', 'w a'), ('ue', 'w e'), ('uo', 'w o'), ('ui', 'w i'),
     ('ai', 'a j'), ('ei', 'e j'), ('oi', 'o j'),
@@ -134,14 +134,14 @@ _IT_RULES_SORTED: list = sorted(_IT_RULES, key=lambda r: -len(r[0]))
 
 
 # ===========================================================================
-# Conversion mot → clés
+# Word → keys conversion
 # ===========================================================================
 
 def _word_to_keys(word: str, warnings: list) -> list:
-    """Convertit un mot italien en liste de clés SAMPA moteur."""
+    """Converts an Italian word to a list of engine SAMPA keys."""
     word_lc = word.lower().replace('’', "'")
 
-    # (0) lexique externe — priorité absolue
+    # (0) external lexicon — absolute priority
     lex_keys = lexicon_for('it').get(word_lc)
     if lex_keys:
         return list(lex_keys)
@@ -150,7 +150,7 @@ def _word_to_keys(word: str, warnings: list) -> list:
     if word_lc in _IT_EXCEPTIONS:
         return _IT_EXCEPTIONS[word_lc].split()
 
-    # (b) prétraitement + table de règles
+    # (b) preprocessing + rule table
     word_lc = _preprocess(word_lc)
     keys: list = []
     i = 0
@@ -172,7 +172,7 @@ def _word_to_keys(word: str, warnings: list) -> list:
 
 
 def _phrase_to_sampa(phrase: str, warnings: list) -> str:
-    """Convertit un syntagme (mots seuls) en SAMPA."""
+    """Converts a phrase (single words) to SAMPA."""
     words = _WORD_RE.findall(phrase)
     if not words:
         return ''
@@ -186,11 +186,11 @@ def _phrase_to_sampa(phrase: str, warnings: list) -> str:
 
 
 def text_to_sampa_it(text: str, warnings: list = None, **kwargs) -> str:
-    """Convertit un texte italien en séquence SAMPA moteur.
+    """Converts an Italian text to an engine SAMPA sequence.
 
-    Même contrat que ``g2p.text_to_sampa`` (anglais) : ponctuation de
-    phrase → ``|``, virgule → pause courte, mots adjacents reliés
-    par ``.`` (coarticulation).
+    Same contract as ``g2p.text_to_sampa`` (English): sentence
+    punctuation → ``|``, comma → short pause, adjacent words
+    linked with ``.`` (coarticulation).
     """
     own = warnings is None
     if own:
