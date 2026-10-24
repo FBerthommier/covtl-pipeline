@@ -68,8 +68,9 @@ POLAR_VERSION = 4
 STEP_MS = 10.0          # 1 gesture step = 10 ms @ 100 Hz
 
 # Display curvature (arXiv:2307.02299 §2.1: "K = 30 for vowel arcs and
-# K = 10 for consonant arcs") — the same convention as
-# trajectory_legacy's K_v / K_c = K_CONSONANT_DEFAULT.  The engine
+# K = 10 for consonant arcs") — the same convention as the
+# reference constants K_VOWEL_DEFAULT = 30 / K_CONSONANT_DEFAULT = 10
+# (core/polar.py).  The engine
 # itself drives the parameters with SYL_K = 1000 (quasi-rectilinear in
 # the z-plane).  nu = +1 bows the vocalic arcs one way, −1 the
 # consonantal sub-arcs the other way, as in the reference CV

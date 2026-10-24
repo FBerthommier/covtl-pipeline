@@ -121,7 +121,8 @@ def inject_active_parameters(Pval: np.ndarray, block_slice: slice,
 
 
 # =============================================================================
-# Legacy compatibility — symbols used by trajectory_legacy and parsing
+# Arc/segment specifications — polar-internal structures; the former
+# trajectory_legacy consumer was removed (single-path trajectory)
 # =============================================================================
 from dataclasses import dataclass, field
 from typing import List, Optional, Tuple as _Tuple, Dict
@@ -175,8 +176,9 @@ def polar_arc(
     Interpolates from the polar target (rho1, theta1) to (rho2, theta2)
     along a curved path in the z-plane: the blend factor follows
     cos²(th/2) over a half-turn sweep, and the end point carries an
-    extra phase nu/K (COVTL reference model). Used by
-    trajectory_legacy.py and parsing.py.
+    extra phase nu/K (COVTL reference model). Used by the polar
+    video renderer (polar_video.py) and re-exported as
+    ``covtl_arc'' in the public API.
 
     Parameters
     ----------

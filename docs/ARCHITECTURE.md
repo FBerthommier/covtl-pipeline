@@ -16,7 +16,7 @@ VTL(t) = B(t) + E_source(t) + E_ortho(t)
 
 | Term | Content | Parameters | Main modules |
 |---|---|---|---|
-| `B(t)` | **Berthommier polar core** — phonetic targets in polar coordinates (rho, theta), arcs, superposition | 15 COVTL tract params | `core/polar.py`, `core/projection.py`, `core/syltraj.py`, `core/trajectory*.py` |
+| `B(t)` | **Berthommier polar core** — phonetic targets in polar coordinates (rho, theta), arcs, superposition | 15 COVTL tract params | `core/polar.py`, `core/projection.py`, `core/syltraj.py`, `core/trajectory.py` |
 | `E_source(t)` | tag-driven extension: amplitude envelope E, voicing V, velum VO/VS, glottis trajectory (11 params), F0 | VO (1) + 11 glottis | `core/tag_system.py`, `core/amplitude_envelope.py`, `core/enveloppe.py`, `core/glottal_source.py`, `core/pulmonary_effort.py`, `core/timers.py`, `core/prosody_source.py` |
 | `E_ortho(t)` | orthogonal branch: TS3 tongue-side shape + speaker-derived VS | TS3 (additive), VS (priority) | `core/orthogonal_params.py`, `core/speaker_jd.py` |
 
@@ -30,7 +30,7 @@ The assembly into VTL frames is `core/assemble_tract.py`
 ```
 vtl_synth/
 ├── __init__.py            public API (Pipeline, PipelineResult, ...)
-├── core/                  the synthesis engine (26 modules)
+├── core/                  the synthesis engine (28 modules)
 │   ├── pipeline.py        Pipeline orchestrator: run / text_to_wav,
 │   │                      F0 declination, WAV writing, video dispatch
 │   ├── build_phrase_tract.py  7-step per-phrase assembly (B + E + ortho)
@@ -51,13 +51,18 @@ vtl_synth/
 │   ├── projection.py      COVTL projection, superposition, target
 │   │                      resolution (voiceless->voiced, g_vel/g_pal,
 │   │                      z_front)
-│   ├── syltraj.py         ACTIVE syllabic trajectory engine ('syl')
-│   ├── trajectory.py      refactored block builder (legacy chain;
-│   │                      single trajectory algorithm)
+│   ├── syltraj.py         ACTIVE syllabic trajectory engine ('syl',
+│   │                      self-contained block builder)
+│   ├── trajectory.py      block builder of the deprecated 'legacy'
+│   │                      chain (single trajectory algorithm — the
+│   │                      old superposition-graph engine is gone)
 │   ├── continuous.py      legacy continuous chain (tokens, syllabification,
 │   │                      gesture/anchor assembly via trajectory.py)
 │   ├── gesture.py         gesture nodes and anchors (legacy chain)
+│   ├── sampa_guard.py     SAMPA input guard (warn/error/off)
 │   ├── tag_system.py      three-level tag architecture (A/B/C)
+│   ├── orthogonal_params.py  orthogonal branch (TS3/VS, §1)
+│   ├── speaker_registry.py  active-speaker registry (§8.1)
 │   ├── amplitude_envelope.py  token-based effort envelope E(t)
 │   ├── enveloppe.py       TimedEnvelope + FeatureTimer (voicing, velum,
 │   │                      F0, aspiration events indexed by anchors)
@@ -180,7 +185,7 @@ per phrase: build_phrase_tract(...)
 | Engine | Flag | Status | Modules |
 |---|---|---|---|
 | `syl` | `--engine syl` (default) | active | `syltraj.py` |
-| `legacy` | `--engine legacy` | deprecated (DeprecationWarning, kept for non-regression) | `continuous.py`, `trajectory*.py`, `gesture.py`, `phonology.py` |
+| `legacy` | `--engine legacy` | deprecated (DeprecationWarning, kept for non-regression) | `continuous.py`, `trajectory.py`, `gesture.py`, `phonology.py` |
 
 The VTL backend is the `vocaltractlab-cython` wheel (VocalTractLab 2.4,
 Paul Krug's Cython binding); `vtl_synth.vtl.api` re-exports the facade
@@ -298,9 +303,10 @@ Module: `video/polar_video.py`; doc: `docs/polar_visualization.pdf`.
   in `lang_pack/lang_blocks/blocks.py`, then
   `python setup_lang.py install --lang <xx>` (calibration: JD3 only,
   §8.2).
-- **Tests**: lightweight pytest suite (111 tests) in `tests/`,
+- **Tests**: lightweight pytest suite (153 tests) in `tests/`,
   including end-to-end non-regression against the per-speaker
-  `regression_baselines*.json`.
+  `regression_baselines*.json` and the single-trajectory-path
+  guards (`tests/test_single_trajectory_path.py`).
 
 See also `docs/CONVENTIONS.md` (naming, physical notation) and
 `docs/manual.pdf` (user manual with the full model description).

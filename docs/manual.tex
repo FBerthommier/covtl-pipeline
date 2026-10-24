@@ -286,8 +286,8 @@ reference repository; the synthesis path itself is entirely different
       nasality with carry-over, glottal effort and F0 declination
       (\S\ref{sec:source}).
 \item Syllabic trajectory engine (\texttt{syl}) with pause handling and
-      phrase-final holds; a legacy superposition-graph engine remains
-      selectable (\S\ref{sec:syltraj}).
+      phrase-final holds; a deprecated pre-\texttt{syltraj} alignment
+      engine (\texttt{legacy}) remains selectable (\S\ref{sec:syltraj}).
 \item Inspectors for the tract sequence: \texttt{inspect} (tables,
       ranges) and the graphical \texttt{plot-tract}.
 \item Per-speaker non-regression baselines (jd3, s1, s2, m01, w02)
@@ -1058,14 +1058,19 @@ is additive on TS3 and priority-based on VS, and can be disabled with
 \subsection{The legacy engine}
 
 The \texttt{legacy} engine (\texttt{-{}-engine legacy}) is the
-pre-\texttt{syltraj} chain: it builds explicit superposition graphs in
-the complex plane (CV, CVC, CCV graphs per syllable, executed by
-\texttt{execute\_superposition\_segment}) with the reference constants
-\(K_v = 30\), \(K_c = 10\), \(\nu = 1\), \(p_{\mathrm{exp}} = 2\),
-scaling the consonantal branch to \(n_{\mathrm{arcs}} \cdot T \cdot
-t_{\mathrm{cons}}\) and the vocalic branch to \(2T \cdot t_{\mathrm{voy}}\).
-It is deprecated (a \texttt{DeprecationWarning} is emitted) and kept for
-non-regression.
+pre-\texttt{syltraj} gesture/anchor chain: it parses the phrase into
+gesture nodes and anchors (\texttt{core/gesture.py}) and walks the
+anchor pairs with the block builder \texttt{build\_global\_pval}
+of \texttt{core/trajectory.py} (plateaus at anchors, \texttt{arc\_B}
+transitions), with the reference constants \(K_v = 30\), \(K_c = 10\),
+\(\nu = 1\), \(p_{\mathrm{exp}} = 2\) and fixed block timing
+(\(T_{\mathrm{cons}} = T_{\mathrm{voy}} = 160\)\,ms, pauses 100/200\,ms
+--- not parameterizable, unlike the active engine). It is deprecated
+(a \texttt{DeprecationWarning} is emitted) and kept as an alignment
+reference for non-regression. The former superposition-graph executor
+of this chain (explicit CV/CVC/CCV graphs in the complex plane) was
+removed: synthesis follows a single trajectory algorithm per engine,
+guarded by \texttt{tests/test\_single\_trajectory\_path.py}.
 
 %==============================================================================
 \section{The source model: envelopes and the glottal source}\label{sec:source}

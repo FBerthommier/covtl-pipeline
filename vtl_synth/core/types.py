@@ -165,7 +165,7 @@ class GestureNode:
     """
     # --- Common fields ---
     # RISK-005: seg_key is the canonical field; `key` is a read alias
-    # (property below) for trajectory_legacy compatibility.
+    # (property below), used throughout syltraj.py.
     seg_key: str = ''
     kind: str = 'V'
 

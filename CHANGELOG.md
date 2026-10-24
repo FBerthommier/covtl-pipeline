@@ -5,6 +5,25 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
+### Documentation
+- **Alignement de la documentation sur le chemin de trajectoire
+  unique** : `docs/manual.tex` (et `manual.pdf` recompilé) — la
+  section « The legacy engine » décrivait encore l'ancien exécuteur
+  superposition-graph (`execute_superposition_segment`, graphes
+  CV/CVC/CCV explicites) ; elle décrit désormais la chaîne réelle
+  (nœuds/ancres `gesture.py` + block builder `trajectory.py`, timing
+  fixe T_cons=T_voy=160 ms, non paramétrable) ; la puce « Key
+  features » affirmait à tort qu'un « legacy superposition-graph
+  engine » restait sélectionnable. `docs/ARCHITECTURE.md` —
+  `core/trajectory*.py` → `core/trajectory.py` (B(t) et tableau des
+  moteurs), arborescence core/ portée à 28 modules (ajout de
+  `orthogonal_params.py`, `sampa_guard.py`, `speaker_registry.py`),
+  compteur de tests 111 → 153 avec mention des gardes
+  single-trajectory-path, précision que `syltraj` embarque son
+  propre block builder. Commentaires de code périmés révisés
+  (`polar.py` ×2, `types.py`, `polar_video.py` : plus aucune
+  référence active à `trajectory_legacy`).
+
 ### Removed
 - **Suppression du moteur de trajectoire double (trajectory_legacy)** :
   le moteur superposition-graph `vtl_synth/core/trajectory_legacy.py`
