@@ -52,10 +52,10 @@ vtl_synth/
 │   │                      resolution (voiceless->voiced, g_vel/g_pal,
 │   │                      z_front)
 │   ├── syltraj.py         ACTIVE syllabic trajectory engine ('syl')
-│   ├── trajectory.py      refactored block builder (legacy chain)
-│   ├── trajectory_legacy.py  superposition-graph engine (legacy)
+│   ├── trajectory.py      refactored block builder (legacy chain;
+│   │                      single trajectory algorithm)
 │   ├── continuous.py      legacy continuous chain (tokens, syllabification,
-│   │                      CV/CVC/CCV executors)
+│   │                      gesture/anchor assembly via trajectory.py)
 │   ├── gesture.py         gesture nodes and anchors (legacy chain)
 │   ├── tag_system.py      three-level tag architecture (A/B/C)
 │   ├── amplitude_envelope.py  token-based effort envelope E(t)

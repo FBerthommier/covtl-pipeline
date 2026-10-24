@@ -5,6 +5,24 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
+### Removed
+- **Suppression du moteur de trajectoire double (trajectory_legacy)** :
+  le moteur superposition-graph `vtl_synth/core/trajectory_legacy.py`
+  (1025 lignes) et son cluster d'exécuteurs morts dans
+  `continuous.py` (`_execute_syllable_element`, `_execute_*_diphthong*`,
+  `_build_{cv,cccv,ccvc,cvc_extended}_graph`, `_build_transition_arc`,
+  `_generate_pause` — 1189 lignes) ont été supprimés. Ces fonctions
+  n'étaient appelées par aucun chemin de production ni de test (le
+  moteur actif est `syltraj` via `engine='syl'` par défaut ; le chemin
+  d'alignement déprécié `engine='legacy'` utilise déjà
+  `trajectory.py`). La synthèse de production suit désormais un
+  chemin algorithmique unique, prouvé par le garde-fou
+  `tests/test_single_trajectory_path.py` (module non importable,
+  scan AST des imports, moteur par défaut = syltraj, chemin
+  déprécié = trajectory.py). Sorties numériques par défaut
+  **bit-identiques** sur le corpus de référence
+  (16/16 `test_regression_baselines.py` inchangés).
+
 ### Fixed
 - **Polar display teardrop** : les sous-arcs consonantiques (branche
   bleue) étaient tracés avec la phase ν/K portée par le point
