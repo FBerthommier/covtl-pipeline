@@ -5,6 +5,28 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
+### Added
+- **Démos HTML interactives** (`examples/html/`) : pages autonomes
+  (aucun serveur ni réseau, ouverture directe en `file://`) générées
+  par `python examples/html/make_html_demos.py` — `index.html` + une
+  page par phrase (`polar_demo_fr.html` « ba.da.ga »,
+  `polar_demo_en.html` « this is easy for us », mêmes paramètres que
+  la démo MP4). Chaque page embarque ses données (trajectoires
+  `.polar` v4 à 100 Hz, frames sagittales SVG du VTL à 25 Hz, audio
+  AAC en data URI) et restitue sur canvas le contrepoint interactif
+  du MP4 bi-panel : vue sagittale, figure polaire à deux branches
+  (rendu identique à `render_polar_frame` — K=30/ν=+1 vocalique,
+  K=10/ν=−1 consonantique, traînée estompée 300 ms, étiquettes
+  phonémiques transitoires, inventaire), traces ρ/θ avec bandes
+  phonémiques, et transport complet (lecture/pause, scrub, vitesse
+  0,25×–1×, boucle, clavier). Vérifié : équivalence géométrique des
+  figures polaires avec les figures du manuel (`fig_frame_b`,
+  `fig_frame_da`), aller-retour exact des données embarquées vers
+  les sorties du pipeline, aucune erreur console. Actifs de dépôt
+  uniquement : jamais installés par pip (exclues de la roue et du
+  sdist — allowlist `vtl_synth*` du pyproject + `prune examples` du
+  MANIFEST.in, vérifié sur les distributions construites).
+
 ### Changed
 - **Traînée du polar vidéo portée à 300 ms par défaut** : la trace
   estompée de chaque branche (vocalique rouge / consonantique bleue)

@@ -1,0 +1,5 @@
+# examples/ (demo scripts, MP4s, interactive HTML demos) is
+# repository-only: it never ships in the sdist (this prune) nor in
+# the wheel (the vtl_synth* allowlist in pyproject.toml) —
+# pip install pulls in vtl_synth/ only.
+prune examples

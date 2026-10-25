@@ -275,7 +275,7 @@ never the tract. Full guide: `docs/expressive_prosody.pdf`.
 
 ### 8.4 Polar visualization (add-on 4)
 
-`--polar` builds a `.polar` intermediate (100 Hz, **format v3**: two
+`--polar` builds a `.polar` intermediate (100 Hz, **format v4**: two
 dissociated trajectories `vocalic`/`consonantal` + phoneme timing;
 v2 files stay readable) then renders the dual-panel MP4
 (sagittal | polar) at 25 Hz — red vocalic branch, blue consonantal
@@ -286,6 +286,19 @@ frames are off-manifold inside clusters — v2's single zigzag path is
 kept only as the `polar_from_pval` diagnostic). The work directory is
 purged and the frame count verified before encoding (stale-frame fix).
 Module: `video/polar_video.py`; doc: `docs/polar_visualization.pdf`.
+
+The **interactive HTML counterpart** ships in `examples/html/`:
+`make_html_demos.py` regenerates, from `polar_player.template.html`,
+one self-contained page per demo phrase plus an `index.html` landing
+page. Each page embeds its whole data set (v4 `.polar` trajectories,
+sagittal SVG frames, AAC audio as a data URI — no fetch, no server,
+no network) and replays on `<canvas>` the polar figure of
+`render_polar_frame` (dual branch, 300 ms fading trail, transient
+phoneme labels, inventory dots), the sagittal view and the ρ/θ
+time traces, with the embedded `<audio>` element as the playback
+master clock. The README links directly to the rendered pages, so
+the demos open in a browser straight from the repository without
+cloning.
 
 ## 9. Extension points
 

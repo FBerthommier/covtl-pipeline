@@ -58,6 +58,9 @@ Repository = "https://github.com/fberthommier/covtl-pipeline"
 Documentation = "https://www.vocaltractlab.de"
 
 [tool.setuptools.packages.find]
+# allowlist: only vtl_synth* ships with pip install — examples/
+# (incl. the interactive HTML demos), docs/ and lang_pack/ are
+# repository-only, never packaged (sdist guard: MANIFEST.in).
 where = ["."]
 include = ["vtl_synth*"]
 
