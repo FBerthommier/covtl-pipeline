@@ -84,6 +84,13 @@
                 border-radius: 50%; vertical-align: -1px; margin-right: 5px;
                 border: 1px solid rgba(0,0,0,.35); }
   .legend .sw.line { border-radius: 6px; height: 4px; width: 16px; }
+  /* Narrow screens (phones): trim the two movie panels so the movies
+   and the transport box share the viewport without scrolling. */
+@media (max-width: 700px) {
+  #sagittalWrap { width: min(68vw, 470px); }
+  #polarWrap { width: min(74vw, 520px); }
+}
+
   #tracesCard { margin-top: 18px; padding-bottom: 8px; }
   #tracesWrap { width: 100%; }
   #tracesCanvas { height: 196px; }
@@ -146,10 +153,6 @@
       </div>
     </div>
   </div>
-  <div class="card" id="tracesCard">
-    <canvas id="tracesCanvas"></canvas>
-    <div class="caption">branch trajectories &rho;, &theta; (t) &mdash; shaded bands: active phoneme spans (red = vowel, blue = consonant) &middot; vertical line: current time</div>
-  </div>
   <div class="transport">
     <button id="btnPlay" aria-label="play / pause"></button>
     <div class="grow">
@@ -167,8 +170,12 @@
     <label><input type="checkbox" id="loop"> loop</label>
     <label><input type="checkbox" id="mute"> mute</label>
   </div>
-</main>
 <p class="hint">Keys: <kbd>space</kbd> play / pause &middot; <kbd>&larr;</kbd>/<kbd>&rarr;</kbd> step &plusmn;10 ms (<kbd>shift</kbd> &plusmn;100 ms) &middot; <kbd>home</kbd>/<kbd>end</kbd> jump &middot; click or drag on the traces chart to scrub. <a href="index.html">All demos</a>.</p>
+<div class="card" id="tracesCard">
+    <canvas id="tracesCanvas"></canvas>
+    <div class="caption">branch trajectories &rho;, &theta; (t) &mdash; shaded bands: active phoneme spans (red = vowel, blue = consonant) &middot; vertical line: current time</div>
+  </div>
+  </main>
 <footer>
   <p id="provenance"></p>
   <p>Self-contained page (offline, no server, no network): polar trajectories <span id="fmtNote"></span>, sagittal frames from <code>vocaltractlab_cython.tract_state_to_svg</code>, audio AAC &mdash; all embedded at build time. Regenerate with <code>python examples/html/make_html_demos.py</code>. Rendering mirrors <code>vtl_synth/video/polar_video.py</code> (<code>render_polar_frame</code>): display curvature K=30 (&nu;=+1) vocalic / K=10 (&nu;=&minus;1) consonantal, reference model of arXiv:2307.02299 &sect;2.1 &mdash; not the quasi-rectilinear SYL_K=1000 parameter arcs of the synthesis engine.</p>
