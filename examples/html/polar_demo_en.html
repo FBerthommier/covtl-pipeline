@@ -84,6 +84,13 @@
                 border-radius: 50%; vertical-align: -1px; margin-right: 5px;
                 border: 1px solid rgba(0,0,0,.35); }
   .legend .sw.line { border-radius: 6px; height: 4px; width: 16px; }
+  /* Narrow screens (phones): trim the two movie panels so the movies
+   and the transport box share the viewport without scrolling. */
+@media (max-width: 700px) {
+  #sagittalWrap { width: min(68vw, 470px); }
+  #polarWrap { width: min(74vw, 520px); }
+}
+
   #tracesCard { margin-top: 18px; padding-bottom: 8px; }
   #tracesWrap { width: 100%; }
   #tracesCanvas { height: 196px; }
