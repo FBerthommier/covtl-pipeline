@@ -324,7 +324,7 @@ def describe(f0_used: Optional[float] = None) -> str:
 
     Two lines (plus explicit warnings when layers disagree)::
 
-        Speaker actif : s1 (DVTD sujet 1 male)  constants=f100ab03b579  f0_default=114.908 Hz
+        Active speaker: s1 (DVTD sujet 1 male)  constants=f100ab03b579  f0_default=114.908 Hz
                         geometry: s1  ortho: s1  audio wheel: s1  video: s1
 
     ``f0_used`` (Hz) is mentioned on a third line when it differs from
@@ -337,14 +337,14 @@ def describe(f0_used: Optional[float] = None) -> str:
         desc = entry.get('description', '')
         f0_def = entry.get('f0_default')
     except KeyError:
-        name, desc, f0_def = DEFAULT_NAME, 'registre indisponible', None
+        name, desc, f0_def = DEFAULT_NAME, 'registry unavailable', None
 
     wheel = wheel_speaker_name()
-    wheel_txt = wheel if wheel is not None else 'indisponible'
-    video_txt = wheel if wheel is not None else 'indisponible'
+    wheel_txt = wheel if wheel is not None else 'unavailable'
+    video_txt = wheel if wheel is not None else 'unavailable'
 
     lines = [
-        f"Speaker actif : {name} ({desc})  "
+        f"Active speaker: {name} ({desc})  "
         f"constants={installed_constants_hash()}  "
         f"f0_default={f0_def} Hz",
         f"{'':16s}geometry: {name}  ortho: {name}  "
@@ -353,21 +353,21 @@ def describe(f0_used: Optional[float] = None) -> str:
 
     if wheel is not None and wheel != name:
         lines.append(
-            f"{'':16s}!! INCOHERENCE audio : la ressource wheel contient "
-            f"'{wheel}' alors que le speaker actif est '{name}'. "
-            f"(install incomplet ? ou process lance avant l'install : "
-            f"la DLL charge son .speaker a l'import, relancer le programme)")
+            f"{'':16s}!! AUDIO INCONSISTENCY: the wheel resource contains "
+            f"'{wheel}' while the active speaker is '{name}'. "
+            f"(incomplete install? or the process was started before the "
+            f"install: the DLL loads its .speaker at import time — restart the program)")
     if not constants_coherent():
         lines.append(
-            f"{'':16s}!! INCOHERENCE constants : le constants.py installe "
-            f"({installed_constants_hash()}) != source du speaker actif "
-            f"({active_constants_hash()}) — relancer install_speaker.py")
+            f"{'':16s}!! CONSTANTS INCONSISTENCY: the installed constants.py "
+            f"({installed_constants_hash()}) != active speaker source "
+            f"({active_constants_hash()}) — rerun install_speaker.py")
 
     if f0_used is not None and f0_def is not None \
             and abs(float(f0_used) - float(f0_def)) > 1e-9:
         lines.append(
-            f"{'':16s}f0 force : {f0_used:.3f} Hz "
-            f"(f0_default du speaker : {f0_def} Hz)")
+            f"{'':16s}f0 forced: {f0_used:.3f} Hz "
+            f"(speaker f0_default: {f0_def} Hz)")
 
     return '\n'.join(lines)
 

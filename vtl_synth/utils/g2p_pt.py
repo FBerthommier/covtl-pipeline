@@ -4,35 +4,37 @@
 """
 g2p_pt.py
 =========
-Graphème-phonème portugais (européen) : texte orthographique → SAMPA
-moteur. Même architecture que ``g2p_fr.py`` (v2) :
+European Portuguese grapheme-to-phoneme: orthographic text → engine
+SAMPA. Same architecture as ``g2p_fr.py`` (v2):
 
-  lexique externe (priorité absolue) → dictionnaire d'exceptions →
-  prétraitement contextuel (nasalisation, s/z sonores, finales) →
-  table de règles (motif le plus long d'abord).
+  external lexicon (absolute priority) → exceptions dictionary →
+  contextual preprocessing (nasalization, voiced s/z, finals) →
+  rule table (longest pattern first).
 
-Lexique : ``vtl_synth/data/pt_lexicon.tsv`` (Wikipron
-``por_latn_po_broad_filtered.tsv`` — portugais EUROPÉEN ; variable :
-``$COVTL_PT_LEXICON``), chargé par :mod:`vtl_synth.utils.lexicon_loader`.
+Lexicon: ``vtl_synth/data/pt_lexicon.tsv`` (Wikipron
+``por_latn_po_broad_filtered.tsv`` — EUROPEAN Portuguese;
+variable: ``$COVTL_PT_LEXICON``), loaded by
+:mod:`vtl_synth.utils.lexicon_loader`.
 
-Couverture graphémique : ã/õ, ão/ães/õe/ões, nasales en V+(m|n)+C,
-ç /s/, nh /ɲ/, lh /ʎ/, ch /ʃ/, ss, s final /ʃ/, z final /ʃ/, g+e/i
-/ʒ/, qu/gu, finales -o → /u/ et -e → /ɐ/, diphtongues en glides.
+Graphemic coverage: ã/õ, ão/ães/õe/ões, nasals in V+(m|n)+C,
+ç /s/, nh /ɲ/, lh /ʎ/, ch /ʃ/, ss, final s /ʃ/, final z /ʃ/, g+e/i
+/ʒ/, qu/gu, finals -o → /u/ and -e → /ɐ/, diphthongs as glides.
 
-Convention nasale (moteur) : voyelle nasale = base + '~' (notation.py ;
-syltraj retire le '~' avant lookup) — ex. cão → ``k @~ w``. En port.
-européen, /ɐ̃/ (ã, am/an, em/en nasals) → ``@~``, base ``@`` (ɐ) qui
-possède sa propre cible calibrée (language_vowel_sets 'pt').
+Nasal convention (engine): nasal vowel = base + '~' (notation.py;
+syltraj strips the '~' before lookup) — e.g. cão → ``k @~ w``. In
+European Portuguese, /ɐ̃/ (ã, nasal am/an, em/en) → ``@~``, base
+``@`` (ɐ) which has its own calibrated target (language_vowel_sets
+'pt').
 
-Approximations documentées :
-  * rhotiques (ɾ, r, ʁ) → clé unique ``R`` (seule rhotique du moteur) ;
-  * l vélaire final (-al, -el, -ol : 'sol') → ``l`` simple ;
-  * e/o atones NON finaux non réduits (européen : e → [ɨ], o → [u]
-    selon le contexte ; le lexique porte les réductions exactes) ;
-  * pas de distinction /b/ vs /β/ (moteur sans approximante) ;
-  * « qu » résiduel (non couvert par que/qui/qua/quo, ex.
-    « quente ») -> /k/ (CORRECTIONS v2.1, fuite g2p-pt — avant :
-    'q' fuyait dans la sortie SAMPA).
+Documented approximations:
+  * rhotics (ɾ, r, ʁ) → single key ``R`` (the engine's only rhotic);
+  * final velar l (-al, -el, -ol: 'sol') → plain ``l``;
+  * NON-final atonic e/o not reduced (European: e → [ɨ], o → [u]
+    depending on context; the lexicon carries the exact reductions);
+  * no /b/ vs /β/ distinction (engine without an approximant);
+  * residual "qu" (not covered by que/qui/qua/quo, e.g.
+    "quente") -> /k/ (CORRECTIONS v2.1, g2p-pt leak — before:
+    a raw 'q' leaked into the SAMPA output).
 """
 
 from __future__ import annotations
@@ -53,21 +55,21 @@ _SENT_PUNCT_RE = re.compile(r'[.!?;:]+\s*')
 _COMMA_RE = re.compile(r'\s*[,–—]\s*')
 _WORD_RE = re.compile(r"[A-Za-zÁÀÂÃÇÉÊÍÓÔÕÚáàâãçéêíóôõú]+")
 
-_V = 'aeiouáàâãéêíóôõú'   # voyelles orthographiques
+_V = 'aeiouáàâãéêíóôõú'   # orthographic vowels
 
 
 def _normalize_input(text: str) -> str:
-    """NFC + apostrophes typographiques normalisés."""
+    """NFC + typographic apostrophes normalized."""
     text = unicodedata.normalize('NFC', text)
     return text.replace('’', "'")
 
 
 # ===========================================================================
-# Exceptions (mots fréquents irréguliers pour les règles)
+# Exceptions (frequent words irregular for the rules)
 # ===========================================================================
 
 _PT_EXCEPTIONS: dict = {
-    # mots-outils (voyelles pleines, nasales correctes)
+    # function words (full vowels, correct nasals)
     'e': 'e', 'é': 'e', 'ou': 'o w', 'não': 'n @~ w',
     'são': 's @~ w', 'nós': 'n O S', 'mais': 'm a j S',
     'mas': 'm a S', 'muito': 'm w i t u',
@@ -77,7 +79,7 @@ _PT_EXCEPTIONS: dict = {
     'quando': 'k w @~ d u',
     'porque': 'p u R k e', 'também': 't @~ b e~ j',
     'agora': 'a g O R a', 'ainda': 'a j d a',
-    # x = /ks/ (défaut /ʃ/)
+    # x = /ks/ (default /ʃ/)
     'táxi': 't a k s i', 'tóxico': 't O k s i k u',
     'axioma': 'a k s j o~ m @',
 }
@@ -87,34 +89,34 @@ _PT_EXCEPTIONS: dict = {
 # Prétraitement contextuel
 # ===========================================================================
 
-# Nasalisation V + (m|n) + C/final. Les digraphes nh/lh sont protégés
-# (n devant h n'est pas un nasal ; l devant h non plus). Le m/n tombe,
-# la voyelle porte le tilde : a/e → @~ (ɐ̃ européen), i → i~, o → o~,
-# u → u~. Placeholders : AN→@~, IN→i~, ON→o~, UN→u~ (traduits par les
-# règles 'AN' etc.).
+# Nasalization V + (m|n) + C/final. The nh/lh digraphs are protected
+# (n before h is not a nasal; neither is l before h). The m/n drops,
+# the vowel carries the tilde: a/e → @~ (European ɐ̃), i → i~, o → o~,
+# u → u~. Placeholders: AN→@~, IN→i~, ON→o~, UN→u~ (translated by
+# the 'AN' etc. rules).
 _NASAL_MAP = {'a': 'AN', 'e': 'AN', 'i': 'IN', 'o': 'ON', 'u': 'UN'}
 
 
 def _preprocess(word: str) -> str:
-    """Normalisations contextuelles de l'orthographie portugaise.
+    """Contextual normalizations of the Portuguese orthography.
 
-    1. Nasales finales -am/-em/-ém/-êm/-im/-om/-um (diphtongues
-       nasales : /ɐ̃w̃/, /ɐ̃j̃~ẽj̃/, /ĩ/, /õ/, /ũ/) → placeholders.
-    2. Nasalisation interne V + m/n + C (le n de nh est protégé ;
-       géminées nn/mm protégées).
-    3. s sonore : intervocalique ou devant consonde sonore → /z/ ;
-       s/z finaux → /ʃ/ (européen). Placeholders SZ / SF.
-    4. Finales atones : -o → u, -e → @ — SAUF après ã/õ (ão, ãe, õe…)
-       et après u (que, gue : le e de ces digraphes n'est pas atone).
+    1. Final nasals -am/-em/-ém/-êm/-im/-om/-um (nasal diphthongs:
+       /ɐ̃w̃/, /ɐ̃j̃~ẽj̃/, /ĩ/, /õ/, /ũ/) → placeholders.
+    2. Internal nasalization V + m/n + C (the n of nh is protected;
+       nn/mm geminates protected).
+    3. Voiced s: intervocalic or before a voiced consonant → /z/;
+       final s/z → /ʃ/ (European). Placeholders SZ / SF.
+    4. Atonic finals: -o → u, -e → @ — EXCEPT after ã/õ (ão, ãe, õe…)
+       and after u (que, gue: the e of these digraphs is not atonic).
     """
-    # --- 1. nasales finales -------------------------------------------
+    # --- 1. final nasals -------------------------------------------
     word = re.sub(r'am$', 'AMF', word)
     word = re.sub(r'(em|ém|êm)$', 'EMF', word)
     word = re.sub(r'im$', 'IMF', word)
     word = re.sub(r'om$', 'OMF', word)
     word = re.sub(r'um$', 'UMF', word)
 
-    # --- 2. nasalisation interne V + m/n + (C ou fin) ------------------
+    # --- 2. internal nasalization V + m/n + (C or end) ------------------
     out = []
     i = 0
     while i < len(word):
@@ -126,7 +128,7 @@ def _preprocess(word: str) -> str:
                     and not (ch == 'n' and nxt == 'h') \
                     and not (ch == 'm' and nxt == 'm') \
                     and not (ch == 'n' and nxt == 'n'):
-                out[-1] = _NASAL_MAP[prev]      # voyelle nasalisée
+                out[-1] = _NASAL_MAP[prev]      # nasalized vowel
                 i += 1
                 continue
         # digraphes protégés : nh → NH, lh → LH
@@ -151,50 +153,50 @@ def _preprocess(word: str) -> str:
 
 
 # ===========================================================================
-# Table de règles (motif le plus long d'abord)
+# Rule table (longest pattern first)
 # ===========================================================================
 
 _PT_RULES: list = [
-    # --- placeholders du prétraitement ---
+    # --- preprocessing placeholders ---
     ('NHDIG', 'J'), ('LHDIG', 'L'),
     ('AN', '@~'), ('IN', 'i~'), ('ON', 'o~'), ('UN', 'u~'),
     ('SZ', 'z'), ('SF', 'S'),
     ('OFIN', 'u'), ('EFIN', '@'),
     ('AMF', '@~ w'), ('EMF', 'e~ j'), ('IMF', 'i~'),
     ('OMF', 'o~'), ('UMF', 'u~'),
-    # --- nasales orthographiques (tilde) ---
+    # --- orthographic nasals (tilde) ---
     ('ões', 'o~ j S'), ('ães', '@~ j S'), ('õe', 'o~ j'),
     ('ãe', '@~ j'),
     ('ão', '@~ w'), ('ã', '@~'), ('õ', 'o~'),
-    # --- graphies contextuelles c/g + voyelle --------------------------
+    # --- contextual spellings c/g + vowel --------------------------
     ('gue', 'g e'), ('gui', 'g i'),
     ('que', 'k e'), ('qui', 'k i'),
     ('ge', 'Z e'), ('gi', 'Z i'),
     ('qua', 'k w a'), ('quo', 'k w o'),
-    # CORRECTIONS v2.1 (fuite g2p-pt, 2026-10-23) : repli « qu »
-    # pour les graphies non couvertes par que/qui/qua/quo (qu +
-    # voyelle nasalisée : « quente » -> placeholder AN, donc « qu »
-    # nu ; quê, quá…) — 'q' fuyait dans la sortie SAMPA (clé
-    # absente de l'inventaire moteur, droppée en silence).
+    # CORRECTIONS v2.1 (g2p-pt leak, 2026-10-23): "qu" fallback
+    # for spellings not covered by que/qui/qua/quo (qu + nasalized
+    # vowel: "quente" -> placeholder AN, hence a bare "qu";
+    # quê, quá…) — a raw 'q' leaked into the SAMPA output (key
+    # absent from the engine inventory, silently dropped).
     ('qu', 'k'),
     ('gua', 'g w a'), ('guo', 'g w o'),
     ('ç', 's'), ('ch', 'S'), ('ss', 's'),
     ('lh', 'L'), ('nh', 'J'),
     ('rr', 'R'),
-    # --- hiatus accentués (voyelle accentuée pleine) --------------------
+    # --- accented hiatus (full accented vowel) --------------------
     ('ía', 'i a'), ('úa', 'u a'), ('aí', 'a i'), ('eí', 'e i'),
     ('oí', 'o i'), ('aú', 'a u'), ('oú', 'o u'),
-    # --- diphtongues DESCENDANTES uniquement (les montantes de l'écrit
-    #     portugais sont majoritairement des hiatus : família, dia,
-    #     ruído — les vraies montantes passent par qua/gua/lexique) ----
+    # --- FALLING diphthongs only (the rising sequences of Portuguese
+    #     orthography are mostly hiatus: família, dia, ruído — the
+    #     true rising ones go through qua/gua/lexicon) ----
     ('ai', 'a j'), ('ei', 'e j'), ('oi', 'o j'),
     ('au', 'a w'), ('eu', 'e w'), ('ou', 'o w'),
-    # --- accents → voyelles ---------------------------------------------
+    # --- accents → vowels ---------------------------------------------
     ('á', 'a'), ('à', 'a'), ('â', '@'), ('é', 'e'), ('ê', 'e'),
     ('í', 'i'), ('ó', 'o'), ('ô', 'o'),
     # --- lettres simples -------------------------------------------------
     ('g', 'g'), ('j', 'Z'), ('x', 'S'), ('r', 'R'),
-    ('h', ''),             # h muet (hoje, hospital…)
+    ('h', ''),             # mute h (hoje, hospital…)
     ('a', 'a'), ('e', 'e'), ('i', 'i'), ('o', 'o'), ('u', 'u'),
     ('b', 'b'), ('c', 'k'), ('d', 'd'), ('f', 'f'), ('l', 'l'),
     ('m', 'm'), ('n', 'n'), ('p', 'p'), ('s', 's'), ('t', 't'),
@@ -205,14 +207,14 @@ _PT_RULES_SORTED: list = sorted(_PT_RULES, key=lambda r: -len(r[0]))
 
 
 # ===========================================================================
-# Conversion mot → clés
+# Word → keys conversion
 # ===========================================================================
 
 def _word_to_keys(word: str, warnings: list) -> list:
-    """Convertit un mot portugais en liste de clés SAMPA moteur."""
+    """Converts a Portuguese word to a list of engine SAMPA keys."""
     word_lc = word.lower().replace('’', "'")
 
-    # (0) lexique externe — priorité absolue
+    # (0) external lexicon — absolute priority
     lex_keys = lexicon_for('pt').get(word_lc)
     if lex_keys:
         return list(lex_keys)
@@ -221,7 +223,7 @@ def _word_to_keys(word: str, warnings: list) -> list:
     if word_lc in _PT_EXCEPTIONS:
         return _PT_EXCEPTIONS[word_lc].split()
 
-    # (b) prétraitement + table de règles
+    # (b) preprocessing + rule table
     word_lc = _preprocess(word_lc)
     keys: list = []
     i = 0

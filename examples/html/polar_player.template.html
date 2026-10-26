@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polar planning demo</title>
+<!--
+  polar_player.template.html -- interactive polar-planning demo (template).
+
+  Self-contained HTML counterpart of the dual-panel MP4
+  (vtl_synth.video.polar_video): mid-sagittal vocal tract | polar
+  planning figure, dual branch model (vocalic z_v in red, consonantal
+  z_c in blue), synchronized with the synthesized audio.
+
+  This file is a TEMPLATE consumed by examples/html/make_html_demos.py:
+  the single placeholder token in the script block below is replaced by
+  the embedded demo data (polar trajectories v4, sagittal polyline
+  frames, AAC audio).  The generated pages need no web server and no
+  network: open them by double-click (file://).
+
+  Rendering mirrors vtl_synth/video/polar_video.py render_polar_frame:
+  trigonometric orientation (theta = 0 East, counter-clockwise),
+  300 ms fading trail, transient phoneme labels (0.5 s), inventory
+  dots.  Reference: arXiv:2307.02299 section 2.1 (K = 30 vocalic /
+  K = 10 consonantal display curvature).
+-->
+<style>
+  :root {
+    --red: #d62728;
+    --blue: #1f77b4;
+    --ink: #1c1c1c;
+    --muted: #6a6a6a;
+    --line: #d9d9d9;
+    --bg: #f4f4f2;
+    --panel: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font: 15px/1.5 system-ui, "Segoe UI", Roboto, "Helvetica Neue",
+          Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    padding: 22px clamp(14px, 4vw, 46px) 34px;
+  }
+  a { color: #23527c; }
+  header { max-width: 1180px; margin: 0 auto 16px; }
+  h1 { font-size: 22px; margin: 0 0 4px; font-weight: 650; }
+  h1 .phrase { font-style: italic; }
+  .sub { color: var(--muted); font-size: 13.5px; }
+  .sub code, footer code {
+    font: 12.5px/1.4 ui-monospace, "Cascadia Mono", Consolas, Menlo,
+          monospace;
+    background: #ececea; border-radius: 3px; padding: 1px 5px;
+  }
+  .warn {
+    display: none; max-width: 1180px; margin: 0 auto 14px;
+    background: #fff4e0; border: 1px solid #e0b25e; border-radius: 6px;
+    padding: 10px 14px; font-size: 14px;
+  }
+  main { max-width: 1180px; margin: 0 auto; }
+  .panels {
+    display: flex; flex-wrap: wrap; gap: 18px; align-items: stretch;
+    justify-content: center;
+  }
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 14px 14px 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .card canvas { display: block; width: 100%; }
+  #polarWrap { width: min(520px, 94vw); }
+  #sagittalWrap { width: min(470px, 94vw); }
+  .caption {
+    font-size: 12.5px; color: var(--muted); text-align: center;
+    margin: 2px 2px 4px;
+  }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: center;
+    font-size: 12.5px; color: #3a3a3a; margin-top: 2px;
+  }
+  .legend .sw { display: inline-block; width: 11px; height: 11px;
+                border-radius: 50%; vertical-align: -1px; margin-right: 5px;
+                border: 1px solid rgba(0,0,0,.35); }
+  .legend .sw.line { border-radius: 6px; height: 4px; width: 16px; }
+  #tracesCard { margin-top: 18px; padding-bottom: 8px; }
+  #tracesWrap { width: 100%; }
+  #tracesCanvas { height: 196px; }
+  .transport {
+    margin-top: 18px; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 10px 16px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .transport button {
+    font: 600 13.5px/1 system-ui, sans-serif; color: var(--ink);
+    background: #f0f0ee; border: 1px solid var(--line); border-radius: 7px;
+    padding: 8px 14px; cursor: pointer;
+  }
+  .transport button:hover { background: #e6e6e3; }
+  .transport button:active { transform: translateY(1px); }
+  .transport .grow { flex: 1 1 240px; display: flex; align-items: center;
+                     gap: 10px; }
+  #seek { flex: 1 1 auto; }
+  #time { font: 13px/1 ui-monospace, Consolas, Menlo, monospace;
+          color: var(--muted); min-width: 108px; text-align: right; }
+  .transport label { font-size: 13px; color: var(--muted);
+                     display: flex; align-items: center; gap: 6px; }
+  #speed { font-size: 13px; padding: 3px 5px; border-radius: 5px;
+           border: 1px solid var(--line); background: #fff; }
+  .hint { max-width: 1180px; margin: 10px auto 0; font-size: 12.5px;
+          color: var(--muted); }
+  kbd {
+    font: 11.5px/1 ui-monospace, Consolas, Menlo, monospace;
+    background: #ececea; border: 1px solid #ccc; border-bottom-width: 2px;
+    border-radius: 4px; padding: 1px 5px; color: #333;
+  }
+  footer {
+    max-width: 1180px; margin: 26px auto 0; padding-top: 12px;
+    border-top: 1px solid var(--line); font-size: 12.5px;
+    color: var(--muted);
+  }
+  footer p { margin: 4px 0; }
+</style>
+</head>
+<body>
+<header>
+  <h1 id="docTitle">Polar planning demo</h1>
+  <p class="sub" id="docSub"></p>
+</header>
+<div class="warn" id="warn"></div>
+<main>
+  <div class="panels">
+    <div class="card" id="sagittalWrap">
+      <canvas id="sagittalCanvas"></canvas>
+      <div class="caption">mid-sagittal vocal tract (JD3 speaker, VTL SVG frames)</div>
+    </div>
+    <div class="card" id="polarWrap">
+      <canvas id="polarCanvas"></canvas>
+      <div class="caption">polar planning figure &mdash; tongue-body target space</div>
+      <div class="legend">
+        <span><span class="sw" style="background:var(--red)"></span>vocalic branch z<sub>v</sub> (always active)</span>
+        <span><span class="sw" style="background:var(--blue)"></span>consonantal branch z<sub>c</sub> (during clusters)</span>
+        <span><span class="sw line" style="background:var(--red);opacity:.45"></span><span class="sw line" style="background:var(--blue);opacity:.45"></span>300 ms fading trail</span>
+      </div>
+    </div>
+  </div>
+  <div class="card" id="tracesCard">
+    <canvas id="tracesCanvas"></canvas>
+    <div class="caption">branch trajectories &rho;, &theta; (t) &mdash; shaded bands: active phoneme spans (red = vowel, blue = consonant) &middot; vertical line: current time</div>
+  </div>
+  <div class="transport">
+    <button id="btnPlay" aria-label="play / pause"></button>
+    <div class="grow">
+      <input id="seek" type="range" min="0" max="1000" value="0" step="1"
+             aria-label="timeline">
+      <span id="time">0.00 / 0.00 s</span>
+    </div>
+    <label>speed
+      <select id="speed">
+        <option value="0.25">0.25&times;</option>
+        <option value="0.5">0.5&times;</option>
+        <option value="1" selected>1&times;</option>
+      </select>
+    </label>
+    <label><input type="checkbox" id="loop"> loop</label>
+    <label><input type="checkbox" id="mute"> mute</label>
+  </div>
+</main>
+<p class="hint">Keys: <kbd>space</kbd> play / pause &middot; <kbd>&larr;</kbd>/<kbd>&rarr;</kbd> step &plusmn;10 ms (<kbd>shift</kbd> &plusmn;100 ms) &middot; <kbd>home</kbd>/<kbd>end</kbd> jump &middot; click or drag on the traces chart to scrub. <a href="index.html">All demos</a>.</p>
+<footer>
+  <p id="provenance"></p>
+  <p>Self-contained page (offline, no server, no network): polar trajectories <span id="fmtNote"></span>, sagittal frames from <code>vocaltractlab_cython.tract_state_to_svg</code>, audio AAC &mdash; all embedded at build time. Regenerate with <code>python examples/html/make_html_demos.py</code>. Rendering mirrors <code>vtl_synth/video/polar_video.py</code> (<code>render_polar_frame</code>): display curvature K=30 (&nu;=+1) vocalic / K=10 (&nu;=&minus;1) consonantal, reference model of arXiv:2307.02299 &sect;2.1 &mdash; not the quasi-rectilinear SYL_K=1000 parameter arcs of the synthesis engine.</p>
+</footer>
+<audio id="audio" preload="auto"></audio>
+<script>
+"use strict";
+/* Single injection point: make_html_demos.py replaces this placeholder
+   with the full demo data object. */
+const DEMO = __DEMO_JSON__;
+
+(function () {
+  const warn = document.getElementById('warn');
+  function bail(msg) {
+    warn.style.display = 'block';
+    warn.textContent = msg;
+    document.getElementById('docSub').textContent =
+      'raw template opened without embedded data';
+    throw new Error(msg);
+  }
+  if (typeof DEMO !== 'object' || !DEMO || !DEMO.polar)
+    bail('This is the raw template. Run ' +
+         'examples/html/make_html_demos.py to generate the demo pages, ' +
+         'then open polar_demo_fr.html / polar_demo_en.html.');
+
+  /* ---------------- constants mirroring polar_video.py ------------- */
+  const TRAIL_S = 0.30;      // s of visible fading trail
+  const LABEL_S = 0.5;       // s of transient label display
+  const COLV = [214, 39, 40];    // #d62728 vocalic
+  const COLC = [31, 119, 180];   // #1f77b4 consonantal
+  const SR = DEMO.polar.sample_rate;       // 100 Hz
+  const DUR = DEMO.duration_s;
+  const N = DEMO.polar.trajectory.vocalic.rho.length;
+  const FPS_SAG = DEMO.sagittal_fps;       // 25
+  const hasC = DEMO.polar.trajectory.consonantal &&
+               DEMO.polar.trajectory.consonantal.rho.some(x => x !== null);
+
+  /* ---------------- state ------------------------------------------ */
+  let t = 0, playing = false, lastTs = null, raf = null;
+  const audio = document.getElementById('audio');
+  if (DEMO.audio && DEMO.audio.b64) {
+    audio.src = 'data:' + DEMO.audio.mime + ';base64,' + DEMO.audio.b64;
+    audio.load();
+  }
+
+  /* ---------------- header ------------------------------------------ */
+  document.title = DEMO.meta.page_title;
+  document.getElementById('docTitle').innerHTML = DEMO.meta.h1;
+  document.getElementById('docSub').innerHTML = DEMO.meta.sub;
+  document.getElementById('provenance').innerHTML = DEMO.meta.provenance;
+  document.getElementById('fmtNote').textContent =
+    '(.polar v' + DEMO.polar.version + ', 100 Hz)';
+
+  /* ---------------- canvas plumbing --------------------------------- */
+  function fit(canvas, cssW, cssH) {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.style.width = cssW + 'px';
+    canvas.style.height = cssH + 'px';
+    canvas.width = Math.max(1, Math.round(cssW * dpr));
+    canvas.height = Math.max(1, Math.round(cssH * dpr));
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return ctx;
+  }
+
+  /* ================= polar figure (render_polar_frame) ============== */
+  const polarCanvas = document.getElementById('polarCanvas');
+  const polarWrap = document.getElementById('polarWrap');
+  let pctx = null, PS = 0, PCX = 0, PCY = 0, PR = 0, RMAX = 1;
+
+  function rhoMax() {
+    let m = 0;
+    for (const v of DEMO.polar.trajectory.vocalic.rho) m = Math.max(m, v);
+    if (hasC) for (const v of DEMO.polar.trajectory.consonantal.rho)
+      if (v !== null) m = Math.max(m, v);
+    for (const p of DEMO.polar.inventory) m = Math.max(m, p.rho);
+    return m;
+  }
+  RMAX = 1.25 * rhoMax();
+
+  function pxy(rho, theta) {
+    const r = rho / RMAX * PR;
+    return [PCX + r * Math.cos(theta), PCY - r * Math.sin(theta)];
+  }
+  function rgba(c, a) { return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
+
+  function drawPolarGrid() {
+    const g = pctx;
+    g.save();
+    g.strokeStyle = '#c9c9c9'; g.fillStyle = '#7a7a7a';
+    g.lineWidth = 1; g.font = '10px system-ui'; g.textAlign = 'center';
+    /* spokes every 30 deg */
+    g.globalAlpha = 0.55;
+    for (let d = 0; d < 360; d += 30) {
+      const a = d * Math.PI / 180;
+      g.beginPath();
+      g.moveTo(PCX, PCY);
+      g.lineTo(PCX + PR * Math.cos(a), PCY - PR * Math.sin(a));
+      g.stroke();
+    }
+    /* circles every 0.5 cm + labels at 22.5 deg (rlabel position) */
+    for (let rr = 0.5; rr <= RMAX + 1e-9; rr += 0.5) {
+      g.beginPath();
+      g.arc(PCX, PCY, rr / RMAX * PR, 0, 2 * Math.PI);
+      g.stroke();
+      const la = 22.5 * Math.PI / 180;
+      g.globalAlpha = 0.9;
+      g.fillText(rr.toFixed(1),
+        PCX + (rr / RMAX * PR + 12) * Math.cos(la),
+        PCY - (rr / RMAX * PR + 12) * Math.sin(la));
+      g.globalAlpha = 0.55;
+    }
+    /* degree labels every 45 deg, just outside */
+    g.globalAlpha = 0.95; g.font = '9.5px system-ui';
+    for (let d = 0; d < 360; d += 45) {
+      const a = d * Math.PI / 180;
+      g.fillText(d + '\u00b0',
+        PCX + (PR + 14) * Math.cos(a), PCY - (PR + 14) * Math.sin(a) + 3);
+    }
+    g.restore();
+  }
+
+  function drawPolar() {
+    const g = pctx;
+    g.clearRect(0, 0, PS, PS);
+    drawPolarGrid();
+    /* inventory dots */
+    for (const cat of ['V', 'C']) {
+      g.fillStyle = rgba(cat === 'V' ? COLV : COLC, 1);
+      g.strokeStyle = 'rgba(0,0,0,.4)'; g.lineWidth = 0.6;
+      for (const p of DEMO.polar.inventory) {
+        if (p.category !== cat) continue;
+        const xy = pxy(p.rho, p.theta);
+        g.beginPath(); g.arc(xy[0], xy[1], 3.6, 0, 2 * Math.PI);
+        g.fill(); g.stroke();
+      }
+    }
+    if (N === 0) return;
+    const i = Math.min(Math.round(t * SR), N - 1);
+    const i0 = Math.max(0, Math.trunc((t - TRAIL_S) * SR));
+    const u = PS / 560;                       // stroke scale
+    const tv = DEMO.polar.trajectory.vocalic;
+    const tc = hasC ? DEMO.polar.trajectory.consonantal : null;
+    g.lineCap = 'round';
+    /* vocalic trail */
+    for (let k = i0; k < i; k++) {
+      const frac = (k - i0 + 1) / Math.max(1, i - i0);
+      g.strokeStyle = rgba(COLV, 0.15 + 0.75 * frac);
+      g.lineWidth = (0.8 + 1.6 * frac) * u;
+      const a = pxy(tv.rho[k], tv.theta[k]);
+      const b = pxy(tv.rho[k + 1], tv.theta[k + 1]);
+      g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke();
+    }
+    /* consonantal trail (clusters only; break at inactive samples) */
+    if (tc) {
+      for (let k = i0; k < i; k++) {
+        if (tc.rho[k] === null || tc.rho[k + 1] === null) continue;
+        const frac = (k - i0 + 1) / Math.max(1, i - i0);
+        g.strokeStyle = rgba(COLC, 0.15 + 0.75 * frac);
+        g.lineWidth = (0.8 + 1.6 * frac) * u;
+        const a = pxy(tc.rho[k], tc.theta[k]);
+        const b = pxy(tc.rho[k + 1], tc.theta[k + 1]);
+        g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke();
+      }
+    }
+    /* current positions */
+    g.fillStyle = rgba(COLV, 1);
+    g.strokeStyle = 'black'; g.lineWidth = 0.8;
+    let p = pxy(tv.rho[i], tv.theta[i]);
+    g.beginPath(); g.arc(p[0], p[1], 4.4 * u, 0, 2 * Math.PI);
+    g.fill(); g.stroke();
+    if (tc && tc.rho[i] !== null) {
+      g.fillStyle = rgba(COLC, 1);
+      p = pxy(tc.rho[i], tc.theta[i]);
+      g.beginPath(); g.arc(p[0], p[1], 4.4 * u, 0, 2 * Math.PI);
+      g.fill(); g.stroke();
+    }
+    /* active phoneme(s): branch-to-target segment + transient label */
+    for (const ph of DEMO.polar.phonemes) {
+      if (!(ph.t0 <= i && i < ph.t1)) continue;
+      const col = ph.category === 'V' ? COLV : COLC;
+      let src = [tv.rho[i], tv.theta[i]];
+      if (ph.category === 'C' && tc && tc.rho[i] !== null)
+        src = [tc.rho[i], tc.theta[i]];
+      const a = pxy(src[0], src[1]);
+      const b = pxy(ph.rho, ph.theta);
+      g.strokeStyle = rgba(col, 0.9);
+      g.lineWidth = 1.8 * u;
+      g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke();
+      if (t <= ph.t0 / SR + LABEL_S) {
+        g.fillStyle = rgba(col, 1);
+        g.font = 'bold ' + (11 * Math.max(1, u)) + 'px system-ui';
+        g.textAlign = 'center';
+        g.fillText(ph.key, b[0], b[1] - 8);
+      }
+    }
+  }
+
+  /* ================= sagittal view ================================== */
+  const sagCanvas = document.getElementById('sagittalCanvas');
+  const sagWrap = document.getElementById('sagittalWrap');
+  let sctx = null, SW = 0, SH = 0;
+  const VB = DEMO.viewBox;   // [x, y, w, h] in SVG units
+
+  function drawSagittal() {
+    const g = sctx;
+    g.clearRect(0, 0, SW, SH);
+    const frames = DEMO.sagittal;
+    if (!frames || !frames.length) return;
+    const k = Math.min(Math.floor(t * FPS_SAG), frames.length - 1);
+    const s = Math.min(SW / VB[2], SH / VB[3]);
+    const ox = (SW - VB[2] * s) / 2 - VB[0] * s;
+    const oy = (SH - VB[3] * s) / 2 - VB[1] * s;
+    g.lineCap = 'round'; g.lineJoin = 'round';
+    for (const line of frames[k]) {
+      const stroke = line[0], width = line[1], fill = line[2],
+            pts = line[3];
+      g.beginPath();
+      g.moveTo(ox + pts[0] * s, oy + pts[1] * s);
+      for (let j = 2; j < pts.length; j += 2)
+        g.lineTo(ox + pts[j] * s, oy + pts[j + 1] * s);
+      if (fill !== 'none') { g.fillStyle = fill; g.fill(); }
+      g.strokeStyle = stroke;
+      g.lineWidth = Math.max(1, width * s);
+      g.stroke();
+    }
+  }
+
+  /* ================= traces chart =================================== */
+  const trCanvas = document.getElementById('tracesCanvas');
+  const trCard = document.getElementById('tracesCard');
+  let xctx = null, TW = 0, TH = 0;
+  const ML = 88, MR = 14, MT = 20, MB = 20;
+  const GAP = 12, PH = 16;    // gap between strips, phoneme band height
+
+  function stripRects() {
+    const h = TH - MT - MB - GAP - PH;
+    const hRho = Math.round(h * 0.52), hTh = h - hRho;
+    const x0 = ML, w = TW - ML - MR;
+    return {
+      rho: [x0, MT + PH, w, hRho],
+      th: [x0, MT + PH + hRho + GAP, w, hTh],
+      bandTop: MT
+    };
+  }
+  function tToX(tt) { const r = stripRects(); return r.rho[0] + tt / DUR * r.rho[2]; }
+  function xToT(xx) {
+    const r = stripRects();
+    return Math.min(DUR, Math.max(0, (xx - r.rho[0]) / r.rho[2] * DUR));
+  }
+  function ranges() {
+    let rMax = 0, thMin = 1e9, thMax = -1e9;
+    const tv = DEMO.polar.trajectory.vocalic;
+    const tc = hasC ? DEMO.polar.trajectory.consonantal : null;
+    for (const v of tv.rho) rMax = Math.max(rMax, v);
+    for (const v of tv.theta) { thMin = Math.min(thMin, v); thMax = Math.max(thMax, v); }
+    if (tc) for (let k = 0; k < tc.rho.length; k++) {
+      if (tc.rho[k] === null) continue;
+      rMax = Math.max(rMax, tc.rho[k]);
+      thMin = Math.min(thMin, tc.theta[k]); thMax = Math.max(thMax, tc.theta[k]);
+    }
+    return { rMax: rMax * 1.08, thMin: thMin - 0.1, thMax: thMax + 0.1 };
+  }
+  const RG = ranges();
+
+  function drawStrip(r, key, yMin, yMax) {
+    const g = xctx;
+    g.save();
+    g.strokeStyle = '#d0d0d0'; g.lineWidth = 1;
+    g.strokeRect(r[0], r[1], r[2], r[3]);
+    g.fillStyle = '#7a7a7a'; g.font = '10.5px system-ui';
+    g.textAlign = 'right'; g.textBaseline = 'middle';
+    for (let q = 0; q <= 2; q++) {
+      const val = yMin + (yMax - yMin) * q / 2;
+      const y = r[1] + r[3] - (val - yMin) / (yMax - yMin) * r[3];
+      g.fillText(val.toFixed(1), r[0] - 6, y);
+      g.beginPath(); g.strokeStyle = '#ececec';
+      g.moveTo(r[0], y); g.lineTo(r[0] + r[2], y); g.stroke();
+    }
+    /* series */
+    const tv = DEMO.polar.trajectory.vocalic;
+    const tc = hasC ? DEMO.polar.trajectory.consonantal : null;
+    g.lineWidth = 1.5;
+    for (const pair of [[tv, COLV], [tc, COLC]]) {
+      const src = pair[0], col = pair[1];
+      if (!src) continue;
+      g.strokeStyle = rgba(col, 1);
+      g.beginPath();
+      let pen = false;
+      for (let k = 0; k < N; k++) {
+        const v = src[key][k];
+        if (v === null) { pen = false; continue; }
+        const x = r[0] + k / SR / DUR * r[2];
+        const y = r[1] + r[3] - (v - yMin) / (yMax - yMin) * r[3];
+        if (!pen) { g.moveTo(x, y); pen = true; } else g.lineTo(x, y);
+      }
+      g.stroke();
+    }
+    /* current-sample dots */
+    const i = Math.min(Math.round(t * SR), N - 1);
+    for (const pair of [[tv, COLV], [tc, COLC]]) {
+      const src = pair[0], col = pair[1];
+      if (!src || src[key][i] === null) continue;
+      const v = src[key][i];
+      const x = r[0] + i / SR / DUR * r[2];
+      const y = r[1] + r[3] - (v - yMin) / (yMax - yMin) * r[3];
+      g.fillStyle = rgba(col, 1);
+      g.beginPath(); g.arc(x, y, 3, 0, 2 * Math.PI); g.fill();
+    }
+    g.restore();
+  }
+
+  function drawTraces() {
+    const g = xctx;
+    g.clearRect(0, 0, TW, TH);
+    const R = stripRects();
+    /* phoneme bands + labels */
+    g.font = 'bold 10px system-ui'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    const bandH = R.rho[1] - R.bandTop;
+    for (const ph of DEMO.polar.phonemes) {
+      const col = ph.category === 'V' ? COLV : COLC;
+      const x0 = R.rho[0] + ph.t0 / SR / DUR * R.rho[2];
+      const x1 = R.rho[0] + ph.t1 / SR / DUR * R.rho[2];
+      g.fillStyle = rgba(col, 0.12);
+      g.fillRect(x0, R.rho[1], x1 - x0, R.th[1] + R.th[3] - R.rho[1]);
+      g.fillStyle = rgba(col, 1);
+      g.fillText(ph.key, (x0 + x1) / 2, R.bandTop + bandH / 2, x1 - x0 - 2);
+    }
+    /* strip titles (y-axis labels, right of the canvas margin) */
+    g.save();
+    g.fillStyle = '#3a3a3a'; g.font = '11px system-ui';
+    g.textAlign = 'right'; g.textBaseline = 'middle';
+    g.fillText('\u03c1 (cm)', R.rho[0] - 34, R.rho[1] + R.rho[3] / 2);
+    g.fillText('\u03b8 (rad)', R.th[0] - 34, R.th[1] + R.th[3] / 2);
+    g.restore();
+    drawStrip(R.rho, 'rho', 0, RG.rMax);
+    drawStrip(R.th, 'theta', RG.thMin, RG.thMax);
+    /* time ticks */
+    g.fillStyle = '#7a7a7a'; g.font = '10px system-ui';
+    g.textAlign = 'center'; g.textBaseline = 'top';
+    const stepT = DUR > 2 ? 0.5 : 0.25;
+    for (let tt = 0; tt <= DUR + 1e-9; tt += stepT) {
+      const x = tToX(tt);
+      g.fillText(tt.toFixed(2) + ' s', x, R.th[1] + R.th[3] + 5);
+      g.strokeStyle = '#ececec'; g.beginPath();
+      g.moveTo(x, R.rho[1]); g.lineTo(x, R.th[1] + R.th[3]); g.stroke();
+    }
+    /* cursor */
+    const cx = tToX(t);
+    g.strokeStyle = 'rgba(20,20,20,.75)'; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(cx, R.rho[1] - 4); g.lineTo(cx, R.th[1] + R.th[3] + 2); g.stroke();
+  }
+
+  /* ---------------- traces interaction ------------------------------ */
+  let scrubbing = false;
+  function seekClientX(ev) {
+    const r = trCanvas.getBoundingClientRect();
+    const x = (ev.touches ? ev.touches[0].clientX : ev.clientX) - r.left;
+    seek(xToT(x * (TW / r.width)));
+  }
+  trCanvas.addEventListener('pointerdown', function (e) {
+    scrubbing = true; trCanvas.setPointerCapture(e.pointerId);
+    seekClientX(e);
+  });
+  trCanvas.addEventListener('pointermove', function (e) { if (scrubbing) seekClientX(e); });
+  trCanvas.addEventListener('pointerup', function () { scrubbing = false; });
+
+  /* ---------------- transport --------------------------------------- */
+  const btnPlay = document.getElementById('btnPlay');
+  const seekEl = document.getElementById('seek');
+  const timeEl = document.getElementById('time');
+  const speedEl = document.getElementById('speed');
+  const loopEl = document.getElementById('loop');
+  const muteEl = document.getElementById('mute');
+  const ICON_PLAY = '<svg width="13" height="13" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z" fill="currentColor"/></svg> Play';
+  const ICON_PAUSE = '<svg width="13" height="13" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1h3v10H2zM7 1h3v10H7z" fill="currentColor"/></svg> Pause';
+
+  function fmt(s) { return s.toFixed(2); }
+  function refreshUI() {
+    seekEl.value = String(Math.round(t / DUR * 1000) || 0);
+    timeEl.textContent = fmt(t) + ' / ' + fmt(DUR) + ' s';
+    btnPlay.innerHTML = playing ? ICON_PAUSE : ICON_PLAY;
+  }
+  function drawAll() { drawPolar(); drawSagittal(); drawTraces(); refreshUI(); }
+
+  function seek(nt) {
+    t = Math.min(DUR, Math.max(0, nt));
+    if (DEMO.audio && DEMO.audio.b64) {
+      try {
+        if (isFinite(audio.duration))
+          audio.currentTime = Math.min(t, Math.max(0, audio.duration - 0.01));
+      } catch (e) { /* not loaded yet */ }
+    }
+    drawAll();
+  }
+  function play() {
+    if (t >= DUR - 0.005) t = 0;
+    playing = true;
+    if (DEMO.audio && DEMO.audio.b64) {
+      try {
+        audio.currentTime = Math.min(t,
+          isFinite(audio.duration) ? audio.duration - 0.01 : t);
+      } catch (e) { /* seek before metadata */ }
+      audio.play().catch(function () {});
+    }
+    lastTs = null;
+    if (!raf) raf = requestAnimationFrame(tick);
+    refreshUI();
+  }
+  function pause() {
+    playing = false;
+    audio.pause();
+    refreshUI();
+  }
+  function tick(ts) {
+    raf = requestAnimationFrame(tick);
+    if (!playing) { lastTs = ts; return; }
+    const dt = lastTs === null ? 0 : (ts - lastTs) / 1000;
+    lastTs = ts;
+    const speed = parseFloat(speedEl.value);
+    let adv = null;
+    if (DEMO.audio && DEMO.audio.b64 && !audio.paused &&
+        isFinite(audio.currentTime) && audio.currentTime > 0)
+      adv = audio.currentTime;                     /* audio = master clock */
+    if (adv === null) adv = t + dt * speed;        /* fallback clock */
+    if (adv >= DUR - 1e-4) {
+      if (loopEl.checked) { t = 0; play(); return; }
+      t = DUR; playing = false; audio.pause();
+      drawAll(); return;
+    }
+    t = adv;
+    drawAll();
+  }
+
+  btnPlay.addEventListener('click', function () { playing ? pause() : play(); });
+  seekEl.addEventListener('input', function () {
+    seek(parseFloat(seekEl.value) / 1000 * DUR);
+  });
+  speedEl.addEventListener('change', function () {
+    audio.playbackRate = parseFloat(speedEl.value);
+  });
+  muteEl.addEventListener('change', function () { audio.muted = muteEl.checked; });
+  window.addEventListener('keydown', function (e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+    const step = e.shiftKey ? 0.1 : 0.01;
+    if (e.code === 'Space') { e.preventDefault(); playing ? pause() : play(); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); pause(); seek(t - step); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); pause(); seek(t + step); }
+    else if (e.key === 'Home') { e.preventDefault(); pause(); seek(0); }
+    else if (e.key === 'End') { e.preventDefault(); pause(); seek(DUR); }
+  });
+  audio.addEventListener('ended', function () {
+    if (!loopEl.checked && t >= DUR - 0.05) {
+      playing = false; t = DUR; drawAll();
+    }
+  });
+
+  /* ---------------- layout / resize --------------------------------- */
+  function layout() {
+    const pw = polarWrap.clientWidth - 28;         /* card padding */
+    PS = Math.max(240, Math.min(pw, 520));
+    pctx = fit(polarCanvas, PS, PS);
+    PCX = PS / 2; PCY = PS / 2; PR = PS / 2 - 30;
+    const sw = sagWrap.clientWidth - 28;
+    SW = Math.max(240, Math.min(sw, 470));
+    SH = Math.round(SW * VB[3] / VB[2]);
+    sctx = fit(sagCanvas, SW, SH);
+    TW = trCard.clientWidth - 28; TH = 196;
+    xctx = fit(trCanvas, TW, TH);
+    drawAll();
+  }
+  if (window.ResizeObserver)
+    new ResizeObserver(function () { layout(); })
+      .observe(document.querySelector('main'));
+  else window.addEventListener('resize', layout);
+  layout();
+})();
+</script>
+</body>
+</html>

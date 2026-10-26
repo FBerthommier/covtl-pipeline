@@ -105,12 +105,12 @@ def _make_pipeline(args: argparse.Namespace):
         pause_short_ms=args.tpause,
         pause_long_ms=args.tpause_long,
     )
-    # lang= n'existe que lorsque le language pack est installe (le
-    # Pipeline natif multi-speakers ne connait pas ce parametre)
+    # lang= only exists when the language pack is installed (the
+    # native multi-speaker Pipeline does not know this parameter)
     if args.lang is not None or hasattr(_c, 'ACTIVE_LANG'):
         kwargs['lang'] = _resolve_lang(args)
     else:
-        # pipeline natif : pas de sentinelles None (defaults historiques)
+        # native pipeline: no None sentinels (historical defaults)
         for key, default in (('t_cons_ms', 100.0), ('t_voy_ms', 80.0),
                              ('pause_short_ms', 200.0),
                              ('pause_long_ms', 320.0)):

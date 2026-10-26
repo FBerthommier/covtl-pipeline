@@ -4,39 +4,39 @@
 """
 g2p_de.py
 =========
-Graphème-phonème allemand : texte orthographique → SAMPA moteur.
-Même architecture que ``g2p_fr.py`` (v2) :
+German grapheme-to-phoneme: orthographic text → engine SAMPA.
+Same architecture as ``g2p_fr.py`` (v2):
 
-  lexique externe (priorité absolue) → dictionnaire d'exceptions →
-  prétraitement contextuel (désvoisement final, ach/ich-laut,
-  s sonore, réductions des finales non accentuées) → table de règles.
+  external lexicon (absolute priority) → exceptions dictionary →
+  contextual preprocessing (final devoicing, ach/ich-laut,
+  voiced s, unstressed final reductions) → rule table.
 
-Lexique : ``vtl_synth/data/de_lexicon.tsv`` (Wikipron
-``deu_latn_broad_filtered.tsv`` ; variable : ``$COVTL_DE_LEXICON``),
-chargé par :mod:`vtl_synth.utils.lexicon_loader`.
+Lexicon: ``vtl_synth/data/de_lexicon.tsv`` (Wikipron
+``deu_latn_broad_filtered.tsv``; variable: ``$COVTL_DE_LEXICON``),
+loaded by :mod:`vtl_synth.utils.lexicon_loader`.
 
-Couverture graphémique (cf. cahier des charges) : ä ö ü ß, sch, ch
-(ach/ich selon le contexte vocalique), ei, eu/äu, ie, au, h muet
-(allongeant après voyelle), en plus du désvoisement final
-(Auslautverhärtung), st-/sp- initiaux /ʃt ʃp/, s intervocalique /z/,
--z- /ts/ et des finales -er/-en/-el/-e réduites vers @.
+Graphemic coverage (cf. specification): ä ö ü ß, sch, ch
+(ach/ich depending on the vocalic context), ei, eu/äu, ie, au, mute
+h (lengthening after a vowel), plus final devoicing
+(Auslautverhärtung), initial st-/sp- /ʃt ʃp/, intervocalic s /z/,
+-z- /ts/ and the -er/-en/-el/-e finals reduced to @.
 
-Approximations documentées :
-  * ö/ü toujours tendues (2/y) : la règle n'a pas de test de longueur
-    (le lexique donne les réalisations brèves correctes 9/Y) ;
-  * ʁ → ``R`` (seule rhotique du moteur) ; ɐ → ``@`` ;
-  * pas de coup de glotte (ʔ absent de l'inventaire) ;
-  * pas de réduction e → ə en dehors des finales -e/-er/-en/-el ;
-  * les consonnes doubles sont émises deux fois (géminées) ;
-  * ɪ/ʊ/ʏ (lax) du lexique et des exceptions -> i/u/y (tendues) :
-    les clés I/U/Y ne sont pas dans l'inventaire moteur
-    (CORRECTIONS v2.1, fuite g2p-de — avant : voyelles droppées
-    en silence par les parseurs).
+Documented approximations:
+  * ö/ü always tense (2/y): the rule has no length test
+    (the lexicon provides the correct short realizations 9/Y);
+  * ʁ → ``R`` (the engine's only rhotic); ɐ → ``@``;
+  * no glottal stop (ʔ absent from the inventory);
+  * no e → ə reduction outside the -e/-er/-en/-el finals;
+  * double consonants are emitted twice (geminated);
+  * ɪ/ʊ/ʏ (lax) from the lexicon and exceptions -> i/u/y (tense):
+    the I/U/Y keys are not in the engine inventory
+    (CORRECTIONS v2.1, g2p-de leak — before: vowels silently
+    dropped by the parsers).
 
-Le prétraitement utilise des PLACEHOLDRES MAJUSCULES (ACH, ICH, TSCH,
-SCH, SDT, SDP, SZ, SCHWA, ERFIN, ENFIN, ELFIN, IQ) : le mot est
-mis en minuscules avant, donc ils ne peuvent pas entrer en collision
-avec l'orthographie, et la table de règles les traduit vers les clés.
+The preprocessing uses UPPERCASE PLACEHOLDERS (ACH, ICH, TSCH,
+SCH, SDT, SDP, SZ, SCHWA, ERFIN, ENFIN, ELFIN, IQ): the word is
+lowercased first, so they cannot collide with the orthography,
+and the rule table translates them to the keys.
 """
 
 from __future__ import annotations
@@ -50,28 +50,28 @@ from vtl_synth.utils.lexicon_loader import lexicon_for
 
 
 # ===========================================================================
-# Tokenisation (miroir de g2p_fr.py)
+# Tokenization (mirror of g2p_fr.py)
 # ===========================================================================
 
 _SENT_PUNCT_RE = re.compile(r'[.!?;:]+\s*')
 _COMMA_RE = re.compile(r'\s*[,–—]\s*')
 _WORD_RE = re.compile(r"[A-Za-zÄÖÜäöüß]+")
 
-_V = 'aeiouäöü'          # voyelles orthographiques
+_V = 'aeiouäöü'          # orthographic vowels
 
 
 def _normalize_input(text: str) -> str:
-    """NFC + apostrophes typographiques normalisés."""
+    """NFC + typographic apostrophes normalized."""
     text = unicodedata.normalize('NFC', text)
     return text.replace('’', "'")
 
 
 # ===========================================================================
-# Exceptions (mots fréquents irréguliers pour les règles)
+# Exceptions (frequent words irregular for the rules)
 # ===========================================================================
 
 _DE_EXCEPTIONS: dict = {
-    # mots-outils (voyelles pleines, pas de réduction finale)
+    # function words (full vowels, no final reduction)
     'der': 'd e R', 'die': 'd i', 'das': 'd a s', 'den': 'd e n',
     'dem': 'd e m', 'des': 'd e s', 'ein': 'a j n', 'eine': 'a j n @',
     'einen': 'a j n @ n', 'und': 'u n t', 'ist': 'i s t',
@@ -86,37 +86,37 @@ _DE_EXCEPTIONS: dict = {
 
 
 # ===========================================================================
-# Prétraitement contextuel
+# Contextual preprocessing
 # ===========================================================================
 
 def _preprocess(word: str) -> str:
-    """Normalisations contextuelles de l'orthographie allemande.
+    """Contextual normalizations of the German orthography.
 
-    Ordre : -ig final /ɪç/ → désvoisement final → affriquées/fricatives
-    complexes en placeholders → ach/ich-laut selon la voyelle
-    précédente → st/sp initiaux → s sonore → finales réduites.
+    Order: final -ig /ɪç/ → final devoicing → complex affricates/
+    fricatives to placeholders → ach/ich-laut according to the
+    preceding vowel → initial st/sp → voiced s → reduced finals.
     """
-    # 1. -ig final → /ɪç/ (König, zufrieden…) — AVANT le désvoisement
-    #    (sinon ig devient ik et le ich-laut est perdu)
+    # 1. final -ig → /ɪç/ (König, zufrieden…) — BEFORE the devoicing
+    #    (else ig becomes ik and the ich-laut is lost)
     word = re.sub(r'ig$', 'IQ', word)
-    # 2. Auslautverhärtung : b/d/g de fin de mot → p/t/k
+    # 2. Auslautverhärtung: word-final b/d/g → p/t/k
     if len(word) > 2 and word[-1] in 'bdg':
         word = word[:-1] + {'b': 'p', 'd': 't', 'g': 'k'}[word[-1]]
-    # 3. affriquées / groupes complexes en placeholders (tsch AVANT
-    #    sch, chs AVANT ch)
+    # 3. affricates / complex clusters to placeholders (tsch BEFORE
+    #    sch, chs BEFORE ch)
     word = word.replace('tsch', 'TSCH').replace('sch', 'SCH')
     word = word.replace('chs', 'CHS')
-    # 4. ach-laut (/x/) après a/o/u, sinon ich-laut (/ç/)
+    # 4. ach-laut (/x/) after a/o/u, else ich-laut (/ç/)
     word = re.sub(r'(?<=[aou])ch', 'ACH', word)
     word = word.replace('ch', 'ICH')
-    # 5. st-/sp- INITIAUX seulement → /ʃt ʃp/
+    # 5. INITIAL st-/sp- only → /ʃt ʃp/
     word = re.sub(r'^st', 'SDT', word)
     word = re.sub(r'^sp', 'SDP', word)
-    # 6. s sonore : initial devant voyelle, ou intervocalique
+    # 6. voiced s: initial before a vowel, or intervocalic
     word = re.sub(r'^s(?=[' + _V + r'])', 'SZ', word)
     word = re.sub(r'(?<=[' + _V + r'])s(?=[' + _V + r'])', 'SZ', word)
-    # 7. finales non accentuées réduites (er > en > el > e, du plus
-    #    long au plus court)
+    # 7. unstressed finals reduced (er > en > el > e, longest
+    #    first)
     word = re.sub(r'er$', 'ERFIN', word)
     word = re.sub(r'en$', 'ENFIN', word)
     word = re.sub(r'el$', 'ELFIN', word)
@@ -125,11 +125,11 @@ def _preprocess(word: str) -> str:
 
 
 # ===========================================================================
-# Table de règles (motif le plus long d'abord)
+# Rule table (longest pattern first)
 # ===========================================================================
 
 _DE_RULES: list = [
-    # --- placeholders du prétraitement ---
+    # --- preprocessing placeholders ---
     ('TSCH', 'tS'), ('SCH', 'S'), ('ACH', 'X'), ('ICH', 'C'),
     ('CHS', 'k s'),
     ('SDT', 'S t'), ('SDP', 'S p'), ('SZ', 'z'),
@@ -142,13 +142,13 @@ _DE_RULES: list = [
     # --- diphtongues ---
     ('ei', 'a j'), ('ai', 'a j'), ('ey', 'a j'), ('ay', 'a j'),
     ('eu', 'O j'), ('äu', 'O j'), ('au', 'a w'), ('ie', 'i'),
-    # --- voyelles longues écrites (h muet allongeant) ---
+    # --- written long vowels (mute lengthening h) ---
     ('ah', 'a'), ('eh', 'e'), ('ih', 'i'), ('oh', 'o'), ('uh', 'u'),
     ('äh', 'E'), ('öh', '2'), ('üh', 'y'),
     ('ee', 'e'), ('oo', 'o'),
     # --- umlauts et lettres simples ---
     ('ä', 'E'), ('ö', '2'), ('ü', 'y'), ('ß', 's'), ('ss', 's'),
-    ('h', 'h'),           # h initial / après consonante
+    ('h', 'h'),           # initial h / after a consonant
     ('v', 'f'), ('w', 'v'), ('j', 'j'), ('z', 't s'), ('c', 'k'),
     ('a', 'a'), ('e', 'e'), ('i', 'i'), ('o', 'o'), ('u', 'u'),
     ('b', 'b'), ('d', 'd'), ('f', 'f'), ('g', 'g'), ('k', 'k'),
@@ -160,14 +160,14 @@ _DE_RULES_SORTED: list = sorted(_DE_RULES, key=lambda r: -len(r[0]))
 
 
 # ===========================================================================
-# Conversion mot → clés
+# Word → keys conversion
 # ===========================================================================
 
 def _word_to_keys(word: str, warnings: list) -> list:
-    """Convertit un mot allemand en liste de clés SAMPA moteur."""
+    """Converts a German word to a list of engine SAMPA keys."""
     word_lc = word.lower().replace('’', "'")
 
-    # (0) lexique externe — priorité absolue
+    # (0) external lexicon — absolute priority
     lex_keys = lexicon_for('de').get(word_lc)
     if lex_keys:
         return list(lex_keys)
@@ -176,7 +176,7 @@ def _word_to_keys(word: str, warnings: list) -> list:
     if word_lc in _DE_EXCEPTIONS:
         return _DE_EXCEPTIONS[word_lc].split()
 
-    # (b) prétraitement + table de règles
+    # (b) preprocessing + rule table
     word_lc = _preprocess(word_lc)
     keys: list = []
     i = 0
@@ -198,7 +198,7 @@ def _word_to_keys(word: str, warnings: list) -> list:
 
 
 def _phrase_to_sampa(phrase: str, warnings: list) -> str:
-    """Convertit un syntagme (mots seuls) en SAMPA."""
+    """Converts a phrase (single words) to SAMPA."""
     words = _WORD_RE.findall(phrase)
     if not words:
         return ''
@@ -212,11 +212,11 @@ def _phrase_to_sampa(phrase: str, warnings: list) -> str:
 
 
 def text_to_sampa_de(text: str, warnings: list = None, **kwargs) -> str:
-    """Convertit un texte allemand en séquence SAMPA moteur.
+    """Converts a German text to an engine SAMPA sequence.
 
-    Même contrat que ``g2p.text_to_sampa`` (anglais) : ponctuation de
-    phrase → ``|``, virgule → pause courte, mots adjacents reliés
-    par ``.`` (coarticulation).
+    Same contract as ``g2p.text_to_sampa`` (English): sentence
+    punctuation → ``|``, comma → short pause, adjacent words
+    linked with ``.`` (coarticulation).
     """
     own = warnings is None
     if own:

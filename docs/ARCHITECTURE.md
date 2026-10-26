@@ -16,7 +16,7 @@ VTL(t) = B(t) + E_source(t) + E_ortho(t)
 
 | Term | Content | Parameters | Main modules |
 |---|---|---|---|
-| `B(t)` | **Berthommier polar core** — phonetic targets in polar coordinates (rho, theta), arcs, superposition | 15 COVTL tract params | `core/polar.py`, `core/projection.py`, `core/syltraj.py`, `core/trajectory*.py` |
+| `B(t)` | **Berthommier polar core** — phonetic targets in polar coordinates (rho, theta), arcs, superposition | 15 COVTL tract params | `core/polar.py`, `core/projection.py`, `core/syltraj.py`, `core/trajectory.py` |
 | `E_source(t)` | tag-driven extension: amplitude envelope E, voicing V, velum VO/VS, glottis trajectory (11 params), F0 | VO (1) + 11 glottis | `core/tag_system.py`, `core/amplitude_envelope.py`, `core/enveloppe.py`, `core/glottal_source.py`, `core/pulmonary_effort.py`, `core/timers.py`, `core/prosody_source.py` |
 | `E_ortho(t)` | orthogonal branch: TS3 tongue-side shape + speaker-derived VS | TS3 (additive), VS (priority) | `core/orthogonal_params.py`, `core/speaker_jd.py` |
 
@@ -30,7 +30,7 @@ The assembly into VTL frames is `core/assemble_tract.py`
 ```
 vtl_synth/
 ├── __init__.py            public API (Pipeline, PipelineResult, ...)
-├── core/                  the synthesis engine (26 modules)
+├── core/                  the synthesis engine (28 modules)
 │   ├── pipeline.py        Pipeline orchestrator: run / text_to_wav,
 │   │                      F0 declination, WAV writing, video dispatch
 │   ├── build_phrase_tract.py  7-step per-phrase assembly (B + E + ortho)
@@ -51,13 +51,18 @@ vtl_synth/
 │   ├── projection.py      COVTL projection, superposition, target
 │   │                      resolution (voiceless->voiced, g_vel/g_pal,
 │   │                      z_front)
-│   ├── syltraj.py         ACTIVE syllabic trajectory engine ('syl')
-│   ├── trajectory.py      refactored block builder (legacy chain)
-│   ├── trajectory_legacy.py  superposition-graph engine (legacy)
+│   ├── syltraj.py         ACTIVE syllabic trajectory engine ('syl',
+│   │                      self-contained block builder)
+│   ├── trajectory.py      block builder of the deprecated 'legacy'
+│   │                      chain (single trajectory algorithm — the
+│   │                      old superposition-graph engine is gone)
 │   ├── continuous.py      legacy continuous chain (tokens, syllabification,
-│   │                      CV/CVC/CCV executors)
+│   │                      gesture/anchor assembly via trajectory.py)
 │   ├── gesture.py         gesture nodes and anchors (legacy chain)
+│   ├── sampa_guard.py     SAMPA input guard (warn/error/off)
 │   ├── tag_system.py      three-level tag architecture (A/B/C)
+│   ├── orthogonal_params.py  orthogonal branch (TS3/VS, §1)
+│   ├── speaker_registry.py  active-speaker registry (§8.1)
 │   ├── amplitude_envelope.py  token-based effort envelope E(t)
 │   ├── enveloppe.py       TimedEnvelope + FeatureTimer (voicing, velum,
 │   │                      F0, aspiration events indexed by anchors)
@@ -180,7 +185,7 @@ per phrase: build_phrase_tract(...)
 | Engine | Flag | Status | Modules |
 |---|---|---|---|
 | `syl` | `--engine syl` (default) | active | `syltraj.py` |
-| `legacy` | `--engine legacy` | deprecated (DeprecationWarning, kept for non-regression) | `continuous.py`, `trajectory*.py`, `gesture.py`, `phonology.py` |
+| `legacy` | `--engine legacy` | deprecated (DeprecationWarning, kept for non-regression) | `continuous.py`, `trajectory.py`, `gesture.py`, `phonology.py` |
 
 The VTL backend is the `vocaltractlab-cython` wheel (VocalTractLab 2.4,
 Paul Krug's Cython binding); `vtl_synth.vtl.api` re-exports the facade
@@ -270,7 +275,7 @@ never the tract. Full guide: `docs/expressive_prosody.pdf`.
 
 ### 8.4 Polar visualization (add-on 4)
 
-`--polar` builds a `.polar` intermediate (100 Hz, **format v3**: two
+`--polar` builds a `.polar` intermediate (100 Hz, **format v4**: two
 dissociated trajectories `vocalic`/`consonantal` + phoneme timing;
 v2 files stay readable) then renders the dual-panel MP4
 (sagittal | polar) at 25 Hz — red vocalic branch, blue consonantal
@@ -281,6 +286,19 @@ frames are off-manifold inside clusters — v2's single zigzag path is
 kept only as the `polar_from_pval` diagnostic). The work directory is
 purged and the frame count verified before encoding (stale-frame fix).
 Module: `video/polar_video.py`; doc: `docs/polar_visualization.pdf`.
+
+The **interactive HTML counterpart** ships in `examples/html/`:
+`make_html_demos.py` regenerates, from `polar_player.template.html`,
+one self-contained page per demo phrase plus an `index.html` landing
+page. Each page embeds its whole data set (v4 `.polar` trajectories,
+sagittal SVG frames, AAC audio as a data URI — no fetch, no server,
+no network) and replays on `<canvas>` the polar figure of
+`render_polar_frame` (dual branch, 300 ms fading trail, transient
+phoneme labels, inventory dots), the sagittal view and the ρ/θ
+time traces, with the embedded `<audio>` element as the playback
+master clock. The README links directly to the rendered pages, so
+the demos open in a browser straight from the repository without
+cloning.
 
 ## 9. Extension points
 
@@ -298,9 +316,10 @@ Module: `video/polar_video.py`; doc: `docs/polar_visualization.pdf`.
   in `lang_pack/lang_blocks/blocks.py`, then
   `python setup_lang.py install --lang <xx>` (calibration: JD3 only,
   §8.2).
-- **Tests**: lightweight pytest suite (111 tests) in `tests/`,
+- **Tests**: lightweight pytest suite (153 tests) in `tests/`,
   including end-to-end non-regression against the per-speaker
-  `regression_baselines*.json`.
+  `regression_baselines*.json` and the single-trajectory-path
+  guards (`tests/test_single_trajectory_path.py`).
 
 See also `docs/CONVENTIONS.md` (naming, physical notation) and
 `docs/manual.pdf` (user manual with the full model description).

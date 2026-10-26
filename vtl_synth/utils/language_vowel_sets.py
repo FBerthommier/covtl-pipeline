@@ -4,22 +4,22 @@
 """
 language_vowel_sets.py
 ======================
-Inventaires vocaliques par langue pour le calibrage automatique.
+Per-language vowel inventories for automatic calibration.
 
-Chaque entrée contient :
-  - ``vowels`` : dict {clé moteur → (F1_attendu, F2_attendu, θ_cardinal, description)}
-    Les formants F1/F2 sont des valeurs de référence pour un locuteur
-    masculin moyen de la langue (en Hz). L'angle θ_cardinal est la
-    position angulaire dans le plan vocalique de Maeda (en radians),
-    héritée de timit-to-maeda pour les langues supportées.
-  - ``cardinal_corners`` : les 3 sommets du triangle vocalique
-    (clés des voyelles extréma, généralement /a/ /i/ /u/).
-  - ``schwa`` : clé du schwa (centre du triangle), ou None.
+Each entry contains:
+  - ``vowels``: dict {engine key → (expected_F1, expected_F2, cardinal_θ, description)}
+    The F1/F2 formants are reference values for an average male
+    speaker of the language (in Hz). The cardinal_θ angle is the
+    angular position in Maeda's vowel plane (in radians), inherited
+    from timit-to-maeda for the supported languages.
+  - ``cardinal_corners``: the 3 corners of the vowel triangle
+    (keys of the extreme vowels, usually /a/ /i/ /u/).
+  - ``schwa``: key of the schwa (center of the triangle), or None.
 
-Les inventaires sont extensibles : un contributeur peut ajouter une
-nouvelle langue en créant une nouvelle entrée VOWEL_SETS['xx'].
+The inventories are extensible: a contributor can add a new
+language by creating a new VOWEL_SETS['xx'] entry.
 
-Références formantiques :
+Formant references:
   - FR : Fant (1973), Rastatter (1980), Calliope (1989)
   - EN : Peterson & Barney (1952), Hillenbrand et al. (1995)
   - ES : Quilis (1981), Bradlow (1996)
@@ -34,7 +34,7 @@ import numpy as np
 from typing import Dict, Tuple, List, Optional
 
 
-# Type alias : (F1, F2, theta_rad, description)
+# Type alias: (F1, F2, theta_rad, description)
 VowelEntry = Tuple[float, float, float, str]
 
 
@@ -47,7 +47,7 @@ VOWEL_SETS: Dict[str, dict] = {
         'cardinal_corners': ['a', 'i', 'u'],
         'schwa': '@',
         'vowels': {
-            # Voyelles orales cardinales (angles timit-to-maeda)
+            # Cardinal oral vowels (timit-to-maeda angles)
             'i':  (280, 2200, 5 * np.pi / 3,     'antérieure haute'),         # 300°
             'e':  (380, 2000, 3 * np.pi / 2,     'antérieure mi-haute'),      # 270°
             'E':  (530, 1700, 4 * np.pi / 3,     'antérieure mi-basse'),      # 240°
@@ -57,10 +57,10 @@ VOWEL_SETS: Dict[str, dict] = {
             'u':  (300, 870,  np.pi / 3,         'postérieure haute'),        #  60°
             'y':  (290, 1800, 5.5 * np.pi / 3,    'antérieure haute arrondie'),# 330°
             '2':  (370, 1500, 5.5 * np.pi / 3,    'antérieure mi-haute arrondie /ø/'),  # 330°
-            # Voyelles nasales (pas d'angle cardinal — interpolées depuis les orales)
+            # Nasal vowels (no cardinal angle — interpolated from the oral ones)
             '6':  (500, 1500, np.pi,             'nasale mi-antérieure /œ/'), # 180° approx
             '9':  (500, 1500, np.pi,             'nasale mi-antérieure /œ̃/'),
-            # Schwa (centre du triangle, calculé automatiquement)
+            # Schwa (center of the triangle, computed automatically)
             '@':  (500, 1500, np.pi,             'schwa /ə/'),
         },
     },
@@ -73,7 +73,7 @@ VOWEL_SETS: Dict[str, dict] = {
         'cardinal_corners': ['a', 'i', 'u'],
         'schwa': '@',
         'vowels': {
-            # Voyelles anglaises (Peterson & Barney 1952)
+            # English vowels (Peterson & Barney 1952)
             'i':  (300, 2200, 5 * np.pi / 3,     'high front tense /iː/'),    # 300°
             'I':  (400, 1800, 5 * np.pi / 3,     'high front lax /ɪ/'),        # 300° (rho plus bas)
             'e':  (450, 2000, 3 * np.pi / 2,     'mid front /eɪ/'),            # 270°
@@ -97,7 +97,7 @@ VOWEL_SETS: Dict[str, dict] = {
         'cardinal_corners': ['a', 'i', 'u'],
         'schwa': None,  # l'espagnol n'a pas de schwa phonologique
         'vowels': {
-            # Voyelles espagnoles (Quilis 1981)
+            # Spanish vowels (Quilis 1981)
             'i':  (280, 2300, 5 * np.pi / 3,     'alta anterior /i/'),        # 300°
             'e':  (400, 1900, 3 * np.pi / 2,     'media anterior /e/'),       # 270°
             'E':  (520, 1700, 4 * np.pi / 3,     'media-baja anterior /ɛ/'),  # 240°
@@ -116,7 +116,7 @@ VOWEL_SETS: Dict[str, dict] = {
         'cardinal_corners': ['a', 'i', 'u'],
         'schwa': '@',
         'vowels': {
-            # Voyelles allemandes (Jørgensen 1969, Simpson 2009)
+            # German vowels (Jørgensen 1969, Simpson 2009)
             'i':  (280, 2200, 5 * np.pi / 3,     'high front tense /iː/'),    # 300°
             'I':  (350, 1900, 5 * np.pi / 3,     'high front lax /ɪ/'),
             'e':  (370, 2100, 3 * np.pi / 2,     'mid front tense /eː/'),     # 270°
@@ -142,7 +142,7 @@ VOWEL_SETS: Dict[str, dict] = {
         'cardinal_corners': ['a', 'i', 'u'],
         'schwa': None,  # l'italien n'a pas de schwa phonologique
         'vowels': {
-            # Voyelles italiennes (Ferrero et al. 1978 ; homme moyen)
+            # Italian vowels (Ferrero et al. 1978; average male)
             'i':  (280, 2250, 5 * np.pi / 3,     'anteriore alta /i/'),      # 300°
             'e':  (400, 1950, 3 * np.pi / 2,     'media anteriore /e/'),     # 270°
             'E':  (550, 1750, 4 * np.pi / 3,     'aperta anteriore /ɛ/'),    # 240°
@@ -159,14 +159,14 @@ VOWEL_SETS: Dict[str, dict] = {
     'pt': {
         'display_name': 'Português',
         'cardinal_corners': ['a', 'i', 'u'],
-        # Pas de schwa DÉRIVÉ : '@' (/ɐ/) est une voyelle de plein droit
-        # en portugais européen (post-tonique) — il est calibré comme
-        # les autres voyelles, pas comme centre du triangle.
+        # No DERIVED schwa: '@' (/ɐ/) is a full-fledged vowel in
+        # European Portuguese (post-tonic) — it is calibrated like
+        # the other vowels, not as the center of the triangle.
         'schwa': None,
         'vowels': {
-            # Voyelles portugaises (Delgado-Martins 1999 ; Escudero et
-            # al. 2009 — homme moyen ; les nasales sont rendues par la
-            # convention '~' du moteur : a~, e~, i~, o~, u~, @~)
+            # Portuguese vowels (Delgado-Martins 1999; Escudero et
+            # al. 2009 — average male; nasals are rendered with the
+            # engine's '~' convention: a~, e~, i~, o~, u~, @~)
             'i':  (280, 2200, 5 * np.pi / 3,     'anterior alta /i/'),       # 300°
             'e':  (400, 2000, 3 * np.pi / 2,     'semiaberta anterior /e/'), # 270°
             'E':  (550, 1800, 4 * np.pi / 3,     'aberta anterior /ɛ/'),     # 240°
@@ -185,7 +185,7 @@ VOWEL_SETS: Dict[str, dict] = {
 # =====================================================================
 
 def get_vowel_set(lang: str) -> dict:
-    """Retourne l'inventaire vocalique d'une langue."""
+    """Returns the vowel inventory of a language."""
     lang = lang.lower()
     if lang not in VOWEL_SETS:
         available = ', '.join(sorted(VOWEL_SETS.keys()))
@@ -194,20 +194,20 @@ def get_vowel_set(lang: str) -> dict:
 
 
 def list_supported_languages() -> list:
-    """Retourne la liste triée des codes de langue supportés."""
+    """Returns the sorted list of supported language codes."""
     return sorted(VOWEL_SETS.keys())
 
 
 def get_cardinal_corners(lang: str) -> List[str]:
-    """Retourne les 3 sommets du triangle vocalique de la langue."""
+    """Returns the 3 corners of the language's vowel triangle."""
     return get_vowel_set(lang)['cardinal_corners']
 
 
 def get_schwa_key(lang: str) -> Optional[str]:
-    """Retourne la clé du schwa pour la langue, ou None."""
+    """Returns the schwa key of the language, or None."""
     return get_vowel_set(lang).get('schwa')
 
 
 def get_vowel_targets(lang: str) -> Dict[str, Tuple[float, float, float, str]]:
-    """Retourne le dict {clé → (F1, F2, theta, description)} de la langue."""
+    """Returns the language's {key → (F1, F2, theta, description)} dict."""
     return get_vowel_set(lang)['vowels']

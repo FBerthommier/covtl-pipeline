@@ -68,8 +68,9 @@ POLAR_VERSION = 4
 STEP_MS = 10.0          # 1 gesture step = 10 ms @ 100 Hz
 
 # Display curvature (arXiv:2307.02299 §2.1: "K = 30 for vowel arcs and
-# K = 10 for consonant arcs") — the same convention as
-# trajectory_legacy's K_v / K_c = K_CONSONANT_DEFAULT.  The engine
+# K = 10 for consonant arcs") — the same convention as the
+# reference constants K_VOWEL_DEFAULT = 30 / K_CONSONANT_DEFAULT = 10
+# (core/polar.py).  The engine
 # itself drives the parameters with SYL_K = 1000 (quasi-rectilinear in
 # the z-plane).  nu = +1 bows the vocalic arcs one way, −1 the
 # consonantal sub-arcs the other way, as in the reference CV
@@ -595,7 +596,7 @@ def read_polar(path) -> dict:
 
 _COLOR_V = '#d62728'      # vocalic branch / vowel targets: red
 _COLOR_C = '#1f77b4'      # consonantal branch / consonant targets: blue
-_TRAIL_S = 0.75           # s of visible fading trail
+_TRAIL_S = 0.30           # s of visible fading trail (300 ms)
 _LABEL_S = 0.5            # s of transient label display
 
 

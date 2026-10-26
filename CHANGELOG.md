@@ -5,6 +5,100 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
+### Added
+- **Démos HTML interactives** (`examples/html/`) : pages autonomes
+  (aucun serveur ni réseau, ouverture directe en `file://`) générées
+  par `python examples/html/make_html_demos.py` — `index.html` + une
+  page par phrase (`polar_demo_fr.html` « ba.da.ga »,
+  `polar_demo_en.html` « this is easy for us », mêmes paramètres que
+  la démo MP4). Chaque page embarque ses données (trajectoires
+  `.polar` v4 à 100 Hz, frames sagittales SVG du VTL à 25 Hz, audio
+  AAC en data URI) et restitue sur canvas le contrepoint interactif
+  du MP4 bi-panel : vue sagittale, figure polaire à deux branches
+  (rendu identique à `render_polar_frame` — K=30/ν=+1 vocalique,
+  K=10/ν=−1 consonantique, traînée estompée 300 ms, étiquettes
+  phonémiques transitoires, inventaire), traces ρ/θ avec bandes
+  phonémiques, et transport complet (lecture/pause, scrub, vitesse
+  0,25×–1×, boucle, clavier). Vérifié : équivalence géométrique des
+  figures polaires avec les figures du manuel (`fig_frame_b`,
+  `fig_frame_da`), aller-retour exact des données embarquées vers
+  les sorties du pipeline, aucune erreur console. Actifs de dépôt
+  uniquement : jamais installés par pip (exclues de la roue et du
+  sdist — allowlist `vtl_synth*` du pyproject + `prune examples` du
+  MANIFEST.in, vérifié sur les distributions construites).
+
+### Changed
+- **Traînée du polar vidéo portée à 300 ms par défaut** : la trace
+  estompée de chaque branche (vocalique rouge / consonantique bleue)
+  passe de $\approx$ 0,75 s à $\approx$ 0,30 s (`_TRAIL_S`), pour
+  raccourcir la rémanence visuelle — les trajectoires passées
+  s'effacent plus vite et ne masquent plus les gestes brefs (clusters,
+  vues proches de la figure 4 de l'article). Changement
+  d'affichage uniquement : moteur, `.tract`, audio, format `.polar`
+  et géométrie des branches inchangés. **Figures du manuel polaire
+  régénérées** (`fig_branches_full`, `fig_frame_b`, `fig_frame_da` +
+  démo `examples/polar_demo_en.mp4`) : elles dataient de v1.1.0 et
+  montraient encore la géométrie pré-correctifs (lentilles
+  symétriques au lieu des larmes arcplot, plongée de la branche
+  vocalique vers l'origine aux bords, angle dental /d/ pré-recalibrage
+  23π/16) ; elles montrent désormais le rendu v4 courant (larmes,
+  périphérie, traînée 300 ms) et les légendes sont alignées
+  (`docs/polar_visualization.tex` + PDF recompilé).
+- **Traduction anglais US des commentaires, docstrings et affichages
+  restants** : messages utilisateur du noyau (annonce du locuteur
+  actif `describe()`/`announce()`, replis de la prosodie expressive
+  dans `Pipeline`, avertissement TSV du chargeur de lexiques, sorties
+  du calibreur vocalique et de sa CLI), docstrings et commentaires
+  des g2p multilingues (de/es/it/pt + legacy fr) et du chargeur
+  commun, notes de calibration COVTL des speakers DVTD
+  (s1/s2/m01/w02 — `jd3_constants.py` volontairement intact : son
+  hachage est doublement épinglé (registre + préfixe de test) et déjà
+  l'objet de l'incohérence amont connue) ; `registry.json` limité au
+  rafraîchissement mécanique des 4 `constants_sha256` correspondants.
+  Changement d'affichage uniquement, prouvé par égalité AST (chaînes
+  normalisées) sur les 18 fichiers modifiés ; suite de tests
+  inchangée (152 passed + échec amont jd3 identique). Données
+  légitimes non traduites : lexiques et dictionnaires g2p, symboles
+  IPA, noms de langue natifs, entrées du dictionnaire français legacy
+  annotées en terminologie phonétique française.
+
+### Documentation
+- **Alignement de la documentation sur le chemin de trajectoire
+  unique** : `docs/manual.tex` (et `manual.pdf` recompilé) — la
+  section « The legacy engine » décrivait encore l'ancien exécuteur
+  superposition-graph (`execute_superposition_segment`, graphes
+  CV/CVC/CCV explicites) ; elle décrit désormais la chaîne réelle
+  (nœuds/ancres `gesture.py` + block builder `trajectory.py`, timing
+  fixe T_cons=T_voy=160 ms, non paramétrable) ; la puce « Key
+  features » affirmait à tort qu'un « legacy superposition-graph
+  engine » restait sélectionnable. `docs/ARCHITECTURE.md` —
+  `core/trajectory*.py` → `core/trajectory.py` (B(t) et tableau des
+  moteurs), arborescence core/ portée à 28 modules (ajout de
+  `orthogonal_params.py`, `sampa_guard.py`, `speaker_registry.py`),
+  compteur de tests 111 → 153 avec mention des gardes
+  single-trajectory-path, précision que `syltraj` embarque son
+  propre block builder. Commentaires de code périmés révisés
+  (`polar.py` ×2, `types.py`, `polar_video.py` : plus aucune
+  référence active à `trajectory_legacy`).
+
+### Removed
+- **Suppression du moteur de trajectoire double (trajectory_legacy)** :
+  le moteur superposition-graph `vtl_synth/core/trajectory_legacy.py`
+  (1025 lignes) et son cluster d'exécuteurs morts dans
+  `continuous.py` (`_execute_syllable_element`, `_execute_*_diphthong*`,
+  `_build_{cv,cccv,ccvc,cvc_extended}_graph`, `_build_transition_arc`,
+  `_generate_pause` — 1189 lignes) ont été supprimés. Ces fonctions
+  n'étaient appelées par aucun chemin de production ni de test (le
+  moteur actif est `syltraj` via `engine='syl'` par défaut ; le chemin
+  d'alignement déprécié `engine='legacy'` utilise déjà
+  `trajectory.py`). La synthèse de production suit désormais un
+  chemin algorithmique unique, prouvé par le garde-fou
+  `tests/test_single_trajectory_path.py` (module non importable,
+  scan AST des imports, moteur par défaut = syltraj, chemin
+  déprécié = trajectory.py). Sorties numériques par défaut
+  **bit-identiques** sur le corpus de référence
+  (16/16 `test_regression_baselines.py` inchangés).
+
 ### Fixed
 - **Polar display teardrop** : les sous-arcs consonantiques (branche
   bleue) étaient tracés avec la phase ν/K portée par le point

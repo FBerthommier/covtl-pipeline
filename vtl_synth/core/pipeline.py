@@ -46,9 +46,9 @@ from vtl_synth.utils.setlang import (
     text_to_sampa as _text_to_sampa_lang,
 )
 
-# Expressive prosody (v1.1.0, option — défaut OFF). Import non
-# critique : indisponible → Pipeline(expressive=True) retombe sur la
-# déclinaison monotone avec un avertissement.
+# Expressive prosody (v1.1.0, option — default OFF). Non-critical
+# import: when unavailable, Pipeline(expressive=True) falls back to
+# monotone declination with a warning.
 try:
     from vtl_synth.core.syltraj import get_last_build as _get_last_build
     from vtl_synth.utils.prosody_f0 import (
@@ -201,15 +201,15 @@ class Pipeline:
     pause_short_ms, pause_long_ms :
         Inter-word (space) and end-of-sentence ('|') pause duration.
     expressive : bool
-        Prosodie expressive (v1.1.0) : respiration syntaxique
-        (pauses courtes aux frontières de blocs — aucune chaîne de
-        mots coarticulés > ``max_chain_words``) et contour de F0
-        sculpté (accents de hauteur sur les syllabes accentuées,
-        reprise d'attaque par bloc, chute nucléaire). DÉFAUT OFF :
-        sorties bit-identiques au mode monotone. N'agit que sur la
-        colonne f0 du glottis et les durées de pause — jamais sur le
-        tract. Requiert ``use_g2p=True`` (l'entrée phonétique n'a
-        pas de structure syntaxique).
+        Expressive prosody (v1.1.0): syntactic breathing (short
+        pauses at block boundaries — no chain of coarticulated
+        words longer than ``max_chain_words``) and a sculpted F0
+        contour (pitch accents on accented syllables, per-block
+        attack reset, nuclear fall). DEFAULT OFF: bit-identical
+        outputs to monotone mode. Only acts on the glottal f0
+        column and pause durations — never on the tract.
+        Requires ``use_g2p=True`` (phonetic input has no
+        syntactic structure).
     """
 
     def __init__(self,
@@ -260,17 +260,17 @@ class Pipeline:
         self.t_voy_ms = t_voy_ms
         self.pause_short_ms = pause_short_ms
         self.pause_long_ms = pause_long_ms
-        # Prosodie expressive (v1.1.0, défaut OFF)
+        # Expressive prosody (v1.1.0, default OFF)
         self.expressive = bool(expressive)
         self._expressivity = getattr(_profile, 'expressivity', None)
         if self.expressive:
             if not _EXPRESSIVE_OK:
-                print('[pipeline] prosody_f0 indisponible : '
-                      'retombée sur la déclinaison monotone')
+                print('[pipeline] prosody_f0 unavailable: '
+                      'falling back to monotone declination')
                 self.expressive = False
             elif self._expressivity is None:
-                print(f'[pipeline] pas de profil expressif pour '
-                      f'{lang!r} : retombée sur la déclinaison monotone')
+                print(f'[pipeline] no expressive profile for '
+                      f'{lang!r}: falling back to monotone declination')
                 self.expressive = False
 
     # ------------------------------------------------------------------
@@ -319,14 +319,14 @@ class Pipeline:
         expressive = self.expressive and use_g2p
         if self.expressive and not use_g2p:
             warnings.append(
-                'mode expressif ignoré : l\'entrée phonétique '
-                '(use_g2p=False) n\'a pas de structure syntaxique')
+                'expressive mode ignored: phonetic input '
+                '(use_g2p=False) has no syntactic structure')
             print(f'[pipeline] {warnings[-1]}')
         expressive_plans = None
         if expressive:
-            # Respiration syntaxique + plan d'accents : le SAMPA
-            # assemblé est celui du g2p de la langue, séparé en
-            # groupes de souffle par le marqueur '%'.
+            # Syntactic breathing + accent plan: the assembled
+            # SAMPA is the language g2p's, split into breath
+            # groups by the '%' marker.
             sampa, expressive_plans = _plan_expressive_text(
                 text, self.lang, self._lang_profile.g2p_callable,
                 self._expressivity, warnings)
@@ -342,7 +342,7 @@ class Pipeline:
             raise ValueError(f'no phonetic content in: {text!r}')
         if expressive_plans is not None and \
                 len(expressive_plans) != len(phrases):
-            # garde-fou : le plan et le SAMPA doivent s'aligner
+            # guard: the plan and the SAMPA must stay aligned
             expressive_plans = None
 
         # File stem from the *original* text (not the SAMPA), so that
@@ -374,10 +374,10 @@ class Pipeline:
                 pause_long_ms=self.pause_long_ms,
                 pause_breath_ms=pause_breath_ms,
             )
-            # Prosodie F0 : expressive (accents + reprises + chute
-            # nucléaire, plan aligné sur les blocs syltraj) ou
-            # déclinaison monotone (language pack : gains du profil
-            # actif).
+            # F0 prosody: expressive (pitch accents + attack resets +
+            # nuclear fall, plan aligned on the syltraj blocks) or
+            # monotone declination (language pack: gains of the
+            # active profile).
             applied = False
             if expressive and expressive_plans is not None:
                 last_build = _get_last_build()
