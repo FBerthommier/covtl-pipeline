@@ -5,6 +5,16 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
+## [Unreleased]
+
+### Changed
+- **fix(syltraj): preserve the pending anchor point across consecutive pause
+  nodes (audit D-11)** — pause arcs now depart from the preceding vowel
+  (paper §2.2 pause-diphthong V_e → V_o); max inter-step jump on `bi |`
+  reduced from 0.908 to 0.106 VTL units; `bi |` and `bi | ba` are the only
+  affected corpus sequences (90/92 corpus notations byte-identical; the
+  console splits phrases on `|` and is unaffected).
+
 ### Added
 - **Démos HTML interactives** (`examples/html/`) : pages autonomes
   (aucun serveur ni réseau, ouverture directe en `file://`) générées

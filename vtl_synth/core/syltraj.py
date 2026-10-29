@@ -930,7 +930,14 @@ def build_global_pval(nodes, anchors, T_cons, T_voy, T_pause_short,
                 pending_pt = None
                 pending_breath = False
             elif B.kind == 'pause':
-                pending_pt = A.pt or [0.0, 0.0]
+                # audit D-11: when a pending point is already held (pause
+                # node following another pause node — the tokenizer emits
+                # GAP before PAUSE for "bi |"), KEEP it: the pause arc must
+                # depart from the preceding vowel (pause diphthong
+                # V_e -> V_o, paper arXiv:2307.02299 §2.2). The A.pt
+                # fallback applies only to the first pause of a run.
+                if pending_pt is None:
+                    pending_pt = A.pt or [0.0, 0.0]
                 pending_long = B.long
                 pending_breath = B.breath
             continue
