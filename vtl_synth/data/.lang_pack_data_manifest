@@ -1,12 +1,12 @@
 {
- "README_de_lexicon.md": "a640a6b5d0529597c89a3fc40d52352e550c265f31107490bcccebef86a24d85",
- "README_es_lexicon.md": "87aee6b8841ec7aeb87c5aeff70887fce9ba6562a296836f70cb87e5a511b21b",
- "README_fr_lexicon.md": "c0c1be7a11c065975ff6996b8448cbef53538e2afe9b707bfe116e14e17a90e7",
- "README_it_lexicon.md": "9384806f02ae1876646406da1404e9d0112eb6640934d3ec90a8982dc09cf921",
- "README_pt_lexicon.md": "91738884734b4b38ab6eee8662a246d8f903383c3f88f81fd29c0b140b7c8815",
- "de_lexicon.tsv": "2639f44d6bfc1c28572626f6b4c3be38453e6764d217d1c5a2b9fac3648a4d34",
- "es_lexicon.tsv": "c92b2eab119d6e52eb68f5f62f443033e30975dc763bc256de76fa6257b529ef",
- "fr_lexicon.tsv": "6f0fe8d7a50f4eb494eb478e5673cb72542484dccd048f46f3b12f75f4d51628",
- "it_lexicon.tsv": "231c78d1fb89f1f03ad7420b69003023b84863d877ce82ee72d2590fa470b78a",
- "pt_lexicon.tsv": "8c79a454884ad1058f0002d807bb06e2e0264d111f0934a12ab331b64e7f2c41"
+ "README_de_lexicon.md": "c0fbe2890bdd254b3c5f0246174692fccb3cab13d7b0f78b2b9e9b278e4ab849",
+ "README_es_lexicon.md": "cec59d3f4fc9ef3329b8079e2343d8e8fa1badf20934dda8f06870716ae78eba",
+ "README_fr_lexicon.md": "e0388b346934d307ada043dc89ad9dbdd19f2e7fa8486c98e62b1627383ce512",
+ "README_it_lexicon.md": "23e2243fb4a155bfee5c01c1705872a31b0d142f9ae9946c9cd8c0b330d6eedf",
+ "README_pt_lexicon.md": "cff66e8a6c085462a7c7ed9b45e29aa9d99cb327b416d19feb15541c8858b78b",
+ "de_lexicon.tsv": "dedaaf15164e94556e70df5f270bbbd70b6e85110a786e92d75189e18728aeae",
+ "es_lexicon.tsv": "86a5fc8ba26435e19eb6de4440c8a1149cc9052ff7745c882c6033f580f93243",
+ "fr_lexicon.tsv": "206cd18ba0b37b125d1564fcf58c27f2145bf0aa7c16ebfc0873248f67ddca1a",
+ "it_lexicon.tsv": "d451a64160a6a9cc77eb2d2abc23303e92e58448586f2cbe681ab9e90e5f62a5",
+ "pt_lexicon.tsv": "a9692846592b27d281be293bc15afdb80378873b7157d3e6e90641fff25e4f47"
 }

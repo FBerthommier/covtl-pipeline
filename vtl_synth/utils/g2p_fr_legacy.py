@@ -158,7 +158,7 @@ _FR_EXCEPTIONS: dict = {
     'mesdames': 'm e d a m',
     'oiseau': 'w a z o',
     'oiseaux': 'w a z o',
-    # --- words with ambiguous nasals (the 'en'→a~ rule captures too early) ---
+    # --- mots avec nasales ambiguës (la règle 'en'→a~ capture trop tôt) ---
     'demain':   'd@ mE~',    # /də.mɛ̃/ — pas 'da~E~' (règle en→a~ appliquée à 'den')
     'demains':  'd@ mE~',
     'chemin':   'S@ mE~',    # /ʃə.mɛ̃/
@@ -182,10 +182,10 @@ _FR_EXCEPTIONS: dict = {
     'moins':    'mwE~',
     'frais':    'f R E',
     'religion': 'R @ l i Z j O~',
-    # --- words with pronounced 'il' (must NOT become /j/) ---
+    # --- mots avec 'il' prononcé (ne doit PAS passer à /j/) ---
     'film':     'f i l m',     # /film/ — le 'l' est prononcé
     'films':    'f i l m',
-    # --- words with 'ien' / 'ièn' / 'ié' (nasal trigraph and semivowel) ---
+    # --- mots avec 'ien' / 'ièn' / 'ié' (trigraphe nasale et semi-voyelle) ---
     'bien':     'b j E~',       # /bjɛ̃/
     'biens':    'b j E~',
     'viens':    'v j E~',
@@ -198,7 +198,7 @@ _FR_EXCEPTIONS: dict = {
     'ancien':   'A~ s j E~',
     'ancienne': 'A~ s j E n',
     'citizen':  's i t i z E~',  # anglicisme
-    # --- imperfect and simple past (é → open E) ---
+    # --- imparfait et passé simple (é → E ouvert) ---
     'était':    'E tE',        # /ɛ.tɛ/ — imparfait, é = /E/ ouvert
     'étais':    'E tE',
     'étaient':  'E tE',
@@ -213,16 +213,16 @@ _FR_EXCEPTIONS: dict = {
     'faisaient':'f@ zE',
     # --- mots avec 'ier' (i devant voyelle = /j/) ---
     'hier':     'j E R',       # /jɛʁ/ — le 'h' est muet, 'i' = /j/ devant 'e'
-    # --- verb aimer (the 'aim'→E~ rule captures too early before a vowel) ---
-    # NOTE: the values are SPACE-SEPARATED SAMPA KEYS (no '.').
-    # The syllabification '.' is added automatically by keys_to_connected
-    # via onset maximization. Putting a '.' in the value would create
-    # an invalid token (e.g. 'e.m') passed as-is to the engine.
-    # To enable the mR cluster (and avoid the intermediate schwa
-    # allocated by COVTL when the engine sees 'e.m' as 2 syllables),
-    # give 'e m R E' (separate keys) → keys_to_connected produces
-    # 'em.RE', a cluster of 2 consonants (m, R) between 2 vowels
-    # (e, E), treated as ONE block without schwa.
+    # --- verbe aimer (la règle 'aim'→E~ capture trop tôt devant voyelle) ---
+    # NOTE : les valeurs sont des CLÉS SAMPA SÉPARÉES PAR ESPACES (pas de '.').
+    # Le '.' de syllabification est ajouté automatiquement par keys_to_connected
+    # via la maximisation d'attaque. Mettre un '.' dans la valeur créerait
+    # un token invalide (e.g. 'e.m') qui serait passé tel quel au moteur.
+    # Pour activer le cluster mR (et éviter le schwa intermédiaire alloué
+    # par COVTL quand le moteur voit 'e.m' comme 2 syllabes), il faut
+    # donner 'e m R E' (clés séparées) → keys_to_connected produit 'em.RE'
+    # qui est un cluster de 2 consonnes (m, R) entre 2 voyelles (e, E),
+    # traité comme UN bloc sans schwa.
     'aimer':    'e m e',       # /ɛ.me/ — 2 syllabes: em.e
     'aime':     'E m',         # /ɛm/ — 1 syllabe
     'aimes':    'E m',
@@ -242,7 +242,7 @@ _FR_EXCEPTIONS: dict = {
     'aimeriez': 'e m R j e',
     'aimeraient': 'e m R E',
     # --- recevoir (le 'c' devant 'e' devrait donner 's', non 'k') ---
-    # NOTE: space-separated keys (no '.'), keys_to_connected adds '.'
+    # NOTE : clés séparées par espaces (pas de '.'), keys_to_connected ajoute '.'
     'recevoir': 'R @ s @ v w a R',  # /ʁə.sə.vwaʁ/ — 3 syllabes: R@.s@.vwaR
     'reçois':   'R @ s w a',         # /ʁə.swa/
     'reçoit':   'R @ s w a',
@@ -273,15 +273,15 @@ _FR_EXCEPTIONS: dict = {
     'quelque':  'k E l k',
     'quelles':  'k E l',
     'quelle':   'k E l',
-    # --- Corée / coréen (the final 'e' is mute) ---
+    # --- Corée / coréen (le 'e' final est muet) ---
     'Corée':    'k o R e',    # /kɔ.ʁe/
     'corée':    'k o R e',
     'coréen':   'k o R e E~',
     'coréenne': 'k o R E n',
     'Coréen':   'k o R e E~',
     'Coréenne': 'k o R E n',
-    # --- words with ambiguous nasal to correct ---
-    # (already handled by the rules, but let's add a few confirmations)
+    # --- mots avec nasale ambiguë à corriger ---
+    # (déjà gérés par les règles, mais ajoutons quelques confirmations)
     # --- function words / contractions ---
     'ils':   'i l',        # /il/ — la règle 'il'→j capture trop tôt
     'elles': 'E l',        # /ɛl/ — idem

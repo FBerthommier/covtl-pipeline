@@ -4,27 +4,27 @@
 """
 calibrate_vowels.py
 ====================
-Automatic calibration of the vowel targets (rho, theta) for a
-specific VTL speaker and a target language.
+Calibrage automatique des cibles vocaliques (rho, theta) pour un
+locuteur VTL spécifique et une langue cible.
 
-Principle
----------
-Given:
-  1. A VTL speaker (.speaker file) — defines the tract geometry
-  2. A COVTL matrix (c0/c1/c2 coefficients of the 15 VTL parameters) —
-     defined in ``constants.CO_VTL``
-  3. A language vowel inventory (expected F1/F2 + cardinal theta) —
-     defined in ``language_vowel_sets.VOWEL_SETS``
+Principe
+--------
+Étant donnés :
+  1. Un speaker VTL (fichier .speaker) — définit la géométrie du tract
+  2. Une matrice COVTL (coefficients c0/c1/c2 des 15 paramètres VTL) —
+     définie dans ``constants.CO_VTL``
+  3. Un inventaire vocalique de langue (F1/F2 attendus + theta cardinal)
+     — défini dans ``language_vowel_sets.VOWEL_SETS``
 
-The calibrator:
-  - Measures the speaker's mechanical extremes /a/ /i/ /u/ by sweeping
-    rho ∈ [0.3, 1.2] and measuring the formants via the VTL transfer
-    function + LPC analysis.
-  - For each vowel, finds the optimal rho (fixed theta) that
-    minimizes the deviation from the language's reference formants.
-  - Computes the schwa as the centroid of the a-i-u triangle.
-  - Returns a ``{key → (rho, theta)}`` dict ready to be installed in
-    ``constants.VOWEL_TARGETS``.
+Le calibreur :
+  - Mesure les extréma mécaniques /a/ /i/ /u/ du speaker en balayant
+    rho ∈ [0.3, 1.2] et en mesurant les formants via la transfer function
+    VTL + analyse LPC.
+  - Pour chaque voyelle, trouve le rho optimal (theta fixe) qui
+    minimise l'écart aux formants de référence de la langue.
+  - Calcule le schwa comme centroïde du triangle a-i-u.
+  - Retourne un dict ``{clé → (rho, theta)}`` prêt à être installé
+    dans ``constants.VOWEL_TARGETS``.
 
 Usage
 -----
@@ -37,7 +37,7 @@ Usage
         lang='fr',
         co_vtl=CO_VTL,
         covtl_to_full=COVTL_TO_FULL,
-        speaker_path=None,  # use the default VTL speaker
+        speaker_path=None,  # utilise le speaker VTL par défaut
     )
     # targets = {'i': (0.34, 5.236), 'e': (0.85, 4.712), ...}
 
@@ -59,7 +59,7 @@ from typing import Dict, Tuple, Optional
 
 import numpy as np
 
-# Lazy imports to avoid circular dependencies
+# Imports paresseux pour éviter les dépendances circulaires
 def _import_vtl():
     """Import vocaltractlab_cython (lazy)."""
     import vocaltractlab_cython as vtl
@@ -67,36 +67,36 @@ def _import_vtl():
 
 
 def _import_constants():
-    """Imports CO_VTL and COVTL_TO_FULL from constants (lazy)."""
+    """Importe CO_VTL et COVTL_TO_FULL depuis constants (lazy)."""
     from vtl_synth.core.constants import CO_VTL, COVTL_TO_FULL
     return CO_VTL, COVTL_TO_FULL
 
 
 # =====================================================================
-# Formant measurement via LPC
+# Mesure des formants par LPC
 # =====================================================================
 
 def compute_formants_lpc(tract19, sr_audio: int = 44100,
                           order: int = 12, window_ms: float = 30.0):
-    """Measures the formants of a tract state via LPC analysis.
+    """Mesure les formants d'un état du tract via analyse LPC.
 
     Parameters
     ----------
     tract19 : array-like (19,)
-        Vocal tract state vector (19 VTL parameters).
+        Vecteur d'état du tract vocal (19 paramètres VTL).
     sr_audio : int
-        Audio sampling rate (Hz).
+        Fréquence d'échantillonnage audio (Hz).
     order : int
-        LPC model order (12 = 6 pole pairs, enough for
+        Ordre du modèle LPC (12 = 6 paires de pôles, suffisant pour
         4-5 formants).
     window_ms : float
-        Analysis window duration (ms) on the impulse response.
+        Durée de la fenêtre d'analyse (ms) sur l'impulse response.
 
     Returns
     -------
     list of float
-        List of formants (F1, F2, F3, ...) sorted by
-        increasing frequency. Empty list if the measurement fails.
+        Liste des formants (F1, F2, F3, ...) triés par fréquence
+        croissante. Liste vide si la mesure échoue.
     """
     vtl = _import_vtl()
     from scipy.linalg import toeplitz
@@ -120,7 +120,7 @@ def compute_formants_lpc(tract19, sr_audio: int = 44100,
     if n < order + 2:
         return []
     R = np.correlate(h, h, mode='full')[n - 1:n + order]
-    R = R + 1e-8 * np.max(np.abs(R))  # regularization
+    R = R + 1e-8 * np.max(np.abs(R))  # régularisation
     try:
         A = np.linalg.solve(toeplitz(R[:-1]), R[1:])
         A = np.concatenate([[1.0], -A])
@@ -139,28 +139,28 @@ def compute_formants_lpc(tract19, sr_audio: int = 44100,
 
 
 # =====================================================================
-# Tract construction from a (rho, theta) target
+# Construction du tract à partir d'une cible (rho, theta)
 # =====================================================================
 
 def build_tract(rho: float, theta: float, co_vtl: dict,
                 covtl_to_full: dict) -> np.ndarray:
-    """Builds the 19-parameter vector for a (rho, theta) target.
+    """Construit le vecteur 19-paramètres pour une cible (rho, theta).
 
     Parameters
     ----------
     rho : float
-        Polar radius (0.0 = neutral, 1.0 = nominal target, >1.0 = occlusion).
+        Rayon polaire (0.0 = neutre, 1.0 = cible nominale, >1.0 = occlusion).
     theta : float
-        Polar angle (radians).
+        Angle polaire (radians).
     co_vtl : dict
-        CO_VTL matrix: {param_name → (c1, c0, c2)}.
+        Matrice CO_VTL : {param_name → (c1, c0, c2)}.
     covtl_to_full : dict
-        Mapping {param_name → index 0-18} in the 19-parameter vector.
+        Mapping {param_name → index 0-18} dans le vecteur 19-paramètres.
 
     Returns
     -------
     np.ndarray (19,)
-        Tract state vector.
+        Vecteur d'état du tract.
     """
     tract = np.zeros(19)
     for p, idx in covtl_to_full.items():
@@ -170,16 +170,16 @@ def build_tract(rho: float, theta: float, co_vtl: dict,
 
 
 # =====================================================================
-# Formant measurement for a target
+# Mesure des formants pour une cible
 # =====================================================================
 
 def measure_formants(rho: float, theta: float, co_vtl: dict,
                      covtl_to_full: dict) -> Tuple[float, float]:
-    """Measures F1/F2 for a (rho, theta) target via VTL + LPC.
+    """Mesure F1/F2 pour une cible (rho, theta) via VTL + LPC.
 
     Returns
     -------
-    (F1, F2) in Hz, or (0, 0) if the measurement fails.
+    (F1, F2) en Hz, ou (0, 0) si la mesure échoue.
     """
     tract = build_tract(rho, theta, co_vtl, covtl_to_full)
     formants = compute_formants_lpc(tract)
@@ -189,7 +189,7 @@ def measure_formants(rho: float, theta: float, co_vtl: dict,
 
 
 # =====================================================================
-# Optimal rho search for a vowel
+# Recherche du rho optimal pour une voyelle
 # =====================================================================
 
 def find_best_rho(f1_att: float, f2_att: float, theta: float,
@@ -197,20 +197,20 @@ def find_best_rho(f1_att: float, f2_att: float, theta: float,
                   rho_min: float = 0.3, rho_max: float = 1.2,
                   rho_step: float = 0.05,
                   verbose: bool = False) -> Tuple[float, float, float, float]:
-    """Finds the optimal rho for a vowel (fixed theta).
+    """Trouve le rho optimal pour une voyelle (theta fixe).
 
     Parameters
     ----------
     f1_att, f2_att : float
-        Reference formants (Hz) — targets to reach.
+        Formants de référence (Hz) — cibles à atteindre.
     theta : float
-        Fixed polar angle (radians) — cardinal position of the vowel.
+        Angle polaire fixe (radians) — position cardinale de la voyelle.
     co_vtl, covtl_to_full : dict
-        COVTL matrix and index mapping (cf. build_tract).
+        Matrice COVTL et mapping d'index (cf. build_tract).
     rho_min, rho_max, rho_step : float
-        Search range for rho.
+        Plage de recherche pour rho.
     verbose : bool
-        If True, prints each measurement.
+        Si True, affiche chaque mesure.
 
     Returns
     -------
@@ -237,7 +237,7 @@ def find_best_rho(f1_att: float, f2_att: float, theta: float,
 
 
 # =====================================================================
-# Full calibration of a language
+# Calibrage complet d'une langue
 # =====================================================================
 
 def calibrate_vowels(lang: str,
@@ -247,34 +247,34 @@ def calibrate_vowels(lang: str,
                      rho_range_cardinal: Tuple[float, float, float] = (0.3, 1.2, 0.02),
                      rho_range_others: Tuple[float, float, float] = (0.3, 1.05, 0.05),
                      verbose: bool = False) -> Dict[str, Tuple[float, float]]:
-    """Calibrates the vowel targets for a language and a VTL speaker.
+    """Calibre les cibles vocaliques pour une langue et un speaker VTL.
 
     Parameters
     ----------
     lang : str
-        ISO 639-1 language code (e.g. 'fr', 'en', 'es', 'de').
+        Code langue ISO 639-1 (e.g. 'fr', 'en', 'es', 'de').
     co_vtl : dict, optional
-        CO_VTL matrix {param → (c1, c0, c2)}. If None, uses
-        the repository's ``constants.CO_VTL``.
+        Matrice CO_VTL {param → (c1, c0, c2)}. Si None, utilise
+        ``constants.CO_VTL`` du dépôt.
     covtl_to_full : dict, optional
-        Mapping {param → index 0-18}. If None, uses
+        Mapping {param → index 0-18}. Si None, utilise
         ``constants.COVTL_TO_FULL``.
     speaker_path : str, optional
-        Path to the VTL .speaker file. If None, uses the
-        default speaker (JD3).
+        Chemin vers le fichier .speaker VTL. Si None, utilise le
+        speaker par défaut (JD3).
     rho_range_cardinal : tuple
-        (rho_min, rho_max, rho_step) for the /a/ /i/ /u/ extremes.
+        (rho_min, rho_max, rho_step) pour les extréma /a/ /i/ /u/.
     rho_range_others : tuple
-        (rho_min, rho_max, rho_step) for the other vowels.
+        (rho_min, rho_max, rho_step) pour les autres voyelles.
     verbose : bool
-        If True, prints each formant measurement.
+        Si True, affiche chaque mesure de formants.
 
     Returns
     -------
     dict
-        {vowel_key → (rho, theta)} ready to install in VOWEL_TARGETS.
+        {clé_voyelle → (rho, theta)} prêt à installer dans VOWEL_TARGETS.
     """
-    # Lazy imports
+    # Imports paresseux
     if co_vtl is None or covtl_to_full is None:
         CO_VTL, COVTL_TO_FULL = _import_constants()
         if co_vtl is None:
@@ -282,33 +282,33 @@ def calibrate_vowels(lang: str,
         if covtl_to_full is None:
             covtl_to_full = COVTL_TO_FULL
 
-    # Load the speaker if specified
+    # Charger le speaker si spécifié
     vtl = _import_vtl()
     if speaker_path is not None:
         if not os.path.exists(speaker_path):
             raise FileNotFoundError(f'speaker file not found: {speaker_path}')
-        # Note: the VTL 0.0.17 API does not make it easy to load a
-        # custom speaker; the default speaker (JD3) is used. For
-        # another speaker, VTL would have to be recompiled.
-        print(f'[!] Note: speaker_path={speaker_path!r} ignored (VTL API '
-              f'limitation) — using the default speaker',
+        # Note : l'API VTL 0.0.17 ne permet pas de charger un speaker
+        # personnalisé facilement ; le speaker par défaut (JD3) est
+        # utilisé. Pour un autre speaker, il faudrait recompilier VTL.
+        print(f'[!] Note: speaker_path={speaker_path!r} ignoré (VTL API '
+              f'limitation) — utilisation du speaker par défaut',
               file=sys.stderr)
 
-    # Language inventory
+    # Inventaire de la langue
     from vtl_synth.utils.language_vowel_sets import get_vowel_targets, get_cardinal_corners, get_schwa_key
     vowel_targets_ref = get_vowel_targets(lang)
     cardinal_corners = get_cardinal_corners(lang)
     schwa_key = get_schwa_key(lang)
 
-    print(f'[+] Automatic calibration for language: {lang!r}')
-    print(f'    Cardinal extremes: {cardinal_corners}')
-    print(f'    Schwa: {schwa_key}')
+    print(f'[+] Calibrage automatique pour la langue : {lang!r}')
+    print(f'    Extréma cardinaux : {cardinal_corners}')
+    print(f'    Schwa : {schwa_key}')
     print()
 
-    # Step 1: calibrate the /a/ /i/ /u/ extremes with a fine rho
-    print('=== Step 1: cardinal extremes (fine rho) ===')
-    print(f'{"vow":>4} {"θ°":>5} {"F1_tgt":>7} {"F2_tgt":>7} '
-          f'{"rho_opt":>7} {"F1_pred":>7} {"F2_pred":>7} {"error":>7}')
+    # Étape 1 : calibrer les extréma /a/ /i/ /u/ avec rho fin
+    print('=== Étape 1 : extréma cardinaux (rho fin) ===')
+    print(f'{"voy":>4} {"θ°":>5} {"F1_att":>7} {"F2_att":>7} '
+          f'{"rho_opt":>7} {"F1_pred":>7} {"F2_pred":>7} {"erreur":>7}')
     targets = {}
     cardinal_rhos = {}
     for v in cardinal_corners:
@@ -325,11 +325,11 @@ def calibrate_vowels(lang: str,
         print(f'  /{v}/ {int(np.degrees(theta)):>5} {f1_att:>7.0f} {f2_att:>7.0f} '
               f'{rho:>7.3f} {f1:>7.0f} {f2:>7.0f} {err:>7.0f}  {desc}')
 
-    # Step 2: calibrate the other vowels
+    # Étape 2 : calibrer les autres voyelles
     print()
-    print('=== Step 2: other vowels ===')
-    print(f'{"vow":>4} {"θ°":>5} {"F1_tgt":>7} {"F2_tgt":>7} '
-          f'{"rho_opt":>7} {"F1_pred":>7} {"F2_pred":>7} {"error":>7}')
+    print('=== Étape 2 : autres voyelles ===')
+    print(f'{"voy":>4} {"θ°":>5} {"F1_att":>7} {"F2_att":>7} '
+          f'{"rho_opt":>7} {"F1_pred":>7} {"F2_pred":>7} {"erreur":>7}')
     for v, (f1_att, f2_att, theta, desc) in vowel_targets_ref.items():
         if v in cardinal_corners or v == schwa_key:
             continue
@@ -344,18 +344,18 @@ def calibrate_vowels(lang: str,
         print(f'  /{v}/ {int(np.degrees(theta)):>5} {f1_att:>7.0f} {f2_att:>7.0f} '
               f'{rho:>7.3f} {f1:>7.0f} {f2:>7.0f} {err:>7.0f}  {desc}')
 
-    # Step 3: schwa = centroid of the a-i-u triangle
+    # Étape 3 : schwa = centroïde du triangle a-i-u
     if schwa_key is not None:
         rho_mean = np.mean(list(cardinal_rhos.values()))
         theta_schwa = vowel_targets_ref[schwa_key][2]
         targets[schwa_key] = (rho_mean, theta_schwa)
         print()
-        print(f'=== Step 3: schwa /{schwa_key}/ ===')
-        print(f'  rho = mean of the cardinals = ({cardinal_rhos}) = {rho_mean:.3f}')
+        print(f'=== Étape 3 : schwa /{schwa_key}/ ===')
+        print(f'  rho = moyenne des cardinaux = ({cardinal_rhos}) = {rho_mean:.3f}')
         print(f'  theta = {np.degrees(theta_schwa):.0f}°')
 
     print()
-    print('=== Final calibrated targets ===')
+    print('=== Cibles finales calibrées ===')
     print('VOWEL_TARGETS = {')
     for v, (rho, theta) in targets.items():
         print(f"    '{v}': ({rho:.3f}, {theta:.6f}),  # {int(np.degrees(theta))}°")
@@ -370,18 +370,18 @@ def calibrate_vowels(lang: str,
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Automatically calibrates the vowel targets for '
-                    'a language and a VTL speaker.',
+        description='Calibre automatiquement les cibles vocaliques pour '
+                    'une langue et un speaker VTL.',
     )
     parser.add_argument('--lang', default='fr',
                         choices=['fr', 'en', 'es', 'de'],
-                        help='language code (default: fr)')
+                        help='code langue (default: fr)')
     parser.add_argument('--speaker', default=None,
-                        help='path to the VTL .speaker file')
+                        help='chemin vers le fichier .speaker VTL')
     parser.add_argument('--output', '-o', default=None,
-                        help='output JSON file (calibrated_vowels.json)')
+                        help='fichier JSON de sortie (calibrated_vowels.json)')
     parser.add_argument('--verbose', '-v', action='store_true',
-                        help='print each formant measurement')
+                        help='affiche chaque mesure de formants')
     args = parser.parse_args()
 
     targets = calibrate_vowels(
@@ -390,14 +390,14 @@ def main():
         verbose=args.verbose,
     )
 
-    # Save to JSON
+    # Sauvegarder en JSON
     if args.output is None:
         args.output = f'/home/z/my-project/download/calibrated_vowels_{args.lang}.json'
     data = {v: {'rho': r, 'theta_deg': np.degrees(t), 'theta_rad': t}
             for v, (r, t) in targets.items()}
     with open(args.output, 'w') as f:
         json.dump(data, f, indent=2)
-    print(f'\n[+] Calibration saved: {args.output}')
+    print(f'\n[+] Calibration sauvegardée : {args.output}')
     return 0
 
 

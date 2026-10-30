@@ -4,34 +4,34 @@
 """
 lexicon_loader.py
 =================
-Shared pronunciation-lexicon loader (Wikipron TSV), used by all the
-multilingual g2p front-ends (fr, es, de, it, pt).
+Chargeur commun des lexiques de prononciation (Wikipron TSV), partagé
+par tous les g2p multilingues (fr, es, de, it, pt).
 
-Factorized from ``g2p_fr.py``'s ``_load_lexicon`` (v2): each language
-describes its lexicon with a ``LexiconSpec`` (file name, environment
-variable, IPA → engine keys table). The loader is lazy,
-failure-tolerant (missing lexicon → graceful degradation to the rules)
-and caches its results.
+Factorisation de ``_load_lexicon`` de ``g2p_fr.py`` (v2) : chaque langue
+décrit son lexique par un ``LexiconSpec`` (nom de fichier, variable
+d'environnement, table IPA → clés moteur). Le chargeur est paresseux,
+tolérant aux pannes (lexique absent → dégradation douce vers les règles)
+et met ses résultats en cache.
 
-Formats accepted per ``word<TAB>pron`` line (auto-detected):
-  * engine SAMPA keys separated by spaces (``a t a~``);
-  * Wikipron IPA (``atɑ̃``), converted through the language table.
+Formats acceptés par ligne ``mot<TAB>pron`` (détection automatique) :
+  * clés moteur SAMPA séparées par des espaces (``a t a~``) ;
+  * IPA Wikipron (``atɑ̃``), converti par la table de la langue.
 
-Wikipron sources (Wiktionary data, CC BY-SA 3.0 — see
-``vtl_synth/data/README_fr_lexicon.md`` and the per-language
-``README_xx_lexicon.md`` notes):
+Sources Wikipron (données du Wiktionnaire, CC BY-SA 3.0 — cf.
+``vtl_synth/data/README_fr_lexicon.md`` et les notices
+``README_xx_lexicon.md`` par langue) :
 
   ========  ======  =====================================================
-  language  code    Wikipron file (data/scrape/tsv/, master branch)
+  langue    code    fichier Wikipron (data/scrape/tsv/, branche master)
   ========  ======  =====================================================
   fr        fra     fra_latn_broad_filtered.tsv
-  es        spa     spa_latn_ca_broad_filtered.tsv   (Castilian, /θ/)
+  es        spa     spa_latn_ca_broad_filtered.tsv   (castillan, /θ/)
   de        deu     deu_latn_broad_filtered.tsv
   it        ita     ita_latn_broad_filtered.tsv
-  pt        por     por_latn_po_broad_filtered.tsv   (European Portuguese)
+  pt        por     por_latn_po_broad_filtered.tsv   (port. européen)
   ========  ======  =====================================================
 
-The raw URL has the form ::
+L'URL brute est de la forme ::
 https://raw.githubusercontent.com/CUNY-CL/wikipron/master/data/scrape/tsv/<fichier>
 """
 
@@ -45,11 +45,11 @@ from typing import Dict, List, Optional, Tuple
 
 from vtl_synth.core.constants import ALL_CONSONANT_KEYS
 
-# Union of the vowels of ALL languages (language_vowel_sets): the
-# "token = valid engine key" test must not depend on the ACTIVE
-# language (e.g. German 'I'/'U'/'Y' must be recognized even when
-# the active language section is 'en'). Lazy import to avoid any
-# import cycle at package load time.
+# Union des voyelles de TOUTES les langues (language_vowel_sets) : le
+# test « token = clé moteur valide » ne doit pas dépendre de la langue
+# ACTIVE (ex. 'I'/'U'/'Y' allemands doivent être reconnus même quand la
+# section langue active est 'en'). Import paresseux pour éviter tout
+# cycle d'import au chargement du paquet.
 def _all_vowel_keys() -> frozenset:
     from vtl_synth.utils.language_vowel_sets import VOWEL_SETS
     keys = set()
@@ -58,8 +58,8 @@ def _all_vowel_keys() -> frozenset:
     return frozenset(keys)
 
 
-# Valid keys for the "engine keys" branch of the loader: consonants +
-# all known vowels + nasal vowels (base + '~').
+# Clés valides pour la branche « clés moteur » du chargeur : consonnes +
+# toutes les voyelles connues + voyelles nasales (base + '~').
 _VALID_KEYS: frozenset = frozenset(
     set(ALL_CONSONANT_KEYS) | _all_vowel_keys()
     | {k + '~' for k in _all_vowel_keys()}
@@ -69,30 +69,30 @@ _VALID_KEYS: frozenset = frozenset(
 
 
 # ===========================================================================
-# IPA → engine key tables (per language)
+# Tables IPA → clés moteur (par langue)
 # ===========================================================================
-# Conventions:
-#   * the input is NFC-normalized before conversion (the decomposed
-#     nasals of the Portuguese Wikipron compose by themselves for
-#     a/e/i/o/u; ɐ̃ ɛ̃ ɔ̃ etc. remain decomposed → 2-char entries);
-#   * ordered table: longest patterns first (the conversion is greedy
-#     position by position, in list order);
-#   * phonemes without an engine equivalent: documented approximations
-#     (ɾ→R: no alveolar rhotic in the inventory; ʔ→'': no glottal
-#     stop; t͡s→'t s': no dental affricate).
+# Conventions :
+#   * l'entrée est normalisée NFC avant conversion (les nasales
+#     décomposées de Wikipron portugais se composent seules pour
+#     a/e/i/o/u ; ɐ̃ ɛ̃ ɔ̃ etc. restent décomposées → entrées 2-car.) ;
+#   * table ordonnée : motifs longs d'abord (la conversion est gloutonne
+#     position par position, dans l'ordre de la liste) ;
+#   * phonèmes sans équivalent moteur : approximations documentées
+#     (ɾ→R : pas de rhotique alvéolaire dans l'inventaire ; ʔ→'' :
+#     pas de coup de glotte ; t͡s→'t s' : pas d'affriquée dentale).
 
 _TILDE = '\u0303'
-_TIE = '\u0361'          # t͡ʃ (affricate tie)
+_TIE = '\u0361'          # t͡ʃ (liaison affriquée)
 _NONSYL = '\u032F'       # a̯ (diacritique non-syllabique)
 _SYLL = '\u0329'         # m̩ (diacritique syllabique)
 
-# --- common base (ASCII IPA + shared symbols) -------------------------
+# --- socle commun (ASCII IPA + symboles partagés) -------------------------
 _BASE_IPA_TO_KEYS: List[Tuple[str, str]] = [
     ('t' + _TIE + 'ʃ', 'tS'), ('d' + _TIE + 'ʒ', 'dZ'),
     (_TIE, ''),
     ('tʃ', 'tS'), ('dʒ', 'dZ'),
-    # falling diphthongs written as full vowels (Wikipron
-    # es/it/pt: 'rey' → r e i; rising ones use explicit j/w)
+    # diphtongues descendantes écrites en voyelles pleines (Wikipron
+    # es/it/pt : 'rey' → r e i ; les montantes utilisent j/w explicites)
     ('ai', 'a j'), ('ei', 'e j'), ('oi', 'o j'),
     ('au', 'a w'), ('eu', 'e w'), ('ou', 'o w'),
     ('ʃ', 'S'), ('ʒ', 'Z'), ('ŋ', 'N'), ('ɲ', 'J'), ('ʁ', 'R'),
@@ -110,23 +110,23 @@ _BASE_IPA_TO_KEYS: List[Tuple[str, str]] = [
     ('m', 'm'), ('n', 'n'),
 ]
 
-# --- precomposed nasals (NFC) --------------------------------------------
+# --- nasales précomposées (NFC) --------------------------------------------
 _NASAL_PRECOMPOSED: List[Tuple[str, str]] = [
     ('ã', 'a~'), ('ẽ', 'e~'), ('ĩ', 'i~'), ('õ', 'o~'), ('ũ', 'u~'),
     ('ɐ' + _TILDE, '@~'), ('ɛ' + _TILDE, 'E~'), ('ɔ' + _TILDE, 'O~'),
-    ('ɑ' + _TILDE, 'a~'),   # no precomposed form (Wikipron fra)
+    ('ɑ' + _TILDE, 'a~'),   # pas de forme précomposée (Wikipron fra)
     ('y' + _TILDE, 'y~'), ('ø' + _TILDE, '2~'), ('œ' + _TILDE, '9~'),
     ('ə' + _TILDE, '@~'), ('i' + _TILDE, 'i~'), ('u' + _TILDE, 'u~'),
     ('o' + _TILDE, 'o~'), ('e' + _TILDE, 'e~'), ('a' + _TILDE, 'a~'),
-    # nasal glides (w̃ j̃, Portuguese) → plain glide (approximation:
-    # the nasality of the adjacent vowel dominates)
+    # glides nasaux (w̃ j̃, portugais) → glide simple (approximation :
+    # la nasalité de la voyelle adjacente domine)
     ('w' + _TILDE, 'w'), ('j' + _TILDE, 'j'),
     (_TILDE, ''),
 ]
 
 _FR_IPA_TO_KEYS: List[Tuple[str, str]] = (
     _NASAL_PRECOMPOSED + _BASE_IPA_TO_KEYS + [
-        ('ç', 's'),          # notation.py: foreign ç → /s/ (French)
+        ('ç', 's'),          # notation.py : ç étranger → /s/ (français)
         ('χ', 'X'),
         ('x', 'X'),
         ('ɥ', 'ɥ'),
@@ -134,15 +134,15 @@ _FR_IPA_TO_KEYS: List[Tuple[str, str]] = (
 
 _ES_IPA_TO_KEYS: List[Tuple[str, str]] = (
     _NASAL_PRECOMPOSED + _BASE_IPA_TO_KEYS + [
-        ('x', 'X'),          # Spanish j, g+e/i /x/ → uvular fricative
+        ('x', 'X'),          # j, g+e/i espagnols /x/ → fricative uvulaire
         ('t' + _TIE + 's', 't s'),
         ('ts', 't s'),
     ])
 
 _DE_IPA_TO_KEYS: List[Tuple[str, str]] = (
     _NASAL_PRECOMPOSED + [
-        # diphthongs with the non-syllabic diacritic (aɪ̯ aʊ̯ …) and
-        # flat forms (Wikipron writes aɪ̯ / aɪ interchangeably)
+        # diphtongues avec diacritique non-syllabique (aɪ̯ aʊ̯ …) et
+        # formes plates (Wikipron écrit indifféremment aɪ̯ / aɪ)
         ('aɪ' + _NONSYL, 'a j'), ('aʊ' + _NONSYL, 'a w'),
         ('ɔɪ' + _NONSYL, 'O j'), ('ɔʏ' + _NONSYL, 'O j'),
         ('eɪ' + _NONSYL, 'e j'), ('oʊ' + _NONSYL, 'o w'),
@@ -151,71 +151,72 @@ _DE_IPA_TO_KEYS: List[Tuple[str, str]] = (
         ('ʏ' + _NONSYL, 'j'),
         ('ɐ' + _NONSYL, 'a'),
         (_NONSYL, ''),
-        # German dental affricates (Zeit → t͡saɪt)
+        # affriquées dentales allemandes (Zeit → t͡saɪt)
         ('t' + _TIE + 's', 't s'), ('d' + _TIE + 'z', 'd z'),
-        # syllabic consonants → supporting vowel + consonant (the
-        # engine cannot synthesize a lone syllabic nasal:
-        # 'guten' → ɡuːtn̩ must give g u t @ n)
+        # consonnes syllabiques → voyelle d'appui + consonne (le
+        # moteur ne synthétise pas de nasale syllabique seule :
+        # 'guten' → ɡuːtn̩ doit donner g u t @ n)
         ('n' + _SYLL, '@ n'), ('m' + _SYLL, '@ m'),
         ('l' + _SYLL, '@ l'),
-        ('ç', 'C'),          # ich-laut → engine palatal fricative 'C'
-        ('x', 'X'), ('χ', 'X'),   # ach-laut → uvular fricative 'X'
-        ('ʔ', ''),           # glottal stop: absent from the inventory
-        # CORRECTIONS v2.1 (g2p-de leak, 2026-10-23): lax ɪ/ʊ/ʏ ->
-        # tense i/u/y of the core inventory. The 'I'/'U'/'Y' keys
-        # exist on the language-pack side (language_vowel_sets,
-        # formantic calibration) but NOT in the engine inventory
-        # (constants.ALL_PHONEME_KEYS): before this fix the vowels
-        # were emitted then silently dropped by the parsers
-        # ("Butter" -> /bt@/, "Mütter" -> /mt@/, "ist" -> /st/).
+        ('ç', 'C'),          # ich-laut → fricative palatale moteur 'C'
+        ('x', 'X'), ('χ', 'X'),   # ach-laut → fricative uvulaire 'X'
+        ('ʔ', ''),           # coup de glotte : absent de l'inventaire
+        # CORRECTIONS v2.1 (fuite g2p-de, 2026-10-23) : ɪ/ʊ/ʏ lax ->
+        # i/u/y tendues de l'inventaire cœur. Les clés 'I'/'U'/'Y'
+        # existent côté pack langue (language_vowel_sets, calibration
+        # formantique) mais PAS dans l'inventaire moteur (constants.
+        # ALL_PHONEME_KEYS) : avant ce correctif les voyelles étaient
+        # émises puis droppées en silence par les parseurs
+        # (« Butter » -> /bt@/, « Mütter » -> /mt@/, « ist » -> /st/).
         ('ɪ', 'i'), ('ʊ', 'u'), ('ʏ', 'y'),
         ('ʋ', 'v'), ('ɱ', 'm'), ('ɘ', '@'), ('ɒ', 'O'),
-        (_SYLL, ''),         # other residual syllabics
+        (_SYLL, ''),         # autres syllabiques résiduels
         ('̥', ''), ('ʰ', ''), ('̊', ''), ('̍', ''),
     ] + _BASE_IPA_TO_KEYS)
 
 _IT_IPA_TO_KEYS: List[Tuple[str, str]] = (
     _NASAL_PRECOMPOSED + [
-        ('ao', 'a w'),       # ciao → t͡ʃao: falling diphthong
-        # Tuscan /ə/ (atonic e: "come" → ˈkomə): Italian has NO
-        # schwa — the '@' key does not exist in its engine inventory
+        ('ao', 'a w'),       # ciao → t͡ʃao : diphtongue descendante
+        # /ə/ toscan (e atone : « come » → ˈkomə) : l'italien n'a PAS de
+        # schwa — la clé '@' n'existe pas dans son inventaire moteur
         ('ə', 'e'),
-        ('ʎ', 'L'),          # Italian lateral-liquid → engine key 'L'
+        ('ʎ', 'L'),          # glatéral italien → clé 'L' du moteur
         ('t' + _TIE + 's', 't s'), ('d' + _TIE + 'z', 'd z'),
         ('ts', 't s'),
     ] + _BASE_IPA_TO_KEYS)
 
 _PT_IPA_TO_KEYS: List[Tuple[str, str]] = (
     _NASAL_PRECOMPOSED + [
-        # residual 'ø' (a few TSV borrowings): Portuguese has no
-        # front rounded vowel — the '2' key is absent from its
-        # engine inventory
+        # 'ø' résiduel (quelques emprunts du TSV) : le portugais n'a pas
+        # de voyelle arrondie antérieure — clé '2' absente de son
+        # inventaire moteur
         ('ø', 'e'),
         ('ʎ', 'L'),
     ] + _BASE_IPA_TO_KEYS)
 
 
 # ===========================================================================
-# Per-language specification
+# Spécification par langue
 # ===========================================================================
 
 @dataclass
 class LexiconSpec:
-    """Description of a language's pronunciation lexicon.
+    """Description du lexique de prononciation d'une langue.
 
-    filename: TSV name inside ``vtl_synth/data/``
-    env_var: environment variable overriding the path
-    ipa_to_keys: ordered IPA → keys table (longest patterns first)
-    source_file: original Wikipron file (traceability)
-    variant_policy: choice among the Wiktionary duplicates:
-      * ``'short'`` (fr legacy) — avoid liaison artifacts,
-        prefer the schwa for words ≤ 3 letters, else the
-        shortest form;
-      * ``'grapheme'`` (es, de, it, pt) — avoid the artifacts, then
-        the variant whose length is closest to the word's grapheme
-        count (the Romance/German orthographies are close to one
-        grapheme per phoneme; this rejects elided clitic variants:
-        it. "la" → /a/ vs /la/, pt. "bom"), tie → the longest.
+    filename : nom du TSV dans ``vtl_synth/data/``
+    env_var : variable d'environnement de surcharge du chemin
+    ipa_to_keys : table ordonnée IPA → clés (motifs longs d'abord)
+    source_file : fichier Wikipron d'origine (traçabilité)
+    variant_policy : choix parmi les doublons du Wiktionnaire :
+      * ``'short'`` (hérité fr) — éviter les artefacts de liaison,
+        préférer le schwa pour les mots ≤ 3 lettres, sinon la forme
+        la plus courte ;
+      * ``'grapheme'`` (es, de, it, pt) — éviter les artefacts, puis
+        la variante dont la longueur est la plus proche du nombre de
+        graphèmes du mot (les orthographes romaniques/allemande sont
+        proches d'un graphème par phonème ; ceci rejette les variantes
+        clitiques élidées : it. « la » → /a/ vs /la/, pt. « bom »),
+        ex æquo → la plus longue.
     """
 
     lang: str
@@ -226,10 +227,10 @@ class LexiconSpec:
     display_name: str
     expected_min: int = 10000
     variant_policy: str = 'grapheme'
-    # Spot corrections applied AFTER loading (clearly faulty or
-    # dialectal Wiktionary data: the es variant "en" → /em/).
-    # Lexicon priority preserved — these are corrected lexicon
-    # entries, not g2p exceptions.
+    # Corrections ponctuelles appliquées APRÈS chargement (données du
+    # Wiktionnaire manifestement fautives ou dialectales : la variante
+    # es « en » → /em/). Priorité du lexique conservée — ce sont des
+    # entrées de lexique corrigées, pas des exceptions g2p.
     overrides: Dict[str, List[str]] = field(default_factory=dict)
 
 
@@ -257,40 +258,40 @@ _DATA_DIR = Path(__file__).resolve().parent.parent / 'data'
 
 
 # ===========================================================================
-# IPA → keys conversion
+# Conversion IPA → clés
 # ===========================================================================
 
 def ipa_to_keys(ipa: str, lang: str) -> List[str]:
-    """Converts an IPA transcription (Wikipron) to engine keys.
+    """Convertit une transcription IPA (Wikipron) en clés moteur.
 
-    The sequence is NFC-normalized then DESPACED before conversion:
-    Wikipron separates each phone with a space ("rey" →
-    ``r e i``), and falling diphthongs are written as separate
-    full vowels — the table must therefore see ``rei`` as one block
-    to apply ``ei → e j``. Greedy conversion position by position
-    over the language table; unknown glyphs are silently ignored
-    (same contract as ``g2p_fr._ipa_to_keys``).
+    La séquence est normalisée NFC puis DÉSPACÉE avant conversion :
+    Wikipron sépare chaque téléphone par un espace (« rey » →
+    ``r e i``), et les diphtongues descendantes s'écrivent en voyelles
+    pleines séparées — la table doit donc voir ``rei`` d'un bloc pour
+    appliquer ``ei → e j``. Conversion gloutonne position par position
+    sur la table de la langue ; les glyphes inconnus sont silencieusement
+    ignorés (même contrat que ``g2p_fr._ipa_to_keys``).
 
-    Word-stress marks (ˈ primary, ˌ secondary) are STRIPPED here —
-    use :func:`ipa_to_keys_stress` to keep them (expressive prosody:
-    pitch-accent placement).
+    Les marques d'accent de mot (ˈ primaire, ˌ secondaire) sont ici
+    SUPPRIMÉES — utiliser :func:`ipa_to_keys_stress` pour les conserver
+    (prosodie expressive : placement des accents de hauteur).
     """
     return ipa_to_keys_stress(ipa, lang)[0]
 
 
 def ipa_to_keys_stress(ipa: str,
                        lang: str) -> Tuple[List[str], Optional[int]]:
-    """:func:`ipa_to_keys` variant that keeps the word stress.
+    """Variante de :func:`ipa_to_keys` qui conserve l'accent de mot.
 
-    Returns ``(keys, stressed_index)`` where ``stressed_index`` is
-    the index of the stressed syllable (counted in emitted vowels,
-    the Wikipron ˈ/ˌ mark preceding the stressed syllable onset)
-    or ``None`` when the transcription carries no mark.
+    Retourne ``(clés, index_accidentée)`` où ``index_accidentée`` est
+    l'index de la syllabe accentuée (comptée en voyelles émises, la
+    marque Wikipron ˈ/ˌ précédant l'attaque de la syllabe accentuée)
+    ou ``None`` si la transcription ne porte aucune marque.
 
-    The stress travels OUT OF BAND: it never appears in the engine
-    keys (the engine inventory is not polluted), only in the
-    parallel channel dedicated to expressive prosody
-    (``stress_for`` below).
+    Le stress voyage HORS BANDE : il n'apparaît jamais dans les clés
+    moteur (l'inventaire du moteur n'est pas pollué), seulement dans
+    le channel parallèle destiné à la prosodie expressive
+    (``stress_for`` ci-dessous).
     """
     table = LEXICONS[lang].ipa_to_keys
     ipa = unicodedata.normalize('NFC', ipa).replace(' ', '')
@@ -301,12 +302,12 @@ def ipa_to_keys_stress(ipa: str,
     i = 0
     while i < len(ipa):
         ch = ipa[i]
-        if ch == '\u02C8':                         # ˈ primary stress
+        if ch == '\u02C8':                         # ˈ accent primaire
             n_vow = sum(1 for k in out if k.rstrip('~') in vowel_keys)
             primary = n_vow
             i += 1
             continue
-        if ch == '\u02CC':                         # ˌ secondary stress
+        if ch == '\u02CC':                         # ˌ accent secondaire
             n_vow = sum(1 for k in out if k.rstrip('~') in vowel_keys)
             secondary = n_vow
             i += 1
@@ -317,40 +318,40 @@ def ipa_to_keys_stress(ipa: str,
                 i += len(pat)
                 break
         else:
-            i += 1                      # unknown glyph — skipped
+            i += 1                      # glyphe inconnu — ignoré
     stress = primary if primary is not None else secondary
     return out, stress
 
 
 def _ipa_chars(lang: str) -> set:
-    """Non-ASCII glyphs of the table — a sign the line is IPA."""
+    """Glyphes non-ASCII de la table — signe que la ligne est de l'IPA."""
     return {c for pat, _ in LEXICONS[lang].ipa_to_keys
             for c in pat if ord(c) > 127}
 
 
 # ===========================================================================
-# TSV loading
+# Chargement du TSV
 # ===========================================================================
 
 def _best_candidate(word: str, cands: List[List[str]],
                     policy: str = 'grapheme') -> List[str]:
-    """Picks the best pronunciation among lexicon duplicates.
+    """Choisit la meilleure prononciation parmi des doublons du lexique.
 
-    The Wiktionary lists several transcriptions per spelling with no
-    frequency ranking. Policies (cf. ``LexiconSpec``):
+    Le Wiktionnaire liste plusieurs transcriptions par graphie sans
+    classement de fréquence. Politiques (cf. ``LexiconSpec``) :
 
-    ``'short'`` (inherited from g2p_fr v2):
-      1. avoid liaison artifacts (empty key);
-      2. monosyllabic function words (≤ 3 letters): prefer the
-         schwa realization ("de" → /də/, not /dam/);
-      3. else the shortest realization (canonical form).
+    ``'short'`` (héritée de g2p_fr v2) :
+      1. éviter les artefacts de liaison (clé vide) ;
+      2. mots-outils monosyllabiques (≤ 3 lettres) : préférer la
+         réalisation avec schwa (« de » → /də/, pas /dam/) ;
+      3. sinon la réalisation la plus courte (forme canonique).
 
-    ``'grapheme'`` (es, de, it, pt):
-      1. avoid liaison artifacts;
-      2. the variant closest, in length, to the word's grapheme
-         count (rejects elided clitic variants:
-         it. "la" → /a/ vs /la/);
-      3. tie → the longest.
+    ``'grapheme'`` (es, de, it, pt) :
+      1. éviter les artefacts de liaison ;
+      2. la variante la plus proche, en longueur, du nombre de
+         graphèmes du mot (rejette les variantes clitiques élidées :
+         it. « la » → /a/ vs /la/) ;
+      3. ex æquo → la plus longue.
     """
     cands = [c for c in cands if c] or [[]]
     if len(cands) == 1:
@@ -370,15 +371,16 @@ def _best_candidate(word: str, cands: List[List[str]],
 
 
 def load_lexicon(lang: str, path: Optional[Path] = None) -> dict:
-    """Loads the TSV lexicon of ``lang``: ``word<TAB>keys-or-IPA``.
+    """Charge le lexique TSV de ``lang`` : ``mot<TAB>clés-ou-IPA``.
 
-    Returns {} when the lexicon is missing or unusable (graceful
-    degradation: the language g2p falls back to its rules).
+    Retourne {} si le lexique est absent ou inexploitable (dégradation
+    douce : le g2p de la langue retombe sur ses règles).
 
-    In parallel, fills the out-of-band stress channel
-    (``ipa_to_keys_stress``) queryable via :func:`stress_for`:
-    stressed syllable index per word (None when the transcription
-    carries no mark — "engine keys" branch or unstressed Wikipron).
+    En parallèle, remplit le channel de stress hors-bande
+    (``ipa_to_keys_stress``) consultable via :func:`stress_for` :
+    index de syllabe accentuée par mot (None si la transcription ne
+    porte pas de marque — branch « clés moteur » ou Wikipron sans
+    accent).
     """
     spec = LEXICONS[lang]
     path = path or Path(os.environ.get(spec.env_var,
@@ -406,7 +408,7 @@ def load_lexicon(lang: str, path: Optional[Path] = None) -> dict:
             if (any(c in pron for c in ipa_glyphs)
                     or any(t not in _VALID_KEYS for t in tokens)):
                 keys, stress = ipa_to_keys_stress(pron, lang)
-            else:                                       # engine keys
+            else:                                       # clés moteur
                 keys = [t if t != 'r' else 'R' for t in tokens]
                 stress = None
             if keys:
@@ -422,31 +424,31 @@ def load_lexicon(lang: str, path: Optional[Path] = None) -> dict:
     if spec.overrides:
         lex.update(spec.overrides)
     if not lex and n_lines > 0:
-        # file present but nothing usable — probably an HTML page
-        # saved instead of the raw TSV (classic GitHub mistake).
-        print(f'[lexicon-{lang}] WARNING: {path} contains no usable '
-              f'TSV entry ({n_lines} lines) — lexicon ignored. '
-              'Check that the file is the raw TSV (GitHub "Raw" '
-              'link), see data/README_fr_lexicon.md')
+        # fichier présent mais rien d'exploitable — probablement une page
+        # HTML enregistrée au lieu du TSV brut (erreur GitHub classique).
+        print(f'[lexicon-{lang}] ATTENTION : {path} ne contient aucune '
+              f'entrée TSV exploitable ({n_lines} lignes) — lexique '
+              'ignoré. Vérifier que le fichier est bien le TSV brut '
+              '(lien « Raw » de GitHub), cf. data/README_fr_lexicon.md')
     _STRESS_CACHE[lang] = stress
     return lex
 
 
 # ===========================================================================
-# Lazy per-language cache
+# Cache paresseux par langue
 # ===========================================================================
 
 _CACHE: Dict[str, Optional[dict]] = {}
-# Out-of-band stress channel (expressive prosody): word → stressed
-# syllable index (None = unspecified). Filled by load_lexicon.
+# Channel de stress hors-bande (prosodie expressive) : mot → index de
+# syllabe accentuée (None = non spécifié). Rempli par load_lexicon.
 _STRESS_CACHE: Dict[str, dict] = {}
 
 
 def lexicon_for(lang: str) -> dict:
-    """Lexicon of ``lang`` (lazy singleton, None when absent).
+    """Lexique de ``lang`` (singleton paresseux, None si absent).
 
-    Returns an empty dict when the file is missing — callers must
-    treat that as "rules only".
+    Retourne un dict vide si le fichier manque — les appelants doivent
+    traiter cela comme « règles uniquement ».
     """
     if lang not in _CACHE:
         _CACHE[lang] = load_lexicon(lang)
@@ -454,24 +456,24 @@ def lexicon_for(lang: str) -> dict:
 
 
 def stress_for(lang: str) -> dict:
-    """Per-word stress index (out-of-band channel, v1.0.8).
+    """Index d'accent de mot par mot (channel hors-bande, v1.0.8).
 
-    ``{word: stressed_syllable_index | None}`` — the index counts
-    syllables in emitted vowels (cf. :func:`ipa_to_keys_stress`).
-    Lexicon not loaded → {} (the caller falls back to its
-    per-language fallback rules).
+    ``{mot: index_syllabe_accentuée | None}`` — l'index compte les
+    syllabes en voyelles émises (cf. :func:`ipa_to_keys_stress`).
+    Lexique non chargé → {} (l'appelant retombe sur ses règles de
+    repli par langue).
     """
-    lexicon_for(lang)                    # ensures loading
+    lexicon_for(lang)                    # garantit le chargement
     return _STRESS_CACHE.get(lang, {})
 
 
 def lexicon_size(lang: str) -> int:
-    """Number of loaded entries (0 when the lexicon is absent)."""
+    """Nombre d'entrées chargées (0 si le lexique est absent)."""
     return len(lexicon_for(lang))
 
 
 def reset_cache(lang: Optional[str] = None) -> None:
-    """Invalidates the cache (tests / file swap)."""
+    """Invalide le cache (tests / échange de fichier)."""
     if lang is None:
         _CACHE.clear()
         _STRESS_CACHE.clear()
@@ -481,7 +483,7 @@ def reset_cache(lang: Optional[str] = None) -> None:
 
 
 def has_lexicon(lang: str) -> bool:
-    """True when the TSV file of ``lang`` is present on disk."""
+    """True si le fichier TSV de ``lang`` est présent sur disque."""
     spec = LEXICONS[lang]
     return (Path(os.environ.get(spec.env_var,
                                 str(_DATA_DIR / spec.filename))).exists())
