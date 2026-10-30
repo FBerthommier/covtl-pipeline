@@ -351,6 +351,23 @@ def _norm(word: str) -> str:
     return word.lower().replace('’', "'")
 
 
+def _join_word_tokens(tokens: Sequence[str]) -> str:
+    """Mots → SAMPA de chunk : points par défaut, mais PAUSE COURTE
+    (espace) après un mot fini par une voyelle nasale.
+
+    La marche syltraj ne sait pas articuler la bascule nasale/orale à
+    travers une frontière liée : ``V~.V`` est réduite à un bloc
+    background et les DEUX voyelles disparaissent du plan et de l'audio
+    (observé sur « comment allez-vous »). Même règle que le correctif
+    nasal de ``g2p_fr`` — l'invariant « le SAMPA assemblé est identique
+    à celui du g2p » est ainsi préservé.
+    """
+    out = tokens[0] if tokens else ''
+    for tok in tokens[1:]:
+        out += (' ' if out.endswith('~') else '.') + tok
+    return out
+
+
 def _make_chunk_plan(wps: Sequence[WordPlan], lang: str) -> ChunkPlan:
     """Assemble le plan d'un chunk et choisit les accents de hauteur.
 
@@ -363,7 +380,8 @@ def _make_chunk_plan(wps: Sequence[WordPlan], lang: str) -> ChunkPlan:
         et des mots intermédiaires — heuristique given/new) ;
       * aucun mot lexical (mots-outils seuls) : accent de groupe.
     """
-    chunk = ChunkPlan(words=list(wps), sampa='.'.join(wp.token for wp in wps))
+    chunk = ChunkPlan(words=list(wps),
+                      sampa=_join_word_tokens([wp.token for wp in wps]))
     off = 0
     for wp in wps:
         chunk.word_start.append(off)
@@ -441,7 +459,8 @@ def plan_expressive_text(text: str,
                     wps.append(WordPlan(w, tok, nuclei, stress))
                 if not wps:
                     continue
-                chunk_strs.append('.'.join(wp.token for wp in wps))
+                chunk_strs.append(
+                    _join_word_tokens([wp.token for wp in wps]))
                 phrase_chunks.append(_make_chunk_plan(wps, lang))
             if chunk_strs:
                 part_strs.append(' % '.join(chunk_strs))
