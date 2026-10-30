@@ -6,6 +6,28 @@ Format: Keep a Changelog — https://keepachangelog.com/
 ## [Unreleased]
 
 ### Fixed
+- **fix(prosody): nasal boundary keeps a short pause in the expressive
+  enrichment** — `plan_expressive_text` assembled chunk SAMPA by joining
+  word tokens with the linking dot, re-creating `V~.V` boundaries that the
+  syltraj walk drops: with expressive prosody ON, "comment allez-vous"
+  regressed to `kOma~.a.le.vu` even after the g2p_fr nasal fix (the g2p
+  injected the pause, the enrichment re-dotted it). Word tokens are now
+  joined with the same nasal rule as `g2p_fr` (`_join_word_tokens`: short
+  pause after a word ending on a nasal vowel), in both `ChunkPlan.sampa`
+  and the chunk strings; the documented invariant "the assembled SAMPA is
+  identical to the language g2p's" is restored (all 7 vowels of the
+  phrase, zero background blocks; verified through expressive synthesis).
+- **fix(lang-pack): refresh the stale integration pipeline.py** —
+  `lang_pack/integration/pipeline.py` shipped a pre-sampa_guard revision
+  of the engine pipeline, and every `setup_lang.py install` copies it over
+  `vtl_synth/core/pipeline.py` (PATCHED_FILES, backed up as `.bak`),
+  silently regressing the engine: the console bridge and the CLI pass
+  `sampa_guard=...`, which the stale pipeline rejects (TypeError). The
+  integration copy is now the current v1.1.0 pipeline (expressive v1.1.0 +
+  sampa_guard); installs no longer regress.
+- **chore(lang): sync the installed `vtl_synth/utils/` copies with
+  `lang_pack/profiles`** — the committed utils copies were a stale
+  snapshot; installs now leave no spurious dirty state.
 - **fix(g2p-fr): short pause instead of the linking dot after a nasal-vowel
   word ending** — the syltraj walk cannot articulate the nasal/oral toggle
   across a linked boundary: on "comment allez-vous" the G2P emitted
@@ -22,7 +44,9 @@ Format: Keep a Changelog — https://keepachangelog.com/
   written that way by hand — the walk should eventually handle the
   nasal/oral toggle across a linked boundary itself; hand-written input
   must currently avoid `V~.V` (the SAMPA guard does not flag it — all
-  symbols are valid).
+  symbols are valid; the covtl-console compiler now warns about it).
+
+## [Unreleased]
 
 ## [Unreleased]
 
