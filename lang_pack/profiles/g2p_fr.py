@@ -247,7 +247,17 @@ def _word_to_keys(word: str, warnings: list) -> list:
 
 
 def _phrase_to_sampa(phrase: str, warnings: list) -> str:
-    """Convert one phrase (words only) to SAMPA."""
+    """Convert one phrase (words only) to SAMPA.
+
+    Words are normally linked with the syllable dot (no pause). One
+    exception: when the LEFT word ends on a NASAL vowel (key ending in
+    ``~``), the boundary is a short pause (space) instead — the syltraj
+    walk cannot articulate the nasal/oral toggle across a linked
+    boundary and silently reduces ``V~.V`` to a background block
+    (observed: "comment allez-vous" -> ``kOma~.a.le.vu`` lost both the
+    /a~/ and the /a/). Plain ``V.V`` boundaries (e.g. ``di.as``) are
+    handled by the walk and keep the dot.
+    """
     words = _WORD_RE.findall(phrase)
     if not words:
         return ''
@@ -257,7 +267,16 @@ def _phrase_to_sampa(phrase: str, warnings: list) -> str:
         if not keys:
             continue
         tokens.append(keys_to_connected(keys))
-    return '.'.join(tokens)
+    return _join_tokens(tokens)
+
+
+def _join_tokens(tokens: List[str]) -> str:
+    """Join word tokens: dot by default, space after a nasal-vowel ending."""
+    out = tokens[0] if tokens else ''
+    for tok in tokens[1:]:
+        sep = ' ' if out.endswith('~') else '.'
+        out += sep + tok
+    return out
 
 
 def text_to_sampa_fr(text: str, warnings: list = None, **kwargs) -> str:

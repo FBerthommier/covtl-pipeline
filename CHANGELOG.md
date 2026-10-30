@@ -5,6 +5,25 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
+### Fixed
+- **fix(g2p-fr): short pause instead of the linking dot after a nasal-vowel
+  word ending** — the syltraj walk cannot articulate the nasal/oral toggle
+  across a linked boundary: on "comment allez-vous" the G2P emitted
+  `kOma~.a.le.vu` and the walk silently reduced `a~.a` to a background
+  block, dropping BOTH the /a~/ and the /a/ from the articulation plan and
+  from the audio (the compiler panel showed a `-` stretch; the polar
+  display had no `a` label). The FR profile now joins two words with a
+  short pause (space) when the left word ends on a nasal vowel
+  (`kOma~ a.le.vu`), keeping the linking dot for every other boundary —
+  plain `V.V` links (e.g. `di.as`) are articulated correctly by the walk
+  and are unchanged. All five vowels of the phrase are back in the plan.
+  **Known engine limitation, kept on record:** `V~` + (dot or nothing) +
+  `V` is still dropped by `syltraj.build_phrase_pval` if a SAMPA string is
+  written that way by hand — the walk should eventually handle the
+  nasal/oral toggle across a linked boundary itself; hand-written input
+  must currently avoid `V~.V` (the SAMPA guard does not flag it — all
+  symbols are valid).
+
 ## [Unreleased]
 
 ### Changed
