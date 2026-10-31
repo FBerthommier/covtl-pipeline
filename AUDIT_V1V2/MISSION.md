@@ -1,5 +1,14 @@
 # MISSION — Correction du moteur : bascule nasal/oral sur les hiatus V1V2 liés
 
+**ÉTAT (2026-10-31) : CORRECTION RÉALISÉE** — voir `IMPLEMENTATION_V1V2.md` :
+le principe prescrit (syltraj intact + couche de pré-traitement + nasalité
+dans l'espace orthogonal VO/timer existant) est implémenté et validé
+(20/20 items, VO 0,49-0,50, témoins bit-identiques, 33 tests unitaires).
+Le critère « blocs étiquetés » du §1 est supédité par l'architecture retenue
+§6.1 du rapport d'implémentation. Restent pour l'agent : P3 (ré-inversion g2p,
+`phonemes.py:38`) et la mise à jour du SHA préexistant de
+`test_syltraj_double_pause`.
+
 **Destinataire :** agent chargé de la modification du moteur de synthèse.
 **Dépôt de travail :** ce clone `covtl-pipeline` (état : HEAD = commit d'audit `2a55b69`, qui inverse les contournements g2p `dea71c6` + `f62f185` — **ne pas les rétablir**, le défaut doit rester exposé jusqu'à correction du moteur).
 **Lecture préalable obligatoire :** `AUDIT_V1V2/AUDIT.md` (constats, mécanisme, preuves) — en particulier § 4.2 (mécanisme), § 6 (correctif proposé), § Annexe B (fichiers/lignes).

@@ -1,7 +1,7 @@
 SAMPA (entrée moteur) : a~vi
 Total : 120 steps @100 Hz = 1.20 s
 
-Nœuds : [V]a~ [C]v [V]i [pause]
+Nœuds : [V]a~ [C]v [V]i
 
  offset   dur kind        voyelle nasal  contenu
 ------------------------------------------------------------------------
@@ -12,3 +12,6 @@ Nœuds : [V]a~ [C]v [V]i [pause]
      74    12 plateau     i       False  plateau de /i/
      86    14 decay       -       False  
     100    20 terminal    -       False  
+Porte nasalité (pré-traitement nasal_preproc) :
+  chaîne moteur (syltraj) : a~vi
+  aucun membre d'hiatus nasal — chaîne inchangée (sorties identiques au moteur nu)

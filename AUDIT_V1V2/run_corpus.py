@@ -44,6 +44,7 @@ sys.path.insert(0, str(REPO))          # le clone local prime sur tout install
 
 from vtl_synth import Pipeline                      # noqa: E402
 from vtl_synth.core.syltraj import get_last_build   # noqa: E402
+from vtl_synth.core.nasal_preproc import get_last_nasal_plan  # noqa: E402
 
 TARGET_SR = 100          # Hz — pas des blocs syltraj
 TRACT_SR = 400           # Hz — frames du fichier .tract
@@ -90,10 +91,20 @@ def rms(x: np.ndarray) -> float:
 # Plan d'articulation -> structures lisibles
 # --------------------------------------------------------------------------
 
-def timeline_of_build(build: dict):
-    """Nœuds + blocs avec offsets cumulés (steps @100 Hz)."""
-    nodes = [{'i': i, 'kind': n.kind, 'key': n.key, 'nasal': bool(n.nasal)}
-             for i, n in enumerate(build['nodes'])]
+def timeline_of_build(build: dict, plan: dict | None = None):
+    """Nœuds + blocs avec offsets cumulés (steps @100 Hz).
+
+    Les nœuds viennent de la vue d'ORIGINE de la porte nasal_preproc
+    quand elle est disponible : les nœuds moteurs (syltraj) voient la
+    chaîne oralisée (membres d'hiatus nasal=False), la vue d'origine
+    porte les drapeaux vrais — c'est elle qui fonde le verdict.
+    """
+    view = (plan or {}).get('nodes_view') or build['nodes']
+    nodes = [{'i': i,
+              'kind': (n['kind'] if isinstance(n, dict) else n.kind),
+              'key': (n['key'] if isinstance(n, dict) else n.key),
+              'nasal': bool(n['nasal'] if isinstance(n, dict) else n.nasal)}
+             for i, n in enumerate(view)]
     blocks, off = [], 0
     for b in build['block_info']:
         blocks.append({
@@ -119,14 +130,47 @@ def fmt_timeline(sampa: str, nodes, blocks, total) -> str:
         if b['kind'] == 'plateau':
             contenu = f"plateau de /{b['vowel_key']}{'~' if b['nasal'] else ''}/"
         elif b['kind'] == 'background':
-            contenu = ('arc de fond NON étiqueté (hiatus réduit '
-                       '— ni noyau, ni nasalité)') if not b['vowel_key'] \
-                else f"arc de fond via @{b['vowel_key']}"
+            contenu = ('arc de fond : transition diphtongue de base '
+                       '(réalisation des noyaux de l\'hiatus)') \
+                if not b['vowel_key'] else f"arc de fond via @{b['vowel_key']}"
         elif b['kind'] == 'cluster':
             contenu = f"cluster ({b['n_cons']} cons.)"
         out.append(f"{b['offset']:>7} {b['n_steps']:>5} {b['kind']:<11} "
                    f"{b['vowel_key'] or '-':<7} {str(b['nasal']):<6} {contenu}")
     return '\n'.join(out)
+
+
+def fmt_nasal_gate(sampa: str, plan: dict | None) -> str:
+    """Section « porte nasalité » des plans (couche de pré-traitement)."""
+    if not plan:
+        return ''
+    ev = plan.get('events') or []
+    iv = plan.get('intervals') or []
+    lines = ['', 'Porte nasalité (pré-traitement nasal_preproc) :',
+             f"  chaîne moteur (syltraj) : {plan['motor']}"]
+    if not ev:
+        lines.append('  aucun membre d\'hiatus nasal — chaîne inchangée'
+                     ' (sorties identiques au moteur nu)')
+    else:
+        runs = plan.get('runs') or []
+        for ri, run in enumerate(runs):
+            seq = ' . '.join(f"{m['key']}{'~' if m['nasal'] else ''}"
+                             for m in run)
+            lines.append(f"  run {ri} : [{seq}]")
+        for e in ev:
+            lines.append(f"  oralisé : run {e['run']} membre {e['member']} "
+                         f"→ /{e['key']}~/ (nasalité capturée)")
+    if iv:
+        for (t0, t1, k) in iv:
+            knas = '+'.join(f"{p}~" for p in k.split('+'))
+            lines.append(f"  VO orthogonale : /{knas}/ sur "
+                         f"[{t0}, {t1}) pas @100 Hz "
+                         f"({t0 / TARGET_SR * 1000:.0f}-"
+                         f"{t1 / TARGET_SR * 1000:.0f} ms)")
+    elif ev:
+        lines.append('  ATTENTION : intervalles VO non calculés '
+                     '(correspondance runs/blocs non vérifiée)')
+    return '\n'.join(lines)
 
 
 # --------------------------------------------------------------------------
@@ -188,9 +232,25 @@ def analyse_item(rec: dict, tract: np.ndarray, audio: np.ndarray,
 
     vo_bg_max, vo_bg_centre = vo_stats(bgs)
 
+    def vo_moites_nasales():
+        """max(VO) sur chaque intervalle nasal du plan (vérité terrain
+        .tract) — la métrique centrale de l'audit ne voyait pas la
+        dernière moitié des runs VVV."""
+        vals = []
+        for (t0, t1, _k) in rec.get('intervalles_vo') or []:
+            seg = window(tract[:, VO_COL], TRACT_SR,
+                         t0 / TARGET_SR, t1 / TARGET_SR)
+            if len(seg):
+                vals.append(round(float(seg.max()), 3))
+        return vals or None
+
+    vo_nas = vo_moites_nasales()
+
     rec['mesures'] = {
         'vo_max_background': vo_bg_max,
         'vo_max_background_centre': vo_bg_centre,
+        'vo_moites_nasales': vo_nas,
+        'vo_moites_nasales_max': (max(vo_nas) if vo_nas else None),
         'vo_max_plateau_nasal': vo_max(nas_pls),
         'vo_max_plateau_oral': vo_max(ora_pls),
         'relamp_moyen_background': relamp_mean(bgs),
@@ -221,7 +281,10 @@ def verdict_item(rec: dict, nodes, blocks):
 
     m = rec['mesures']
     nasal_in_hiatus = any(v['nasal'] for pair in hiatus for v in pair)
-    vo_bg = m['vo_max_background_centre']
+    # critère VO : moitiés nasales du plan (repli : demi-fenêtre centrale
+    # de l'arc, métrique de l'audit initial)
+    vo_nas = m.get('vo_moites_nasales_max')
+    vo_bg = vo_nas if vo_nas is not None else m['vo_max_background_centre']
     vo_ref = m['vo_max_plateau_nasal']
     rms_bg, rms_pl, rms_gl = (m['rms_background'], m['rms_plateaux'],
                               m['rms_global'])
@@ -248,7 +311,9 @@ def verdict_item(rec: dict, nodes, blocks):
         'nasalite_perdue': nasalite_perdue,
         'arc_statique': arc_statique,
         'audio_present_dans_hiatus': audio_present,
-        'vo_hiatus_centre': vo_bg,
+        'vo_hiatus_centre': m['vo_max_background_centre'],
+        'vo_moites_nasales': vo_nas,
+        'vo_critere': vo_bg,
         'vo_reference_nasale': vo_ref,
     }
     return rec
@@ -286,7 +351,8 @@ def main(argv):
                 results.append({'id': rid, 'erreur': repr(exc)})
                 continue
             build = get_last_build()
-            nodes, blocks, total = timeline_of_build(build)
+            plan = get_last_nasal_plan()
+            nodes, blocks, total = timeline_of_build(build, plan)
             sampa = res.sampa
 
         # fichiers renommés
@@ -300,7 +366,9 @@ def main(argv):
         rec = {'id': rid, 'situation': it['situation'], 'note': it.get('note', ''),
                'entree': entree, 'use_g2p': it['use_g2p'],
                'sampa_moteur': sampa, 'phrases': res.phrases,
-               'duree_s': round(res.duration_s, 3)}
+               'duree_s': round(res.duration_s, 3),
+               'porte_moteur': (plan or {}).get('motor'),
+               'intervalles_vo': (plan or {}).get('intervals')}
         tract, _ = read_tract(trt_dst)
         audio, wav_sr = read_wav(wav_dst)
         rec['n_frames_tract'] = int(tract.shape[0])
@@ -313,13 +381,15 @@ def main(argv):
         results.append(rec)
 
         (res_dir / 'plans' / f'{rid}.txt').write_text(
-            fmt_timeline(sampa, nodes, blocks, total) + '\n',
+            fmt_timeline(sampa, nodes, blocks, total)
+            + fmt_nasal_gate(sampa, plan) + '\n',
             encoding='utf-8')
         v = rec['verdict']
-        print(f"    SAMPA moteur : {sampa}")
-        print(f"    noyaux élidés : {v['noyaux_elides'] or 'aucun'} "
+        print(f"    SAMPA moteur : {sampa} | chaîne syltraj : "
+              f"{rec['porte_moteur']}")
+        print(f"    noyaux dans l'arc de fond : {v['noyaux_elides'] or 'aucun'} "
               f"| nasalité perdue : {v['nasalite_perdue']} "
-              f"(VO centre hiatus={v['vo_hiatus_centre']}, "
+              f"(VO moitiés nasales={v['vo_moites_nasales']}, "
               f"réf. nasale={v['vo_reference_nasale']}) "
               f"| audio : {'oui' if v['audio_present_dans_hiatus'] else 'NON'}"
               f"{' | ARC STATIQUE' if v['arc_statique'] else ''}")
@@ -338,7 +408,7 @@ def main(argv):
     # tableau récapitulatif
     print('\n=== RÉCAPITULATIF ===')
     hdr = (f"{'id':<4} {'situation':<32} {'SAMPA moteur':<22} "
-           f"{'élidés':<12} {'VO c.hiat.':<10} {'VO réf.':<8} {'nas.perdue':<10}")
+           f"{'dans arc':<12} {'VO nas.':<8} {'VO réf.':<8} {'nas.perdue':<10}")
     print(hdr); print('-' * len(hdr))
     for r in results:
         if 'erreur' in r:
@@ -348,7 +418,7 @@ def main(argv):
         print(f"{r['id']:<4} {r['situation'][:31]:<32} "
               f"{r['sampa_moteur'][:21]:<22} "
               f"{(','.join(v['noyaux_elides']))[:11]:<12} "
-              f"{str(v['vo_hiatus_centre']):<10} {str(v['vo_reference_nasale']):<8} "
+              f"{str(v['vo_critere']):<8} {str(v['vo_reference_nasale']):<8} "
               f"{'OUI' if v['nasalite_perdue'] else 'non':<10}")
     print(f"\nÉcrit : {res_dir / 'results.json'}")
     return 0

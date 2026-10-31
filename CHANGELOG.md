@@ -5,6 +5,27 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
+### Added (fix moteur V1V2 — 2026-10-31)
+
+- **fix(engine): nasal/oral toggle across linked V1V2 hiatus via an
+  orthogonal velar-port layer (nasal_preproc)** — syltraj's parametric
+  elaboration is left untouched: hiatus-member nasal vowels are oralized
+  in the motor chain by a new preprocessing gate
+  (`vtl_synth/core/nasal_preproc.py`), so the background arc carries the
+  base diphthong transition on oral targets, and nasality is re-injected
+  downstream in the existing orthogonal VO control space (target 0.5,
+  20% ramps) shaped by the existing 20 ms velar timer
+  (build_phrase_tract step 3b-bis). Surgical scope: held nasal vowels
+  keep the working plateau path; tokenizer round-trip verified with a
+  conservative fallback (original chain, warning) so the gate can never
+  produce an unexpected chain. Results (AUDIT_V1V2, 20 items): nasal
+  halves reach VO 0.49-0.50 (healthy plateau reference), the audit's
+  byte-identity `ta.ata ≡ ta~.ata ≡ ta.a~ta ≡ ta~.a~ta` is broken into
+  4 distinct outputs, the 5 control items are bit-identical, and only
+  the VO column of the .tract changes for the 15 corrected items.
+  33 new unit tests (tests/test_nasal_preproc.py). See
+  `AUDIT_V1V2/IMPLEMENTATION_V1V2.md`.
+
 ### Reverted (audit V1V2 — 2026-10-31)
 
 - **revert(audit): remove the g2p-fr / prosody nasal-boundary workaround

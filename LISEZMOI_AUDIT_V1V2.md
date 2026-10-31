@@ -1,5 +1,15 @@
 # Audit V1V2 — point d'entrée (pour l'agent correcteur)
 
+> **ÉTAT 2026-10-31 — CORRECTION MOTEUR RÉALISÉE.** La correction est
+> implémentée selon le principe non perturbateur prescrit (syltraj intact,
+> couche de pré-traitement `vtl_synth/core/nasal_preproc.py`, nasalité
+> réinjectée dans l'espace orthogonal VO + timer 20 ms existant) : lire en
+> premier **`AUDIT_V1V2/IMPLEMENTATION_V1V2.md`** (architecture, résultats,
+> preuves de non-perturbation, commandes de re-vérification). Restent à
+> traiter par l'agent : P3 de la MISSION (ré-inversion g2p `dea71c6`+
+`f62f185`, clés nasales dans `phonemes.py:38`) et le SHA préexistant de
+> `test_syltraj_double_pause`.
+
 Ce clone est l'état de travail remis pour la correction du moteur de synthèse
 (covtl-pipeline). Il contient, à la racine, le dépôt complet avec son
 historique git ; en tête se trouvent deux commits d'audit :

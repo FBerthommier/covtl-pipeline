@@ -1,0 +1,338 @@
+{
+  "items": [
+    {
+      "id": "S1a",
+      "situation": "inter-mot, nasal -> oral",
+      "vo_avant": -0.085,
+      "vo_apres": 0.495,
+      "nas_perdue_avant": true,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "64694b87b369decae7f54a59753487ab",
+      "md5_tract_apres": "b8817b3bebbf46145d64439d3a10ebae",
+      "md5_wav_avant": "333c1d4e3709a4955acb75081874b928",
+      "md5_wav_apres": "72c9f9141c0903add596ae5b3bcc66cf",
+      "colonnes_diff": [
+        7
+      ],
+      "corrige": true,
+      "identique": false
+    },
+    {
+      "id": "S1b",
+      "situation": "inter-mot, nasal -> oral",
+      "vo_avant": -0.085,
+      "vo_apres": 0.495,
+      "nas_perdue_avant": true,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "6bd64fc4234551ae87a5b4f26c58eff8",
+      "md5_tract_apres": "f91643ce7955c242f37ace9b7b228c2c",
+      "md5_wav_avant": "f8a88f5497f98aa74a2e8c575dfea7fe",
+      "md5_wav_apres": "d9b369244bab4ada8e15fac1f0f6bfc1",
+      "colonnes_diff": [
+        7
+      ],
+      "corrige": true,
+      "identique": false
+    },
+    {
+      "id": "S2a",
+      "situation": "inter-mot, oral -> nasal",
+      "vo_avant": -0.1,
+      "vo_apres": 0.491,
+      "nas_perdue_avant": true,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "061f73f3d620187377ee1c4ad1ebe609",
+      "md5_tract_apres": "c9f3409bd8557fcfcf9011deffd51cd6",
+      "md5_wav_avant": "7a76f8caed28353ad9c820e7ac346ebc",
+      "md5_wav_apres": "211a5a0f75e138b1746cedaed8fd8729",
+      "colonnes_diff": [
+        7
+      ],
+      "corrige": true,
+      "identique": false
+    },
+    {
+      "id": "S2b",
+      "situation": "inter-mot, oral -> nasal",
+      "vo_avant": -0.1,
+      "vo_apres": 0.491,
+      "nas_perdue_avant": true,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "1d047e16de735117ff24781b9028d766",
+      "md5_tract_apres": "49d4bc0463e4bbc9fc1a1a4226cb7651",
+      "md5_wav_avant": "f9f65b46aecd1c6a569c12ec21d17826",
+      "md5_wav_apres": "2c83b9f68ef489e6cedaf6ae9e10b615",
+      "colonnes_diff": [
+        7
+      ],
+      "corrige": true,
+      "identique": false
+    },
+    {
+      "id": "S3a",
+      "situation": "intra-mot, oral -> nasal",
+      "vo_avant": -0.085,
+      "vo_apres": 0.491,
+      "nas_perdue_avant": true,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "0e4d01b289ad947e7430356e6375f8ae",
+      "md5_tract_apres": "d8826437830fe9cb278499ee3002f755",
+      "md5_wav_avant": "6f0cadf27e7cc3c5071b8d120a7f9c9f",
+      "md5_wav_apres": "27c4a6119b14ebd9a6335844deb3d20e",
+      "colonnes_diff": [
+        7
+      ],
+      "corrige": true,
+      "identique": false
+    },
+    {
+      "id": "S3b",
+      "situation": "intra-mot, oral -> nasal",
+      "vo_avant": -0.1,
+      "vo_apres": 0.491,
+      "nas_perdue_avant": true,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "7cde08b0d98790d4e4af6532c3d12aa3",
+      "md5_tract_apres": "cb9f100c96ff3437f8c10aa81817c1d0",
+      "md5_wav_avant": "298abe6cab39bc09e4204383537d55b2",
+      "md5_wav_apres": "5bc90d23141519f95326271d109d89a6",
+      "colonnes_diff": [
+        7
+      ],
+      "corrige": true,
+      "identique": false
+    },
+    {
+      "id": "S3c",
+      "situation": "intra-mot, oral -> nasal",
+      "vo_avant": -0.1,
+      "vo_apres": 0.491,
+      "nas_perdue_avant": true,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "476a98ac8c9cb55d741b460b471834a3",
+      "md5_tract_apres": "2f58712e347a0017da1766c699caae3e",
+      "md5_wav_avant": "d047300eb35e85315776b60de0ec868d",
+      "md5_wav_apres": "160eb4007082ded706b1887019d6c76a",
+      "colonnes_diff": [
+        7
+      ],
+      "corrige": true,
+      "identique": false
+    },
+    {
+      "id": "S4a",
+      "situation": "intra-mot, nasal -> oral",
+      "vo_avant": -0.1,
+      "vo_apres": 0.491,
+      "nas_perdue_avant": true,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "f34702b176789f854512fc9b97e6564b",
+      "md5_tract_apres": "e2174b11a852b6bc4957587ee8b8b66c",
+      "md5_wav_avant": "28a710e4b5529b8f4eb34d4f12f8b339",
+      "md5_wav_apres": "9b46379c036188b65e1301bbe7b4b94b",
+      "colonnes_diff": [
+        7
+      ],
+      "corrige": true,
+      "identique": false
+    },
+    {
+      "id": "S4b",
+      "situation": "intra-mot, nasal -> oral",
+      "vo_avant": -0.1,
+      "vo_apres": 0.491,
+      "nas_perdue_avant": true,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "f6f9e53f8a3ff3dd123733b1bd42da50",
+      "md5_tract_apres": "a4d78e0f5cf85a4e1e86460cc543f5a0",
+      "md5_wav_avant": "317ac55f7e55dca4d2b20e6622c60110",
+      "md5_wav_apres": "882e66021cff37cca34029579819dd53",
+      "colonnes_diff": [
+        7
+      ],
+      "corrige": true,
+      "identique": false
+    },
+    {
+      "id": "T1",
+      "situation": "temoin intra-mot V.V oral-orale",
+      "vo_avant": -0.1,
+      "vo_apres": -0.1,
+      "nas_perdue_avant": false,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "3dd8bd678a276d2156faf3a51840f21b",
+      "md5_tract_apres": "3dd8bd678a276d2156faf3a51840f21b",
+      "md5_wav_avant": "ccab335abd790c394f2f49fb75f83b7e",
+      "md5_wav_apres": "ccab335abd790c394f2f49fb75f83b7e",
+      "colonnes_diff": [],
+      "corrige": false,
+      "identique": true
+    },
+    {
+      "id": "T2",
+      "situation": "temoin inter-mot V.V oral-orale",
+      "vo_avant": -0.1,
+      "vo_apres": -0.1,
+      "nas_perdue_avant": false,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "292cde826d4f6f28d5db240816c51530",
+      "md5_tract_apres": "292cde826d4f6f28d5db240816c51530",
+      "md5_wav_avant": "5e5748894a591f37968d3415667516a3",
+      "md5_wav_apres": "5e5748894a591f37968d3415667516a3",
+      "colonnes_diff": [],
+      "corrige": false,
+      "identique": true
+    },
+    {
+      "id": "T3",
+      "situation": "temoin nasale isolee",
+      "vo_avant": null,
+      "vo_apres": null,
+      "nas_perdue_avant": false,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "dbce583344fa2628c545cca4dd8fbfdb",
+      "md5_tract_apres": "dbce583344fa2628c545cca4dd8fbfdb",
+      "md5_wav_avant": "af076e19965cb4a87bfd1675cfed71c4",
+      "md5_wav_apres": "af076e19965cb4a87bfd1675cfed71c4",
+      "colonnes_diff": [],
+      "corrige": false,
+      "identique": true
+    },
+    {
+      "id": "T4",
+      "situation": "temoin nasale isolee non-hiatus",
+      "vo_avant": null,
+      "vo_apres": null,
+      "nas_perdue_avant": false,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "5305b7d51c758c071b09b68588b0d5ac",
+      "md5_tract_apres": "5305b7d51c758c071b09b68588b0d5ac",
+      "md5_wav_avant": "de3459cac714e2f9da631c1f23a965af",
+      "md5_wav_apres": "de3459cac714e2f9da631c1f23a965af",
+      "colonnes_diff": [],
+      "corrige": false,
+      "identique": true
+    },
+    {
+      "id": "T5",
+      "situation": "complement inter-mot V~.V~",
+      "vo_avant": -0.085,
+      "vo_apres": 0.5,
+      "nas_perdue_avant": true,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "709caa26581339a4ffdba525b8142f1f",
+      "md5_tract_apres": "5501c12c8695f7a6362c84bbcb715eee",
+      "md5_wav_avant": "0e86084297cc104b597f5e70bc7cff0d",
+      "md5_wav_apres": "d6ff1beeb7f03fe5122ce4721049922f",
+      "colonnes_diff": [
+        7
+      ],
+      "corrige": true,
+      "identique": false
+    },
+    {
+      "id": "T6",
+      "situation": "complement inter-mot V~.V~",
+      "vo_avant": -0.1,
+      "vo_apres": 0.5,
+      "nas_perdue_avant": true,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "a55deafade3d12c898711fd18cc737e2",
+      "md5_tract_apres": "9ad7865a47298c712d49ed70ac86ee9c",
+      "md5_wav_avant": "d6764e3f98cfcee1eac8302bc2eabba9",
+      "md5_wav_apres": "c3755a1c3f63dba1b9f410ec78752936",
+      "colonnes_diff": [
+        7
+      ],
+      "corrige": true,
+      "identique": false
+    },
+    {
+      "id": "H0",
+      "situation": "manuelle, oral -> oral (temoin)",
+      "vo_avant": -0.1,
+      "vo_apres": -0.1,
+      "nas_perdue_avant": false,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "4f0698e3a77ae6d5816192dfe92e6f5a",
+      "md5_tract_apres": "4f0698e3a77ae6d5816192dfe92e6f5a",
+      "md5_wav_avant": "1c9c94b0cec9b99550ca2251a6e3e2a0",
+      "md5_wav_apres": "1c9c94b0cec9b99550ca2251a6e3e2a0",
+      "colonnes_diff": [],
+      "corrige": false,
+      "identique": true
+    },
+    {
+      "id": "H1",
+      "situation": "manuelle, nasal -> oral",
+      "vo_avant": -0.1,
+      "vo_apres": 0.491,
+      "nas_perdue_avant": true,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "4f0698e3a77ae6d5816192dfe92e6f5a",
+      "md5_tract_apres": "05a49884d49339c08c5a56b541aae520",
+      "md5_wav_avant": "1c9c94b0cec9b99550ca2251a6e3e2a0",
+      "md5_wav_apres": "cd247011ceb731fefb1098169af70190",
+      "colonnes_diff": [
+        7
+      ],
+      "corrige": true,
+      "identique": false
+    },
+    {
+      "id": "H2",
+      "situation": "manuelle, oral -> nasal",
+      "vo_avant": -0.1,
+      "vo_apres": 0.491,
+      "nas_perdue_avant": true,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "4f0698e3a77ae6d5816192dfe92e6f5a",
+      "md5_tract_apres": "6d5327d15dd42f0ffaff552810ea0b95",
+      "md5_wav_avant": "1c9c94b0cec9b99550ca2251a6e3e2a0",
+      "md5_wav_apres": "a2711a1fa4c79032d051d4c337de8390",
+      "colonnes_diff": [
+        7
+      ],
+      "corrige": true,
+      "identique": false
+    },
+    {
+      "id": "H3",
+      "situation": "manuelle, nasal -> nasal",
+      "vo_avant": -0.1,
+      "vo_apres": 0.5,
+      "nas_perdue_avant": true,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "4f0698e3a77ae6d5816192dfe92e6f5a",
+      "md5_tract_apres": "96dc3e3923fd2a1699ae97acf6dba2f0",
+      "md5_wav_avant": "1c9c94b0cec9b99550ca2251a6e3e2a0",
+      "md5_wav_apres": "c67963d5ca3d6f7f17e702cdb10b1d55",
+      "colonnes_diff": [
+        7
+      ],
+      "corrige": true,
+      "identique": false
+    },
+    {
+      "id": "H4",
+      "situation": "manuelle, cas documente",
+      "vo_avant": -0.085,
+      "vo_apres": 0.495,
+      "nas_perdue_avant": true,
+      "nas_perdue_apres": false,
+      "md5_tract_avant": "64694b87b369decae7f54a59753487ab",
+      "md5_tract_apres": "b8817b3bebbf46145d64439d3a10ebae",
+      "md5_wav_avant": "333c1d4e3709a4955acb75081874b928",
+      "md5_wav_apres": "72c9f9141c0903add596ae5b3bcc66cf",
+      "colonnes_diff": [
+        7
+      ],
+      "corrige": true,
+      "identique": false
+    }
+  ],
+  "n_corriges_vo_seule": 15,
+  "n_temoins_identiques": 5,
+  "identite_H0H3_cassee": true,
+  "problemes": []
+}

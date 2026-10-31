@@ -17,16 +17,28 @@
         "kOma~.a.le.vu"
       ],
       "duree_s": 2.255,
+      "porte_moteur": "kOma.a.le.vu",
+      "intervalles_vo": [
+        [
+          88,
+          100,
+          "a"
+        ]
+      ],
       "n_frames_tract": 904,
       "mesures": {
-        "vo_max_background": 0.203,
-        "vo_max_background_centre": -0.085,
+        "vo_max_background": 0.495,
+        "vo_max_background_centre": 0.495,
+        "vo_moites_nasales": [
+          0.495
+        ],
+        "vo_moites_nasales_max": 0.495,
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": 1.0,
         "relamp_moyen_background": 0.999,
-        "rms_background": 0.2354,
-        "rms_plateaux": 0.1427,
-        "rms_global": 0.1142
+        "rms_background": 0.2221,
+        "rms_plateaux": 0.1391,
+        "rms_global": 0.1114
       },
       "verdict": {
         "voyelles_entree": [
@@ -45,10 +57,12 @@
           "a~",
           "a"
         ],
-        "nasalite_perdue": true,
+        "nasalite_perdue": false,
         "arc_statique": true,
         "audio_present_dans_hiatus": true,
-        "vo_hiatus_centre": -0.085,
+        "vo_hiatus_centre": 0.495,
+        "vo_moites_nasales": 0.495,
+        "vo_critere": 0.495,
         "vo_reference_nasale": null
       },
       "nodes": [
@@ -104,12 +118,6 @@
           "i": 8,
           "kind": "V",
           "key": "u",
-          "nasal": false
-        },
-        {
-          "i": 9,
-          "kind": "pause",
-          "key": "",
           "nasal": false
         }
       ],
@@ -203,8 +211,8 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "333c1d4e3709a4955acb75081874b928",
-      "md5_tract": "64694b87b369decae7f54a59753487ab"
+      "md5_wav": "72c9f9141c0903add596ae5b3bcc66cf",
+      "md5_tract": "b8817b3bebbf46145d64439d3a10ebae"
     },
     {
       "id": "S1b",
@@ -217,16 +225,28 @@
         "mO~.a.mi"
       ],
       "duree_s": 1.457,
+      "porte_moteur": "mO.a.mi",
+      "intervalles_vo": [
+        [
+          48,
+          60,
+          "O"
+        ]
+      ],
       "n_frames_tract": 584,
       "mesures": {
-        "vo_max_background": 0.203,
-        "vo_max_background_centre": -0.085,
+        "vo_max_background": 0.495,
+        "vo_max_background_centre": 0.495,
+        "vo_moites_nasales": [
+          0.495
+        ],
+        "vo_moites_nasales_max": 0.495,
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": 0.203,
         "relamp_moyen_background": 0.999,
-        "rms_background": 0.2017,
-        "rms_plateaux": 0.1704,
-        "rms_global": 0.1084
+        "rms_background": 0.1903,
+        "rms_plateaux": 0.1708,
+        "rms_global": 0.105
       },
       "verdict": {
         "voyelles_entree": [
@@ -243,10 +263,12 @@
           "O~",
           "a"
         ],
-        "nasalite_perdue": true,
+        "nasalite_perdue": false,
         "arc_statique": false,
         "audio_present_dans_hiatus": true,
-        "vo_hiatus_centre": -0.085,
+        "vo_hiatus_centre": 0.495,
+        "vo_moites_nasales": 0.495,
+        "vo_critere": 0.495,
         "vo_reference_nasale": null
       },
       "nodes": [
@@ -278,12 +300,6 @@
           "i": 4,
           "kind": "V",
           "key": "i",
-          "nasal": false
-        },
-        {
-          "i": 5,
-          "kind": "pause",
-          "key": "",
           "nasal": false
         }
       ],
@@ -345,8 +361,8 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "f8a88f5497f98aa74a2e8c575dfea7fe",
-      "md5_tract": "6bd64fc4234551ae87a5b4f26c58eff8"
+      "md5_wav": "d9b369244bab4ada8e15fac1f0f6bfc1",
+      "md5_tract": "f91643ce7955c242f37ace9b7b228c2c"
     },
     {
       "id": "S2a",
@@ -359,16 +375,28 @@
         "i.a.a~vi"
       ],
       "duree_s": 1.556,
+      "porte_moteur": "i.a.avi",
+      "intervalles_vo": [
+        [
+          70,
+          82,
+          "a"
+        ]
+      ],
       "n_frames_tract": 624,
       "mesures": {
-        "vo_max_background": -0.1,
+        "vo_max_background": 0.491,
         "vo_max_background_centre": -0.1,
+        "vo_moites_nasales": [
+          0.491
+        ],
+        "vo_moites_nasales_max": 0.491,
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.994,
-        "rms_background": 0.2158,
-        "rms_plateaux": 0.1281,
-        "rms_global": 0.1263
+        "rms_background": 0.2087,
+        "rms_plateaux": 0.1284,
+        "rms_global": 0.1227
       },
       "verdict": {
         "voyelles_entree": [
@@ -388,10 +416,12 @@
           "a",
           "a~"
         ],
-        "nasalite_perdue": true,
+        "nasalite_perdue": false,
         "arc_statique": true,
         "audio_present_dans_hiatus": true,
         "vo_hiatus_centre": -0.1,
+        "vo_moites_nasales": 0.491,
+        "vo_critere": 0.491,
         "vo_reference_nasale": null
       },
       "nodes": [
@@ -423,12 +453,6 @@
           "i": 4,
           "kind": "V",
           "key": "i",
-          "nasal": false
-        },
-        {
-          "i": 5,
-          "kind": "pause",
-          "key": "",
           "nasal": false
         }
       ],
@@ -498,8 +522,8 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "7a76f8caed28353ad9c820e7ac346ebc",
-      "md5_tract": "061f73f3d620187377ee1c4ad1ebe609"
+      "md5_wav": "211a5a0f75e138b1746cedaed8fd8729",
+      "md5_tract": "c9f3409bd8557fcfcf9011deffd51cd6"
     },
     {
       "id": "S2b",
@@ -512,16 +536,28 @@
         "la.O~zjEm"
       ],
       "duree_s": 1.876,
+      "porte_moteur": "la.OzjEm",
+      "intervalles_vo": [
+        [
+          60,
+          72,
+          "O"
+        ]
+      ],
       "n_frames_tract": 752,
       "mesures": {
-        "vo_max_background": -0.1,
-        "vo_max_background_centre": -0.1,
+        "vo_max_background": 0.491,
+        "vo_max_background_centre": 0.454,
+        "vo_moites_nasales": [
+          0.491
+        ],
+        "vo_moites_nasales_max": 0.491,
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.07,
         "relamp_moyen_background": 0.999,
-        "rms_background": 0.2404,
-        "rms_plateaux": 0.2154,
-        "rms_global": 0.1183
+        "rms_background": 0.2278,
+        "rms_plateaux": 0.2153,
+        "rms_global": 0.1151
       },
       "verdict": {
         "voyelles_entree": [
@@ -538,10 +574,12 @@
           "a",
           "O~"
         ],
-        "nasalite_perdue": true,
+        "nasalite_perdue": false,
         "arc_statique": false,
         "audio_present_dans_hiatus": true,
-        "vo_hiatus_centre": -0.1,
+        "vo_hiatus_centre": 0.454,
+        "vo_moites_nasales": 0.491,
+        "vo_critere": 0.491,
         "vo_reference_nasale": null
       },
       "nodes": [
@@ -585,12 +623,6 @@
           "i": 6,
           "kind": "C",
           "key": "m",
-          "nasal": false
-        },
-        {
-          "i": 7,
-          "kind": "pause",
-          "key": "",
           "nasal": false
         }
       ],
@@ -660,8 +692,8 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "f9f65b46aecd1c6a569c12ec21d17826",
-      "md5_tract": "1d047e16de735117ff24781b9028d766"
+      "md5_wav": "2c83b9f68ef489e6cedaf6ae9e10b615",
+      "md5_tract": "49d4bc0463e4bbc9fc1a1a4226cb7651"
     },
     {
       "id": "S3a",
@@ -674,16 +706,28 @@
         "neO~"
       ],
       "duree_s": 1.058,
+      "porte_moteur": "neO",
+      "intervalles_vo": [
+        [
+          60,
+          72,
+          "O"
+        ]
+      ],
       "n_frames_tract": 424,
       "mesures": {
-        "vo_max_background": 0.203,
-        "vo_max_background_centre": -0.085,
+        "vo_max_background": 0.491,
+        "vo_max_background_centre": 0.454,
+        "vo_moites_nasales": [
+          0.491
+        ],
+        "vo_moites_nasales_max": 0.491,
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": null,
         "relamp_moyen_background": 0.984,
-        "rms_background": 0.215,
+        "rms_background": 0.2317,
         "rms_plateaux": null,
-        "rms_global": 0.1133
+        "rms_global": 0.1229
       },
       "verdict": {
         "voyelles_entree": [
@@ -699,10 +743,12 @@
           "e",
           "O~"
         ],
-        "nasalite_perdue": true,
+        "nasalite_perdue": false,
         "arc_statique": false,
         "audio_present_dans_hiatus": true,
-        "vo_hiatus_centre": -0.085,
+        "vo_hiatus_centre": 0.454,
+        "vo_moites_nasales": 0.491,
+        "vo_critere": 0.491,
         "vo_reference_nasale": null
       },
       "nodes": [
@@ -723,12 +769,6 @@
           "kind": "V",
           "key": "O",
           "nasal": true
-        },
-        {
-          "i": 3,
-          "kind": "pause",
-          "key": "",
-          "nasal": false
         }
       ],
       "blocks": [
@@ -773,8 +813,8 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "6f0cadf27e7cc3c5071b8d120a7f9c9f",
-      "md5_tract": "0e4d01b289ad947e7430356e6375f8ae"
+      "md5_wav": "27c4a6119b14ebd9a6335844deb3d20e",
+      "md5_tract": "d8826437830fe9cb278499ee3002f755"
     },
     {
       "id": "S3b",
@@ -787,16 +827,28 @@
         "eO~.te"
       ],
       "duree_s": 1.317,
+      "porte_moteur": "eO.te",
+      "intervalles_vo": [
+        [
+          46,
+          58,
+          "O"
+        ]
+      ],
       "n_frames_tract": 528,
       "mesures": {
-        "vo_max_background": -0.1,
-        "vo_max_background_centre": -0.1,
+        "vo_max_background": 0.491,
+        "vo_max_background_centre": 0.454,
+        "vo_moites_nasales": [
+          0.491
+        ],
+        "vo_moites_nasales_max": 0.491,
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.972,
-        "rms_background": 0.2056,
-        "rms_plateaux": 0.1713,
-        "rms_global": 0.1026
+        "rms_background": 0.2115,
+        "rms_plateaux": 0.1828,
+        "rms_global": 0.1066
       },
       "verdict": {
         "voyelles_entree": [
@@ -813,10 +865,12 @@
           "e",
           "O~"
         ],
-        "nasalite_perdue": true,
+        "nasalite_perdue": false,
         "arc_statique": false,
         "audio_present_dans_hiatus": true,
-        "vo_hiatus_centre": -0.1,
+        "vo_hiatus_centre": 0.454,
+        "vo_moites_nasales": 0.491,
+        "vo_critere": 0.491,
         "vo_reference_nasale": null
       },
       "nodes": [
@@ -842,12 +896,6 @@
           "i": 3,
           "kind": "V",
           "key": "e",
-          "nasal": false
-        },
-        {
-          "i": 4,
-          "kind": "pause",
-          "key": "",
           "nasal": false
         }
       ],
@@ -909,8 +957,8 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "298abe6cab39bc09e4204383537d55b2",
-      "md5_tract": "7cde08b0d98790d4e4af6532c3d12aa3"
+      "md5_wav": "5bc90d23141519f95326271d109d89a6",
+      "md5_tract": "cb9f100c96ff3437f8c10aa81817c1d0"
     },
     {
       "id": "S3c",
@@ -923,16 +971,28 @@
         "pao~"
       ],
       "duree_s": 1.058,
+      "porte_moteur": "pao",
+      "intervalles_vo": [
+        [
+          60,
+          72,
+          "o"
+        ]
+      ],
       "n_frames_tract": 424,
       "mesures": {
-        "vo_max_background": -0.1,
-        "vo_max_background_centre": -0.1,
+        "vo_max_background": 0.491,
+        "vo_max_background_centre": 0.454,
+        "vo_moites_nasales": [
+          0.491
+        ],
+        "vo_moites_nasales_max": 0.491,
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": null,
         "relamp_moyen_background": 0.984,
-        "rms_background": 0.1891,
+        "rms_background": 0.2108,
         "rms_plateaux": null,
-        "rms_global": 0.0906
+        "rms_global": 0.1009
       },
       "verdict": {
         "voyelles_entree": [
@@ -948,10 +1008,12 @@
           "a",
           "o~"
         ],
-        "nasalite_perdue": true,
+        "nasalite_perdue": false,
         "arc_statique": false,
         "audio_present_dans_hiatus": true,
-        "vo_hiatus_centre": -0.1,
+        "vo_hiatus_centre": 0.454,
+        "vo_moites_nasales": 0.491,
+        "vo_critere": 0.491,
         "vo_reference_nasale": null
       },
       "nodes": [
@@ -972,12 +1034,6 @@
           "kind": "V",
           "key": "o",
           "nasal": true
-        },
-        {
-          "i": 3,
-          "kind": "pause",
-          "key": "",
-          "nasal": false
         }
       ],
       "blocks": [
@@ -1022,8 +1078,8 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "d047300eb35e85315776b60de0ec868d",
-      "md5_tract": "476a98ac8c9cb55d741b460b471834a3"
+      "md5_wav": "160eb4007082ded706b1887019d6c76a",
+      "md5_tract": "2f58712e347a0017da1766c699caae3e"
     },
     {
       "id": "S4a",
@@ -1036,16 +1092,28 @@
         "a~aR.diR"
       ],
       "duree_s": 1.876,
+      "porte_moteur": "aaR.diR",
+      "intervalles_vo": [
+        [
+          34,
+          46,
+          "a"
+        ]
+      ],
       "n_frames_tract": 752,
       "mesures": {
-        "vo_max_background": -0.1,
-        "vo_max_background_centre": -0.1,
+        "vo_max_background": 0.491,
+        "vo_max_background_centre": 0.491,
+        "vo_moites_nasales": [
+          0.491
+        ],
+        "vo_moites_nasales_max": 0.491,
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.987,
-        "rms_background": 0.246,
-        "rms_plateaux": 0.125,
-        "rms_global": 0.1017
+        "rms_background": 0.2307,
+        "rms_plateaux": 0.1226,
+        "rms_global": 0.0965
       },
       "verdict": {
         "voyelles_entree": [
@@ -1062,10 +1130,12 @@
           "a~",
           "a"
         ],
-        "nasalite_perdue": true,
+        "nasalite_perdue": false,
         "arc_statique": true,
         "audio_present_dans_hiatus": true,
-        "vo_hiatus_centre": -0.1,
+        "vo_hiatus_centre": 0.491,
+        "vo_moites_nasales": 0.491,
+        "vo_critere": 0.491,
         "vo_reference_nasale": null
       },
       "nodes": [
@@ -1103,12 +1173,6 @@
           "i": 5,
           "kind": "C",
           "key": "R",
-          "nasal": false
-        },
-        {
-          "i": 6,
-          "kind": "pause",
-          "key": "",
           "nasal": false
         }
       ],
@@ -1186,8 +1250,8 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "28a710e4b5529b8f4eb34d4f12f8b339",
-      "md5_tract": "f34702b176789f854512fc9b97e6564b"
+      "md5_wav": "9b46379c036188b65e1301bbe7b4b94b",
+      "md5_tract": "e2174b11a852b6bc4957587ee8b8b66c"
     },
     {
       "id": "S4b",
@@ -1200,16 +1264,28 @@
         "a~y.Se"
       ],
       "duree_s": 1.317,
+      "porte_moteur": "ay.Se",
+      "intervalles_vo": [
+        [
+          34,
+          46,
+          "a"
+        ]
+      ],
       "n_frames_tract": 528,
       "mesures": {
-        "vo_max_background": -0.1,
-        "vo_max_background_centre": -0.1,
+        "vo_max_background": 0.491,
+        "vo_max_background_centre": 0.491,
+        "vo_moites_nasales": [
+          0.491
+        ],
+        "vo_moites_nasales_max": 0.491,
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.972,
-        "rms_background": 0.2072,
-        "rms_plateaux": 0.1626,
-        "rms_global": 0.1021
+        "rms_background": 0.2206,
+        "rms_plateaux": 0.1782,
+        "rms_global": 0.1095
       },
       "verdict": {
         "voyelles_entree": [
@@ -1226,10 +1302,12 @@
           "a~",
           "y"
         ],
-        "nasalite_perdue": true,
+        "nasalite_perdue": false,
         "arc_statique": false,
         "audio_present_dans_hiatus": true,
-        "vo_hiatus_centre": -0.1,
+        "vo_hiatus_centre": 0.491,
+        "vo_moites_nasales": 0.491,
+        "vo_critere": 0.491,
         "vo_reference_nasale": null
       },
       "nodes": [
@@ -1255,12 +1333,6 @@
           "i": 3,
           "kind": "V",
           "key": "e",
-          "nasal": false
-        },
-        {
-          "i": 4,
-          "kind": "pause",
-          "key": "",
           "nasal": false
         }
       ],
@@ -1322,8 +1394,8 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "317ac55f7e55dca4d2b20e6622c60110",
-      "md5_tract": "f6f9e53f8a3ff3dd123733b1bd42da50"
+      "md5_wav": "882e66021cff37cca34029579819dd53",
+      "md5_tract": "a4d78e0f5cf85a4e1e86460cc543f5a0"
     },
     {
       "id": "T1",
@@ -1336,10 +1408,14 @@
         "a.e.Re"
       ],
       "duree_s": 1.317,
+      "porte_moteur": "a.e.Re",
+      "intervalles_vo": null,
       "n_frames_tract": 528,
       "mesures": {
         "vo_max_background": -0.1,
         "vo_max_background_centre": -0.1,
+        "vo_moites_nasales": null,
+        "vo_moites_nasales_max": null,
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.987,
@@ -1366,6 +1442,8 @@
         "arc_statique": false,
         "audio_present_dans_hiatus": true,
         "vo_hiatus_centre": -0.1,
+        "vo_moites_nasales": null,
+        "vo_critere": -0.1,
         "vo_reference_nasale": null
       },
       "nodes": [
@@ -1391,12 +1469,6 @@
           "i": 3,
           "kind": "V",
           "key": "e",
-          "nasal": false
-        },
-        {
-          "i": 4,
-          "kind": "pause",
-          "key": "",
           "nasal": false
         }
       ],
@@ -1472,10 +1544,14 @@
         "i.a.ub.li.je"
       ],
       "duree_s": 2.237,
+      "porte_moteur": "i.a.ub.li.je",
+      "intervalles_vo": null,
       "n_frames_tract": 897,
       "mesures": {
         "vo_max_background": -0.1,
         "vo_max_background_centre": -0.1,
+        "vo_moites_nasales": null,
+        "vo_moites_nasales_max": null,
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.994,
@@ -1506,6 +1582,8 @@
         "arc_statique": false,
         "audio_present_dans_hiatus": true,
         "vo_hiatus_centre": -0.1,
+        "vo_moites_nasales": null,
+        "vo_critere": -0.1,
         "vo_reference_nasale": null
       },
       "nodes": [
@@ -1555,12 +1633,6 @@
           "i": 7,
           "kind": "V",
           "key": "e",
-          "nasal": false
-        },
-        {
-          "i": 8,
-          "kind": "pause",
-          "key": "",
           "nasal": false
         }
       ],
@@ -1668,10 +1740,14 @@
         "kOma~"
       ],
       "duree_s": 1.337,
+      "porte_moteur": "kOma~",
+      "intervalles_vo": null,
       "n_frames_tract": 536,
       "mesures": {
         "vo_max_background": null,
         "vo_max_background_centre": null,
+        "vo_moites_nasales": null,
+        "vo_moites_nasales_max": null,
         "vo_max_plateau_nasal": 0.495,
         "vo_max_plateau_oral": -0.07,
         "relamp_moyen_background": null,
@@ -1692,6 +1768,8 @@
         "arc_statique": false,
         "audio_present_dans_hiatus": false,
         "vo_hiatus_centre": null,
+        "vo_moites_nasales": null,
+        "vo_critere": null,
         "vo_reference_nasale": 0.495
       },
       "nodes": [
@@ -1718,12 +1796,6 @@
           "kind": "V",
           "key": "a",
           "nasal": true
-        },
-        {
-          "i": 4,
-          "kind": "pause",
-          "key": "",
-          "nasal": false
         }
       ],
       "blocks": [
@@ -1798,10 +1870,14 @@
         "a~vi"
       ],
       "duree_s": 1.197,
+      "porte_moteur": "a~vi",
+      "intervalles_vo": null,
       "n_frames_tract": 480,
       "mesures": {
         "vo_max_background": null,
         "vo_max_background_centre": null,
+        "vo_moites_nasales": null,
+        "vo_moites_nasales_max": null,
         "vo_max_plateau_nasal": 0.491,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": null,
@@ -1822,6 +1898,8 @@
         "arc_statique": false,
         "audio_present_dans_hiatus": false,
         "vo_hiatus_centre": null,
+        "vo_moites_nasales": null,
+        "vo_critere": null,
         "vo_reference_nasale": 0.491
       },
       "nodes": [
@@ -1841,12 +1919,6 @@
           "i": 2,
           "kind": "V",
           "key": "i",
-          "nasal": false
-        },
-        {
-          "i": 3,
-          "kind": "pause",
-          "key": "",
           "nasal": false
         }
       ],
@@ -1922,16 +1994,28 @@
         "mO~.O~kl"
       ],
       "duree_s": 1.477,
+      "porte_moteur": "mO.Okl",
+      "intervalles_vo": [
+        [
+          48,
+          72,
+          "O+O"
+        ]
+      ],
       "n_frames_tract": 592,
       "mesures": {
-        "vo_max_background": 0.203,
-        "vo_max_background_centre": -0.085,
+        "vo_max_background": 0.5,
+        "vo_max_background_centre": 0.5,
+        "vo_moites_nasales": [
+          0.5
+        ],
+        "vo_moites_nasales_max": 0.5,
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": null,
         "relamp_moyen_background": 0.984,
-        "rms_background": 0.2351,
+        "rms_background": 0.2489,
         "rms_plateaux": null,
-        "rms_global": 0.1074
+        "rms_global": 0.1168
       },
       "verdict": {
         "voyelles_entree": [
@@ -1947,10 +2031,12 @@
           "O~",
           "O~"
         ],
-        "nasalite_perdue": true,
+        "nasalite_perdue": false,
         "arc_statique": true,
         "audio_present_dans_hiatus": true,
-        "vo_hiatus_centre": -0.085,
+        "vo_hiatus_centre": 0.5,
+        "vo_moites_nasales": 0.5,
+        "vo_critere": 0.5,
         "vo_reference_nasale": null
       },
       "nodes": [
@@ -1982,12 +2068,6 @@
           "i": 4,
           "kind": "C",
           "key": "l",
-          "nasal": false
-        },
-        {
-          "i": 5,
-          "kind": "pause",
-          "key": "",
           "nasal": false
         }
       ],
@@ -2041,8 +2121,8 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "0e86084297cc104b597f5e70bc7cff0d",
-      "md5_tract": "709caa26581339a4ffdba525b8142f1f"
+      "md5_wav": "d6ff1beeb7f03fe5122ce4721049922f",
+      "md5_tract": "5501c12c8695f7a6362c84bbcb715eee"
     },
     {
       "id": "T6",
@@ -2055,16 +2135,28 @@
         "9~.a~"
       ],
       "duree_s": 0.918,
+      "porte_moteur": "9.a",
+      "intervalles_vo": [
+        [
+          34,
+          58,
+          "9+a"
+        ]
+      ],
       "n_frames_tract": 368,
       "mesures": {
-        "vo_max_background": -0.1,
-        "vo_max_background_centre": -0.1,
+        "vo_max_background": 0.5,
+        "vo_max_background_centre": 0.5,
+        "vo_moites_nasales": [
+          0.5
+        ],
+        "vo_moites_nasales_max": 0.5,
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": null,
         "relamp_moyen_background": 0.972,
-        "rms_background": 0.2353,
+        "rms_background": 0.2391,
         "rms_plateaux": null,
-        "rms_global": 0.1208
+        "rms_global": 0.1228
       },
       "verdict": {
         "voyelles_entree": [
@@ -2080,10 +2172,12 @@
           "9~",
           "a~"
         ],
-        "nasalite_perdue": true,
+        "nasalite_perdue": false,
         "arc_statique": false,
         "audio_present_dans_hiatus": true,
-        "vo_hiatus_centre": -0.1,
+        "vo_hiatus_centre": 0.5,
+        "vo_moites_nasales": 0.5,
+        "vo_critere": 0.5,
         "vo_reference_nasale": null
       },
       "nodes": [
@@ -2098,12 +2192,6 @@
           "kind": "V",
           "key": "a",
           "nasal": true
-        },
-        {
-          "i": 2,
-          "kind": "pause",
-          "key": "",
-          "nasal": false
         }
       ],
       "blocks": [
@@ -2148,8 +2236,8 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "d6764e3f98cfcee1eac8302bc2eabba9",
-      "md5_tract": "a55deafade3d12c898711fd18cc737e2"
+      "md5_wav": "c3755a1c3f63dba1b9f410ec78752936",
+      "md5_tract": "9ad7865a47298c712d49ed70ac86ee9c"
     },
     {
       "id": "H0",
@@ -2162,10 +2250,14 @@
         "ta.ata"
       ],
       "duree_s": 1.457,
+      "porte_moteur": "ta.ata",
+      "intervalles_vo": null,
       "n_frames_tract": 584,
       "mesures": {
         "vo_max_background": -0.1,
         "vo_max_background_centre": -0.1,
+        "vo_moites_nasales": null,
+        "vo_moites_nasales_max": null,
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.984,
@@ -2192,6 +2284,8 @@
         "arc_statique": true,
         "audio_present_dans_hiatus": true,
         "vo_hiatus_centre": -0.1,
+        "vo_moites_nasales": null,
+        "vo_critere": -0.1,
         "vo_reference_nasale": null
       },
       "nodes": [
@@ -2223,12 +2317,6 @@
           "i": 4,
           "kind": "V",
           "key": "a",
-          "nasal": false
-        },
-        {
-          "i": 5,
-          "kind": "pause",
-          "key": "",
           "nasal": false
         }
       ],
@@ -2304,16 +2392,28 @@
         "ta~.ata"
       ],
       "duree_s": 1.457,
+      "porte_moteur": "ta.ata",
+      "intervalles_vo": [
+        [
+          48,
+          60,
+          "a"
+        ]
+      ],
       "n_frames_tract": 584,
       "mesures": {
-        "vo_max_background": -0.1,
-        "vo_max_background_centre": -0.1,
+        "vo_max_background": 0.491,
+        "vo_max_background_centre": 0.491,
+        "vo_moites_nasales": [
+          0.491
+        ],
+        "vo_moites_nasales_max": 0.491,
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.984,
-        "rms_background": 0.2229,
-        "rms_plateaux": 0.2182,
-        "rms_global": 0.1107
+        "rms_background": 0.2198,
+        "rms_plateaux": 0.2294,
+        "rms_global": 0.1116
       },
       "verdict": {
         "voyelles_entree": [
@@ -2330,10 +2430,12 @@
           "a~",
           "a"
         ],
-        "nasalite_perdue": true,
+        "nasalite_perdue": false,
         "arc_statique": true,
         "audio_present_dans_hiatus": true,
-        "vo_hiatus_centre": -0.1,
+        "vo_hiatus_centre": 0.491,
+        "vo_moites_nasales": 0.491,
+        "vo_critere": 0.491,
         "vo_reference_nasale": null
       },
       "nodes": [
@@ -2365,12 +2467,6 @@
           "i": 4,
           "kind": "V",
           "key": "a",
-          "nasal": false
-        },
-        {
-          "i": 5,
-          "kind": "pause",
-          "key": "",
           "nasal": false
         }
       ],
@@ -2432,8 +2528,8 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "1c9c94b0cec9b99550ca2251a6e3e2a0",
-      "md5_tract": "4f0698e3a77ae6d5816192dfe92e6f5a"
+      "md5_wav": "cd247011ceb731fefb1098169af70190",
+      "md5_tract": "05a49884d49339c08c5a56b541aae520"
     },
     {
       "id": "H2",
@@ -2446,16 +2542,28 @@
         "ta.a~ta"
       ],
       "duree_s": 1.457,
+      "porte_moteur": "ta.ata",
+      "intervalles_vo": [
+        [
+          60,
+          72,
+          "a"
+        ]
+      ],
       "n_frames_tract": 584,
       "mesures": {
-        "vo_max_background": -0.1,
-        "vo_max_background_centre": -0.1,
+        "vo_max_background": 0.491,
+        "vo_max_background_centre": 0.454,
+        "vo_moites_nasales": [
+          0.491
+        ],
+        "vo_moites_nasales_max": 0.491,
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.984,
-        "rms_background": 0.2229,
+        "rms_background": 0.2111,
         "rms_plateaux": 0.2182,
-        "rms_global": 0.1107
+        "rms_global": 0.1069
       },
       "verdict": {
         "voyelles_entree": [
@@ -2472,10 +2580,12 @@
           "a",
           "a~"
         ],
-        "nasalite_perdue": true,
+        "nasalite_perdue": false,
         "arc_statique": true,
         "audio_present_dans_hiatus": true,
-        "vo_hiatus_centre": -0.1,
+        "vo_hiatus_centre": 0.454,
+        "vo_moites_nasales": 0.491,
+        "vo_critere": 0.491,
         "vo_reference_nasale": null
       },
       "nodes": [
@@ -2507,12 +2617,6 @@
           "i": 4,
           "kind": "V",
           "key": "a",
-          "nasal": false
-        },
-        {
-          "i": 5,
-          "kind": "pause",
-          "key": "",
           "nasal": false
         }
       ],
@@ -2574,8 +2678,8 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "1c9c94b0cec9b99550ca2251a6e3e2a0",
-      "md5_tract": "4f0698e3a77ae6d5816192dfe92e6f5a"
+      "md5_wav": "a2711a1fa4c79032d051d4c337de8390",
+      "md5_tract": "6d5327d15dd42f0ffaff552810ea0b95"
     },
     {
       "id": "H3",
@@ -2588,16 +2692,28 @@
         "ta~.a~ta"
       ],
       "duree_s": 1.457,
+      "porte_moteur": "ta.ata",
+      "intervalles_vo": [
+        [
+          48,
+          72,
+          "a+a"
+        ]
+      ],
       "n_frames_tract": 584,
       "mesures": {
-        "vo_max_background": -0.1,
-        "vo_max_background_centre": -0.1,
+        "vo_max_background": 0.5,
+        "vo_max_background_centre": 0.5,
+        "vo_moites_nasales": [
+          0.5
+        ],
+        "vo_moites_nasales_max": 0.5,
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.984,
-        "rms_background": 0.2229,
-        "rms_plateaux": 0.2182,
-        "rms_global": 0.1107
+        "rms_background": 0.2033,
+        "rms_plateaux": 0.2285,
+        "rms_global": 0.1062
       },
       "verdict": {
         "voyelles_entree": [
@@ -2614,10 +2730,12 @@
           "a~",
           "a~"
         ],
-        "nasalite_perdue": true,
+        "nasalite_perdue": false,
         "arc_statique": true,
         "audio_present_dans_hiatus": true,
-        "vo_hiatus_centre": -0.1,
+        "vo_hiatus_centre": 0.5,
+        "vo_moites_nasales": 0.5,
+        "vo_critere": 0.5,
         "vo_reference_nasale": null
       },
       "nodes": [
@@ -2649,12 +2767,6 @@
           "i": 4,
           "kind": "V",
           "key": "a",
-          "nasal": false
-        },
-        {
-          "i": 5,
-          "kind": "pause",
-          "key": "",
           "nasal": false
         }
       ],
@@ -2716,8 +2828,8 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "1c9c94b0cec9b99550ca2251a6e3e2a0",
-      "md5_tract": "4f0698e3a77ae6d5816192dfe92e6f5a"
+      "md5_wav": "c67963d5ca3d6f7f17e702cdb10b1d55",
+      "md5_tract": "96dc3e3923fd2a1699ae97acf6dba2f0"
     },
     {
       "id": "H4",
@@ -2730,16 +2842,28 @@
         "kOma~.a.le.vu"
       ],
       "duree_s": 2.255,
+      "porte_moteur": "kOma.a.le.vu",
+      "intervalles_vo": [
+        [
+          88,
+          100,
+          "a"
+        ]
+      ],
       "n_frames_tract": 904,
       "mesures": {
-        "vo_max_background": 0.203,
-        "vo_max_background_centre": -0.085,
+        "vo_max_background": 0.495,
+        "vo_max_background_centre": 0.495,
+        "vo_moites_nasales": [
+          0.495
+        ],
+        "vo_moites_nasales_max": 0.495,
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": 1.0,
         "relamp_moyen_background": 0.999,
-        "rms_background": 0.2354,
-        "rms_plateaux": 0.1427,
-        "rms_global": 0.1142
+        "rms_background": 0.2221,
+        "rms_plateaux": 0.1391,
+        "rms_global": 0.1114
       },
       "verdict": {
         "voyelles_entree": [
@@ -2758,10 +2882,12 @@
           "a~",
           "a"
         ],
-        "nasalite_perdue": true,
+        "nasalite_perdue": false,
         "arc_statique": true,
         "audio_present_dans_hiatus": true,
-        "vo_hiatus_centre": -0.085,
+        "vo_hiatus_centre": 0.495,
+        "vo_moites_nasales": 0.495,
+        "vo_critere": 0.495,
         "vo_reference_nasale": null
       },
       "nodes": [
@@ -2817,12 +2943,6 @@
           "i": 8,
           "kind": "V",
           "key": "u",
-          "nasal": false
-        },
-        {
-          "i": 9,
-          "kind": "pause",
-          "key": "",
           "nasal": false
         }
       ],
@@ -2916,8 +3036,8 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "333c1d4e3709a4955acb75081874b928",
-      "md5_tract": "64694b87b369decae7f54a59753487ab"
+      "md5_wav": "72c9f9141c0903add596ae5b3bcc66cf",
+      "md5_tract": "b8817b3bebbf46145d64439d3a10ebae"
     }
   ]
 }

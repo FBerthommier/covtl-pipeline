@@ -1,7 +1,7 @@
 SAMPA (entrée moteur) : kOma~.a.le.vu
 Total : 226 steps @100 Hz = 2.26 s
 
-Nœuds : [C]k [V]O [C]m [V]a~ [V]a [C]l [V]e [C]v [V]u [pause]
+Nœuds : [C]k [V]O [C]m [V]a~ [V]a [C]l [V]e [C]v [V]u
 
  offset   dur kind        voyelle nasal  contenu
 ------------------------------------------------------------------------
@@ -9,10 +9,15 @@ Nœuds : [C]k [V]O [C]m [V]a~ [V]a [C]l [V]e [C]v [V]u [pause]
      20    28 cluster     -       False  cluster (1 cons.)
      48    12 plateau     O       False  plateau de /O/
      60    28 cluster     -       False  cluster (1 cons.)
-     88    24 background  -       False  arc de fond NON étiqueté (hiatus réduit — ni noyau, ni nasalité)
+     88    24 background  -       False  arc de fond : transition diphtongue de base (réalisation des noyaux de l'hiatus)
     112    28 cluster     -       False  cluster (1 cons.)
     140    12 plateau     e       False  plateau de /e/
     152    28 cluster     -       False  cluster (1 cons.)
     180    12 plateau     u       False  plateau de /u/
     192    14 decay       -       False  
     206    20 terminal    -       False  
+Porte nasalité (pré-traitement nasal_preproc) :
+  chaîne moteur (syltraj) : kOma.a.le.vu
+  run 0 : [a~ . a]
+  oralisé : run 0 membre 0 → /a~/ (nasalité capturée)
+  VO orthogonale : /a~/ sur [88, 100) pas @100 Hz (880-1000 ms)

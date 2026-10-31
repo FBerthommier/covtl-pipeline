@@ -1,14 +1,17 @@
 SAMPA (entrée moteur) : a.e.Re
 Total : 132 steps @100 Hz = 1.32 s
 
-Nœuds : [V]a [V]e [C]R [V]e [pause]
+Nœuds : [V]a [V]e [C]R [V]e
 
  offset   dur kind        voyelle nasal  contenu
 ------------------------------------------------------------------------
       0    20 initial     -       False  
      20    14 attack      -       False  
-     34    24 background  -       False  arc de fond NON étiqueté (hiatus réduit — ni noyau, ni nasalité)
+     34    24 background  -       False  arc de fond : transition diphtongue de base (réalisation des noyaux de l'hiatus)
      58    28 cluster     -       False  cluster (1 cons.)
      86    12 plateau     e       False  plateau de /e/
      98    14 decay       -       False  
     112    20 terminal    -       False  
+Porte nasalité (pré-traitement nasal_preproc) :
+  chaîne moteur (syltraj) : a.e.Re
+  aucun membre d'hiatus nasal — chaîne inchangée (sorties identiques au moteur nu)
