@@ -1,0 +1,100 @@
+[
+  {
+    "id": "S1a",
+    "texte": "comment allez-vous",
+    "sampa_frais": "kOma~.a.le.vu",
+    "sampa_head": "kOma~ a.le.vu",
+    "masque_par_patch": true
+  },
+  {
+    "id": "S1b",
+    "texte": "mon ami",
+    "sampa_frais": "mO~.a.mi",
+    "sampa_head": "mO~ a.mi",
+    "masque_par_patch": true
+  },
+  {
+    "id": "S2a",
+    "texte": "il a envie",
+    "sampa_frais": "i.a.a~vi",
+    "sampa_head": "i.a.a~vi",
+    "masque_par_patch": false
+  },
+  {
+    "id": "S2b",
+    "texte": "la onzième",
+    "sampa_frais": "la.O~zjEm",
+    "sampa_head": "la.O~zjEm",
+    "masque_par_patch": false
+  },
+  {
+    "id": "S3a",
+    "texte": "néon",
+    "sampa_frais": "neO~",
+    "sampa_head": "neO~",
+    "masque_par_patch": false
+  },
+  {
+    "id": "S3b",
+    "texte": "éhonté",
+    "sampa_frais": "eO~.te",
+    "sampa_head": "eO~.te",
+    "masque_par_patch": false
+  },
+  {
+    "id": "S4a",
+    "texte": "enhardir",
+    "sampa_frais": "a~aR.diR",
+    "sampa_head": "a~aR.diR",
+    "masque_par_patch": false
+  },
+  {
+    "id": "S4b",
+    "texte": "enhucher",
+    "sampa_frais": "a~y.Se",
+    "sampa_head": "a~y.Se",
+    "masque_par_patch": false
+  },
+  {
+    "id": "T1",
+    "texte": "aérer",
+    "sampa_frais": "a.e.Re",
+    "sampa_head": "a.e.Re",
+    "masque_par_patch": false
+  },
+  {
+    "id": "T2",
+    "texte": "il a oublié",
+    "sampa_frais": "i.a.ub.li.je",
+    "sampa_head": "i.a.ub.li.je",
+    "masque_par_patch": false
+  },
+  {
+    "id": "T3",
+    "texte": "comment",
+    "sampa_frais": "kOma~",
+    "sampa_head": "kOma~",
+    "masque_par_patch": false
+  },
+  {
+    "id": "T4",
+    "texte": "envie",
+    "sampa_frais": "a~vi",
+    "sampa_head": "a~vi",
+    "masque_par_patch": false
+  },
+  {
+    "id": "T5",
+    "texte": "mon oncle",
+    "sampa_frais": "mO~.O~kl",
+    "sampa_head": "mO~ O~kl",
+    "masque_par_patch": true
+  },
+  {
+    "id": "T6",
+    "texte": "un an",
+    "sampa_frais": "9~.a~",
+    "sampa_head": "9~ a~",
+    "masque_par_patch": true
+  }
+]

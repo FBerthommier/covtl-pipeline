@@ -1,0 +1,14 @@
+SAMPA (entrée moteur) : eO~.te
+Total : 132 steps @100 Hz = 1.32 s
+
+Nœuds : [V]e [V]O~ [C]t [V]e [pause]
+
+ offset   dur kind        voyelle nasal  contenu
+------------------------------------------------------------------------
+      0    20 initial     -       False  
+     20    14 attack      -       False  
+     34    24 background  -       False  arc de fond NON étiqueté (hiatus réduit — ni noyau, ni nasalité)
+     58    28 cluster     -       False  cluster (1 cons.)
+     86    12 plateau     e       False  plateau de /e/
+     98    14 decay       -       False  
+    112    20 terminal    -       False  

@@ -1,0 +1,30 @@
+{
+  "titre": "Corpus d'audit V1V2 — hiatus coarticulés V1.V2 avec bascule nasal/oral",
+  "moteur": "covtl-pipeline (clone frais, contournement g2p retiré — revert des commits dea71c6 + f62f185)",
+  "langue": "fr",
+  "speaker": "jd3",
+  "legendes": {
+    "situation": "S1: inter-mot V~.V (nasal -> oral) ; S2: inter-mot V.V~ (oral -> nasal) ; S3: intra-mot V.V~ ; S4: intra-mot V~.V ; T: temoin ; H: paire minimale manuelle (entree SAMPA directe, use_g2p=false)"
+  },
+  "items": [
+    {"id": "S1a", "situation": "inter-mot, nasal -> oral", "texte": "comment allez-vous", "use_g2p": true,  "note": "cas documente dans le commit dea71c6 (kOma~.a.le.vu)"},
+    {"id": "S1b", "situation": "inter-mot, nasal -> oral", "texte": "mon ami",            "use_g2p": true,  "note": "jonction O~.a"},
+    {"id": "S2a", "situation": "inter-mot, oral -> nasal", "texte": "il a envie",        "use_g2p": true,  "note": "exemple de l'utilisateur ; jonction a.a~"},
+    {"id": "S2b", "situation": "inter-mot, oral -> nasal", "texte": "la onzième",        "use_g2p": true,  "note": "jonction a.O~"},
+    {"id": "S3a", "situation": "intra-mot, oral -> nasal", "texte": "néon",              "use_g2p": true,  "note": "lexique Wikipron : n e ɔ̃ ; jonction e.O~ dans le mot"},
+    {"id": "S3b", "situation": "intra-mot, oral -> nasal", "texte": "éhonté",            "use_g2p": true,  "note": "lexique Wikipron : e ɔ̃ t e ; jonction e.O~ dans le mot"},
+    {"id": "S4a", "situation": "intra-mot, nasal -> oral", "texte": "enhardir",          "use_g2p": true,  "note": "lexique Wikipron : ɑ̃ a ʁ d i ʁ ; jonction A~.a dans le mot (h muet)"},
+    {"id": "S4b", "situation": "intra-mot, nasal -> oral", "texte": "enhucher",          "use_g2p": true,  "note": "lexique Wikipron : ɑ̃ y ʃ e ; jonction A~.y dans le mot (h muet)"},
+    {"id": "T1", "situation": "temoin intra-mot V.V oral-orale", "texte": "aérer",       "use_g2p": true,  "note": "jonction a.e sans nasalite — cense etre traite par la marche"},
+    {"id": "T2", "situation": "temoin inter-mot V.V oral-orale",  "texte": "il a oublié", "use_g2p": true, "note": "jonction a.u inter-mot sans nasalite"},
+    {"id": "T3", "situation": "temoin nasale isolee",             "texte": "comment",     "use_g2p": true, "note": "kOma~ — plateau nasal de reference (VO attendu ~0.5)"},
+    {"id": "T4", "situation": "temoin nasale isolee non-hiatus",  "texte": "envie",       "use_g2p": true, "note": "a~vi — plateau nasal de reference (VO attendu ~0.5)"},
+    {"id": "T5", "situation": "complement inter-mot V~.V~",       "texte": "mon oncle",   "use_g2p": true, "note": "jonction O~.O~ — les deux nasalites attendues"},
+    {"id": "T6", "situation": "complement inter-mot V~.V~",       "texte": "un an",       "use_g2p": true, "note": "jonction 9~.a~ — les deux nasalites attendues"},
+    {"id": "H0", "situation": "manuelle, oral -> oral (temoin)",  "sampa": "ta.ata",       "use_g2p": false, "note": "paire minimale moteur : V.V orale"},
+    {"id": "H1", "situation": "manuelle, nasal -> oral",          "sampa": "ta~.ata",      "use_g2p": false, "note": "paire minimale moteur : a~.a"},
+    {"id": "H2", "situation": "manuelle, oral -> nasal",          "sampa": "ta.a~ta",      "use_g2p": false, "note": "paire minimale moteur : a.a~"},
+    {"id": "H3", "situation": "manuelle, nasal -> nasal",         "sampa": "ta~.a~ta",     "use_g2p": false, "note": "paire minimale moteur : a~.a~"},
+    {"id": "H4", "situation": "manuelle, cas documente",          "sampa": "kOma~.a.le.vu", "use_g2p": false, "note": "le SAMPA du commit dea71c6, ecrit a la main a l'entree moteur"}
+  ]
+}

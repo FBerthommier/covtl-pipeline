@@ -1,0 +1,14 @@
+SAMPA (entrée moteur) : kOma~
+Total : 134 steps @100 Hz = 1.34 s
+
+Nœuds : [C]k [V]O [C]m [V]a~ [pause]
+
+ offset   dur kind        voyelle nasal  contenu
+------------------------------------------------------------------------
+      0    20 initial     -       False  
+     20    28 cluster     -       False  cluster (1 cons.)
+     48    12 plateau     O       False  plateau de /O/
+     60    28 cluster     -       False  cluster (1 cons.)
+     88    12 plateau     a       True   plateau de /a~/
+    100    14 decay       -       False  
+    114    20 terminal    -       False  

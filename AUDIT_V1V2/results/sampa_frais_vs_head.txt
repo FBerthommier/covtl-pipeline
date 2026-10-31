@@ -1,0 +1,20 @@
+Comparaison du SAMPA g2p — clone frais (revert) vs HEAD^ (contournement présent)
+====================================================================================================
+id    texte                SAMPA frais (moteur exposé)  SAMPA HEAD (masqué)          état
+----------------------------------------------------------------------------------------------------
+S1a   comment allez-vous   kOma~.a.le.vu                kOma~ a.le.vu                MASQUÉ par le patch (espace inséré)
+S1b   mon ami              mO~.a.mi                     mO~ a.mi                     MASQUÉ par le patch (espace inséré)
+S2a   il a envie           i.a.a~vi                     i.a.a~vi                     NON masqué — exposé aussi avec le patch
+S2b   la onzième           la.O~zjEm                    la.O~zjEm                    NON masqué — exposé aussi avec le patch
+S3a   néon                 neO~                         neO~                         NON masqué — exposé aussi avec le patch
+S3b   éhonté               eO~.te                       eO~.te                       NON masqué — exposé aussi avec le patch
+S4a   enhardir             a~aR.diR                     a~aR.diR                     NON masqué — exposé aussi avec le patch
+S4b   enhucher             a~y.Se                       a~y.Se                       NON masqué — exposé aussi avec le patch
+T1    aérer                a.e.Re                       a.e.Re                       NON masqué — exposé aussi avec le patch
+T2    il a oublié          i.a.ub.li.je                 i.a.ub.li.je                 NON masqué — exposé aussi avec le patch
+T3    comment              kOma~                        kOma~                        NON masqué — exposé aussi avec le patch
+T4    envie                a~vi                         a~vi                         NON masqué — exposé aussi avec le patch
+T5    mon oncle            mO~.O~kl                     mO~ O~kl                     MASQUÉ par le patch (espace inséré)
+T6    un an                9~.a~                        9~ a~                        MASQUÉ par le patch (espace inséré)
+----------------------------------------------------------------------------------------------------
+Items masqués par le contournement g2p : 4/14 — les autres situations restent exposées au défaut moteur même AVEC le patch.
