@@ -5,18 +5,19 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
+### Reverted (audit V1V2 — 2026-10-31)
+
+- **revert(audit): remove the g2p-fr / prosody nasal-boundary workaround
+  (commits `dea71c6` + `f62f185`)** — these two commits masked an engine
+  defect instead of fixing it: the syltraj walk cannot articulate the
+  nasal/oral toggle across a linked `V~.V` boundary and silently reduces
+  the pair to an unlabeled background block (nasality lost, both vowel
+  nuclei lost). The workaround (short pause after any word ending on a
+  nasal vowel) is removed so that the engine defect is observable again,
+  in view of fixing the walk itself. See `AUDIT_V1V2/` (audit report +
+  reproduction harness) shipped with this clone.
+
 ### Fixed
-- **fix(prosody): nasal boundary keeps a short pause in the expressive
-  enrichment** — `plan_expressive_text` assembled chunk SAMPA by joining
-  word tokens with the linking dot, re-creating `V~.V` boundaries that the
-  syltraj walk drops: with expressive prosody ON, "comment allez-vous"
-  regressed to `kOma~.a.le.vu` even after the g2p_fr nasal fix (the g2p
-  injected the pause, the enrichment re-dotted it). Word tokens are now
-  joined with the same nasal rule as `g2p_fr` (`_join_word_tokens`: short
-  pause after a word ending on a nasal vowel), in both `ChunkPlan.sampa`
-  and the chunk strings; the documented invariant "the assembled SAMPA is
-  identical to the language g2p's" is restored (all 7 vowels of the
-  phrase, zero background blocks; verified through expressive synthesis).
 - **fix(lang-pack): refresh the stale integration pipeline.py** —
   `lang_pack/integration/pipeline.py` shipped a pre-sampa_guard revision
   of the engine pipeline, and every `setup_lang.py install` copies it over
@@ -28,27 +29,6 @@ Format: Keep a Changelog — https://keepachangelog.com/
 - **chore(lang): sync the installed `vtl_synth/utils/` copies with
   `lang_pack/profiles`** — the committed utils copies were a stale
   snapshot; installs now leave no spurious dirty state.
-- **fix(g2p-fr): short pause instead of the linking dot after a nasal-vowel
-  word ending** — the syltraj walk cannot articulate the nasal/oral toggle
-  across a linked boundary: on "comment allez-vous" the G2P emitted
-  `kOma~.a.le.vu` and the walk silently reduced `a~.a` to a background
-  block, dropping BOTH the /a~/ and the /a/ from the articulation plan and
-  from the audio (the compiler panel showed a `-` stretch; the polar
-  display had no `a` label). The FR profile now joins two words with a
-  short pause (space) when the left word ends on a nasal vowel
-  (`kOma~ a.le.vu`), keeping the linking dot for every other boundary —
-  plain `V.V` links (e.g. `di.as`) are articulated correctly by the walk
-  and are unchanged. All five vowels of the phrase are back in the plan.
-  **Known engine limitation, kept on record:** `V~` + (dot or nothing) +
-  `V` is still dropped by `syltraj.build_phrase_pval` if a SAMPA string is
-  written that way by hand — the walk should eventually handle the
-  nasal/oral toggle across a linked boundary itself; hand-written input
-  must currently avoid `V~.V` (the SAMPA guard does not flag it — all
-  symbols are valid; the covtl-console compiler now warns about it).
-
-## [Unreleased]
-
-## [Unreleased]
 
 ### Changed
 - **fix(syltraj): preserve the pending anchor point across consecutive pause
