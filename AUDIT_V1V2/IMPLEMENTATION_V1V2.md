@@ -150,13 +150,21 @@ pytest tests/ -q                           # 188 passed, 3 préexistants
    changent pas (aucune sortie moteur hors hiatus nasal n'est modifiée —
    vérifié bit à bit sur les 5 témoins).
 
-## 7. Suites recommandées (reprennent la MISSION §2, P3/P4)
+## 7. Suites recommandées (reprennent la MISSION §2 P3/P4 et les nouvelles consignes §6-§7)
 
-- **P3** — après validation : ré-inverser les contournements g2p
-  (`dea71c6`, `f62f185`) pour revenir au point de liaison partout ;
-  corriger `phonemes.py:38` (`SAMPA_VOWELS` doit inclure les clés nasales —
-  « néon » doit sortir `neO~` syllabé et « envie » `a~.vi`) ; consigner au
-  CHANGELOG.
+- **P3 (résiduel)** — après validation : corriger `phonemes.py:38`
+  (`SAMPA_VOWELS` doit inclure les clés nasales — « néon » doit sortir
+  `neO~` syllabé et « envie » `a~.vi`) ; consigner au CHANGELOG.
+  **La clause de ré-inversion des contournements g2p (`dea71c6`,
+  `f62f185`) est ANNULÉE** : voir MISSION §6 (P5) — le retrait est
+  définitif, l'état « point de liaison partout » doit être conservé.
+- **P5 — décommissionnement** (MISSION §6) : retirer définitivement les
+  modifications devenues inutiles (contournements g2p/prosodie), balayer
+  les résidus documentaires, consigner le caractère définitif au CHANGELOG.
+- **P6 — autres langues** (MISSION §7) : étendre la validation au pack
+  complet — portugais prioritaire (corpus `corpus_v1v2_pt.json`, harnais
+  paramétré par langue), preuve d'inertie pour es/it/de/en, inventaire
+  `phonemes.py` couvrant les clés nasales de toutes les langues.
 - Mettre à jour le SHA obsolète de `test_syltraj_double_pause` (préexistant,
   voir §4) lors de la régénération des baselines
   (`scripts/regen_baselines.py`).

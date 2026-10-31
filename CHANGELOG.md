@@ -5,6 +5,22 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
+### Added (consignes agent V1V2 — 2026-10-31, après correctif)
+
+- **docs(mission): P5/P6 — nouvelles consignes pour l'agent correcteur.**
+  **P5 (MISSION §6)** : décommissionnement définitif des modifications
+  devenues inutiles — les contournements g2p/prosodie (`dea71c6`,
+  `f62f185`) ne doivent jamais être réappliqués (la clause de
+  ré-inversion de P3 est annulée) ; le retrait est définitif, supersédé
+  par le correctif `304f04c`. **P6 (MISSION §7)** : extension du
+  traitement aux autres langues du pack (de, en, es, it, pt) —
+  portugais prioritaire (corpus `corpus_v1v2_pt.json` sur la typologie
+  fr, harnais paramétré par langue), preuve d'inertie pour es/it/de/en,
+  inventaire `phonemes.py` couvrant les clés nasales de toutes les
+  langues. Ajout du HTML didactique autonome
+  `correction_V1V2_avant_apres.html` (20 exemples avant/après, audio
+  embarqué). Voir `AUDIT_V1V2/MISSION.md` §6-§7.
+
 ### Added (fix moteur V1V2 — 2026-10-31)
 
 - **fix(engine): nasal/oral toggle across linked V1V2 hiatus via an
