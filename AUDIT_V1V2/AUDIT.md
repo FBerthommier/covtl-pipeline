@@ -16,10 +16,12 @@ Le présent audit, réalisé sur un **clone frais où ce contournement est retir
 |---|-----------|----------------|------------------------|---------|
 | S1 | inter-mot, nasal→oral | « comment allez-vous » | `kOma~.a.le.vu` | les DEUX noyaux /a~/ et /a/ disparaissent du plan ; nasalité perdue |
 | S2 | inter-mot, oral→nasal | « il a envie » | `i.a.a~vi` | /a/ et /a~/ élidés ; « envie » dénasalisé |
-| S3 | intra-mot, oral→nasal | « néon », « éhonté » | `neO~`, `eO~.te` | /e/ et /O~/ élidés ; « néon » prononcé [neo] |
+| S3 | intra-mot, oral→nasal | « néon », « éhonté », « paons » | `neO~`, `eO~.te`, `pao~` | /e/ et /O~/ élidés ; « néon » prononcé [neo] |
 | S4 | intra-mot, nasal→oral | « enhardir », « enhucher » | `a~aR.diR`, `a~y.Se` | /a~/ et /a/ élidés ; « enhardir » prononcé [anaʁdiʁ] |
 
 **Preuve formelle** : les quatre paires minimales manuscrites `ta.ata`, `ta~.ata`, `ta.a~ta`, `ta~.a~ta` produisent des fichiers `.tract` et `.wav` **identiques octet par octet** (md5 `4f0698e3…` / `1c9c94b0…`). Autrement dit, sur un hiatus lié, **le moteur ignore totalement le trait de nasalité** : l'ouverture vélaire (paramètre VTL `VO`) reste au plancher −0,1 sur toute la durée de la paire, là où un plateau nasal sain atteint +0,49 à +0,50 (`VO_NASALIZED_VOWEL = 0,5`).
+
+**Note sur « paon »** (mot cité dans la commande) : le lexique Wikipron embarqué transcrit le singulier « paon » en `p ɑ̃` — une voyelle nasale **unique**, sans hiatus — et le g2p produit donc `pa~`, qui se synthétise correctement (plateau nasal sain). C'est le pluriel « paons », absent du lexique et transcrit par la voie des règles en `p a ɔ̃`, qui produit le hiatus intra-mot `pao~` (jonction a.o~) — item S3c, défaillant comme les autres.
 
 Le correctif doit être apporté **au moteur** (marche `build_global_pval` + application de la nasalité dans `build_phrase_tract`), pas au g2p : la § 6 propose un patch opérationnel en deux points, compatible avec la philosophie de coarticulation du modèle (le hiatus reste un arc glissé) et avec les exigences de non-régression du dépôt.
 
@@ -63,13 +65,13 @@ La nasalité d'une voyelle n'est pas dans sa cible polaire (ρ, θ) — la cible
 
 ### 3.1 Corpus
 
-Quatre situations × deux items, avec des mots du français **réellement présents dans le lexique Wikipron embarqué** (le cas intra-mot nasal→oral, rarissime, est couvert par les mots en « en-h » à h muet : `enhardir` /ɑ̃.aʁ.diʁ/, `enhucher` /ɑ̃.y.ʃe/), plus des témoins et des paires minimales manuscrites injectées directement en SAMPA à l'entrée du moteur (`use_g2p=False`) :
+Quatre situations × deux ou trois items, avec des mots du français **réellement présents dans le lexique Wikipron embarqué** (le cas intra-mot nasal→oral, rarissime, est couvert par les mots en « en-h » à h muet : `enhardir` /ɑ̃.aʁ.diʁ/, `enhucher` /ɑ̃.y.ʃe/ ; le pluriel « paons », hors lexique, est ajouté car la voie des règles y produit le hiatus `a.ɔ̃`), plus des témoins et des paires minimales manuscrites injectées directement en SAMPA à l'entrée du moteur (`use_g2p=False`) :
 
 | Id | Situation | Entrée | Type |
 |----|-----------|--------|------|
 | S1a/S1b | inter-mot, nasal→oral | « comment allez-vous », « mon ami » | g2p |
 | S2a/S2b | inter-mot, oral→nasal | « il a envie » (exemple du demandeur), « la onzième » | g2p |
-| S3a/S3b | intra-mot, oral→nasal | « néon », « éhonté » | g2p |
+| S3a/S3b/S3c | intra-mot, oral→nasal | « néon », « éhonté », « paons » (pluriel, voie des règles) | g2p |
 | S4a/S4b | intra-mot, nasal→oral | « enHardir », « enHucher » | g2p |
 | T1/T2 | témoins hiatus oral-oral | « aérer », « il a oublié » | g2p |
 | T3/T4 | témoins nasale saine (référence VO) | « comment » (`kOma~`), « envie » (`a~vi`) | g2p |
@@ -101,6 +103,7 @@ Le corpus complet est dans `corpus_v1v2.json` ; le harnais `run_corpus.py` synth
 | S2b | la onzième | `la.O~zjEm` | **a.O~** |
 | S3a | néon | `neO~` | **e.O~** |
 | S3b | éhonté | `eO~.te` | **e.O~** |
+| S3c | paons (pluriel, voie des règles) | `pao~` | **a.o~** |
 | S4a | enhardir | `a~aR.diR` | **a~.a** |
 | S4b | enhucher | `a~y.Se` | **a~.y** |
 | T1 | aérer | `a.e.Re` | a.e (témoin) |
@@ -180,7 +183,8 @@ Le plan passe de 5 noyaux attendus (O, a~, a, e, u) à 3 plateaux réalisés (O,
 | S2a | `i.a.a~vi` | i, a, a~ | −0,100 | — | **OUI** | présent |
 | S2b | `la.O~zjEm` | a, O~ | −0,100 | — | **OUI** | présent |
 | S3a | `neO~` | e, O~ | −0,085 | — | **OUI** | présent |
-| S3b | `eO~.te` | e, O~ | −0,100 | — | **OUI** | présent |
+| S3b | `eO~.te` | e, O~ | −0,100 | — | **OUI** |
+| S3c | `pao~` | a, o~ | −0,100 | — | **OUI** | présent |
 | S4a | `a~aR.diR` | a~, a | −0,100 | — | **OUI** | présent |
 | S4b | `a~y.Se` | a~, y | −0,100 | — | **OUI** | présent |
 | T5 | `mO~.O~kl` | O~, O~ | −0,085 | — | **OUI** | présent |
@@ -197,7 +201,7 @@ Le plan passe de 5 noyaux attendus (O, a~, a, e, u) à 3 plateaux réalisés (O,
 
 Lecture :
 
-- **Les 8 situations S1–S4 sont défaillantes** : les deux membres du hiatus perdent leur noyau, et le membre nasal perd sa nasalité (VO au plancher −0,1, contre +0,49/+0,50 sur un plateau nasal sain — soit une différence de 0,6 en units VTL, énorme).
+- **Les situations S1–S4 sont défaillantes sur tous leurs items (9/9)** : les deux membres du hiatus perdent leur noyau, et le membre nasal perd sa nasalité (VO au plancher −0,1, contre +0,49/+0,50 sur un plateau nasal sain — soit une différence de 0,6 en units VTL, énorme).
 - Les petites valeurs résiduelles (−0,085 au lieu de −0,100 sur S1a, S1b, S3a, T5, H4) proviennent de la queue de décroissance du lissage anti-clic (τ = 20 ms) après la **consonne nasale** précédente ([m] de `kOma~`, [n] de `neO~`) : ce n'est pas la voyelle qui nasalisée, c'est l'occlusive nasale qui ferme son velum en retard — preuve supplémentaire que la voyelle elle-même ne contribue à rien.
 - Le complément V~.V~ (T5 « mon oncle », T6 « un an ») montre que le cas nasal→nasal est également touché : les DEUX nasalités sont perdues.
 - L'audio est présent dans la fenêtre du hiatus (RMS du même ordre que les plateaux) : l'élision est **articulatoire et perceptive** (fusion en une voyelle orale tenue/glissée, non étiquetée), pas un silence.

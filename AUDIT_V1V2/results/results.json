@@ -913,6 +913,119 @@
       "md5_tract": "7cde08b0d98790d4e4af6532c3d12aa3"
     },
     {
+      "id": "S3c",
+      "situation": "intra-mot, oral -> nasal",
+      "note": "mot cite par le demandeur ; singulier 'paon' = p a~ (lexique, sans hiatus), pluriel via regles = p a ɔ̃ ; jonction a.O~",
+      "entree": "paons",
+      "use_g2p": true,
+      "sampa_moteur": "pao~",
+      "phrases": [
+        "pao~"
+      ],
+      "duree_s": 1.058,
+      "n_frames_tract": 424,
+      "mesures": {
+        "vo_max_background": -0.1,
+        "vo_max_background_centre": -0.1,
+        "vo_max_plateau_nasal": null,
+        "vo_max_plateau_oral": null,
+        "relamp_moyen_background": 0.984,
+        "rms_background": 0.1891,
+        "rms_plateaux": null,
+        "rms_global": 0.0906
+      },
+      "verdict": {
+        "voyelles_entree": [
+          "a",
+          "o~"
+        ],
+        "hiatus": [
+          "a.o~"
+        ],
+        "noyaux_attendus": 2,
+        "noyaux_plateaux_realises": 0,
+        "noyaux_elides": [
+          "a",
+          "o~"
+        ],
+        "nasalite_perdue": true,
+        "arc_statique": false,
+        "audio_present_dans_hiatus": true,
+        "vo_hiatus_centre": -0.1,
+        "vo_reference_nasale": null
+      },
+      "nodes": [
+        {
+          "i": 0,
+          "kind": "C",
+          "key": "p",
+          "nasal": false
+        },
+        {
+          "i": 1,
+          "kind": "V",
+          "key": "a",
+          "nasal": false
+        },
+        {
+          "i": 2,
+          "kind": "V",
+          "key": "o",
+          "nasal": true
+        },
+        {
+          "i": 3,
+          "kind": "pause",
+          "key": "",
+          "nasal": false
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "initial",
+          "n_steps": 20,
+          "offset": 0,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 28,
+          "offset": 20,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "background",
+          "n_steps": 24,
+          "offset": 48,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "decay",
+          "n_steps": 14,
+          "offset": 72,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "terminal",
+          "n_steps": 20,
+          "offset": 86,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        }
+      ],
+      "md5_wav": "d047300eb35e85315776b60de0ec868d",
+      "md5_tract": "476a98ac8c9cb55d741b460b471834a3"
+    },
+    {
       "id": "S4a",
       "situation": "intra-mot, nasal -> oral",
       "note": "lexique Wikipron : ɑ̃ a ʁ d i ʁ ; jonction A~.a dans le mot (h muet)",

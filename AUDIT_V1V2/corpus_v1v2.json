@@ -13,6 +13,7 @@
     {"id": "S2b", "situation": "inter-mot, oral -> nasal", "texte": "la onzième",        "use_g2p": true,  "note": "jonction a.O~"},
     {"id": "S3a", "situation": "intra-mot, oral -> nasal", "texte": "néon",              "use_g2p": true,  "note": "lexique Wikipron : n e ɔ̃ ; jonction e.O~ dans le mot"},
     {"id": "S3b", "situation": "intra-mot, oral -> nasal", "texte": "éhonté",            "use_g2p": true,  "note": "lexique Wikipron : e ɔ̃ t e ; jonction e.O~ dans le mot"},
+    {"id": "S3c", "situation": "intra-mot, oral -> nasal", "texte": "paons",             "use_g2p": true,  "note": "mot cite par le demandeur ; singulier 'paon' = p a~ (lexique, sans hiatus), pluriel via regles = p a ɔ̃ ; jonction a.O~"},
     {"id": "S4a", "situation": "intra-mot, nasal -> oral", "texte": "enhardir",          "use_g2p": true,  "note": "lexique Wikipron : ɑ̃ a ʁ d i ʁ ; jonction A~.a dans le mot (h muet)"},
     {"id": "S4b", "situation": "intra-mot, nasal -> oral", "texte": "enhucher",          "use_g2p": true,  "note": "lexique Wikipron : ɑ̃ y ʃ e ; jonction A~.y dans le mot (h muet)"},
     {"id": "T1", "situation": "temoin intra-mot V.V oral-orale", "texte": "aérer",       "use_g2p": true,  "note": "jonction a.e sans nasalite — cense etre traite par la marche"},
