@@ -356,7 +356,12 @@ repository (`README.md`, `docs/covtl-sandhi-guide.pdf`).
   in `lang_pack/lang_blocks/blocks.py`, then
   `python setup_lang.py install --lang <xx>` (calibration: JD3 only,
   §8.2).
-- **Tests**: lightweight pytest suite (153 tests) in `tests/`,
+- **Tests**: lightweight pytest suite in `tests/` (214 tests
+  collected at the time of writing — check with
+  `pytest --collect-only -q | Select-Object -Last 2`), including
+  the sandhi hook tests (10) and the sandhi x V1V2 composition
+  tests (8, run when the covtl-sandhi Branch B package is
+  installed, skipped otherwise),
   including end-to-end non-regression against the per-speaker
   `regression_baselines*.json` and the single-trajectory-path
   guards (`tests/test_single_trajectory_path.py`).
