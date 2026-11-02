@@ -102,8 +102,12 @@ def test_pipeline_validates_level_and_mode():
         _pipeline(sandhi_mode='bogus')
 
 
-@STUB_ONLY
-def test_pipeline_degrades_without_branch_b(capsys):
+def test_pipeline_degrades_without_branch_b(monkeypatch, capsys):
+    # hermetic: force the 'no Branch B' state even when the rule package
+    # happens to be pip-installed on the host (the hook resolves the pip
+    # 'sandhi' import whenever the stub still declares SANDHI_FULL=False)
+    import vtl_synth.core.pipeline as _core_pipeline
+    monkeypatch.setattr(_core_pipeline._sandhi_pkg, 'SANDHI_FULL', False)
     pipe = _pipeline(sandhi='standard')
     assert pipe.sandhi == 'off'            # Branch B missing → off
     assert 'covtl-sandhi' in capsys.readouterr().out
