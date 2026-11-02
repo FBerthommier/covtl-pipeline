@@ -23,11 +23,18 @@ Sorties (dans AUDIT_V1V2/results/) :
   logs/<id>.log    — sorties console (dont la garde SAMPA)
 
 Usage :
-  python AUDIT_V1V2/run_corpus.py            # tout le corpus
-  python AUDIT_V1V2/run_corpus.py S1a H1     # un sous-ensemble
+  python AUDIT_V1V2/run_corpus.py                     # fr : tout le corpus
+  python AUDIT_V1V2/run_corpus.py S1a H1              # un sous-ensemble
+  python AUDIT_V1V2/run_corpus.py --lang pt           # corpus pt -> results_pt/
+  python AUDIT_V1V2/run_corpus.py --lang pt --corpus AUDIT_V1V2/corpus_v1v2_pt.json
+  python AUDIT_V1V2/run_corpus.py --no-preproc        # prouve l'inertie :
+      # désactive la porte nasal_preproc (repli conservateur) — les sorties
+      # doivent être IDENTIQUES au moteur nu sur les entrées sans hiatus
+      # nasal (témoins oraux) et DISTINCTES sur les hiatus nasaux.
 """
 from __future__ import annotations
 
+import argparse
 import contextlib
 import hashlib
 import io
@@ -324,17 +331,49 @@ def verdict_item(rec: dict, nodes, blocks):
 # --------------------------------------------------------------------------
 
 def main(argv):
-    ids = [a for a in argv if not a.startswith('-')]
-    corpus = json.loads((HERE / 'corpus_v1v2.json').read_text(encoding='utf-8'))
-    items = [it for it in corpus['items'] if not ids or it['id'] in ids]
+    parser = argparse.ArgumentParser(
+        description='Harnais audit V1V2 (hiatus nasal/oral), paramétrable '
+                    'par langue.')
+    parser.add_argument('ids', nargs='*', help='sous-ensemble d\'ids')
+    parser.add_argument('--lang', default='fr',
+                        help='langue du corpus (fr, pt, …) — Pipeline(lang=…)')
+    parser.add_argument('--corpus', default=None,
+                        help='fichier corpus JSON (défaut : corpus_v1v2.json, '
+                             'ou corpus_v1v2_<lang>.json si --lang != fr)')
+    parser.add_argument('--results', default=None,
+                        help='dossier résultats (défaut : results, ou '
+                             'results_<lang> si --lang != fr)')
+    parser.add_argument('--no-preproc', action='store_true',
+                        help='désactive la porte nasal_preproc (repli '
+                             'conservateur) — preuve d\'inertie / avant-après')
+    args = parser.parse_args(argv)
+
+    lang = args.lang
+    corpus_path = (Path(args.corpus) if args.corpus else
+                   HERE / (f'corpus_v1v2.json' if lang == 'fr' else
+                           f'corpus_v1v2_{lang}.json'))
+    res_dir = HERE / (args.results or ('results' if lang == 'fr'
+                                       else f'results_{lang}'))
+
+    corpus = json.loads(corpus_path.read_text(encoding='utf-8'))
+    items = [it for it in corpus['items'] if not args.ids or it['id'] in args.ids]
     if not items:
         print('Aucun item sélectionné.'); return 1
 
-    res_dir = HERE / 'results'
+    res_dir.mkdir(parents=True, exist_ok=True)
     for sub in ('wav', 'tract', 'plans', 'logs'):
         (res_dir / sub).mkdir(parents=True, exist_ok=True)
 
-    pipe = Pipeline(lang='fr')
+    if args.no_preproc:
+        # inertie / avant-après : la porte nasal_preproc est neutralisée
+        # (repli conservateur — la chaîne moteur reste la chaîne orale)
+        import vtl_synth.core.nasal_preproc as _npre
+        _npre.split_nasal_hiatus = (lambda phrase: (phrase, {
+            'original': phrase, 'motor': phrase, 'nodes_view': [],
+            'runs': [], 'events': [], 'intervals': None, 'fallback': False}))
+        print('*** porte nasal_preproc NEUTRALISÉE (--no-preproc) ***')
+
+    pipe = Pipeline(lang=lang)
     results = []
     for it in items:
         rid = it['id']
@@ -399,6 +438,7 @@ def main(argv):
     shutil.rmtree(res_dir / '_tmp', ignore_errors=True)
 
     out = {'corpus': corpus['titre'], 'moteur': corpus['moteur'],
+           'langue': lang, 'preproc_neutralise': args.no_preproc,
            'seuils': {'vo_nasal': SEUIL_VO_NASAL,
                       'note': 'VO>=0.3 <=> nasalité réalisée (plateau nasal sain ~0.5)'},
            'items': results}

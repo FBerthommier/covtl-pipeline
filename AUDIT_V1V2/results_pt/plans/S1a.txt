@@ -1,0 +1,23 @@
+SAMPA (entrée moteur) : @.kaw@~.e.l@
+Total : 178 steps @100 Hz = 1.78 s
+
+Nœuds : [V]@ [C]k [V]a [C]w [V]@~ [V]e [C]l [V]@
+
+ offset   dur kind        voyelle nasal  contenu
+------------------------------------------------------------------------
+      0    20 initial     -       False  
+     20    11 attack      -       False  
+     31    10 plateau     @       False  plateau de /@/
+     41    22 cluster     -       False  cluster (1 cons.)
+     63    10 plateau     a       False  plateau de /a/
+     73    22 cluster     -       False  cluster (1 cons.)
+     95    20 background  -       False  arc de fond : transition diphtongue de base (réalisation des noyaux de l'hiatus)
+    115    22 cluster     -       False  cluster (1 cons.)
+    137    10 plateau     @       False  plateau de /@/
+    147    11 decay       -       False  
+    158    20 terminal    -       False  
+Porte nasalité (pré-traitement nasal_preproc) :
+  chaîne moteur (syltraj) : @.kaw@.e.l@
+  run 0 : [@~ . e]
+  oralisé : run 0 membre 0 → /@~/ (nasalité capturée)
+  VO orthogonale : /@~/ sur [95, 105) pas @100 Hz (950-1050 ms)

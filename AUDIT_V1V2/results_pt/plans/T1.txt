@@ -1,0 +1,16 @@
+SAMPA (entrée moteur) : p@.is
+Total : 115 steps @100 Hz = 1.15 s
+
+Nœuds : [C]p [V]@ [V]i [C]s
+
+ offset   dur kind        voyelle nasal  contenu
+------------------------------------------------------------------------
+      0    20 initial     -       False  
+     20    22 cluster     -       False  cluster (1 cons.)
+     42    20 background  -       False  arc de fond : transition diphtongue de base (réalisation des noyaux de l'hiatus)
+     62    22 cluster     -       False  cluster (1 cons.)
+     84    11 decay       -       False  
+     95    20 terminal    -       False  
+Porte nasalité (pré-traitement nasal_preproc) :
+  chaîne moteur (syltraj) : p@.is
+  aucun membre d'hiatus nasal — chaîne inchangée (sorties identiques au moteur nu)

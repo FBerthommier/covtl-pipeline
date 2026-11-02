@@ -1,0 +1,2523 @@
+{
+  "corpus": "Corpus d'audit V1V2 — portugais européen (hiatus coarticulés V1.V2, bascule nasal/oral)",
+  "moteur": "covtl-pipeline (clone frais, sans contournement g2p — revert 2a55b69 ; correction moteur 304f04c)",
+  "langue": "pt",
+  "preproc_neutralise": false,
+  "seuils": {
+    "vo_nasal": 0.3,
+    "note": "VO>=0.3 <=> nasalité réalisée (plateau nasal sain ~0.5)"
+  },
+  "items": [
+    {
+      "id": "S1a",
+      "situation": "inter-mot, nasal -> oral",
+      "note": "jonction @~.e (interjection acauã + ele)",
+      "entree": "acauã ele",
+      "use_g2p": true,
+      "sampa_moteur": "@.kaw@~.e.l@",
+      "phrases": [
+        "@.kaw@~.e.l@"
+      ],
+      "duree_s": 1.776,
+      "porte_moteur": "@.kaw@.e.l@",
+      "intervalles_vo": [
+        [
+          95,
+          105,
+          "@"
+        ]
+      ],
+      "n_frames_tract": 712,
+      "mesures": {
+        "vo_max_background": 0.489,
+        "vo_max_background_centre": 0.489,
+        "vo_moites_nasales": [
+          0.489
+        ],
+        "vo_moites_nasales_max": 0.489,
+        "vo_max_plateau_nasal": null,
+        "vo_max_plateau_oral": 0.489,
+        "relamp_moyen_background": 0.999,
+        "rms_background": 0.1843,
+        "rms_plateaux": 0.1425,
+        "rms_global": 0.1154
+      },
+      "verdict": {
+        "voyelles_entree": [
+          "@",
+          "a",
+          "@~",
+          "e",
+          "@"
+        ],
+        "hiatus": [
+          "@~.e"
+        ],
+        "noyaux_attendus": 5,
+        "noyaux_plateaux_realises": 3,
+        "noyaux_elides": [
+          "@~",
+          "e"
+        ],
+        "nasalite_perdue": false,
+        "arc_statique": false,
+        "audio_present_dans_hiatus": true,
+        "vo_hiatus_centre": 0.489,
+        "vo_moites_nasales": 0.489,
+        "vo_critere": 0.489,
+        "vo_reference_nasale": null
+      },
+      "nodes": [
+        {
+          "i": 0,
+          "kind": "V",
+          "key": "@",
+          "nasal": false
+        },
+        {
+          "i": 1,
+          "kind": "C",
+          "key": "k",
+          "nasal": false
+        },
+        {
+          "i": 2,
+          "kind": "V",
+          "key": "a",
+          "nasal": false
+        },
+        {
+          "i": 3,
+          "kind": "C",
+          "key": "w",
+          "nasal": false
+        },
+        {
+          "i": 4,
+          "kind": "V",
+          "key": "@",
+          "nasal": true
+        },
+        {
+          "i": 5,
+          "kind": "V",
+          "key": "e",
+          "nasal": false
+        },
+        {
+          "i": 6,
+          "kind": "C",
+          "key": "l",
+          "nasal": false
+        },
+        {
+          "i": 7,
+          "kind": "V",
+          "key": "@",
+          "nasal": false
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "initial",
+          "n_steps": 20,
+          "offset": 0,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "attack",
+          "n_steps": 11,
+          "offset": 20,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 31,
+          "vowel_key": "@",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 41,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 63,
+          "vowel_key": "a",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 73,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "background",
+          "n_steps": 20,
+          "offset": 95,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 115,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 137,
+          "vowel_key": "@",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "decay",
+          "n_steps": 11,
+          "offset": 147,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "terminal",
+          "n_steps": 20,
+          "offset": 158,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        }
+      ],
+      "md5_wav": "5adcd0c619af42993753ab24477454af",
+      "md5_tract": "cddb6ef1471f2a9bdd930c94782864fe"
+    },
+    {
+      "id": "S1b",
+      "situation": "inter-mot, nasal -> oral",
+      "note": "jonction u~.a (atum @tu~)",
+      "entree": "atum a",
+      "use_g2p": true,
+      "sampa_moteur": "@tu~.a",
+      "phrases": [
+        "@tu~.a"
+      ],
+      "duree_s": 1.137,
+      "porte_moteur": "@tu.a",
+      "intervalles_vo": [
+        [
+          63,
+          73,
+          "u"
+        ]
+      ],
+      "n_frames_tract": 456,
+      "mesures": {
+        "vo_max_background": 0.489,
+        "vo_max_background_centre": 0.489,
+        "vo_moites_nasales": [
+          0.489
+        ],
+        "vo_moites_nasales_max": 0.489,
+        "vo_max_plateau_nasal": null,
+        "vo_max_plateau_oral": -0.1,
+        "relamp_moyen_background": 0.98,
+        "rms_background": 0.2266,
+        "rms_plateaux": 0.2219,
+        "rms_global": 0.1162
+      },
+      "verdict": {
+        "voyelles_entree": [
+          "@",
+          "u~",
+          "a"
+        ],
+        "hiatus": [
+          "u~.a"
+        ],
+        "noyaux_attendus": 3,
+        "noyaux_plateaux_realises": 1,
+        "noyaux_elides": [
+          "u~",
+          "a"
+        ],
+        "nasalite_perdue": false,
+        "arc_statique": false,
+        "audio_present_dans_hiatus": true,
+        "vo_hiatus_centre": 0.489,
+        "vo_moites_nasales": 0.489,
+        "vo_critere": 0.489,
+        "vo_reference_nasale": null
+      },
+      "nodes": [
+        {
+          "i": 0,
+          "kind": "V",
+          "key": "@",
+          "nasal": false
+        },
+        {
+          "i": 1,
+          "kind": "C",
+          "key": "t",
+          "nasal": false
+        },
+        {
+          "i": 2,
+          "kind": "V",
+          "key": "u",
+          "nasal": true
+        },
+        {
+          "i": 3,
+          "kind": "V",
+          "key": "a",
+          "nasal": false
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "initial",
+          "n_steps": 20,
+          "offset": 0,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "attack",
+          "n_steps": 11,
+          "offset": 20,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 31,
+          "vowel_key": "@",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 41,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "background",
+          "n_steps": 20,
+          "offset": 63,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "decay",
+          "n_steps": 11,
+          "offset": 83,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "terminal",
+          "n_steps": 20,
+          "offset": 94,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        }
+      ],
+      "md5_wav": "18cf5eda31cc4d2017902f63693ceb6f",
+      "md5_tract": "f2be55d32bdfb074def18b6a9193bb3b"
+    },
+    {
+      "id": "S2a",
+      "situation": "inter-mot, oral -> nasal",
+      "note": "jonction @.u~ (um u~ : les mots pt debutant par une voyelle nasale sont rares — hum, hã, ohm, um)",
+      "entree": "ele um",
+      "use_g2p": true,
+      "sampa_moteur": "e.l@.u~",
+      "phrases": [
+        "e.l@.u~"
+      ],
+      "duree_s": 1.137,
+      "porte_moteur": "e.l@.u",
+      "intervalles_vo": [
+        [
+          73,
+          83,
+          "u"
+        ]
+      ],
+      "n_frames_tract": 456,
+      "mesures": {
+        "vo_max_background": 0.489,
+        "vo_max_background_centre": 0.443,
+        "vo_moites_nasales": [
+          0.489
+        ],
+        "vo_moites_nasales_max": 0.489,
+        "vo_max_plateau_nasal": null,
+        "vo_max_plateau_oral": -0.1,
+        "relamp_moyen_background": 0.98,
+        "rms_background": 0.2388,
+        "rms_plateaux": 0.1782,
+        "rms_global": 0.1215
+      },
+      "verdict": {
+        "voyelles_entree": [
+          "e",
+          "@",
+          "u~"
+        ],
+        "hiatus": [
+          "@.u~"
+        ],
+        "noyaux_attendus": 3,
+        "noyaux_plateaux_realises": 1,
+        "noyaux_elides": [
+          "@",
+          "u~"
+        ],
+        "nasalite_perdue": false,
+        "arc_statique": false,
+        "audio_present_dans_hiatus": true,
+        "vo_hiatus_centre": 0.443,
+        "vo_moites_nasales": 0.489,
+        "vo_critere": 0.489,
+        "vo_reference_nasale": null
+      },
+      "nodes": [
+        {
+          "i": 0,
+          "kind": "V",
+          "key": "e",
+          "nasal": false
+        },
+        {
+          "i": 1,
+          "kind": "C",
+          "key": "l",
+          "nasal": false
+        },
+        {
+          "i": 2,
+          "kind": "V",
+          "key": "@",
+          "nasal": false
+        },
+        {
+          "i": 3,
+          "kind": "V",
+          "key": "u",
+          "nasal": true
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "initial",
+          "n_steps": 20,
+          "offset": 0,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "attack",
+          "n_steps": 11,
+          "offset": 20,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 31,
+          "vowel_key": "e",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 41,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "background",
+          "n_steps": 20,
+          "offset": 63,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "decay",
+          "n_steps": 11,
+          "offset": 83,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "terminal",
+          "n_steps": 20,
+          "offset": 94,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        }
+      ],
+      "md5_wav": "ba776bbadbd4e52324fc02fe0975e8b3",
+      "md5_tract": "d254907b435bb5dd88413887d38d8945"
+    },
+    {
+      "id": "S2b",
+      "situation": "inter-mot, oral -> nasal",
+      "note": "jonction @.@~ (hã @~)",
+      "entree": "ele hã",
+      "use_g2p": true,
+      "sampa_moteur": "e.l@.@~",
+      "phrases": [
+        "e.l@.@~"
+      ],
+      "duree_s": 1.137,
+      "porte_moteur": "e.l@.@",
+      "intervalles_vo": [
+        [
+          73,
+          83,
+          "@"
+        ]
+      ],
+      "n_frames_tract": 456,
+      "mesures": {
+        "vo_max_background": 0.489,
+        "vo_max_background_centre": 0.443,
+        "vo_moites_nasales": [
+          0.489
+        ],
+        "vo_moites_nasales_max": 0.489,
+        "vo_max_plateau_nasal": null,
+        "vo_max_plateau_oral": -0.1,
+        "relamp_moyen_background": 0.98,
+        "rms_background": 0.2393,
+        "rms_plateaux": 0.1776,
+        "rms_global": 0.1216
+      },
+      "verdict": {
+        "voyelles_entree": [
+          "e",
+          "@",
+          "@~"
+        ],
+        "hiatus": [
+          "@.@~"
+        ],
+        "noyaux_attendus": 3,
+        "noyaux_plateaux_realises": 1,
+        "noyaux_elides": [
+          "@",
+          "@~"
+        ],
+        "nasalite_perdue": false,
+        "arc_statique": true,
+        "audio_present_dans_hiatus": true,
+        "vo_hiatus_centre": 0.443,
+        "vo_moites_nasales": 0.489,
+        "vo_critere": 0.489,
+        "vo_reference_nasale": null
+      },
+      "nodes": [
+        {
+          "i": 0,
+          "kind": "V",
+          "key": "e",
+          "nasal": false
+        },
+        {
+          "i": 1,
+          "kind": "C",
+          "key": "l",
+          "nasal": false
+        },
+        {
+          "i": 2,
+          "kind": "V",
+          "key": "@",
+          "nasal": false
+        },
+        {
+          "i": 3,
+          "kind": "V",
+          "key": "@",
+          "nasal": true
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "initial",
+          "n_steps": 20,
+          "offset": 0,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "attack",
+          "n_steps": 11,
+          "offset": 20,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 31,
+          "vowel_key": "e",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 41,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "background",
+          "n_steps": 20,
+          "offset": 63,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "decay",
+          "n_steps": 11,
+          "offset": 83,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "terminal",
+          "n_steps": 20,
+          "offset": 94,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        }
+      ],
+      "md5_wav": "ed59eada76e83b9701e4cc93bf7ea16e",
+      "md5_tract": "c22fb6706ccd2ccbcf4cf75a6c4b3ad5"
+    },
+    {
+      "id": "S3a",
+      "situation": "intra-mot, oral -> nasal",
+      "note": "neo~ : jonction e.o~ intra-mot",
+      "entree": "neon",
+      "use_g2p": true,
+      "sampa_moteur": "neo~",
+      "phrases": [
+        "neo~"
+      ],
+      "duree_s": 0.928,
+      "porte_moteur": "neo",
+      "intervalles_vo": [
+        [
+          52,
+          62,
+          "o"
+        ]
+      ],
+      "n_frames_tract": 372,
+      "mesures": {
+        "vo_max_background": 0.489,
+        "vo_max_background_centre": 0.443,
+        "vo_moites_nasales": [
+          0.489
+        ],
+        "vo_moites_nasales_max": 0.489,
+        "vo_max_plateau_nasal": null,
+        "vo_max_plateau_oral": null,
+        "relamp_moyen_background": 0.98,
+        "rms_background": 0.2406,
+        "rms_plateaux": null,
+        "rms_global": 0.124
+      },
+      "verdict": {
+        "voyelles_entree": [
+          "e",
+          "o~"
+        ],
+        "hiatus": [
+          "e.o~"
+        ],
+        "noyaux_attendus": 2,
+        "noyaux_plateaux_realises": 0,
+        "noyaux_elides": [
+          "e",
+          "o~"
+        ],
+        "nasalite_perdue": false,
+        "arc_statique": false,
+        "audio_present_dans_hiatus": true,
+        "vo_hiatus_centre": 0.443,
+        "vo_moites_nasales": 0.489,
+        "vo_critere": 0.489,
+        "vo_reference_nasale": null
+      },
+      "nodes": [
+        {
+          "i": 0,
+          "kind": "C",
+          "key": "n",
+          "nasal": false
+        },
+        {
+          "i": 1,
+          "kind": "V",
+          "key": "e",
+          "nasal": false
+        },
+        {
+          "i": 2,
+          "kind": "V",
+          "key": "o",
+          "nasal": true
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "initial",
+          "n_steps": 20,
+          "offset": 0,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 20,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "background",
+          "n_steps": 20,
+          "offset": 42,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "decay",
+          "n_steps": 11,
+          "offset": 62,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "terminal",
+          "n_steps": 20,
+          "offset": 73,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        }
+      ],
+      "md5_wav": "516235fe63eee967ce8bf30860ec11ff",
+      "md5_tract": "a19c7678ff2a4cdedefb1fd621c72623"
+    },
+    {
+      "id": "T1",
+      "situation": "temoin intra-mot V.V oral-orale",
+      "note": "p@.is : jonction @.i sans nasalite",
+      "entree": "país",
+      "use_g2p": true,
+      "sampa_moteur": "p@.is",
+      "phrases": [
+        "p@.is"
+      ],
+      "duree_s": 1.147,
+      "porte_moteur": "p@.is",
+      "intervalles_vo": null,
+      "n_frames_tract": 460,
+      "mesures": {
+        "vo_max_background": -0.1,
+        "vo_max_background_centre": -0.1,
+        "vo_moites_nasales": null,
+        "vo_moites_nasales_max": null,
+        "vo_max_plateau_nasal": null,
+        "vo_max_plateau_oral": null,
+        "relamp_moyen_background": 0.98,
+        "rms_background": 0.1718,
+        "rms_plateaux": null,
+        "rms_global": 0.0729
+      },
+      "verdict": {
+        "voyelles_entree": [
+          "@",
+          "i"
+        ],
+        "hiatus": [
+          "@.i"
+        ],
+        "noyaux_attendus": 2,
+        "noyaux_plateaux_realises": 0,
+        "noyaux_elides": [
+          "@",
+          "i"
+        ],
+        "nasalite_perdue": false,
+        "arc_statique": false,
+        "audio_present_dans_hiatus": true,
+        "vo_hiatus_centre": -0.1,
+        "vo_moites_nasales": null,
+        "vo_critere": -0.1,
+        "vo_reference_nasale": null
+      },
+      "nodes": [
+        {
+          "i": 0,
+          "kind": "C",
+          "key": "p",
+          "nasal": false
+        },
+        {
+          "i": 1,
+          "kind": "V",
+          "key": "@",
+          "nasal": false
+        },
+        {
+          "i": 2,
+          "kind": "V",
+          "key": "i",
+          "nasal": false
+        },
+        {
+          "i": 3,
+          "kind": "C",
+          "key": "s",
+          "nasal": false
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "initial",
+          "n_steps": 20,
+          "offset": 0,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 20,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "background",
+          "n_steps": 20,
+          "offset": 42,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 62,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "decay",
+          "n_steps": 11,
+          "offset": 84,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "terminal",
+          "n_steps": 20,
+          "offset": 95,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        }
+      ],
+      "md5_wav": "acfa403ee67311f79db6428927b43057",
+      "md5_tract": "3efa8bd548abe5cba29a380e5be19dac"
+    },
+    {
+      "id": "T2",
+      "situation": "temoin inter-mot V.V oral-orale",
+      "note": "e.l@.a.m@ : jonction @.a",
+      "entree": "ele ama",
+      "use_g2p": true,
+      "sampa_moteur": "e.l@.a.m@",
+      "phrases": [
+        "e.l@.a.m@"
+      ],
+      "duree_s": 1.457,
+      "porte_moteur": "e.l@.a.m@",
+      "intervalles_vo": null,
+      "n_frames_tract": 584,
+      "mesures": {
+        "vo_max_background": -0.07,
+        "vo_max_background_centre": -0.1,
+        "vo_moites_nasales": null,
+        "vo_moites_nasales_max": null,
+        "vo_max_plateau_nasal": null,
+        "vo_max_plateau_oral": 1.0,
+        "relamp_moyen_background": 0.999,
+        "rms_background": 0.244,
+        "rms_plateaux": 0.1653,
+        "rms_global": 0.126
+      },
+      "verdict": {
+        "voyelles_entree": [
+          "e",
+          "@",
+          "a",
+          "@"
+        ],
+        "hiatus": [
+          "@.a"
+        ],
+        "noyaux_attendus": 4,
+        "noyaux_plateaux_realises": 2,
+        "noyaux_elides": [
+          "@",
+          "a"
+        ],
+        "nasalite_perdue": false,
+        "arc_statique": false,
+        "audio_present_dans_hiatus": true,
+        "vo_hiatus_centre": -0.1,
+        "vo_moites_nasales": null,
+        "vo_critere": -0.1,
+        "vo_reference_nasale": null
+      },
+      "nodes": [
+        {
+          "i": 0,
+          "kind": "V",
+          "key": "e",
+          "nasal": false
+        },
+        {
+          "i": 1,
+          "kind": "C",
+          "key": "l",
+          "nasal": false
+        },
+        {
+          "i": 2,
+          "kind": "V",
+          "key": "@",
+          "nasal": false
+        },
+        {
+          "i": 3,
+          "kind": "V",
+          "key": "a",
+          "nasal": false
+        },
+        {
+          "i": 4,
+          "kind": "C",
+          "key": "m",
+          "nasal": false
+        },
+        {
+          "i": 5,
+          "kind": "V",
+          "key": "@",
+          "nasal": false
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "initial",
+          "n_steps": 20,
+          "offset": 0,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "attack",
+          "n_steps": 11,
+          "offset": 20,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 31,
+          "vowel_key": "e",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 41,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "background",
+          "n_steps": 20,
+          "offset": 63,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 83,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 105,
+          "vowel_key": "@",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "decay",
+          "n_steps": 11,
+          "offset": 115,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "terminal",
+          "n_steps": 20,
+          "offset": 126,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        }
+      ],
+      "md5_wav": "d45086cd1070316ba8a572f042b8873b",
+      "md5_tract": "c034c07071aa44e876f2c42e13cb989d"
+    },
+    {
+      "id": "T3",
+      "situation": "temoin nasale isolee (plateau final)",
+      "note": "iRm@~ : plateau @~ final de reference (VO attendu ~0.5)",
+      "entree": "irmã",
+      "use_g2p": true,
+      "sampa_moteur": "iRm@~",
+      "phrases": [
+        "iRm@~"
+      ],
+      "duree_s": 1.147,
+      "porte_moteur": "iRm@~",
+      "intervalles_vo": null,
+      "n_frames_tract": 460,
+      "mesures": {
+        "vo_max_background": null,
+        "vo_max_background_centre": null,
+        "vo_moites_nasales": null,
+        "vo_moites_nasales_max": null,
+        "vo_max_plateau_nasal": 0.495,
+        "vo_max_plateau_oral": -0.1,
+        "relamp_moyen_background": null,
+        "rms_background": null,
+        "rms_plateaux": 0.1436,
+        "rms_global": 0.0981
+      },
+      "verdict": {
+        "voyelles_entree": [
+          "i",
+          "@~"
+        ],
+        "hiatus": [],
+        "noyaux_attendus": 2,
+        "noyaux_plateaux_realises": 2,
+        "noyaux_elides": [],
+        "nasalite_perdue": false,
+        "arc_statique": false,
+        "audio_present_dans_hiatus": false,
+        "vo_hiatus_centre": null,
+        "vo_moites_nasales": null,
+        "vo_critere": null,
+        "vo_reference_nasale": 0.495
+      },
+      "nodes": [
+        {
+          "i": 0,
+          "kind": "V",
+          "key": "i",
+          "nasal": false
+        },
+        {
+          "i": 1,
+          "kind": "C",
+          "key": "R",
+          "nasal": false
+        },
+        {
+          "i": 2,
+          "kind": "C",
+          "key": "m",
+          "nasal": false
+        },
+        {
+          "i": 3,
+          "kind": "V",
+          "key": "@",
+          "nasal": true
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "initial",
+          "n_steps": 20,
+          "offset": 0,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "attack",
+          "n_steps": 11,
+          "offset": 20,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 31,
+          "vowel_key": "i",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 33,
+          "offset": 41,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 2
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 74,
+          "vowel_key": "@",
+          "nasal": true,
+          "n_cons": 0
+        },
+        {
+          "kind": "decay",
+          "n_steps": 11,
+          "offset": 84,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "terminal",
+          "n_steps": 20,
+          "offset": 95,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        }
+      ],
+      "md5_wav": "6e3be4989f0c02592276e97510866771",
+      "md5_tract": "5ba0e54108bb1f7abcf4162a43a5e6da"
+    },
+    {
+      "id": "T4",
+      "situation": "temoin nasale isolee non-hiatus",
+      "note": "s@~j : diphtongue nasale e~+j (plateau)",
+      "entree": "sem",
+      "use_g2p": true,
+      "sampa_moteur": "s@~j",
+      "phrases": [
+        "s@~j"
+      ],
+      "duree_s": 1.048,
+      "porte_moteur": "s@~j",
+      "intervalles_vo": null,
+      "n_frames_tract": 420,
+      "mesures": {
+        "vo_max_background": null,
+        "vo_max_background_centre": null,
+        "vo_moites_nasales": null,
+        "vo_moites_nasales_max": null,
+        "vo_max_plateau_nasal": 0.489,
+        "vo_max_plateau_oral": null,
+        "relamp_moyen_background": null,
+        "rms_background": null,
+        "rms_plateaux": 0.2663,
+        "rms_global": 0.0951
+      },
+      "verdict": {
+        "voyelles_entree": [
+          "@~"
+        ],
+        "hiatus": [],
+        "noyaux_attendus": 1,
+        "noyaux_plateaux_realises": 1,
+        "noyaux_elides": [],
+        "nasalite_perdue": false,
+        "arc_statique": false,
+        "audio_present_dans_hiatus": false,
+        "vo_hiatus_centre": null,
+        "vo_moites_nasales": null,
+        "vo_critere": null,
+        "vo_reference_nasale": 0.489
+      },
+      "nodes": [
+        {
+          "i": 0,
+          "kind": "C",
+          "key": "s",
+          "nasal": false
+        },
+        {
+          "i": 1,
+          "kind": "V",
+          "key": "@",
+          "nasal": true
+        },
+        {
+          "i": 2,
+          "kind": "C",
+          "key": "j",
+          "nasal": false
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "initial",
+          "n_steps": 20,
+          "offset": 0,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 20,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 42,
+          "vowel_key": "@",
+          "nasal": true,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 52,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "decay",
+          "n_steps": 11,
+          "offset": 74,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "terminal",
+          "n_steps": 20,
+          "offset": 85,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        }
+      ],
+      "md5_wav": "2f952f271a55e8b5803563ef25231052",
+      "md5_tract": "128cf8d8ceb2bfde7d326a875df66ca2"
+    },
+    {
+      "id": "T5",
+      "situation": "complement inter-mot V~.V~",
+      "note": "jonction i~.u~ — les deux nasalites attendues",
+      "entree": "afim um",
+      "use_g2p": true,
+      "sampa_moteur": "@fi~.u~",
+      "phrases": [
+        "@fi~.u~"
+      ],
+      "duree_s": 1.137,
+      "porte_moteur": "@fi.u",
+      "intervalles_vo": [
+        [
+          63,
+          83,
+          "i+u"
+        ]
+      ],
+      "n_frames_tract": 456,
+      "mesures": {
+        "vo_max_background": 0.5,
+        "vo_max_background_centre": 0.499,
+        "vo_moites_nasales": [
+          0.5
+        ],
+        "vo_moites_nasales_max": 0.5,
+        "vo_max_plateau_nasal": null,
+        "vo_max_plateau_oral": -0.1,
+        "relamp_moyen_background": 0.98,
+        "rms_background": 0.2192,
+        "rms_plateaux": 0.2219,
+        "rms_global": 0.1137
+      },
+      "verdict": {
+        "voyelles_entree": [
+          "@",
+          "i~",
+          "u~"
+        ],
+        "hiatus": [
+          "i~.u~"
+        ],
+        "noyaux_attendus": 3,
+        "noyaux_plateaux_realises": 1,
+        "noyaux_elides": [
+          "i~",
+          "u~"
+        ],
+        "nasalite_perdue": false,
+        "arc_statique": false,
+        "audio_present_dans_hiatus": true,
+        "vo_hiatus_centre": 0.499,
+        "vo_moites_nasales": 0.5,
+        "vo_critere": 0.5,
+        "vo_reference_nasale": null
+      },
+      "nodes": [
+        {
+          "i": 0,
+          "kind": "V",
+          "key": "@",
+          "nasal": false
+        },
+        {
+          "i": 1,
+          "kind": "C",
+          "key": "f",
+          "nasal": false
+        },
+        {
+          "i": 2,
+          "kind": "V",
+          "key": "i",
+          "nasal": true
+        },
+        {
+          "i": 3,
+          "kind": "V",
+          "key": "u",
+          "nasal": true
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "initial",
+          "n_steps": 20,
+          "offset": 0,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "attack",
+          "n_steps": 11,
+          "offset": 20,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 31,
+          "vowel_key": "@",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 41,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "background",
+          "n_steps": 10,
+          "offset": 63,
+          "vowel_key": "@",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "background",
+          "n_steps": 10,
+          "offset": 73,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "decay",
+          "n_steps": 11,
+          "offset": 83,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "terminal",
+          "n_steps": 20,
+          "offset": 94,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        }
+      ],
+      "md5_wav": "cb28c8a528097578c375c619e9dd93d1",
+      "md5_tract": "d2334c07e3e4f41349ec02124027f93a"
+    },
+    {
+      "id": "T6",
+      "situation": "complement inter-mot V~.V~",
+      "note": "jonction u~.u~ — les deux nasalites attendues",
+      "entree": "atum hum",
+      "use_g2p": true,
+      "sampa_moteur": "@tu~.u~",
+      "phrases": [
+        "@tu~.u~"
+      ],
+      "duree_s": 1.137,
+      "porte_moteur": "@tu.u",
+      "intervalles_vo": [
+        [
+          63,
+          83,
+          "u+u"
+        ]
+      ],
+      "n_frames_tract": 456,
+      "mesures": {
+        "vo_max_background": 0.5,
+        "vo_max_background_centre": 0.499,
+        "vo_moites_nasales": [
+          0.5
+        ],
+        "vo_moites_nasales_max": 0.5,
+        "vo_max_plateau_nasal": null,
+        "vo_max_plateau_oral": -0.1,
+        "relamp_moyen_background": 0.98,
+        "rms_background": 0.2192,
+        "rms_plateaux": 0.2219,
+        "rms_global": 0.1137
+      },
+      "verdict": {
+        "voyelles_entree": [
+          "@",
+          "u~",
+          "u~"
+        ],
+        "hiatus": [
+          "u~.u~"
+        ],
+        "noyaux_attendus": 3,
+        "noyaux_plateaux_realises": 1,
+        "noyaux_elides": [
+          "u~",
+          "u~"
+        ],
+        "nasalite_perdue": false,
+        "arc_statique": true,
+        "audio_present_dans_hiatus": true,
+        "vo_hiatus_centre": 0.499,
+        "vo_moites_nasales": 0.5,
+        "vo_critere": 0.5,
+        "vo_reference_nasale": null
+      },
+      "nodes": [
+        {
+          "i": 0,
+          "kind": "V",
+          "key": "@",
+          "nasal": false
+        },
+        {
+          "i": 1,
+          "kind": "C",
+          "key": "t",
+          "nasal": false
+        },
+        {
+          "i": 2,
+          "kind": "V",
+          "key": "u",
+          "nasal": true
+        },
+        {
+          "i": 3,
+          "kind": "V",
+          "key": "u",
+          "nasal": true
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "initial",
+          "n_steps": 20,
+          "offset": 0,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "attack",
+          "n_steps": 11,
+          "offset": 20,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 31,
+          "vowel_key": "@",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 41,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "background",
+          "n_steps": 10,
+          "offset": 63,
+          "vowel_key": "@",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "background",
+          "n_steps": 10,
+          "offset": 73,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "decay",
+          "n_steps": 11,
+          "offset": 83,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "terminal",
+          "n_steps": 20,
+          "offset": 94,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        }
+      ],
+      "md5_wav": "ddcd2fc38a37cec002c5719b5e49aaf9",
+      "md5_tract": "02b8fa8c9d9d422b53df8d7d4d59dd72"
+    },
+    {
+      "id": "T7",
+      "situation": "temoin dedie diphtongue nasale",
+      "note": "k@~w : chemin plateau, VO ~ 0.5 attendu, inchangé avant/après (mission §7.1)",
+      "entree": "cão",
+      "use_g2p": true,
+      "sampa_moteur": "k@~w",
+      "phrases": [
+        "k@~w"
+      ],
+      "duree_s": 1.048,
+      "porte_moteur": "k@~w",
+      "intervalles_vo": null,
+      "n_frames_tract": 420,
+      "mesures": {
+        "vo_max_background": null,
+        "vo_max_background_centre": null,
+        "vo_moites_nasales": null,
+        "vo_moites_nasales_max": null,
+        "vo_max_plateau_nasal": 0.489,
+        "vo_max_plateau_oral": null,
+        "relamp_moyen_background": null,
+        "rms_background": null,
+        "rms_plateaux": 0.2677,
+        "rms_global": 0.0956
+      },
+      "verdict": {
+        "voyelles_entree": [
+          "@~"
+        ],
+        "hiatus": [],
+        "noyaux_attendus": 1,
+        "noyaux_plateaux_realises": 1,
+        "noyaux_elides": [],
+        "nasalite_perdue": false,
+        "arc_statique": false,
+        "audio_present_dans_hiatus": false,
+        "vo_hiatus_centre": null,
+        "vo_moites_nasales": null,
+        "vo_critere": null,
+        "vo_reference_nasale": 0.489
+      },
+      "nodes": [
+        {
+          "i": 0,
+          "kind": "C",
+          "key": "k",
+          "nasal": false
+        },
+        {
+          "i": 1,
+          "kind": "V",
+          "key": "@",
+          "nasal": true
+        },
+        {
+          "i": 2,
+          "kind": "C",
+          "key": "w",
+          "nasal": false
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "initial",
+          "n_steps": 20,
+          "offset": 0,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 20,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 42,
+          "vowel_key": "@",
+          "nasal": true,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 52,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "decay",
+          "n_steps": 11,
+          "offset": 74,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "terminal",
+          "n_steps": 20,
+          "offset": 85,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        }
+      ],
+      "md5_wav": "2c7d80d07080a633da04ddc31820c6db",
+      "md5_tract": "3448d66f39b749d22d09cd263ea856aa"
+    },
+    {
+      "id": "H0",
+      "situation": "manuelle, oral -> oral (temoin)",
+      "note": "paire minimale moteur : V.V orale",
+      "entree": "ta.ata",
+      "use_g2p": false,
+      "sampa_moteur": "ta.ata",
+      "phrases": [
+        "ta.ata"
+      ],
+      "duree_s": 1.247,
+      "porte_moteur": "ta.ata",
+      "intervalles_vo": null,
+      "n_frames_tract": 500,
+      "mesures": {
+        "vo_max_background": -0.1,
+        "vo_max_background_centre": -0.1,
+        "vo_moites_nasales": null,
+        "vo_moites_nasales_max": null,
+        "vo_max_plateau_nasal": null,
+        "vo_max_plateau_oral": -0.1,
+        "relamp_moyen_background": 0.98,
+        "rms_background": 0.2202,
+        "rms_plateaux": 0.2139,
+        "rms_global": 0.1079
+      },
+      "verdict": {
+        "voyelles_entree": [
+          "a",
+          "a",
+          "a"
+        ],
+        "hiatus": [
+          "a.a"
+        ],
+        "noyaux_attendus": 3,
+        "noyaux_plateaux_realises": 1,
+        "noyaux_elides": [
+          "a",
+          "a"
+        ],
+        "nasalite_perdue": false,
+        "arc_statique": true,
+        "audio_present_dans_hiatus": true,
+        "vo_hiatus_centre": -0.1,
+        "vo_moites_nasales": null,
+        "vo_critere": -0.1,
+        "vo_reference_nasale": null
+      },
+      "nodes": [
+        {
+          "i": 0,
+          "kind": "C",
+          "key": "t",
+          "nasal": false
+        },
+        {
+          "i": 1,
+          "kind": "V",
+          "key": "a",
+          "nasal": false
+        },
+        {
+          "i": 2,
+          "kind": "V",
+          "key": "a",
+          "nasal": false
+        },
+        {
+          "i": 3,
+          "kind": "C",
+          "key": "t",
+          "nasal": false
+        },
+        {
+          "i": 4,
+          "kind": "V",
+          "key": "a",
+          "nasal": false
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "initial",
+          "n_steps": 20,
+          "offset": 0,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 20,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "background",
+          "n_steps": 20,
+          "offset": 42,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 62,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 84,
+          "vowel_key": "a",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "decay",
+          "n_steps": 11,
+          "offset": 94,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "terminal",
+          "n_steps": 20,
+          "offset": 105,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        }
+      ],
+      "md5_wav": "0402b12ef4a506f404844351aff6e2ea",
+      "md5_tract": "8a4f5095d7cc1a12dee47c96cd2023c7"
+    },
+    {
+      "id": "H1",
+      "situation": "manuelle, nasal -> oral (couvre S4 intra-mot V~.V, sans instance lexicale pt)",
+      "note": "paire minimale moteur : a~.a",
+      "entree": "ta~.ata",
+      "use_g2p": false,
+      "sampa_moteur": "ta~.ata",
+      "phrases": [
+        "ta~.ata"
+      ],
+      "duree_s": 1.247,
+      "porte_moteur": "ta.ata",
+      "intervalles_vo": [
+        [
+          42,
+          52,
+          "a"
+        ]
+      ],
+      "n_frames_tract": 500,
+      "mesures": {
+        "vo_max_background": 0.489,
+        "vo_max_background_centre": 0.489,
+        "vo_moites_nasales": [
+          0.489
+        ],
+        "vo_moites_nasales_max": 0.489,
+        "vo_max_plateau_nasal": null,
+        "vo_max_plateau_oral": -0.1,
+        "relamp_moyen_background": 0.98,
+        "rms_background": 0.2115,
+        "rms_plateaux": 0.2215,
+        "rms_global": 0.1064
+      },
+      "verdict": {
+        "voyelles_entree": [
+          "a~",
+          "a",
+          "a"
+        ],
+        "hiatus": [
+          "a~.a"
+        ],
+        "noyaux_attendus": 3,
+        "noyaux_plateaux_realises": 1,
+        "noyaux_elides": [
+          "a~",
+          "a"
+        ],
+        "nasalite_perdue": false,
+        "arc_statique": true,
+        "audio_present_dans_hiatus": true,
+        "vo_hiatus_centre": 0.489,
+        "vo_moites_nasales": 0.489,
+        "vo_critere": 0.489,
+        "vo_reference_nasale": null
+      },
+      "nodes": [
+        {
+          "i": 0,
+          "kind": "C",
+          "key": "t",
+          "nasal": false
+        },
+        {
+          "i": 1,
+          "kind": "V",
+          "key": "a",
+          "nasal": true
+        },
+        {
+          "i": 2,
+          "kind": "V",
+          "key": "a",
+          "nasal": false
+        },
+        {
+          "i": 3,
+          "kind": "C",
+          "key": "t",
+          "nasal": false
+        },
+        {
+          "i": 4,
+          "kind": "V",
+          "key": "a",
+          "nasal": false
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "initial",
+          "n_steps": 20,
+          "offset": 0,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 20,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "background",
+          "n_steps": 20,
+          "offset": 42,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 62,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 84,
+          "vowel_key": "a",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "decay",
+          "n_steps": 11,
+          "offset": 94,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "terminal",
+          "n_steps": 20,
+          "offset": 105,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        }
+      ],
+      "md5_wav": "07c325ee632da9ad91d2bf165a61dd98",
+      "md5_tract": "222a3fcb5539b8154dc1b841e0128f70"
+    },
+    {
+      "id": "H2",
+      "situation": "manuelle, oral -> nasal",
+      "note": "paire minimale moteur : a.a~",
+      "entree": "ta.a~ta",
+      "use_g2p": false,
+      "sampa_moteur": "ta.a~ta",
+      "phrases": [
+        "ta.a~ta"
+      ],
+      "duree_s": 1.247,
+      "porte_moteur": "ta.ata",
+      "intervalles_vo": [
+        [
+          52,
+          62,
+          "a"
+        ]
+      ],
+      "n_frames_tract": 500,
+      "mesures": {
+        "vo_max_background": 0.489,
+        "vo_max_background_centre": 0.443,
+        "vo_moites_nasales": [
+          0.489
+        ],
+        "vo_moites_nasales_max": 0.489,
+        "vo_max_plateau_nasal": null,
+        "vo_max_plateau_oral": -0.1,
+        "relamp_moyen_background": 0.98,
+        "rms_background": 0.2095,
+        "rms_plateaux": 0.2141,
+        "rms_global": 0.1045
+      },
+      "verdict": {
+        "voyelles_entree": [
+          "a",
+          "a~",
+          "a"
+        ],
+        "hiatus": [
+          "a.a~"
+        ],
+        "noyaux_attendus": 3,
+        "noyaux_plateaux_realises": 1,
+        "noyaux_elides": [
+          "a",
+          "a~"
+        ],
+        "nasalite_perdue": false,
+        "arc_statique": true,
+        "audio_present_dans_hiatus": true,
+        "vo_hiatus_centre": 0.443,
+        "vo_moites_nasales": 0.489,
+        "vo_critere": 0.489,
+        "vo_reference_nasale": null
+      },
+      "nodes": [
+        {
+          "i": 0,
+          "kind": "C",
+          "key": "t",
+          "nasal": false
+        },
+        {
+          "i": 1,
+          "kind": "V",
+          "key": "a",
+          "nasal": false
+        },
+        {
+          "i": 2,
+          "kind": "V",
+          "key": "a",
+          "nasal": true
+        },
+        {
+          "i": 3,
+          "kind": "C",
+          "key": "t",
+          "nasal": false
+        },
+        {
+          "i": 4,
+          "kind": "V",
+          "key": "a",
+          "nasal": false
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "initial",
+          "n_steps": 20,
+          "offset": 0,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 20,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "background",
+          "n_steps": 20,
+          "offset": 42,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 62,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 84,
+          "vowel_key": "a",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "decay",
+          "n_steps": 11,
+          "offset": 94,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "terminal",
+          "n_steps": 20,
+          "offset": 105,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        }
+      ],
+      "md5_wav": "5945483d93ba2a6d3d925a8029a6527e",
+      "md5_tract": "d5e56e0da8367812902ae7e64da193fc"
+    },
+    {
+      "id": "H3",
+      "situation": "manuelle, nasal -> nasal",
+      "note": "paire minimale moteur : a~.a~",
+      "entree": "ta~.a~ta",
+      "use_g2p": false,
+      "sampa_moteur": "ta~.a~ta",
+      "phrases": [
+        "ta~.a~ta"
+      ],
+      "duree_s": 1.247,
+      "porte_moteur": "ta.ata",
+      "intervalles_vo": [
+        [
+          42,
+          62,
+          "a+a"
+        ]
+      ],
+      "n_frames_tract": 500,
+      "mesures": {
+        "vo_max_background": 0.5,
+        "vo_max_background_centre": 0.499,
+        "vo_moites_nasales": [
+          0.5
+        ],
+        "vo_moites_nasales_max": 0.5,
+        "vo_max_plateau_nasal": null,
+        "vo_max_plateau_oral": -0.1,
+        "relamp_moyen_background": 0.98,
+        "rms_background": 0.1988,
+        "rms_plateaux": 0.2208,
+        "rms_global": 0.1022
+      },
+      "verdict": {
+        "voyelles_entree": [
+          "a~",
+          "a~",
+          "a"
+        ],
+        "hiatus": [
+          "a~.a~"
+        ],
+        "noyaux_attendus": 3,
+        "noyaux_plateaux_realises": 1,
+        "noyaux_elides": [
+          "a~",
+          "a~"
+        ],
+        "nasalite_perdue": false,
+        "arc_statique": true,
+        "audio_present_dans_hiatus": true,
+        "vo_hiatus_centre": 0.499,
+        "vo_moites_nasales": 0.5,
+        "vo_critere": 0.5,
+        "vo_reference_nasale": null
+      },
+      "nodes": [
+        {
+          "i": 0,
+          "kind": "C",
+          "key": "t",
+          "nasal": false
+        },
+        {
+          "i": 1,
+          "kind": "V",
+          "key": "a",
+          "nasal": true
+        },
+        {
+          "i": 2,
+          "kind": "V",
+          "key": "a",
+          "nasal": true
+        },
+        {
+          "i": 3,
+          "kind": "C",
+          "key": "t",
+          "nasal": false
+        },
+        {
+          "i": 4,
+          "kind": "V",
+          "key": "a",
+          "nasal": false
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "initial",
+          "n_steps": 20,
+          "offset": 0,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 20,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "background",
+          "n_steps": 20,
+          "offset": 42,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 62,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 84,
+          "vowel_key": "a",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "decay",
+          "n_steps": 11,
+          "offset": 94,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "terminal",
+          "n_steps": 20,
+          "offset": 105,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        }
+      ],
+      "md5_wav": "219c385b7147879e1db660bec1e73ff6",
+      "md5_tract": "08c4471be3060365267c6c162469dfbd"
+    },
+    {
+      "id": "H4",
+      "situation": "manuelle, cas documente fr",
+      "note": "le SAMPA du commit dea71c6, ecrit a l'entree moteur (moteur pt : meme marche)",
+      "entree": "kOma~.a.le.vu",
+      "use_g2p": false,
+      "sampa_moteur": "kOma~.a.le.vu",
+      "phrases": [
+        "kOma~.a.le.vu"
+      ],
+      "duree_s": 1.886,
+      "porte_moteur": "kOma.a.le.vu",
+      "intervalles_vo": [
+        [
+          74,
+          84,
+          "a"
+        ]
+      ],
+      "n_frames_tract": 756,
+      "mesures": {
+        "vo_max_background": 0.495,
+        "vo_max_background_centre": 0.495,
+        "vo_moites_nasales": [
+          0.495
+        ],
+        "vo_moites_nasales_max": 0.495,
+        "vo_max_plateau_nasal": null,
+        "vo_max_plateau_oral": 1.0,
+        "relamp_moyen_background": 0.999,
+        "rms_background": 0.2154,
+        "rms_plateaux": 0.1404,
+        "rms_global": 0.1104
+      },
+      "verdict": {
+        "voyelles_entree": [
+          "O",
+          "a~",
+          "a",
+          "e",
+          "u"
+        ],
+        "hiatus": [
+          "a~.a"
+        ],
+        "noyaux_attendus": 5,
+        "noyaux_plateaux_realises": 3,
+        "noyaux_elides": [
+          "a~",
+          "a"
+        ],
+        "nasalite_perdue": false,
+        "arc_statique": true,
+        "audio_present_dans_hiatus": true,
+        "vo_hiatus_centre": 0.495,
+        "vo_moites_nasales": 0.495,
+        "vo_critere": 0.495,
+        "vo_reference_nasale": null
+      },
+      "nodes": [
+        {
+          "i": 0,
+          "kind": "C",
+          "key": "k",
+          "nasal": false
+        },
+        {
+          "i": 1,
+          "kind": "V",
+          "key": "O",
+          "nasal": false
+        },
+        {
+          "i": 2,
+          "kind": "C",
+          "key": "m",
+          "nasal": false
+        },
+        {
+          "i": 3,
+          "kind": "V",
+          "key": "a",
+          "nasal": true
+        },
+        {
+          "i": 4,
+          "kind": "V",
+          "key": "a",
+          "nasal": false
+        },
+        {
+          "i": 5,
+          "kind": "C",
+          "key": "l",
+          "nasal": false
+        },
+        {
+          "i": 6,
+          "kind": "V",
+          "key": "e",
+          "nasal": false
+        },
+        {
+          "i": 7,
+          "kind": "C",
+          "key": "v",
+          "nasal": false
+        },
+        {
+          "i": 8,
+          "kind": "V",
+          "key": "u",
+          "nasal": false
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "initial",
+          "n_steps": 20,
+          "offset": 0,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 20,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 42,
+          "vowel_key": "O",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 52,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "background",
+          "n_steps": 20,
+          "offset": 74,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 94,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 116,
+          "vowel_key": "e",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "cluster",
+          "n_steps": 22,
+          "offset": 126,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 1
+        },
+        {
+          "kind": "plateau",
+          "n_steps": 10,
+          "offset": 148,
+          "vowel_key": "u",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "decay",
+          "n_steps": 11,
+          "offset": 158,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        },
+        {
+          "kind": "terminal",
+          "n_steps": 20,
+          "offset": 169,
+          "vowel_key": "",
+          "nasal": false,
+          "n_cons": 0
+        }
+      ],
+      "md5_wav": "fd136226beb010aeb7573a52ea95faa1",
+      "md5_tract": "bb8034415b4b1152404bc3f41b442b43"
+    }
+  ]
+}

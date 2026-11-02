@@ -5,6 +5,28 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
+### Added (mission P6 — 2026-11-02, exécution)
+
+- **fix(P6): validation V1V2 étendue au pack complet.** Corpus
+  portugais dédié `AUDIT_V1V2/corpus_v1v2_pt.json` (18 items sur la
+  typologie fr : S1 inter-mot V~.V, S2 inter-mot V.V~, S3 intra-mot
+  V.V~, témoins oraux/nasaux/diphtongue `cão`, paires H en SAMPA
+  direct) — exécuté via le harnais paramétré
+  (`run_corpus.py --lang pt` → `results_pt/`) : toutes les moitiés
+  nasales atteignent VO >= 0.489 (seuil 0.3), témoins oraux à
+  VO = -0.1, `nasalite_perdue` = faux partout. Particularité pt
+  documentée : `g2p_pt` n'émet jamais V~.V intra-mot (0/35690 mots) —
+  S4 est couvert par les items H en SAMPA direct, comme prévu §7.1.
+  Inertie es/it/de/en prouvée (`p6_multilingue.py` →
+  `results_p6/inertie.json`) : g2p sans `~`, lexiques sans `~`,
+  synthèses bit-identiques porte active/neutralisée. Inventaire
+  moteur : les clés nasales de toutes les langues sont couvertes par
+  `phonemes.SAMPA_VOWELS` (`tout_couvert = True`). Tests étendus
+  (`TestP6Portuguese`, 38/38). Harnais paramétré par langue
+  (`--lang`/`--corpus`/`--results`/`--no-preproc`), le fr restant dans
+  `results/`. Détails : `AUDIT_V1V2/P6_MULTILINGUE.md`.
+
+
 ### Added (consignes agent V1V2 — 2026-10-31, après correctif)
 
 - **docs(mission): P5/P6 — nouvelles consignes pour l'agent correcteur.**

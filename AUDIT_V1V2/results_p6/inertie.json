@@ -1,0 +1,144 @@
+{
+  "langues": {
+    "es": {
+      "g2p": {
+        "texts": 2,
+        "tilde_hits": [],
+        "inerte": true
+      },
+      "lexique": {
+        "lexicon": "es_lexicon.tsv",
+        "tilde_lines": 0,
+        "inerte": true
+      },
+      "non_perturbation": {
+        "md5": {
+          "actif": [
+            "f138824312911bb1e077f058c2f0a5e2:451865bbf454c7f8d57415f13b95bd42",
+            "272aaaa82e4f09624f14f1563ce4402d:551206372c17b1b5c295f17e0bde8548"
+          ],
+          "neutralise": [
+            "f138824312911bb1e077f058c2f0a5e2:451865bbf454c7f8d57415f13b95bd42",
+            "272aaaa82e4f09624f14f1563ce4402d:551206372c17b1b5c295f17e0bde8548"
+          ]
+        },
+        "identique": true
+      },
+      "inerte": true
+    },
+    "it": {
+      "g2p": {
+        "texts": 2,
+        "tilde_hits": [],
+        "inerte": true
+      },
+      "lexique": {
+        "lexicon": "it_lexicon.tsv",
+        "tilde_lines": 0,
+        "inerte": true
+      },
+      "non_perturbation": {
+        "md5": {
+          "actif": [
+            "f4e06179dcff474abce3eb7bcc9c9a0f:a652fc9154835f0f2999f9fbdcf1888f",
+            "1d053acd2d7b46306dfa7a48b09ed987:d9d76f39e7527455247b84f62c778f12"
+          ],
+          "neutralise": [
+            "f4e06179dcff474abce3eb7bcc9c9a0f:a652fc9154835f0f2999f9fbdcf1888f",
+            "1d053acd2d7b46306dfa7a48b09ed987:d9d76f39e7527455247b84f62c778f12"
+          ]
+        },
+        "identique": true
+      },
+      "inerte": true
+    },
+    "de": {
+      "g2p": {
+        "texts": 2,
+        "tilde_hits": [],
+        "inerte": true
+      },
+      "lexique": {
+        "lexicon": "de_lexicon.tsv",
+        "tilde_lines": 0,
+        "inerte": true
+      },
+      "non_perturbation": {
+        "md5": {
+          "actif": [
+            "00d41ff088cee00aeba38e0300d038c3:b3f98f79fd5140ef06aa8b49a36a2b75",
+            "894561ac2fcc6171376a110d9eab2852:70c29b507c49a2668a499528ec6b6c61"
+          ],
+          "neutralise": [
+            "00d41ff088cee00aeba38e0300d038c3:b3f98f79fd5140ef06aa8b49a36a2b75",
+            "894561ac2fcc6171376a110d9eab2852:70c29b507c49a2668a499528ec6b6c61"
+          ]
+        },
+        "identique": true
+      },
+      "inerte": true
+    },
+    "en": {
+      "g2p": {
+        "texts": 2,
+        "tilde_hits": [],
+        "inerte": true
+      },
+      "lexique": {
+        "lexicon": "en_lexicon.tsv (absent — ARPAbet)",
+        "inerte": true
+      },
+      "non_perturbation": {
+        "md5": {
+          "actif": [
+            "418f731389bc53e617f7fd868bb81aef:1c97a977e33f1af7aa618114349c1eac",
+            "34672c830b86b0b4d61d8fb1c612d446:e7a20e5ab6a1815470292ec3dc19aedc"
+          ],
+          "neutralise": [
+            "418f731389bc53e617f7fd868bb81aef:1c97a977e33f1af7aa618114349c1eac",
+            "34672c830b86b0b4d61d8fb1c612d446:e7a20e5ab6a1815470292ec3dc19aedc"
+          ]
+        },
+        "identique": true
+      },
+      "inerte": true
+    }
+  },
+  "inventaire": {
+    "sampa_vowels": [
+      "2",
+      "6",
+      "9",
+      "@",
+      "E",
+      "O",
+      "a",
+      "e",
+      "i",
+      "o",
+      "u",
+      "y"
+    ],
+    "langues": {
+      "fr": {
+        "statut": "jeu de voyelles introuvable"
+      },
+      "pt": {
+        "statut": "jeu de voyelles introuvable"
+      },
+      "es": {
+        "statut": "jeu de voyelles introuvable"
+      },
+      "it": {
+        "statut": "jeu de voyelles introuvable"
+      },
+      "de": {
+        "statut": "jeu de voyelles introuvable"
+      },
+      "en": {
+        "statut": "jeu de voyelles introuvable"
+      }
+    },
+    "tout_couvert": true
+  }
+}

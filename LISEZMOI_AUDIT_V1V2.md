@@ -45,6 +45,8 @@ contre +0,49 sur un plateau nasal sain ; preuve : `ta.ata`, `ta~.ata`,
 `ta.a~ta`, `ta~.a~ta` produisaient des WAV identiques octet par octet
 (distincts depuis le correctif).
 
+**P6 — RÉALISÉ (2026-11-02).** Validation étendue au pack complet : corpus portugais dédié (`corpus_v1v2_pt.json` → `results_pt/`, toutes typologies nasalisees, VO >= 0.489), inertie es/it/de/en prouvée (`p6_multilingue.py` → `results_p6/inertie.json` : g2p sans ~, lexiques sans ~, sorties bit-identiques porte active/neutralisée), inventaire moteur couvrant toutes les langues, harnais paramétré par langue (`run_corpus.py --lang pt`). Détails : `P6_MULTILINGUE.md` ; tests étendus (`TestP6Portuguese`, 38/38 verts).
+
 Reproduire l'audit (Linux) :
 
 ```bash

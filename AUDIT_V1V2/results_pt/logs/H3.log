@@ -1,0 +1,3 @@
+Active speaker: jd3 (JD3 reference (original SynthVTL24b))  constants=8bebcd77ad38  f0_default=102.216 Hz
+                geometry: jd3  ortho: jd3  audio wheel: jd3  video: jd3
+                !! CONSTANTS INCONSISTENCY: the installed constants.py (8bebcd77ad38) != active speaker source (5998296f09c8) — rerun install_speaker.py

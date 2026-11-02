@@ -279,3 +279,61 @@ class TestSynthesisNasality:
             for c in cols:
                 assert np.array_equal(tracts['H0'][:, c], tracts[other][:, c]), \
                     f'colonne {c} diffère entre H0 et {other}'
+
+
+# ---------------------------------------------------------------------------
+# P6 — Portuguese: nasal diphthongs, inter-word boundaries, inert gate
+# ---------------------------------------------------------------------------
+
+class TestP6Portuguese:
+    """Mission P6 §7.1 — pt nasal keys ride the SAME gate (cão -> k@~w,
+    sem -> s@~j, algum -> algu~…). The pt lexicon has NO intra-word
+    V~.V (0/35690 words: a nasal vowel is never adjacent to an oral
+    vowel inside a word), so the intra-word S4 situation is covered by
+    the H minimal pairs above (direct SAMPA input)."""
+
+    def test_pt_nasal_diphthong_is_hold(self):
+        # 'cão' -> k@~w : the nasal vowel is followed by a GLIDE (w),
+        # not by a vowel -> no hiatus, plateau path, gate inert
+        motor, plan = split_nasal_hiatus('k@~w')
+        assert motor == 'k@~w'
+        assert plan['events'] == []
+        assert plan['runs'] == []
+
+    def test_pt_inter_word_nasal_oral(self):
+        # 'acauã ele' -> kaw@~.e.l@ : hiatus @~.e across the word dot
+        motor, plan = split_nasal_hiatus('kaw@~.e.l@')
+        assert motor == 'kaw@.e.l@'
+        assert plan['events'] == [{'run': 0, 'member': 0, 'key': '@'}]
+        runs = plan['runs']
+        assert [m['nasal'] for run in runs for m in run] == [True, False]
+
+    def test_pt_inter_word_oral_nasal(self):
+        # 'ele um' -> e.l@.u~ : hiatus @.u~ (oral -> nasal)
+        motor, plan = split_nasal_hiatus('e.l@.u~')
+        assert motor == 'e.l@.u'
+        assert plan['events'] == [{'run': 0, 'member': 1, 'key': 'u'}]
+        runs = plan['runs']
+        assert [m['nasal'] for run in runs for m in run] == [False, True]
+
+    def test_pt_final_nasal_plateau_unchanged(self):
+        # 'atum' -> @tu~ : word-final nasal -> plateau path, gate inert
+        motor, plan = split_nasal_hiatus('@tu~')
+        assert motor == '@tu~'
+        assert plan['events'] == []
+
+    def test_p6_gate_inert_without_tilde(self):
+        # es / it / de / en emit no '~' at all: the gate is structurally
+        # inert on their g2p outputs (mission §7.2 sweep, engine side).
+        # The samples are given in the ENGINE's normalized conventions
+        # (the pt-style normalization maps ɡ->g, ɾ->R, ə->e); the gate
+        # re-normalizes nothing and returns the phrase unchanged when no
+        # tilde is present.
+        from vtl_synth.core.syltraj import _normalize_word as _syl_norm
+        from vtl_synth.core.continuous import _normalize_ipa
+        for ph in ('el.pe.Ro.beRDe', 'il.gat.to.neRo', 'das.gRy:.n@.haUs',
+                   'd@.gri:n.tri:'):
+            phn = _normalize_ipa(_syl_norm(ph))
+            motor, plan = split_nasal_hiatus(phn)
+            assert motor == phn
+            assert plan['events'] == []
