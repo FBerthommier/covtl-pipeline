@@ -287,7 +287,7 @@ kept only as the `polar_from_pval` diagnostic). The work directory is
 purged and the frame count verified before encoding (stale-frame fix).
 Module: `video/polar_video.py`; doc: `docs/polar_visualization.pdf`.
 
-The **interactive HTML counterpart** ships in `examples/html/`:
+The **interactive HTML counterpart** ships in `docs/html/`:
 `make_html_demos.py` regenerates, from `polar_player.template.html`,
 one self-contained page per demo phrase plus an `index.html` landing
 page. Each page embeds its whole data set (v4 `.polar` trajectories,

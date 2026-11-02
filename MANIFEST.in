@@ -3,3 +3,6 @@
 # the wheel (the vtl_synth* allowlist in pyproject.toml) —
 # pip install pulls in vtl_synth/ only.
 prune examples
+# interactive HTML demos moved to docs/html (GitHub Pages source):
+# repository-only as well — never in the sdist
+prune docs/html

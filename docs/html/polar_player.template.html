@@ -12,7 +12,7 @@
   planning figure, dual branch model (vocalic z_v in red, consonantal
   z_c in blue), synchronized with the synthesized audio.
 
-  This file is a TEMPLATE consumed by examples/html/make_html_demos.py:
+  This file is a TEMPLATE consumed by docs/html/make_html_demos.py:
   the single placeholder token in the script block below is replaced by
   the embedded demo data (polar trajectories v4, sagittal polyline
   frames, AAC audio).  The generated pages need no web server and no
@@ -178,7 +178,7 @@
   </main>
 <footer>
   <p id="provenance"></p>
-  <p>Self-contained page (offline, no server, no network): polar trajectories <span id="fmtNote"></span>, sagittal frames from <code>vocaltractlab_cython.tract_state_to_svg</code>, audio AAC &mdash; all embedded at build time. Regenerate with <code>python examples/html/make_html_demos.py</code>. Rendering mirrors <code>vtl_synth/video/polar_video.py</code> (<code>render_polar_frame</code>): display curvature K=30 (&nu;=+1) vocalic / K=10 (&nu;=&minus;1) consonantal, reference model of arXiv:2307.02299 &sect;2.1 &mdash; not the quasi-rectilinear SYL_K=1000 parameter arcs of the synthesis engine.</p>
+  <p>Self-contained page (offline, no server, no network): polar trajectories <span id="fmtNote"></span>, sagittal frames from <code>vocaltractlab_cython.tract_state_to_svg</code>, audio AAC &mdash; all embedded at build time. Regenerate with <code>python docs/html/make_html_demos.py</code>. Rendering mirrors <code>vtl_synth/video/polar_video.py</code> (<code>render_polar_frame</code>): display curvature K=30 (&nu;=+1) vocalic / K=10 (&nu;=&minus;1) consonantal, reference model of arXiv:2307.02299 &sect;2.1 &mdash; not the quasi-rectilinear SYL_K=1000 parameter arcs of the synthesis engine.</p>
 </footer>
 <audio id="audio" preload="auto"></audio>
 <script>
@@ -198,7 +198,7 @@ const DEMO = __DEMO_JSON__;
   }
   if (typeof DEMO !== 'object' || !DEMO || !DEMO.polar)
     bail('This is the raw template. Run ' +
-         'examples/html/make_html_demos.py to generate the demo pages, ' +
+         'docs/html/make_html_demos.py to generate the demo pages, ' +
          'then open polar_demo_fr.html / polar_demo_en.html.');
 
   /* ---------------- constants mirroring polar_video.py ------------- */
