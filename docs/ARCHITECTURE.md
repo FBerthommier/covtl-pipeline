@@ -300,6 +300,46 @@ master clock. The README links directly to the rendered pages, so
 the demos open in a browser straight from the repository without
 cloning.
 
+### 8.5 Inter-word sandhi — the covtl-sandhi hook (add-on 5)
+
+`Pipeline(sandhi=...)` / `--sandhi off|minimal|standard|careful`
+(default **off**, bit-identical outputs) and `--sandhi-mode
+g2p|post|pre` (default `g2p`). Branch A of a two-branch architecture:
+this repository only ships the hook — the stub package
+`vtl_synth/utils/sandhi/` (`SANDHI_FULL = False`: every entry point is
+the identity) plus the option wiring. The rules live in the companion
+package [covtl-sandhi](https://github.com/FBerthommier/covtl-sandhi)
+(Branch B, six languages: fr latent consonant, en a→an + onset
+linking/linking-r, it raddoppiamento sintattico + euphonic d, es
+enlace + y→e/o→u, pt encadeamento + EP voicing, de Glottalversatz —
+the "anti-liaison"), activated either by copying its `sandhi/` folder
+over the stub (`cp -r sandhi/. vtl_synth/utils/sandhi/`) or by
+`pip install` (the hook then resolves the top-level `import sandhi`).
+
+Technical principles:
+
+- **Text/g2p layer only.** The rules rewrite text or SAMPA, never the
+  engine; the sandhi key is always a consonant inserted as the **onset
+  of the next syllable** (never a nucleus), so the expressive-prosody
+  F0 plans stay aligned; no insertion ever crosses a pause
+  (`%`, `|`, comma).
+- **Three insertion points** (`pre` = orthographic rewrite before the
+  g2p; `g2p` = sandhi-aware per-word gateway + SAMPA merge,
+  **recommended** — the only point that sees both the word pair and
+  the pronunciation; `post` = pure SAMPA post-processor re-aligned on
+  the text).
+- **Coverage levels** (`minimal ⊆ standard ⊆ careful`) are a monotone
+  filter over each language's rule set — they decide which pair
+  classes may fire, never the phonology of a firing rule; pairs that
+  fail any check stay unlinked — never a wrong form.
+- **Single dispatch.** The hook is the pipeline's only cross-word
+  sandhi path; there is no competing per-language option. Without the
+  Branch B package, `--sandhi` degrades to `off` with a warning and
+  bit-identical outputs.
+
+Details, per-language rules and the full test suite: the covtl-sandhi
+repository (`README.md`, `docs/covtl-sandhi-guide.pdf`).
+
 ## 9. Extension points
 
 - **New phoneme**: add `(rho, theta, selector)` to

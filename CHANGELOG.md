@@ -5,6 +5,37 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
+### Added (covtl-sandhi hook — 2026-11-02)
+
+- **feat(sandhi): covtl-sandhi hook (Branch A) — cross-word sandhi as
+  an option, default OFF** — `vtl_synth/utils/sandhi/` ships as an
+  identity STUB (`SANDHI_FULL = False`) plus the
+  `--sandhi` / `--sandhi-mode` options (`Pipeline(sandhi=...,
+  sandhi_mode=...)`). Without the rule package the stub is the pure
+  identity — **bit-identical outputs to the unpatched repository**
+  (`tests/test_sandhi_hook.py`). The rule package (covtl-sandhi,
+  Branch B — https://github.com/FBerthommier/covtl-sandhi) is
+  installed either by copying its `sandhi/` folder over the stub
+  (`cp -r sandhi/. vtl_synth/utils/sandhi/`) or via pip
+  (`import sandhi`); it brings six languages — fr liaison
+  (`faut il` → `fo.til`), en a→an + onset linking / linking-r
+  (`far away` → `fa.R@.we`), it raddoppiamento + euphonic d
+  (`a casa` → `a.kka.sa`), es enlace + y→e/o→u (`los amigos` →
+  `lo.sa.mi.gos`), pt encadeamento + EP voicing (`os amigos` →
+  `o.Z@.mi.guS`), de Glottalversatz (`ein Apfel` → `ajn a.pf@l`) —
+  under four COVERAGE LEVELS: `off | minimal | standard | careful`
+  (a monotone filter over each language's rule set, never a
+  phonology change). The three implementations stay available as
+  `--sandhi-mode g2p|post|pre`. The hook rewrites text/SAMPA only —
+  never the engine — and the inserted key is never a syllable
+  nucleus, so the expressive F0 plans stay aligned; no insertion
+  across a `%` breath pause. This is the SINGLE sandhi dispatch of
+  the pipeline: the historical 5-language liaison pack
+  (fr/it/es/pt/de `liaison_*` modules, `--liaison`) was never
+  merged to main and is superseded by the covtl-sandhi package
+  (rule parity archived: 39/39 identical outputs on the shared
+  battery).
+
 ### Added (mission P6 — 2026-11-02, execution)
 
 - **fix(P6): V1V2 validation extended to the full language pack.**

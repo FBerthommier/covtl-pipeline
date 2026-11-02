@@ -76,6 +76,35 @@ def _add_engine_options(p: argparse.ArgumentParser) -> None:
                         "the engine inventory are dropped; 'error' "
                         "aborts before synthesis; 'off' disables the "
                         "diagnostic. Env var: VTL_SAMPA_GUARD")
+    g.add_argument('--sandhi', default='off',
+                   choices=['off', 'minimal', 'standard', 'careful'],
+                   help="cross-word sandhi (covtl-sandhi), one rule "
+                        "module per language: fr liaison (faut il -> "
+                        "fo.til, mon ami -> mO~.na.mi), en a->an + "
+                        "onset linking (a apple -> @.na.p@l, far away "
+                        "-> fa.R@.we), it raddoppiamento + euphonic d "
+                        "(a casa -> a.kka.sa, e io -> e.di.o), es "
+                        "enlace + y->e/o->u (los amigos -> lo.sa."
+                        "mi.gos), pt encadeamento + EP voicing (os "
+                        "amigos -> o.Z@.mi.guS), de Glottalversatz "
+                        "(ein Apfel -> 'ajn a.pf@l'). 'minimal' = "
+                        "categorical rules only; 'standard' = "
+                        "recommended (= the historical liaison patch "
+                        "for fr/it/es/pt/de); 'careful' = hyper-"
+                        "articulate register (fr style soutenu, de "
+                        "boundary before function words). Default "
+                        "'off' keeps bit-identical outputs — needs "
+                        "the covtl-sandhi rule package (Branch B: "
+                        "copy sandhi/ over vtl_synth/utils/sandhi/ "
+                        "or pip install covtl-sandhi), else degrades "
+                        "to off with a warning")
+    g.add_argument('--sandhi-mode', dest='sandhi_mode', default='g2p',
+                   choices=['g2p', 'post', 'pre'],
+                   help="sandhi implementation: 'g2p' = liaison-aware "
+                        "gateway (recommended); 'post' = SAMPA post-"
+                        "processor, g2p untouched; 'pre' = orthographic "
+                        "rewrite before the g2p (weakest — no-op for "
+                        "de/en: the phenomenon has no spelling)")
 
 
 def _resolve_lang(args: argparse.Namespace) -> str:
@@ -121,6 +150,12 @@ def _make_pipeline(args: argparse.Namespace):
     # prosody)
     if getattr(args, 'expressive', False):
         kwargs['expressive'] = True
+    # sandhi=/sandhi_mode= only exist when the sandhi hook patch
+    # (covtl-sandhi Branch A) is applied to the Pipeline
+    if getattr(args, 'sandhi', 'off') != 'off':
+        kwargs['sandhi'] = getattr(args, 'sandhi', 'off')
+    if getattr(args, 'sandhi_mode', 'g2p') != 'g2p':
+        kwargs['sandhi_mode'] = getattr(args, 'sandhi_mode', 'g2p')
     return Pipeline(**kwargs)
 
 

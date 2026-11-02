@@ -54,6 +54,13 @@ Repository: <https://github.com/fberthommier/covtl-pipeline>
 - **Expressive prosody** — [docs/expressive_prosody.pdf](docs/expressive_prosody.pdf):
   breathing groups, F0 contour, out-of-band stress, and the
   interaction with the multi-speakers installation (v1.1.0).
+- **Inter-word sandhi (`--sandhi`)** — cross-word phenomena (fr
+  liaison, en a/an + linking-r, it raddoppiamento, es enlace,
+  pt encadeamento, de Glottalversatz) via the
+  [covtl-sandhi](https://github.com/FBerthommier/covtl-sandhi)
+  rule package behind the built-in hook: off by default
+  (bit-identical outputs), coverage levels `minimal/standard/careful`.
+  See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) §8.5.
 - **Architecture** — [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md):
   developer map of the engine (module layout, data flow, the
   B(t) + E_source(t) + E_ortho(t) decomposition) — including the
