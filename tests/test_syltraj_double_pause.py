@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2026 Frédéric Berthommier
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Non-regression tests for audit finding D-11 — pending point overwritten
 at double pauses (syltraj).
 

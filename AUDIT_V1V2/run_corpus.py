@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 Frédéric Berthommier
+# SPDX-License-Identifier: GPL-3.0-or-later
 # -*- coding: utf-8 -*-
 """
 run_corpus.py — Reproduction harness for the V1V2 audit (nasal/oral hiatus)

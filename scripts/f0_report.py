@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2026 Frédéric Berthommier
+# SPDX-License-Identifier: GPL-3.0-or-later
 # -*- coding: utf-8 -*-
 """Objective measurement of the F0 contour of a .tract file
 (expressive prosody).

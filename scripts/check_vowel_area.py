@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2026 Frédéric Berthommier
+# SPDX-License-Identifier: GPL-3.0-or-later
 # -*- coding: utf-8 -*-
 """Contrôle de la fonction d'aire des 12 fonds vocaliques d'un speaker
 (min constriction linguale sections 26-35, bombement max, lèvres LD,

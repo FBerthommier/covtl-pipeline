@@ -1,4 +1,6 @@
 #!/usr/bin/env python3.12
+# SPDX-FileCopyrightText: 2026 Frédéric Berthommier
+# SPDX-License-Identifier: GPL-3.0-or-later
 """
 test_parsing_equivalence.py
 =========================

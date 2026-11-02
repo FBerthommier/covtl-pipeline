@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2026 Frédéric Berthommier
+# SPDX-License-Identifier: GPL-3.0-or-later
 # -*- coding: utf-8 -*-
 """E2E non-regression test against regression_baselines.json (schema 2).
 
