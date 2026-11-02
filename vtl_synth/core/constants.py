@@ -293,12 +293,13 @@ for _idx, _pname in enumerate(COVTL_PARAMS):
 # /a/, /i/, /u/ are fixed at the Maeda anchors (ρ=1).
 # The other vowels are adjusted by least squares with ρ <= 1.
 # === LANG SECTION — BEGIN (managed by setup_lang.py — do not edit by hand)
-# English — strict Maeda anchors (original covtl-pipeline calibration).
-# /a/, /i/, /u/ close to the Maeda anchors (ρ≤1); the other vowels are
-# adjusted by least squares. English notation: no nasal vowels, /r/ is
-# alveolar (resolved by the notation alias layer, not by the targets).
-ACTIVE_LANG: str = 'en'
-
+# Language selection ONLY since v1.2.0: pronunciation modules, lexicons,
+# G2P and notation. The vowel targets (VOWEL_TARGETS) and the effort gain
+# (VOWEL_EFFORT_GAIN) below this section are the ACTIVE SPEAKER's own
+# calibration — no per-language override any more (the former JD3-copied
+# overrides clobbered the per-speaker calibration, defect D24).
+ACTIVE_LANG: str = 'fr'
+# === LANG SECTION — END =============================================================
 VOWEL_TARGETS: Dict[str, Tuple[float, float]] = {
     'a': (1.000, np.pi),           # 180° — STRICT
     'i': (0.600, 5 * np.pi / 3),   # 300° — compensation for the raised c1(TCY)
@@ -324,7 +325,6 @@ VOWEL_EFFORT_GAIN: Dict[str, float] = {
     'y': 1.3,
     '2': 1.2,
 }
-# === LANG SECTION — END =============================================================
 
 # =============================================================================
 # Front vowels — palatal context for g/k

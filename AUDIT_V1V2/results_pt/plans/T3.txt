@@ -1,17 +1,17 @@
-SAMPA (entrée moteur) : iRm@~
+SAMPA (engine input) : iRm@~
 Total : 115 steps @100 Hz = 1.15 s
 
-Nœuds : [V]i [C]R [C]m [V]@~
+Nodes : [V]i [C]R [C]m [V]@~
 
- offset   dur kind        voyelle nasal  contenu
+ offset   dur kind        vowel   nasal  content
 ------------------------------------------------------------------------
       0    20 initial     -       False  
      20    11 attack      -       False  
-     31    10 plateau     i       False  plateau de /i/
+     31    10 plateau     i       False  plateau of /i/
      41    33 cluster     -       False  cluster (2 cons.)
-     74    10 plateau     @       True   plateau de /@~/
+     74    10 plateau     @       True   plateau of /@~/
      84    11 decay       -       False  
      95    20 terminal    -       False  
-Porte nasalité (pré-traitement nasal_preproc) :
-  chaîne moteur (syltraj) : iRm@~
-  aucun membre d'hiatus nasal — chaîne inchangée (sorties identiques au moteur nu)
+Nasality gate (nasal_preproc pre-processing) :
+  engine string (syltraj) : iRm@~
+  no nasal hiatus member — string unchanged (outputs identical to the bare engine)

@@ -326,12 +326,12 @@ def build_phrase_polar(phrase: str,
     from vtl_synth.core.polar import polar_arc, stationary_point
 
     ipa = _normalize_phrase(phrase)
-    # Nasalité/formant — couche de pré-traitement V1V2 (nasal_preproc) :
-    # même pré-traitement que build_phrase_tract — les voyelles nasales
-    # MEMBRES D'HIATUS sont oralisées dans la chaîne moteur, de sorte que
-    # le plan polaire (blocs, timings) corresponde exactement au trajet
-    # synthétisé ; la nasalité de hiatus est réinjectée dans l'audio par
-    # la porte VO (ici sans canal VO : seule la géométrie est figurée).
+    # Nasality/formants — V1V2 preprocessing layer (nasal_preproc): the
+    # same preprocessing as build_phrase_tract — nasal vowels that are
+    # MEMBERS of a hiatus are oralized in the motor chain, so the polar
+    # plan (blocks, timing) matches the synthesized trajectory exactly;
+    # the hiatus nasality is re-injected in the audio by the VO gate
+    # (no VO channel here: only the geometry is drawn).
     from vtl_synth.core.nasal_preproc import split_nasal_hiatus
     ipa, nasal_plan = split_nasal_hiatus(ipa)
     block_info, ev = _recorded_build_pval(ipa, t_cons, t_voy,

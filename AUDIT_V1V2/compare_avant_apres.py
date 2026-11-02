@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-compare_avant_apres.py — vérification de la correction moteur V1V2
-===================================================================
-Compare l'état défaillant archivé (results_avant/, commit d'audit) et
-l'état corrigé (results/, porte nasal_preproc) :
+compare_avant_apres.py — verification of the V1V2 engine fix
+============================================================
+Compares the archived failing state (results_avant/, audit commit) and
+the fixed state (results/, nasal_preproc gate) :
 
-  1. tableau : VO moitiés nasales, verdict nasalité, md5 (.tract/.wav) ;
-  2. preuve « espace paramétrique intact » : colonnes du .tract
-     strictement identiques avant/après, SAUF la colonne VO (7) pour
-     les items corrigés — et intégralement identiques pour les témoins
-     (T1-T4, H0 : non-perturbation bit à bit) ;
-  3. preuve d'inversion du défaut : md5(ta~.ata) ≠ md5(ta.ata) etc.
-     (l'identité octet H0≡H1≡H2≡H3 de l'audit §4.5 est cassée) ;
-  4. copie des paires WAV avant/après pour écoute (wav_compare/).
+  1. table: VO nasal halves, nasality verdict, md5 (.tract/.wav) ;
+  2. "parameter space intact" proof: columns of the .tract
+     strictly identical before/after, EXCEPT the VO column (7) for
+     the fixed items — and fully identical for the controls
+     (T1-T4, H0: bit-for-bit non-perturbation) ;
+  3. proof of the defect inversion: md5(ta~.ata) != md5(ta.ata) etc.
+     (the byte identity H0≡H1≡H2≡H3 of audit §4.5 is broken) ;
+  4. copy of the before/after WAV pairs for listening (wav_compare/).
 
-Usage :  python AUDIT_V1V2/compare_avant_apres.py
+Usage:  python AUDIT_V1V2/compare_avant_apres.py
 """
 from __future__ import annotations
 
@@ -64,12 +64,12 @@ def main() -> int:
     for rid, it_a in items_avant.items():
         it_p = items_apres.get(rid)
         if it_p is None or 'erreur' in it_p or 'erreur' in it_a:
-            problems.append(f'{rid}: erreur de synthèse')
+            problems.append(f'{rid}: synthesis error')
             continue
         t_av = read_tract(HERE / 'results_avant' / 'tract' / f'{rid}.tract')
         t_ap = read_tract(HERE / 'results' / 'tract' / f'{rid}.tract')
         if t_av.shape != t_ap.shape:
-            problems.append(f'{rid}: formes .tract différentes '
+            problems.append(f'{rid}: different .tract shapes '
                             f'{t_av.shape} vs {t_ap.shape}')
             continue
         cols = [j for j in range(N_COLS)
@@ -85,9 +85,9 @@ def main() -> int:
         elif corrige and cols == [VO_COL]:
             n_corr += 1
         else:
-            problems.append(f'{rid}: colonnes modifiées inattendues {cols}'
-                            f' (corrigé={corrige})')
-        # paires WAV pour écoute
+            problems.append(f'{rid}: unexpected modified columns {cols}'
+                            f' (fixed={corrige})')
+        # WAV pairs for listening
         for tag, src in (('avant', HERE / 'results_avant' / 'wav' / f'{rid}.wav'),
                          ('apres', HERE / 'results' / 'wav' / f'{rid}.wav')):
             if src.exists():
@@ -105,31 +105,31 @@ def main() -> int:
             'corrige': corrige, 'identique': identique,
         })
 
-    # preuve d'inversion de l'identité octet (audit §4.5)
+    # proof of the byte-identity inversion (audit §4.5)
     h = {r['id']: r['md5_tract_apres'] for r in rows}
     identite_cassee = len({h.get(k) for k in ('H0', 'H1', 'H2', 'H3')}) == 4
 
-    # tableau
-    print(f"{'id':<4} {'VO avant':<9} {'VO après':<9} "
-          f"{'avant':<7} {'après':<7} {'tract':<11} {'état':<10}")
+    # table
+    print(f"{'id':<4} {'VO before':<9} {'VO after':<9} "
+          f"{'before':<7} {'after':<7} {'tract':<11} {'state':<10}")
     print('-' * 66)
     for r in rows:
-        etat = ('IDENTIQUE' if r['identique']
-                else 'VO seule' if r['colonnes_diff'] == [VO_COL]
+        etat = ('IDENTICAL' if r['identique']
+                else 'VO only' if r['colonnes_diff'] == [VO_COL]
                 else str(r['colonnes_diff']))
         print(f"{r['id']:<4} {str(r['vo_avant']):<9} {str(r['vo_apres']):<9} "
-              f"{'OUI' if r['nas_perdue_avant'] else 'non':<7} "
-              f"{'OUI' if r['nas_perdue_apres'] else 'non':<7} "
+              f"{'YES' if r['nas_perdue_avant'] else 'no':<7} "
+              f"{'YES' if r['nas_perdue_apres'] else 'no':<7} "
               f"{'=' if r['md5_tract_avant'] == r['md5_tract_apres'] else 'diff':<11} "
               f"{etat:<10}")
 
     print()
-    print(f"Corrigés (VO seule modifiée) : {n_corr}")
-    print(f"Témoins bit-identiques       : {n_ident}")
-    print(f"Identité octet H0-H3 cassée  : "
-          f"{'OUI (4 md5 distincts)' if identite_cassee else 'NON'}")
+    print(f"Fixed (VO column only changed): {n_corr}")
+    print(f"Bit-identical controls        : {n_ident}")
+    print(f"H0-H3 byte identity broken    : "
+          f"{'YES (4 distinct md5)' if identite_cassee else 'NO'}")
     if problems:
-        print('PROBLÈMES :')
+        print('PROBLEMS:')
         for p in problems:
             print('  -', p)
 
@@ -140,12 +140,12 @@ def main() -> int:
            'problemes': problems}
     (HERE / 'results' / 'compare_avant_apres.json').write_text(
         json.dumps(out, ensure_ascii=False, indent=2), encoding='utf-8')
-    print("\nÉcrit : " + str(HERE / 'results' / 'compare_avant_apres.json'))
-    print(f"WAV avant/après pour écoute : {wav_cmp}")
+    print("\nWritten : " + str(HERE / 'results' / 'compare_avant_apres.json'))
+    print(f"Before/after WAVs for listening : {wav_cmp}")
 
     ok = (not problems and identite_cassee
           and all(not r['nas_perdue_apres'] for r in rows))
-    print('\nVERDICT GLOBAL :', 'SUCCÈS' if ok else 'ÉCHEC')
+    print('\nOVERALL VERDICT :', 'SUCCESS' if ok else 'FAILURE')
     return 0 if ok else 1
 
 

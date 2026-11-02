@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-p6_multilingue.py — Mission P6 : inertie de la porte nasal_preproc sur
-es / it / de / en, balayage g2p + lexiques, inventaire moteur.
+p6_multilingual.py — Mission P6: inertness of the nasal_preproc gate on
+es / it / de / en, g2p + lexicon sweeps, engine inventory.
 
-Pour chaque langue SANS voyelle nasale phonémique :
-  1. balayage g2p : un échantillon de textes ne produit AUCUNE clé `~` ;
-  2. balayage du lexique : le .tsv ne contient aucun signe `~` ;
-  3. non-perturbation bit à bit : deux synthèses d'un échantillon oral —
-     porte nasal_preproc ACTIVE puis NEUTRALISÉE — donnent des fichiers
-     .wav / .tract IDENTIQUES (md5) ;
-  4. inventaire : les clés nasales de `language_vowel_sets.py` (toutes
-     langues) sont couvertes par `phonemes.SAMPA_VOWELS`.
+For each language WITHOUT phonemic nasal vowels:
+  1. g2p sweep: a sample of texts produces NO `~` key;
+  2. lexicon sweep: the .tsv contains no `~` sign;
+  3. bit-level non-perturbation: two syntheses of an oral sample —
+     nasal_preproc gate ACTIVE then NEUTRALIZED — give IDENTICAL
+     .wav / .tract files (md5);
+  4. inventory: the nasal keys of `language_vowel_sets.py` (all
+     languages) are covered by `phonemes.SAMPA_VOWELS`.
 
-Sorties : AUDIT_V1V2/results_p6/inertie.json + recapitulatif console.
+Outputs: AUDIT_V1V2/results_p6/inertie.json + console recap.
 """
 from __future__ import annotations
 
@@ -44,7 +44,7 @@ def md5(path: Path) -> str:
 
 
 def g2p_no_tilde(profile, texts) -> dict:
-    """Balayage g2p : aucune clé ~ n'est émise."""
+    """g2p sweep: no `~` key is emitted."""
     tilde = []
     for t in texts:
         sampa = profile.g2p_callable(t, warnings=[])
@@ -54,8 +54,8 @@ def g2p_no_tilde(profile, texts) -> dict:
 
 
 def lexicon_no_tilde(lang: str) -> dict:
-    """Balayage du lexique .tsv : aucun signe ~ (l'anglais passe par
-    CMUdict/ARPAbet — pas de lexique tsv à balayer)."""
+    """Sweep of the .tsv lexicon: no `~` sign (English goes through
+    CMUdict/ARPAbet — no tsv lexicon to sweep)."""
     lex = REPO / "lang_pack" / "lexicons" / f"{lang}_lexicon.tsv"
     if not lex.exists():
         return {"lexicon": f"{lang}_lexicon.tsv (absent — ARPAbet)", "inerte": True}
@@ -66,7 +66,7 @@ def lexicon_no_tilde(lang: str) -> dict:
 
 
 def bit_identical(lang: str, texts) -> dict:
-    """Deux synthèses (porte active / porte neutralisée) → md5 identiques."""
+    """Two syntheses (gate active / gate neutralized) -> identical md5s."""
     import vtl_synth.core.nasal_preproc as npre
     original = npre.split_nasal_hiatus
     md5s = {}
@@ -93,7 +93,7 @@ def bit_identical(lang: str, texts) -> dict:
 
 
 def inventory_coverage() -> dict:
-    """Clés nasales de language_vowel_sets ⊆ phonemes.SAMPA_VOWELS."""
+    """Nasal keys of language_vowel_sets ⊆ phonemes.SAMPA_VOWELS."""
     from vtl_synth.utils import language_vowel_sets as lvs
     sampa_vowels = set(phonemes.SAMPA_VOWELS)
     cover = {}
@@ -103,12 +103,12 @@ def inventory_coverage() -> dict:
             sets_map = getattr(lvs, "LANGUAGE_VOWEL_SETS", None)
             vs = (sets_map or {}).get(lang)
         if vs is None:
-            cover[lang] = {"statut": "jeu de voyelles introuvable"}
+            cover[lang] = {"statut": "vowel set not found"}
             continue
         nasals = sorted(v for v in vs if v.endswith("~"))
-        manquants = [v for v in nasals if v not in sampa_vowels]
-        cover[lang] = {"nasales": nasals, "manquants_de_l_inventaire": manquants,
-                       "couvert": not manquants}
+        missing = [v for v in nasals if v not in sampa_vowels]
+        cover[lang] = {"nasales": nasals, "manquants_de_l_inventaire": missing,
+                       "couvert": not missing}
     return {"sampa_vowels": sorted(sampa_vowels), "langues": cover,
             "tout_couvert": all(c.get("couvert", True)
                                 for c in cover.values())}
@@ -127,22 +127,22 @@ def main() -> int:
         entry["inerte"] = (entry["g2p"]["inerte"] and entry["lexique"]["inerte"]
                            and entry["non_perturbation"]["identique"])
         results["langues"][lang] = entry
-        print(f"{lang}: g2p inerte={entry['g2p']['inerte']} "
-              f"lexique inerte={entry['lexique']['inerte']} "
-              f"bit-identique={entry['non_perturbation']['identique']} "
-              f"→ INERTE: {entry['inerte']}")
+        print(f"{lang}: g2p inert={entry['g2p']['inerte']} "
+              f"lexicon inert={entry['lexique']['inerte']} "
+              f"bit-identical={entry['non_perturbation']['identique']} "
+              f"-> INERT: {entry['inerte']}")
 
     inv = results["inventaire"]
-    print(f"inventaire: tout couvert = {inv['tout_couvert']}")
+    print(f"inventory: all covered = {inv['tout_couvert']}")
     out = HERE / "results_p6" / "inertie.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(results, ensure_ascii=False, indent=2),
                    encoding="utf-8")
-    print(f"écrit : {out}")
+    print(f"written: {out}")
 
-    inertes = all(e["inerte"] for e in results["langues"].values())
-    ok = inertes and inv["tout_couvert"]
-    print("P6 inertie + inventaire :", "OK" if ok else "ÉCHEC")
+    inert = all(e["inerte"] for e in results["langues"].values())
+    ok = inert and inv["tout_couvert"]
+    print("P6 inertness + inventory:", "OK" if ok else "FAILED")
     return 0 if ok else 1
 
 

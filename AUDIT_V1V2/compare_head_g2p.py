@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-compare_head_g2p.py — le contournement g2p masque-t-il le défaut ?
-===================================================================
-Compare, pour chaque texte du corpus, la chaîne SAMPA produite par le
-g2p du clone frais (contournement RETIRÉ) avec celle du g2p du HEAD
-d'origine (contournement PRÉSENT : espace au lieu du point de liaison
-après un mot terminé par une voyelle nasale — commit dea71c6).
+compare_head_g2p.py — does the g2p workaround mask the defect?
+==============================================================
+For each corpus text, compares the SAMPA string produced by the g2p of
+the fresh clone (workaround REMOVED) with that of the original HEAD
+g2p (workaround PRESENT: space instead of the liaison dot
+after a word ending in a nasal vowel — commit dea71c6).
 
-La version « HEAD d'origine » est extraite de l'historique git du clone
-(parent du commit de revert), donc sans dépendre d'un second checkout.
+The "original HEAD" version is extracted from the git history of the clone
+(parent of the revert commit), so without depending on a second checkout.
 
-Sortie : results/sampa_frais_vs_head.txt + results/results_g2p.json
+Output: results/sampa_frais_vs_head.txt + results/results_g2p.json
 """
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ from vtl_synth.utils.g2p_fr import text_to_sampa_fr as g2p_frais  # noqa: E402
 
 
 def g2p_depuis_git(commit: str):
-    """Charge vtl_synth/utils/g2p_fr.py tel qu'il était à `commit`."""
+    """Load vtl_synth/utils/g2p_fr.py as it was at `commit`."""
     src = subprocess.run(
         ['git', '-C', str(REPO), 'show', f'{commit}:vtl_synth/utils/g2p_fr.py'],
         capture_output=True, text=True, check=True).stdout
@@ -50,11 +50,11 @@ def main():
     lignes = []
     table = []
     lignes.append(
-        f"Comparaison du SAMPA g2p — clone frais (revert) vs {commit_head} "
-        f"(contournement présent)")
+        f"g2p SAMPA comparison — fresh clone (revert) vs {commit_head} "
+        f"(workaround present)")
     lignes.append('=' * 100)
-    lignes.append(f"{'id':<5} {'texte':<20} {'SAMPA frais (moteur exposé)':<28} "
-                  f"{'SAMPA HEAD (masqué)':<28} {'état'}")
+    lignes.append(f"{'id':<5} {'text':<20} {'fresh SAMPA (defect exposed)':<28} "
+                  f"{'HEAD SAMPA (masked)':<28} {'state'}")
     lignes.append('-' * 100)
     for it in corpus['items']:
         if not it.get('use_g2p'):
@@ -63,16 +63,16 @@ def main():
         s_frais = g2p_frais(texte, [])
         s_head = g2p_head.text_to_sampa_fr(texte, [])
         masque = s_frais != s_head
-        etat = 'MASQUÉ par le patch (espace inséré)' if masque \
-            else 'NON masqué — exposé aussi avec le patch'
+        etat = 'MASKED by the patch (space inserted)' if masque \
+            else 'NOT masked — exposed even with the patch'
         table.append({'id': rid, 'texte': texte, 'sampa_frais': s_frais,
                       'sampa_head': s_head, 'masque_par_patch': masque})
         lignes.append(f"{rid:<5} {texte:<20} {s_frais:<28} {s_head:<28} {etat}")
     n_masq = sum(1 for t in table if t['masque_par_patch'])
     lignes.append('-' * 100)
-    lignes.append(f"Items masqués par le contournement g2p : {n_masq}/{len(table)}"
-                  f" — les autres situations restent exposées au défaut moteur "
-                  f"même AVEC le patch.")
+    lignes.append(f"Items masked by the g2p workaround: {n_masq}/{len(table)}"
+                  f" — the other situations remain exposed to the engine defect "
+                  f"even WITH the patch.")
 
     out = HERE / 'results'
     out.mkdir(exist_ok=True)

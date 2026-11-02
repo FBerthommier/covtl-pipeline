@@ -1,21 +1,21 @@
-SAMPA (entrée moteur) : i.a.ub.li.je
+SAMPA (engine input) : i.a.ub.li.je
 Total : 224 steps @100 Hz = 2.24 s
 
-Nœuds : [V]i [V]a [V]u [C]b [C]l [V]i [C]j [V]e
+Nodes : [V]i [V]a [V]u [C]b [C]l [V]i [C]j [V]e
 
- offset   dur kind        voyelle nasal  contenu
+ offset   dur kind        vowel   nasal  content
 ------------------------------------------------------------------------
       0    20 initial     -       False  
      20    14 attack      -       False  
-     34    24 background  -       False  arc de fond : transition diphtongue de base (réalisation des noyaux de l'hiatus)
-     58    24 background  -       False  arc de fond : transition diphtongue de base (réalisation des noyaux de l'hiatus)
+     34    24 background  -       False  background arc: diphthong transition of the base (realization of the hiatus nuclei)
+     58    24 background  -       False  background arc: diphthong transition of the base (realization of the hiatus nuclei)
      82    28 cluster     -       False  cluster (1 cons.)
     110    28 cluster     -       False  cluster (1 cons.)
-    138    12 plateau     i       False  plateau de /i/
+    138    12 plateau     i       False  plateau of /i/
     150    28 cluster     -       False  cluster (1 cons.)
-    178    12 plateau     e       False  plateau de /e/
+    178    12 plateau     e       False  plateau of /e/
     190    14 decay       -       False  
     204    20 terminal    -       False  
-Porte nasalité (pré-traitement nasal_preproc) :
-  chaîne moteur (syltraj) : i.a.ub.li.je
-  aucun membre d'hiatus nasal — chaîne inchangée (sorties identiques au moteur nu)
+Nasality gate (nasal_preproc pre-processing) :
+  engine string (syltraj) : i.a.ub.li.je
+  no nasal hiatus member — string unchanged (outputs identical to the bare engine)

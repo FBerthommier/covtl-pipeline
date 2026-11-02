@@ -5,45 +5,44 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
-### Added (mission P6 — 2026-11-02, exécution)
+### Added (mission P6 — 2026-11-02, execution)
 
-- **fix(P6): validation V1V2 étendue au pack complet.** Corpus
-  portugais dédié `AUDIT_V1V2/corpus_v1v2_pt.json` (18 items sur la
-  typologie fr : S1 inter-mot V~.V, S2 inter-mot V.V~, S3 intra-mot
-  V.V~, témoins oraux/nasaux/diphtongue `cão`, paires H en SAMPA
-  direct) — exécuté via le harnais paramétré
-  (`run_corpus.py --lang pt` → `results_pt/`) : toutes les moitiés
-  nasales atteignent VO >= 0.489 (seuil 0.3), témoins oraux à
-  VO = -0.1, `nasalite_perdue` = faux partout. Particularité pt
-  documentée : `g2p_pt` n'émet jamais V~.V intra-mot (0/35690 mots) —
-  S4 est couvert par les items H en SAMPA direct, comme prévu §7.1.
-  Inertie es/it/de/en prouvée (`p6_multilingue.py` →
-  `results_p6/inertie.json`) : g2p sans `~`, lexiques sans `~`,
-  synthèses bit-identiques porte active/neutralisée. Inventaire
-  moteur : les clés nasales de toutes les langues sont couvertes par
-  `phonemes.SAMPA_VOWELS` (`tout_couvert = True`). Tests étendus
-  (`TestP6Portuguese`, 38/38). Harnais paramétré par langue
-  (`--lang`/`--corpus`/`--results`/`--no-preproc`), le fr restant dans
-  `results/`. Détails : `AUDIT_V1V2/P6_MULTILINGUE.md`.
+- **fix(P6): V1V2 validation extended to the full language pack.**
+  Dedicated Portuguese corpus `AUDIT_V1V2/corpus_v1v2_pt.json` (18
+  items on the fr typology: S1 inter-word V~.V, S2 inter-word V.V~,
+  S3 intra-word V.V~, oral/nasal/`cão` diphthong controls, H minimal
+  pairs in direct SAMPA) — run through the parameterized harness
+  (`run_corpus.py --lang pt` → `results_pt/`): all nasal halves reach
+  VO >= 0.489 (threshold 0.3), oral controls at VO = -0.1,
+  `nasalite_perdue` = false everywhere. Documented pt peculiarity:
+  `g2p_pt` never emits intra-word V~.V (0/35690 words) — S4 is
+  covered by the H items in direct SAMPA, as planned in §7.1.
+  es/it/de/en inertness proven (`p6_multilingue.py` →
+  `results_p6/inertie.json`): g2p without `~`, lexicons without `~`,
+  bit-identical syntheses with the gate active/neutralized. Engine
+  inventory: the nasal keys of every language are covered by
+  `phonemes.SAMPA_VOWELS` (`tout_couvert = True`). Tests extended
+  (`TestP6Portuguese`, 38/38). Harness parameterized per language
+  (`--lang`/`--corpus`/`--results`/`--no-preproc`), fr remaining in
+  `results/`. Details: `AUDIT_V1V2/P6_MULTILINGUE.md`.
 
 
-### Added (consignes agent V1V2 — 2026-10-31, après correctif)
+### Added (V1V2 agent instructions — 2026-10-31, after the fix)
 
-- **docs(mission): P5/P6 — nouvelles consignes pour l'agent correcteur.**
-  **P5 (MISSION §6)** : décommissionnement définitif des modifications
-  devenues inutiles — les contournements g2p/prosodie (`dea71c6`,
-  `f62f185`) ne doivent jamais être réappliqués (la clause de
-  ré-inversion de P3 est annulée) ; le retrait est définitif, supersédé
-  par le correctif `304f04c`. **P6 (MISSION §7)** : extension du
-  traitement aux autres langues du pack (de, en, es, it, pt) —
-  portugais prioritaire (corpus `corpus_v1v2_pt.json` sur la typologie
-  fr, harnais paramétré par langue), preuve d'inertie pour es/it/de/en,
-  inventaire `phonemes.py` couvrant les clés nasales de toutes les
-  langues. Ajout du HTML didactique autonome
-  `correction_V1V2_avant_apres.html` (20 exemples avant/après, audio
-  embarqué). Voir `AUDIT_V1V2/MISSION.md` §6-§7.
+- **docs(mission): P5/P6 — new instructions for the fixing agent.**
+  **P5 (MISSION §6)**: definitive decommissioning of the changes that
+  became unnecessary — the g2p/prosody workarounds (`dea71c6`,
+  `f62f185`) must never be re-applied (the P3 re-inversion clause is
+  cancelled); the removal is final, superseded by fix `304f04c`.
+  **P6 (MISSION §7)**: extending the fix to the pack's other
+  languages (de, en, es, it, pt) — Portuguese first (corpus
+  `corpus_v1v2_pt.json` on the fr typology, harness parameterized per
+  language), inertness proof for es/it/de/en, `phonemes.py` inventory
+  covering the nasal keys of every language. Added the self-contained
+  tutorial HTML `correction_V1V2_avant_apres.html` (20 before/after
+  examples, embedded audio). See `AUDIT_V1V2/MISSION.md` §6-§7.
 
-### Added (fix moteur V1V2 — 2026-10-31)
+### Added (V1V2 engine fix — 2026-10-31)
 
 - **fix(engine): nasal/oral toggle across linked V1V2 hiatus via an
   orthogonal velar-port layer (nasal_preproc)** — syltraj's parametric
@@ -98,225 +97,218 @@ Format: Keep a Changelog — https://keepachangelog.com/
   console splits phrases on `|` and is unaffected).
 
 ### Added
-- **Démos HTML interactives** (`examples/html/`) : pages autonomes
-  (aucun serveur ni réseau, ouverture directe en `file://`) générées
-  par `python examples/html/make_html_demos.py` — `index.html` + une
-  page par phrase (`polar_demo_fr.html` « ba.da.ga »,
-  `polar_demo_en.html` « this is easy for us », mêmes paramètres que
-  la démo MP4). Chaque page embarque ses données (trajectoires
-  `.polar` v4 à 100 Hz, frames sagittales SVG du VTL à 25 Hz, audio
-  AAC en data URI) et restitue sur canvas le contrepoint interactif
-  du MP4 bi-panel : vue sagittale, figure polaire à deux branches
-  (rendu identique à `render_polar_frame` — K=30/ν=+1 vocalique,
-  K=10/ν=−1 consonantique, traînée estompée 300 ms, étiquettes
-  phonémiques transitoires, inventaire), traces ρ/θ avec bandes
-  phonémiques, et transport complet (lecture/pause, scrub, vitesse
-  0,25×–1×, boucle, clavier). Vérifié : équivalence géométrique des
-  figures polaires avec les figures du manuel (`fig_frame_b`,
-  `fig_frame_da`), aller-retour exact des données embarquées vers
-  les sorties du pipeline, aucune erreur console. Actifs de dépôt
-  uniquement : jamais installés par pip (exclues de la roue et du
-  sdist — allowlist `vtl_synth*` du pyproject + `prune examples` du
-  MANIFEST.in, vérifié sur les distributions construites).
+- **Interactive HTML demos** (`examples/html/`): self-contained pages
+  (no server or network, opened directly via `file://`) generated by
+  `python examples/html/make_html_demos.py` — `index.html` + one page
+  per phrase (`polar_demo_fr.html` "ba.da.ga",
+  `polar_demo_en.html` "this is easy for us", same parameters as the
+  MP4 demo). Each page embeds its data (`.polar` v4 trajectories at
+  100 Hz, VTL sagittal SVG frames at 25 Hz, AAC audio as data URI)
+  and renders on canvas the interactive counterpart of the
+  dual-panel MP4: sagittal view, two-branch polar figure (rendering
+  identical to `render_polar_frame` — K=30/ν=+1 vocalic,
+  K=10/ν=−1 consonantal, 300 ms fading trail, transient phonemic
+  labels, inventory), ρ/θ traces with phonemic bands, and full
+  transport (play/pause, scrub, speed 0.25×–1×, loop, keyboard).
+  Verified: geometric equivalence of the polar figures with the
+  manual figures (`fig_frame_b`, `fig_frame_da`), exact round-trip
+  from embedded data to pipeline outputs, no console errors.
+  Repository assets only: never installed by pip (excluded from the
+  wheel and sdist — pyproject `vtl_synth*` allowlist + MANIFEST.in
+  `prune examples`, verified on built distributions).
 
 ### Changed
-- **Traînée du polar vidéo portée à 300 ms par défaut** : la trace
-  estompée de chaque branche (vocalique rouge / consonantique bleue)
-  passe de $\approx$ 0,75 s à $\approx$ 0,30 s (`_TRAIL_S`), pour
-  raccourcir la rémanence visuelle — les trajectoires passées
-  s'effacent plus vite et ne masquent plus les gestes brefs (clusters,
-  vues proches de la figure 4 de l'article). Changement
-  d'affichage uniquement : moteur, `.tract`, audio, format `.polar`
-  et géométrie des branches inchangés. **Figures du manuel polaire
-  régénérées** (`fig_branches_full`, `fig_frame_b`, `fig_frame_da` +
-  démo `examples/polar_demo_en.mp4`) : elles dataient de v1.1.0 et
-  montraient encore la géométrie pré-correctifs (lentilles
-  symétriques au lieu des larmes arcplot, plongée de la branche
-  vocalique vers l'origine aux bords, angle dental /d/ pré-recalibrage
-  23π/16) ; elles montrent désormais le rendu v4 courant (larmes,
-  périphérie, traînée 300 ms) et les légendes sont alignées
-  (`docs/polar_visualization.tex` + PDF recompilé).
-- **Traduction anglais US des commentaires, docstrings et affichages
-  restants** : messages utilisateur du noyau (annonce du locuteur
-  actif `describe()`/`announce()`, replis de la prosodie expressive
-  dans `Pipeline`, avertissement TSV du chargeur de lexiques, sorties
-  du calibreur vocalique et de sa CLI), docstrings et commentaires
-  des g2p multilingues (de/es/it/pt + legacy fr) et du chargeur
-  commun, notes de calibration COVTL des speakers DVTD
-  (s1/s2/m01/w02 — `jd3_constants.py` volontairement intact : son
-  hachage est doublement épinglé (registre + préfixe de test) et déjà
-  l'objet de l'incohérence amont connue) ; `registry.json` limité au
-  rafraîchissement mécanique des 4 `constants_sha256` correspondants.
-  Changement d'affichage uniquement, prouvé par égalité AST (chaînes
-  normalisées) sur les 18 fichiers modifiés ; suite de tests
-  inchangée (152 passed + échec amont jd3 identique). Données
-  légitimes non traduites : lexiques et dictionnaires g2p, symboles
-  IPA, noms de langue natifs, entrées du dictionnaire français legacy
-  annotées en terminologie phonétique française.
+- **Polar video trail default raised to 300 ms**: the fading trail of
+  each branch (red vocalic / blue consonantal) goes from
+  $\approx$ 0.75 s to $\approx$ 0.30 s (`_TRAIL_S`) to shorten the
+  visual afterglow — past trajectories fade faster and no longer
+  mask brief gestures (clusters, views close to figure 4 of the
+  paper). Display-only change: engine, `.tract`, audio, `.polar`
+  format and branch geometry unchanged. **Polar manual figures
+  regenerated** (`fig_branches_full`, `fig_frame_b`, `fig_frame_da` +
+  demo `examples/polar_demo_en.mp4`): they dated from v1.1.0 and
+  still showed the pre-fix geometry (symmetric lenses instead of the
+  arcplot teardrops, vocalic branch diving toward the origin at the
+  edges, dental /d/ angle at the pre-recalibration 23π/16); they now
+  show the current v4 rendering (teardrops, periphery, 300 ms
+  trail) and the captions are aligned
+  (`docs/polar_visualization.tex` + recompiled PDF).
+- **US English translation of the remaining comments, docstrings and
+  displays**: core user-facing messages (active speaker announcement
+  `describe()`/`announce()`, expressive prosody fallbacks in
+  `Pipeline`, TSV warning of the lexicon loader, outputs of the
+  vowel calibrator and its CLI), docstrings and comments of the
+  multilingual g2p (de/es/it/pt + legacy fr) and of the common
+  loader, COVTL calibration notes of the DVTD speakers
+  (s1/s2/m01/w02 — `jd3_constants.py` deliberately untouched: its
+  hash is doubly pinned (registry + test prefix) and already the
+  subject of the known upstream inconsistency); `registry.json`
+  limited to the mechanical refresh of the corresponding 4
+  `constants_sha256`. Display-only change, proven by AST equality
+  (normalized strings) on the 18 modified files; test suite
+  unchanged (152 passed + identical jd3 upstream failure).
+  Legitimately untranslated data: lexicons and g2p dictionaries,
+  IPA symbols, native language names, legacy French dictionary
+  entries annotated in French phonetic terminology.
 
 ### Documentation
-- **Alignement de la documentation sur le chemin de trajectoire
-  unique** : `docs/manual.tex` (et `manual.pdf` recompilé) — la
-  section « The legacy engine » décrivait encore l'ancien exécuteur
-  superposition-graph (`execute_superposition_segment`, graphes
-  CV/CVC/CCV explicites) ; elle décrit désormais la chaîne réelle
-  (nœuds/ancres `gesture.py` + block builder `trajectory.py`, timing
-  fixe T_cons=T_voy=160 ms, non paramétrable) ; la puce « Key
-  features » affirmait à tort qu'un « legacy superposition-graph
-  engine » restait sélectionnable. `docs/ARCHITECTURE.md` —
-  `core/trajectory*.py` → `core/trajectory.py` (B(t) et tableau des
-  moteurs), arborescence core/ portée à 28 modules (ajout de
+- **Documentation aligned with the single trajectory path**:
+  `docs/manual.tex` (and recompiled `manual.pdf`) — the "The legacy
+  engine" section still described the old superposition-graph
+  executor (`execute_superposition_segment`, explicit
+  CV/CVC/CCV graphs); it now describes the actual chain
+  (`gesture.py` nodes/anchors + `trajectory.py` block builder, fixed
+  timing T_cons=T_voy=160 ms, not parameterizable); the "Key
+  features" bullet wrongly claimed that a "legacy superposition-graph
+  engine" remained selectable. `docs/ARCHITECTURE.md` —
+  `core/trajectory*.py` → `core/trajectory.py` (B(t) and engine
+  table), core/ tree raised to 28 modules (addition of
   `orthogonal_params.py`, `sampa_guard.py`, `speaker_registry.py`),
-  compteur de tests 111 → 153 avec mention des gardes
-  single-trajectory-path, précision que `syltraj` embarque son
-  propre block builder. Commentaires de code périmés révisés
-  (`polar.py` ×2, `types.py`, `polar_video.py` : plus aucune
-  référence active à `trajectory_legacy`).
+  test counter 111 → 153 with mention of the single-trajectory-path
+  guards, clarification that `syltraj` embeds its own block builder.
+  Stale code comments revised (`polar.py` ×2, `types.py`,
+  `polar_video.py`: no active reference to `trajectory_legacy`
+  left).
 
 ### Removed
-- **Suppression du moteur de trajectoire double (trajectory_legacy)** :
-  le moteur superposition-graph `vtl_synth/core/trajectory_legacy.py`
-  (1025 lignes) et son cluster d'exécuteurs morts dans
+- **Removal of the dual trajectory engine (trajectory_legacy)**: the
+  superposition-graph engine `vtl_synth/core/trajectory_legacy.py`
+  (1025 lines) and its cluster of dead executors in
   `continuous.py` (`_execute_syllable_element`, `_execute_*_diphthong*`,
   `_build_{cv,cccv,ccvc,cvc_extended}_graph`, `_build_transition_arc`,
-  `_generate_pause` — 1189 lignes) ont été supprimés. Ces fonctions
-  n'étaient appelées par aucun chemin de production ni de test (le
-  moteur actif est `syltraj` via `engine='syl'` par défaut ; le chemin
-  d'alignement déprécié `engine='legacy'` utilise déjà
-  `trajectory.py`). La synthèse de production suit désormais un
-  chemin algorithmique unique, prouvé par le garde-fou
-  `tests/test_single_trajectory_path.py` (module non importable,
-  scan AST des imports, moteur par défaut = syltraj, chemin
-  déprécié = trajectory.py). Sorties numériques par défaut
-  **bit-identiques** sur le corpus de référence
-  (16/16 `test_regression_baselines.py` inchangés).
+  `_generate_pause` — 1189 lines) were removed. These functions were
+  called by no production or test path (the active engine is
+  `syltraj` via `engine='syl'` by default; the deprecated alignment
+  path `engine='legacy'` already uses `trajectory.py`). Production
+  synthesis now follows a single algorithmic path, proven by the
+  guard `tests/test_single_trajectory_path.py` (module not
+  importable, AST scan of imports, default engine = syltraj,
+  deprecated path = trajectory.py). Default numeric outputs
+  **bit-identical** on the reference corpus
+  (16/16 `test_regression_baselines.py` unchanged).
 
 ### Fixed
-- **Polar display teardrop** : les sous-arcs consonantiques (branche
-  bleue) étaient tracés avec la phase ν/K portée par le point
-  d'*arrivée* (`polar.polar_arc`) — sur une jambe d'approche V→C ce
-  point est la consonne de grand rayon, donc le renflement se
-  produisait côté consonne et une boucle fermée V→C→V rendait comme
-  une lentille symétrique, et non comme la « larme » des figures de
-  planification de l'article (arXiv:2307.02299, Fig. 4).
-  `polar_video.py` trace désormais les sous-arcs bleus dans
-  l'ancrage *arcplot* original de Syllable_Synthesis
-  (`_z_leg_arcplot` : porteur de phase = l'extrémité de plus court
-  rayon, ρ = cos(θ/2), premier échantillon abandonné ; cf. le
-  correctif homologue de big.bi-supplement) : ventre mesuré à
-  0,34–0,36 de la corde depuis la voyelle (référence : 0,35),
-  effilement exact vers la cible consonantique. Format `.polar`
-  bumpé 3 → 4 (géométrie des trajectoires modifiée) ; branche rouge
-  inchangée ; aucun test moteur ne couvre le rendu, la validation
-  est métrique + visuelle (16/16 sur `-k "video or pipeline or cli
-  or polar"`).
-- **BUG-001 (critique, audit externe 25/09)** : `setup_lang.py` cassait
-  `constants.py` sur un clone frais — l'ancienne LANG SECTION « riche »
-  (v1.1.0) contient les `VOWEL_TARGETS` ; leur remplacement par le
-  marqueur seul supprimait la définition et l'import de `vtl_synth`
-  échouait (`NameError`). La migration extrait désormais la région
-  vocalique de l'ancienne section et la réécrit après le marqueur.
-- **BUG-002 (majeur)** : `install_speaker.py` — garde-fou du pointeur
-  editable rendu portable (message OS-neutre, chemins POSIX préservés).
-- **BUG-009 (mineur)** : `setup_lang.py restore` invalide désormais les
-  `__pycache__` (ACTIVE_LANG périmé).
-- **BUG-011 (mineur)** : défaut CLI `-s/--speaker` = `jd3` (minuscule,
-  conforme au registre).
+- **Polar display teardrop**: the consonantal sub-arcs (blue branch)
+  were drawn with the ν/K phase carried by the *arrival* point
+  (`polar.polar_arc`) — on a V→C approach leg that point is the
+  large-radius consonant, so the bulge occurred on the consonant
+  side and a closed V→C→V loop rendered like a symmetric lens
+  instead of the "teardrop" of the paper's planning figures
+  (arXiv:2307.02299, Fig. 4). `polar_video.py` now draws the blue
+  sub-arcs in the original *arcplot* anchor of Syllable_Synthesis
+  (`_z_leg_arcplot`: phase carrier = the shortest-radius endpoint,
+  ρ = cos(θ/2), first sample dropped; cf. the counterpart fix of
+  big.bi-supplement): belly measured at 0.34–0.36 of the chord from
+  the vowel (reference: 0.35), exact taper toward the consonantal
+  target. `.polar` format bumped 3 → 4 (trajectory geometry
+  changed); red branch unchanged; no engine test covers the
+  rendering, validation is metric + visual (16/16 on
+  `-k "video or pipeline or cli or polar"`).
+- **BUG-001 (critical, external audit 09/25)**: `setup_lang.py` broke
+  `constants.py` on a fresh clone — the old "rich" LANG SECTION
+  (v1.1.0) contains the `VOWEL_TARGETS`; replacing them with the
+  marker alone removed the definition and the `vtl_synth` import
+  failed (`NameError`). The migration now extracts the vowel region
+  from the old section and rewrites it after the marker.
+- **BUG-002 (major)**: `install_speaker.py` — editable-pointer guard
+  made portable (OS-neutral message, POSIX paths preserved).
+- **BUG-009 (minor)**: `setup_lang.py restore` now invalidates the
+  `__pycache__` (stale ACTIVE_LANG).
+- **BUG-011 (minor)**: CLI default `-s/--speaker` = `jd3` (lowercase,
+  consistent with the registry).
 ### Added
-- **SAMPA guard (CORRECTIONS v2.1 s.2, correctif moteur)** : les
-  parseurs (`continuous.parse_ipa_with_markers`, `parsing._tokenize_word`,
-  `syltraj.tokenize_phrase`) laissaient tomber les symboles inconnus
-  *en silence* (ex. `klincan` : le `c` n'est pas une clef moteur et
-  disparaissait sans diagnostic). Nouvelle garde aux frontieres
-  publiques (`vtl_synth/core/sampa_guard.py`) : `build_phrase_tract`,
+- **SAMPA guard (CORRECTIONS v2.1 s.2, engine fix)**: the parsers
+  (`continuous.parse_ipa_with_markers`, `parsing._tokenize_word`,
+  `syltraj.tokenize_phrase`) silently dropped unknown symbols
+  (e.g. `klincan`: `c` is not an engine key and vanished without any
+  diagnosis). New guard at the public frontiers
+  (`vtl_synth/core/sampa_guard.py`): `build_phrase_tract`,
   `parse_to_segments`, `parse_input`, `build_phrase_pval`,
-  `Pipeline.run`/`text_to_wav` et CLI `--sampa-guard {warn,error,off}`
-  (+ variable d'environnement `VTL_SAMPA_GUARD`). Defaut `warn` :
-  avertissement `UnknownSegmentWarning` listant symboles et positions,
-  sorties bit-identiques ; `error` : `SampaGuardError` avant synthese ;
-  `off` : comportement antérieur. Tests : `tests/test_sampa_guard.py`
-  (neutralite bitwise incluse). Un seul diagnostic par synthese
-  (plumbing 'off' interne).
-- **Correctifs g2p (CORRECTIONS v2.1, fuites de synthèse de/pt, 2026-10-23)** :
-  deux fuites PRÉEXISTANTES révélées par la garde SAMPA (qui n'a
-  elle-même changé aucune sortie) — (a) g2p-de : le lexique
-  Wikipron (table `_DE_IPA_TO_KEYS`) et les exceptions émettaient
-  les clés `I`/`U`/`Y` (ɪ/ʊ/ʏ lax), absentes de l'inventaire
-  moteur : voyelles droppées en silence (« Butter » -> /bt@/,
-  « Mütter » -> /mt@/, « ist » -> /st/) ; désormais mappées sur
-  i/u/y (approximation lax->tense documentée, cohérente avec
-  « ö/ü toujours tendues ») ; (b) g2p-pt : « qu » non couvert par
-  que/qui/qua/quo fuyait `q` (« quente » -> /@~t@/) ; règle de
-  repli « qu » -> « k » ajoutée. Sorties en/fr/es/it inchangées
-  (tests de non-régression) ; miroirs `lang_pack/profiles`
-  synchronisés. Tests : `tests/test_g2p_leaks.py`.
-- **Expressive prosody option** (v1.0.8 — défaut OFF, sorties
-  bit-identiques au mode monotone; portée depuis covtl-languages dans
-  la branche multi-speakers, compatible bascule de speakers):
-  `Pipeline(expressive=True)` / CLI `--expressive` (bandeau
-  « prosodie : expressive ») ajoute (a) la *respiration syntaxique* —
-  découpage lexical en groupes de souffle (`vtl_synth/utils/chunking.py`,
-  dictionnaires de mots-outils pour les 6 langues, limite dure 5 mots
-  équilibrée, connecteurs insécables « parce que »/« so that »/…) et
-  pause respiratoire `%` de 130 ms dans le moteur syl (`syltraj`
-  `T_pause_breath`, bit-identique sans marqueur) ; (b) le
-  *contour de F0 sculpté* (`vtl_synth/utils/prosody_f0.py`):
-  déclinaison conservée + reprise d'attaque par bloc + accents de
-  hauteur (bosse gaussienne asymétrique, amplitude par langue
-  0.16-0.24 × f0_base, downstep allemand) + chute nucléaire terminale
-  par langue (Jun 2005/2014, Ladd 2008 ; Pierrehumbert 1980 /
+  `Pipeline.run`/`text_to_wav` and CLI `--sampa-guard {warn,error,off}`
+  (+ environment variable `VTL_SAMPA_GUARD`). Default `warn`:
+  `UnknownSegmentWarning` warning listing symbols and positions,
+  bit-identical outputs; `error`: `SampaGuardError` before synthesis;
+  `off`: previous behavior. Tests: `tests/test_sampa_guard.py`
+  (bitwise neutrality included). One diagnosis per synthesis
+  (internal 'off' plumbing).
+- **g2p fixes (CORRECTIONS v2.1, de/pt synthesis leaks, 2026-10-23)**:
+  two PRE-EXISTING leaks revealed by the SAMPA guard (which itself
+  changed no output) — (a) g2p-de: the Wikipron lexicon (table
+  `_DE_IPA_TO_KEYS`) and the exceptions emitted the keys
+  `I`/`U`/`Y` (lax ɪ/ʊ/ʏ), absent from the engine inventory: vowels
+  silently dropped ("Butter" -> /bt@/, "Mütter" -> /mt@/,
+  "ist" -> /st/); now mapped to i/u/y (documented lax->tense
+  approximation, consistent with "ö/ü always tense"); (b) g2p-pt:
+  "qu" not covered by que/qui/qua/quo leaked `q` ("quente" ->
+  /@~t@/); a "qu" -> "k" fallback rule added. en/fr/es/it outputs
+  unchanged (non-regression tests); `lang_pack/profiles` mirrors
+  synchronized. Tests: `tests/test_g2p_leaks.py`.
+- **Expressive prosody option** (v1.0.8 — default OFF, outputs
+  bit-identical to the monotone mode; carried over from
+  covtl-languages into the multi-speakers branch, compatible with
+  speaker switching): `Pipeline(expressive=True)` / CLI
+  `--expressive` (banner "prosody: expressive") adds (a) *syntactic
+  breathing* — lexical chunking into breath groups
+  (`vtl_synth/utils/chunking.py`, function-word dictionaries for the
+  6 languages, balanced hard limit of 5 words, unbreakable
+  connectors "parce que"/"so that"/…) and a 130 ms breath pause `%`
+  in the syl engine (`syltraj` `T_pause_breath`, bit-identical
+  without the marker); (b) the *sculpted F0 contour*
+  (`vtl_synth/utils/prosody_f0.py`): kept declination + per-block
+  onset reset + pitch accents (asymmetric Gaussian bump, per-language
+  amplitude 0.16-0.24 × f0_base, German downstep) + terminal nuclear
+  fall per language (Jun 2005/2014, Ladd 2008; Pierrehumbert 1980 /
   Jun & Fougeron 2002 / Face 2003 / Grice et al. 2005 / Avesani 1995 /
-  Frota 2000, cf. setlang.py). Le stress lexical voyage HORS BANDE
-  (jamais dans le SAMPA) : `lexicon_loader.ipa_to_keys_stress`
-  conserve ˈ/ˌ Wikipron (canal `stress_for`), digits CMUdict pour
-  l'anglais, règles orthographiques de repli es/it/pt/de. N'agit que
-  sur la colonne f0 du glottis et les durées de pause — jamais sur le
-  tract (la mécanique speakers — f0 par locuteur, registre, .polar —
-  est inchangée ; `f0_base` du contour expressif = le f0 actif,
-  quel que soit le speaker). `ExpressivityProfile` par langue porté
-  par `LangProfile.expressivity`. Démos :
-  `python examples/demo_prosody.py`; mesures :
-  `python scripts/f0_report.py <tract...>`. Tests :
-  `tests/test_expressive.py` (bit-identité off, chunking par langue,
-  stress, accents mesurables, douceur, chute nucléaire).
-  `lang_pack/profiles/` enrichi (`chunking.py`, `prosody_f0.py`;
+  Frota 2000, cf. setlang.py). Lexical stress travels OUT OF BAND
+  (never in the SAMPA): `lexicon_loader.ipa_to_keys_stress` keeps
+  Wikipron ˈ/ˌ (`stress_for` channel), CMUdict digits for English,
+  fallback orthographic rules es/it/pt/de. Acts only on the glottis
+  f0 column and the pause durations — never on the tract (the
+  speaker mechanics — per-speaker f0, register, .polar — is
+  unchanged; the expressive contour's `f0_base` = the active f0,
+  whatever the speaker). Per-language `ExpressivityProfile` carried
+  by `LangProfile.expressivity`. Demos:
+  `python examples/demo_prosody.py`; measurements:
+  `python scripts/f0_report.py <tract...>`. Tests:
+  `tests/test_expressive.py` (off bit-identity, per-language
+  chunking, stress, measurable accents, smoothness, nuclear fall).
+  `lang_pack/profiles/` enriched (`chunking.py`, `prosody_f0.py`;
   `setlang.py`, `lexicon_loader.py`, `integration/pipeline.py`
-  synchronisés ; `setup_lang.LANG_MODULES` → 13 modules).
-- **`docs/expressive_prosody.tex/.pdf`** : guide didactique
-  (anglais US, pdflatex pur, transportable) — démarrage rapide,
-  respiration syntaxique, contour F0, stress hors-bande, mesures
-  (`f0_report`), tests, limitations, et un chapitre détaillé
-  sur l'interaction avec l'installation multi-speakers
-  (registre, transport de la LANG SECTION, garde-fou JD3,
-  workflows langue-d'abord/locuteur-d'abord, matrice de
-  garanties).
-- **`PROVENANCE_PROSODY_CHUNKING.md` / `.json`** : rapport de
-  traçabilité des modules `chunking.py` / `prosody_f0.py` —
-  implémentation originale du projet (spécification du 2026-09-15,
-  session humain-dirigée **assistée par IA** ; aucune source
-  logicielle tierce trouvée ; références scientifiques = sources de
-  paramétrage, sans code) ; historique public : commit `e991ff9`
-  (v1.1.0, 2026-09-17). Actions de régularisation appliquées :
-  notice Wikipron (CC BY-SA 3.0) dans `THIRD_PARTY_NOTICES.md`,
-  archivage de la spécification dans `docs/`.
+  synchronized; `setup_lang.LANG_MODULES` → 13 modules).
+- **`docs/expressive_prosody.tex/.pdf`**: tutorial guide
+  (US English, pure pdflatex, transportable) — quick start,
+  syntactic breathing, F0 contour, out-of-band stress, measurements
+  (`f0_report`), tests, limitations, and a detailed chapter on the
+  interaction with the multi-speakers installation
+  (registry, LANG SECTION transport, JD3 guard,
+  language-first/speaker-first workflows, guarantees matrix).
+- **`PROVENANCE_PROSODY_CHUNKING.md` / `.json`**: provenance report
+  for the `chunking.py` / `prosody_f0.py` modules — original project
+  implementation (specification of 2026-09-15, human-led session
+  **assisted by AI**; no third-party software source found;
+  scientific references = parameter sources, no code); public
+  history: commit `e991ff9` (v1.1.0, 2026-09-17). Regularization
+  actions applied: Wikipron notice (CC BY-SA 3.0) in
+  `THIRD_PARTY_NOTICES.md`, specification archived in `docs/`.
 
 ### Changed
-- **Triangle vocalique des 4 locuteurs de production** (v1.2.0) :
-  matrices CO_VTL recalibrées au niveau paramétrique (port du répertoire
-  gestuel jd3 : c1_jd3, s_L·c0_jd3, c2_jd3 — s1 complet ; s2 hybride
-  lèvres jd3 + langue ×1.2 ; m01 conservé après arbitrage in-situ ;
-  w02 inchangé), cibles vocaliques jd3-référencées recalées par
-  locuteur, correctif `SYL_THETA_DENTAL` 23π/16 → 3π/2 (270° —
-  l'occlusion apicale d/t était ouverte chez tous les locuteurs, jd3
-  compris : 13/18 → 18/18 occlusives réalisées). Triangles a-i-u :
-  s1 4 → 70 %, s2 11 → 44 % de l'aire jd3 ; registre et 5 baselines
-  régénérés.
-- **Pack langue : la LANG SECTION est un marqueur seul** (résolution
-  D24) : `setup_lang.py` n'écrit plus de cibles vocaliques —
-  `VOWEL_TARGETS`/`VOWEL_EFFORT_GAIN` restent la propriété du speaker
-  actif ; `_ensure_jd3` devient no-op, `calibrate`/`--calibrate`
-  dépréciés, `install_speaker.py` transporte le marqueur sans toucher
-  la région native ; hachage canonique neutralisant section et région
+- **Vowel triangle of the 4 production speakers** (v1.2.0):
+  CO_VTL matrices recalibrated at the parametric level (port of the
+  jd3 gesture repertoire: c1_jd3, s_L·c0_jd3, c2_jd3 — s1 complete;
+  s2 hybrid jd3 lips + tongue ×1.2; m01 kept after in-situ
+  arbitration; w02 unchanged), jd3-referenced vowel targets re-fit
+  per speaker, `SYL_THETA_DENTAL` fix 23π/16 → 3π/2 (270° — the
+  d/t apical closure was open in all speakers, jd3 included:
+  13/18 → 18/18 occlusives realized). a-i-u triangles:
+  s1 4 → 70 %, s2 11 → 44 % of the jd3 area; registry and 5
+  baselines regenerated.
+- **Language pack: the LANG SECTION is a bare marker** (D24
+  resolution): `setup_lang.py` no longer writes vowel targets —
+  `VOWEL_TARGETS`/`VOWEL_EFFORT_GAIN` remain the property of the
+  active speaker; `_ensure_jd3` becomes a no-op,
+  `calibrate`/`--calibrate` deprecated, `install_speaker.py`
+  transports the marker without touching the native region;
+  canonical hash neutralizing section and region
   (`speaker_registry`).
 ### Changed
 - **Polar video v3 — dissociated vocalic/consonantal branches**: the

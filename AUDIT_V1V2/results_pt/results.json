@@ -1,17 +1,17 @@
 {
-  "corpus": "Corpus d'audit V1V2 — portugais européen (hiatus coarticulés V1.V2, bascule nasal/oral)",
-  "moteur": "covtl-pipeline (clone frais, sans contournement g2p — revert 2a55b69 ; correction moteur 304f04c)",
+  "corpus": "V1V2 audit corpus — European Portuguese (coarticulated V1.V2 hiatuses, nasal/oral switch)",
+  "moteur": "covtl-pipeline (fresh clone, no g2p workaround — revert 2a55b69 ; engine fix 304f04c)",
   "langue": "pt",
   "preproc_neutralise": false,
   "seuils": {
     "vo_nasal": 0.3,
-    "note": "VO>=0.3 <=> nasalité réalisée (plateau nasal sain ~0.5)"
+    "note": "VO>=0.3 <=> nasality realized (healthy nasal plateau ~0.5)"
   },
   "items": [
     {
       "id": "S1a",
-      "situation": "inter-mot, nasal -> oral",
-      "note": "jonction @~.e (interjection acauã + ele)",
+      "situation": "inter-word, nasal -> oral",
+      "note": "junction @~.e (interjection acauã + ele)",
       "entree": "acauã ele",
       "use_g2p": true,
       "sampa_moteur": "@.kaw@~.e.l@",
@@ -212,8 +212,8 @@
     },
     {
       "id": "S1b",
-      "situation": "inter-mot, nasal -> oral",
-      "note": "jonction u~.a (atum @tu~)",
+      "situation": "inter-word, nasal -> oral",
+      "note": "junction u~.a (atum @tu~)",
       "entree": "atum a",
       "use_g2p": true,
       "sampa_moteur": "@tu~.a",
@@ -356,8 +356,8 @@
     },
     {
       "id": "S2a",
-      "situation": "inter-mot, oral -> nasal",
-      "note": "jonction @.u~ (um u~ : les mots pt debutant par une voyelle nasale sont rares — hum, hã, ohm, um)",
+      "situation": "inter-word, oral -> nasal",
+      "note": "junction @.u~ (um u~ : pt words starting with a nasal vowel are rare — hum, hã, ohm, um)",
       "entree": "ele um",
       "use_g2p": true,
       "sampa_moteur": "e.l@.u~",
@@ -500,8 +500,8 @@
     },
     {
       "id": "S2b",
-      "situation": "inter-mot, oral -> nasal",
-      "note": "jonction @.@~ (hã @~)",
+      "situation": "inter-word, oral -> nasal",
+      "note": "junction @.@~ (hã @~)",
       "entree": "ele hã",
       "use_g2p": true,
       "sampa_moteur": "e.l@.@~",
@@ -644,8 +644,8 @@
     },
     {
       "id": "S3a",
-      "situation": "intra-mot, oral -> nasal",
-      "note": "neo~ : jonction e.o~ intra-mot",
+      "situation": "intra-word, oral -> nasal",
+      "note": "neo~ : intra-word junction e.o~",
       "entree": "neon",
       "use_g2p": true,
       "sampa_moteur": "neo~",
@@ -765,8 +765,8 @@
     },
     {
       "id": "T1",
-      "situation": "temoin intra-mot V.V oral-orale",
-      "note": "p@.is : jonction @.i sans nasalite",
+      "situation": "witness intra-word V.V oral-oral",
+      "note": "p@.is : junction @.i without nasality",
       "entree": "país",
       "use_g2p": true,
       "sampa_moteur": "p@.is",
@@ -892,8 +892,8 @@
     },
     {
       "id": "T2",
-      "situation": "temoin inter-mot V.V oral-orale",
-      "note": "e.l@.a.m@ : jonction @.a",
+      "situation": "witness inter-word V.V oral-oral",
+      "note": "e.l@.a.m@ : junction @.a",
       "entree": "ele ama",
       "use_g2p": true,
       "sampa_moteur": "e.l@.a.m@",
@@ -1057,8 +1057,8 @@
     },
     {
       "id": "T3",
-      "situation": "temoin nasale isolee (plateau final)",
-      "note": "iRm@~ : plateau @~ final de reference (VO attendu ~0.5)",
+      "situation": "witness isolated nasal (final plateau)",
+      "note": "iRm@~ : reference final @~ plateau (expected VO ~0.5)",
       "entree": "irmã",
       "use_g2p": true,
       "sampa_moteur": "iRm@~",
@@ -1187,8 +1187,8 @@
     },
     {
       "id": "T4",
-      "situation": "temoin nasale isolee non-hiatus",
-      "note": "s@~j : diphtongue nasale e~+j (plateau)",
+      "situation": "witness isolated nasal non-hiatus",
+      "note": "s@~j : nasal diphthong e~+j (plateau)",
       "entree": "sem",
       "use_g2p": true,
       "sampa_moteur": "s@~j",
@@ -1302,8 +1302,8 @@
     },
     {
       "id": "T5",
-      "situation": "complement inter-mot V~.V~",
-      "note": "jonction i~.u~ — les deux nasalites attendues",
+      "situation": "complement inter-word V~.V~",
+      "note": "junction i~.u~ — both nasalities expected",
       "entree": "afim um",
       "use_g2p": true,
       "sampa_moteur": "@fi~.u~",
@@ -1454,8 +1454,8 @@
     },
     {
       "id": "T6",
-      "situation": "complement inter-mot V~.V~",
-      "note": "jonction u~.u~ — les deux nasalites attendues",
+      "situation": "complement inter-word V~.V~",
+      "note": "junction u~.u~ — both nasalities expected",
       "entree": "atum hum",
       "use_g2p": true,
       "sampa_moteur": "@tu~.u~",
@@ -1606,8 +1606,8 @@
     },
     {
       "id": "T7",
-      "situation": "temoin dedie diphtongue nasale",
-      "note": "k@~w : chemin plateau, VO ~ 0.5 attendu, inchangé avant/après (mission §7.1)",
+      "situation": "dedicated witness nasal diphthong",
+      "note": "k@~w : plateau path, expected VO ~ 0.5, unchanged before/after (mission §7.1)",
       "entree": "cão",
       "use_g2p": true,
       "sampa_moteur": "k@~w",
@@ -1721,8 +1721,8 @@
     },
     {
       "id": "H0",
-      "situation": "manuelle, oral -> oral (temoin)",
-      "note": "paire minimale moteur : V.V orale",
+      "situation": "manual, oral -> oral (witness)",
+      "note": "engine minimal pair: oral V.V",
       "entree": "ta.ata",
       "use_g2p": false,
       "sampa_moteur": "ta.ata",
@@ -1863,8 +1863,8 @@
     },
     {
       "id": "H1",
-      "situation": "manuelle, nasal -> oral (couvre S4 intra-mot V~.V, sans instance lexicale pt)",
-      "note": "paire minimale moteur : a~.a",
+      "situation": "manual, nasal -> oral (covers intra-word S4 V~.V, no pt lexical instance)",
+      "note": "engine minimal pair: a~.a",
       "entree": "ta~.ata",
       "use_g2p": false,
       "sampa_moteur": "ta~.ata",
@@ -2013,8 +2013,8 @@
     },
     {
       "id": "H2",
-      "situation": "manuelle, oral -> nasal",
-      "note": "paire minimale moteur : a.a~",
+      "situation": "manual, oral -> nasal",
+      "note": "engine minimal pair: a.a~",
       "entree": "ta.a~ta",
       "use_g2p": false,
       "sampa_moteur": "ta.a~ta",
@@ -2163,8 +2163,8 @@
     },
     {
       "id": "H3",
-      "situation": "manuelle, nasal -> nasal",
-      "note": "paire minimale moteur : a~.a~",
+      "situation": "manual, nasal -> nasal",
+      "note": "engine minimal pair: a~.a~",
       "entree": "ta~.a~ta",
       "use_g2p": false,
       "sampa_moteur": "ta~.a~ta",
@@ -2313,8 +2313,8 @@
     },
     {
       "id": "H4",
-      "situation": "manuelle, cas documente fr",
-      "note": "le SAMPA du commit dea71c6, ecrit a l'entree moteur (moteur pt : meme marche)",
+      "situation": "manual, documented fr case",
+      "note": "the SAMPA from commit dea71c6, written directly at the engine input (pt engine: same behavior)",
       "entree": "kOma~.a.le.vu",
       "use_g2p": false,
       "sampa_moteur": "kOma~.a.le.vu",

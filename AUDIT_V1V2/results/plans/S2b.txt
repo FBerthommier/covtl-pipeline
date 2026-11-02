@@ -1,20 +1,20 @@
-SAMPA (entrée moteur) : la.O~zjEm
+SAMPA (engine input) : la.O~zjEm
 Total : 188 steps @100 Hz = 1.88 s
 
-Nœuds : [C]l [V]a [V]O~ [C]z [C]j [V]E [C]m
+Nodes : [C]l [V]a [V]O~ [C]z [C]j [V]E [C]m
 
- offset   dur kind        voyelle nasal  contenu
+ offset   dur kind        vowel   nasal  content
 ------------------------------------------------------------------------
       0    20 initial     -       False  
      20    28 cluster     -       False  cluster (1 cons.)
-     48    24 background  -       False  arc de fond : transition diphtongue de base (réalisation des noyaux de l'hiatus)
+     48    24 background  -       False  background arc: diphthong transition of the base (realization of the hiatus nuclei)
      72    42 cluster     -       False  cluster (2 cons.)
-    114    12 plateau     E       False  plateau de /E/
+    114    12 plateau     E       False  plateau of /E/
     126    28 cluster     -       False  cluster (1 cons.)
     154    14 decay       -       False  
     168    20 terminal    -       False  
-Porte nasalité (pré-traitement nasal_preproc) :
-  chaîne moteur (syltraj) : la.OzjEm
+Nasality gate (nasal_preproc pre-processing) :
+  engine string (syltraj) : la.OzjEm
   run 0 : [a . O~]
-  oralisé : run 0 membre 1 → /O~/ (nasalité capturée)
-  VO orthogonale : /O~/ sur [60, 72) pas @100 Hz (600-720 ms)
+  oralized: run 0 member 1 → /O~/ (nasality captured)
+  orthogonal VO: /O~/ over [60, 72) steps @100 Hz (600-720 ms)

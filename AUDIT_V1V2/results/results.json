@@ -1,15 +1,17 @@
 {
-  "corpus": "Corpus d'audit V1V2 — hiatus coarticulés V1.V2 avec bascule nasal/oral",
-  "moteur": "covtl-pipeline (clone frais, contournement g2p retiré — revert des commits dea71c6 + f62f185)",
+  "corpus": "V1V2 audit corpus — coarticulated V1.V2 hiatuses with nasal/oral switching",
+  "moteur": "covtl-pipeline (fresh clone, g2p workaround removed — revert of commits dea71c6 + f62f185)",
+  "langue": "fr",
+  "preproc_neutralise": false,
   "seuils": {
     "vo_nasal": 0.3,
-    "note": "VO>=0.3 <=> nasalité réalisée (plateau nasal sain ~0.5)"
+    "note": "VO>=0.3 <=> nasality realized (healthy nasal plateau ~0.5)"
   },
   "items": [
     {
       "id": "S1a",
-      "situation": "inter-mot, nasal -> oral",
-      "note": "cas documente dans le commit dea71c6 (kOma~.a.le.vu)",
+      "situation": "inter-word, nasal -> oral",
+      "note": "case documented in commit dea71c6 (kOma~.a.le.vu)",
       "entree": "comment allez-vous",
       "use_g2p": true,
       "sampa_moteur": "kOma~.a.le.vu",
@@ -36,9 +38,9 @@
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": 1.0,
         "relamp_moyen_background": 0.999,
-        "rms_background": 0.2221,
-        "rms_plateaux": 0.1391,
-        "rms_global": 0.1114
+        "rms_background": 0.2219,
+        "rms_plateaux": 0.139,
+        "rms_global": 0.1113
       },
       "verdict": {
         "voyelles_entree": [
@@ -211,13 +213,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "72c9f9141c0903add596ae5b3bcc66cf",
-      "md5_tract": "b8817b3bebbf46145d64439d3a10ebae"
+      "md5_wav": "a42a20d4ac80de53e5c47bd4a9806c34",
+      "md5_tract": "e2376d3b3d14de74b1d1b6d7451dfa04"
     },
     {
       "id": "S1b",
-      "situation": "inter-mot, nasal -> oral",
-      "note": "jonction O~.a",
+      "situation": "inter-word, nasal -> oral",
+      "note": "O~.a junction",
       "entree": "mon ami",
       "use_g2p": true,
       "sampa_moteur": "mO~.a.mi",
@@ -244,9 +246,9 @@
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": 0.203,
         "relamp_moyen_background": 0.999,
-        "rms_background": 0.1903,
-        "rms_plateaux": 0.1708,
-        "rms_global": 0.105
+        "rms_background": 0.1894,
+        "rms_plateaux": 0.1702,
+        "rms_global": 0.1046
       },
       "verdict": {
         "voyelles_entree": [
@@ -361,13 +363,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "d9b369244bab4ada8e15fac1f0f6bfc1",
-      "md5_tract": "f91643ce7955c242f37ace9b7b228c2c"
+      "md5_wav": "b58574558a7e3aa064ab3a5c3937a69e",
+      "md5_tract": "aa521f4ff836a488eebd516f21a3c994"
     },
     {
       "id": "S2a",
-      "situation": "inter-mot, oral -> nasal",
-      "note": "exemple de l'utilisateur ; jonction a.a~",
+      "situation": "inter-word, oral -> nasal",
+      "note": "user's example ; a.a~ junction",
       "entree": "il a envie",
       "use_g2p": true,
       "sampa_moteur": "i.a.a~vi",
@@ -394,7 +396,7 @@
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.994,
-        "rms_background": 0.2087,
+        "rms_background": 0.2088,
         "rms_plateaux": 0.1284,
         "rms_global": 0.1227
       },
@@ -522,13 +524,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "211a5a0f75e138b1746cedaed8fd8729",
-      "md5_tract": "c9f3409bd8557fcfcf9011deffd51cd6"
+      "md5_wav": "441b32d5828b08c2dad5194a16130dd1",
+      "md5_tract": "3804b23377cd46cea66a9b6c97352189"
     },
     {
       "id": "S2b",
-      "situation": "inter-mot, oral -> nasal",
-      "note": "jonction a.O~",
+      "situation": "inter-word, oral -> nasal",
+      "note": "a.O~ junction",
       "entree": "la onzième",
       "use_g2p": true,
       "sampa_moteur": "la.O~zjEm",
@@ -555,9 +557,9 @@
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.07,
         "relamp_moyen_background": 0.999,
-        "rms_background": 0.2278,
-        "rms_plateaux": 0.2153,
-        "rms_global": 0.1151
+        "rms_background": 0.227,
+        "rms_plateaux": 0.2146,
+        "rms_global": 0.1147
       },
       "verdict": {
         "voyelles_entree": [
@@ -692,13 +694,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "2c83b9f68ef489e6cedaf6ae9e10b615",
-      "md5_tract": "49d4bc0463e4bbc9fc1a1a4226cb7651"
+      "md5_wav": "43b9070038c6d0517adf8fb48866f3fb",
+      "md5_tract": "44a6f6eacf623807417d76d8396e988f"
     },
     {
       "id": "S3a",
-      "situation": "intra-mot, oral -> nasal",
-      "note": "lexique Wikipron : n e ɔ̃ ; jonction e.O~ dans le mot",
+      "situation": "intra-word, oral -> nasal",
+      "note": "Wikipron lexicon: n e ɔ̃ ; e.O~ junction within the word",
       "entree": "néon",
       "use_g2p": true,
       "sampa_moteur": "neO~",
@@ -725,9 +727,9 @@
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": null,
         "relamp_moyen_background": 0.984,
-        "rms_background": 0.2317,
+        "rms_background": 0.2325,
         "rms_plateaux": null,
-        "rms_global": 0.1229
+        "rms_global": 0.1233
       },
       "verdict": {
         "voyelles_entree": [
@@ -813,13 +815,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "27c4a6119b14ebd9a6335844deb3d20e",
-      "md5_tract": "d8826437830fe9cb278499ee3002f755"
+      "md5_wav": "88ae77c711e9dc1b0add4087c8b5cddf",
+      "md5_tract": "45147414e82b1b6a3d04bd48a4e5f97e"
     },
     {
       "id": "S3b",
-      "situation": "intra-mot, oral -> nasal",
-      "note": "lexique Wikipron : e ɔ̃ t e ; jonction e.O~ dans le mot",
+      "situation": "intra-word, oral -> nasal",
+      "note": "Wikipron lexicon: e ɔ̃ t e ; e.O~ junction within the word",
       "entree": "éhonté",
       "use_g2p": true,
       "sampa_moteur": "eO~.te",
@@ -846,8 +848,8 @@
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.972,
-        "rms_background": 0.2115,
-        "rms_plateaux": 0.1828,
+        "rms_background": 0.211,
+        "rms_plateaux": 0.1831,
         "rms_global": 0.1066
       },
       "verdict": {
@@ -957,13 +959,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "5bc90d23141519f95326271d109d89a6",
-      "md5_tract": "cb9f100c96ff3437f8c10aa81817c1d0"
+      "md5_wav": "c82da79cde87308438e4788572b1fc82",
+      "md5_tract": "1c4d27c917597989047a719a6d843879"
     },
     {
       "id": "S3c",
-      "situation": "intra-mot, oral -> nasal",
-      "note": "mot cite par le demandeur ; singulier 'paon' = p a~ (lexique, sans hiatus), pluriel via regles = p a ɔ̃ ; jonction a.O~",
+      "situation": "intra-word, oral -> nasal",
+      "note": "word cited by the requester ; singular 'paon' = p a~ (lexicon, no hiatus), plural via rules = p a ɔ̃ ; a.O~ junction",
       "entree": "paons",
       "use_g2p": true,
       "sampa_moteur": "pao~",
@@ -990,9 +992,9 @@
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": null,
         "relamp_moyen_background": 0.984,
-        "rms_background": 0.2108,
+        "rms_background": 0.2125,
         "rms_plateaux": null,
-        "rms_global": 0.1009
+        "rms_global": 0.1017
       },
       "verdict": {
         "voyelles_entree": [
@@ -1078,13 +1080,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "160eb4007082ded706b1887019d6c76a",
-      "md5_tract": "2f58712e347a0017da1766c699caae3e"
+      "md5_wav": "0b1e3cefacc5403386ed7386ec3d70a1",
+      "md5_tract": "81c984216d6e9aa5f029585ccb0e7fc9"
     },
     {
       "id": "S4a",
-      "situation": "intra-mot, nasal -> oral",
-      "note": "lexique Wikipron : ɑ̃ a ʁ d i ʁ ; jonction A~.a dans le mot (h muet)",
+      "situation": "intra-word, nasal -> oral",
+      "note": "Wikipron lexicon: ɑ̃ a ʁ d i ʁ ; A~.a junction within the word (silent h)",
       "entree": "enhardir",
       "use_g2p": true,
       "sampa_moteur": "a~aR.diR",
@@ -1111,9 +1113,9 @@
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.987,
-        "rms_background": 0.2307,
-        "rms_plateaux": 0.1226,
-        "rms_global": 0.0965
+        "rms_background": 0.2316,
+        "rms_plateaux": 0.1232,
+        "rms_global": 0.0969
       },
       "verdict": {
         "voyelles_entree": [
@@ -1250,13 +1252,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "9b46379c036188b65e1301bbe7b4b94b",
-      "md5_tract": "e2174b11a852b6bc4957587ee8b8b66c"
+      "md5_wav": "e423a6d3ea877b02b017638580a7b887",
+      "md5_tract": "b12db5e4d0c753240f41b1b0be5f477e"
     },
     {
       "id": "S4b",
-      "situation": "intra-mot, nasal -> oral",
-      "note": "lexique Wikipron : ɑ̃ y ʃ e ; jonction A~.y dans le mot (h muet)",
+      "situation": "intra-word, nasal -> oral",
+      "note": "Wikipron lexicon: ɑ̃ y ʃ e ; A~.y junction within the word (silent h)",
       "entree": "enhucher",
       "use_g2p": true,
       "sampa_moteur": "a~y.Se",
@@ -1283,9 +1285,9 @@
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.972,
-        "rms_background": 0.2206,
+        "rms_background": 0.221,
         "rms_plateaux": 0.1782,
-        "rms_global": 0.1095
+        "rms_global": 0.1096
       },
       "verdict": {
         "voyelles_entree": [
@@ -1394,13 +1396,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "882e66021cff37cca34029579819dd53",
-      "md5_tract": "a4d78e0f5cf85a4e1e86460cc543f5a0"
+      "md5_wav": "51cc3504b70107238ee83c8ef8b25634",
+      "md5_tract": "8a90f371d00022e2a7e9f91b785a590a"
     },
     {
       "id": "T1",
-      "situation": "temoin intra-mot V.V oral-orale",
-      "note": "jonction a.e sans nasalite — cense etre traite par la marche",
+      "situation": "control intra-word V.V oral-oral",
+      "note": "a.e junction without nasality — supposed to be handled by the walk",
       "entree": "aérer",
       "use_g2p": true,
       "sampa_moteur": "a.e.Re",
@@ -1419,9 +1421,9 @@
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.987,
-        "rms_background": 0.2027,
-        "rms_plateaux": 0.1783,
-        "rms_global": 0.1062
+        "rms_background": 0.2022,
+        "rms_plateaux": 0.1778,
+        "rms_global": 0.1059
       },
       "verdict": {
         "voyelles_entree": [
@@ -1530,13 +1532,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "ccab335abd790c394f2f49fb75f83b7e",
-      "md5_tract": "3dd8bd678a276d2156faf3a51840f21b"
+      "md5_wav": "da1cb5ab0e7aec29552c9548e75fd1c7",
+      "md5_tract": "3c1719b425ca9db894b6efb9e364d93a"
     },
     {
       "id": "T2",
-      "situation": "temoin inter-mot V.V oral-orale",
-      "note": "jonction a.u inter-mot sans nasalite",
+      "situation": "control inter-word V.V oral-oral",
+      "note": "inter-word a.u junction without nasality",
       "entree": "il a oublié",
       "use_g2p": true,
       "sampa_moteur": "i.a.ub.li.je",
@@ -1555,9 +1557,9 @@
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.994,
-        "rms_background": 0.1884,
-        "rms_plateaux": 0.112,
-        "rms_global": 0.1036
+        "rms_background": 0.188,
+        "rms_plateaux": 0.1119,
+        "rms_global": 0.1034
       },
       "verdict": {
         "voyelles_entree": [
@@ -1726,13 +1728,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "5e5748894a591f37968d3415667516a3",
-      "md5_tract": "292cde826d4f6f28d5db240816c51530"
+      "md5_wav": "3a5c3272096fc4f47fa5ee7092ebca6c",
+      "md5_tract": "56fa17730b3e9e91f33e0fd45d427349"
     },
     {
       "id": "T3",
-      "situation": "temoin nasale isolee",
-      "note": "kOma~ — plateau nasal de reference (VO attendu ~0.5)",
+      "situation": "control isolated nasal",
+      "note": "kOma~ — reference nasal plateau (expected VO ~0.5)",
       "entree": "comment",
       "use_g2p": true,
       "sampa_moteur": "kOma~",
@@ -1752,8 +1754,8 @@
         "vo_max_plateau_oral": -0.07,
         "relamp_moyen_background": null,
         "rms_background": null,
-        "rms_plateaux": 0.1693,
-        "rms_global": 0.1059
+        "rms_plateaux": 0.1691,
+        "rms_global": 0.1058
       },
       "verdict": {
         "voyelles_entree": [
@@ -1856,13 +1858,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "af076e19965cb4a87bfd1675cfed71c4",
-      "md5_tract": "dbce583344fa2628c545cca4dd8fbfdb"
+      "md5_wav": "ae572427030f3a50e93d05edab0c5869",
+      "md5_tract": "f3b4de01e2eb9d91763bd84ec1046caa"
     },
     {
       "id": "T4",
-      "situation": "temoin nasale isolee non-hiatus",
-      "note": "a~vi — plateau nasal de reference (VO attendu ~0.5)",
+      "situation": "control non-hiatus isolated nasal",
+      "note": "a~vi — reference nasal plateau (expected VO ~0.5)",
       "entree": "envie",
       "use_g2p": true,
       "sampa_moteur": "a~vi",
@@ -1882,8 +1884,8 @@
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": null,
         "rms_background": null,
-        "rms_plateaux": 0.1428,
-        "rms_global": 0.0948
+        "rms_plateaux": 0.143,
+        "rms_global": 0.0949
       },
       "verdict": {
         "voyelles_entree": [
@@ -1980,13 +1982,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "de3459cac714e2f9da631c1f23a965af",
-      "md5_tract": "5305b7d51c758c071b09b68588b0d5ac"
+      "md5_wav": "0cc434d7672467e0712f9e06de89a9e7",
+      "md5_tract": "4a19fd1e4a495a9bcda19e6cffc49ee4"
     },
     {
       "id": "T5",
-      "situation": "complement inter-mot V~.V~",
-      "note": "jonction O~.O~ — les deux nasalites attendues",
+      "situation": "complement inter-word V~.V~",
+      "note": "O~.O~ junction — both nasalities expected",
       "entree": "mon oncle",
       "use_g2p": true,
       "sampa_moteur": "mO~.O~kl",
@@ -2013,9 +2015,9 @@
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": null,
         "relamp_moyen_background": 0.984,
-        "rms_background": 0.2489,
+        "rms_background": 0.2516,
         "rms_plateaux": null,
-        "rms_global": 0.1168
+        "rms_global": 0.1181
       },
       "verdict": {
         "voyelles_entree": [
@@ -2121,13 +2123,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "d6ff1beeb7f03fe5122ce4721049922f",
-      "md5_tract": "5501c12c8695f7a6362c84bbcb715eee"
+      "md5_wav": "f8dc544e24a080b57cf9d203786cf223",
+      "md5_tract": "094935e720791418020416e3a97be704"
     },
     {
       "id": "T6",
-      "situation": "complement inter-mot V~.V~",
-      "note": "jonction 9~.a~ — les deux nasalites attendues",
+      "situation": "complement inter-word V~.V~",
+      "note": "9~.a~ junction — both nasalities expected",
       "entree": "un an",
       "use_g2p": true,
       "sampa_moteur": "9~.a~",
@@ -2154,9 +2156,9 @@
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": null,
         "relamp_moyen_background": 0.972,
-        "rms_background": 0.2391,
+        "rms_background": 0.2375,
         "rms_plateaux": null,
-        "rms_global": 0.1228
+        "rms_global": 0.122
       },
       "verdict": {
         "voyelles_entree": [
@@ -2236,13 +2238,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "c3755a1c3f63dba1b9f410ec78752936",
-      "md5_tract": "9ad7865a47298c712d49ed70ac86ee9c"
+      "md5_wav": "e9cab9a7f40fe01d59e0746d11b9c37a",
+      "md5_tract": "567860c174369864a2f08b5717a6efe2"
     },
     {
       "id": "H0",
-      "situation": "manuelle, oral -> oral (temoin)",
-      "note": "paire minimale moteur : V.V orale",
+      "situation": "manual, oral -> oral (control)",
+      "note": "engine minimal pair: oral V.V",
       "entree": "ta.ata",
       "use_g2p": false,
       "sampa_moteur": "ta.ata",
@@ -2261,9 +2263,9 @@
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.984,
-        "rms_background": 0.2229,
-        "rms_plateaux": 0.2182,
-        "rms_global": 0.1107
+        "rms_background": 0.2235,
+        "rms_plateaux": 0.2189,
+        "rms_global": 0.1111
       },
       "verdict": {
         "voyelles_entree": [
@@ -2378,13 +2380,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "1c9c94b0cec9b99550ca2251a6e3e2a0",
-      "md5_tract": "4f0698e3a77ae6d5816192dfe92e6f5a"
+      "md5_wav": "3032834edf83c3cb59ff8854fd010b2c",
+      "md5_tract": "b79df4403f74244a1f4d38bdb5ae3d24"
     },
     {
       "id": "H1",
-      "situation": "manuelle, nasal -> oral",
-      "note": "paire minimale moteur : a~.a",
+      "situation": "manual, nasal -> oral",
+      "note": "engine minimal pair: a~.a",
       "entree": "ta~.ata",
       "use_g2p": false,
       "sampa_moteur": "ta~.ata",
@@ -2411,9 +2413,9 @@
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.984,
-        "rms_background": 0.2198,
-        "rms_plateaux": 0.2294,
-        "rms_global": 0.1116
+        "rms_background": 0.2194,
+        "rms_plateaux": 0.229,
+        "rms_global": 0.1114
       },
       "verdict": {
         "voyelles_entree": [
@@ -2528,13 +2530,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "cd247011ceb731fefb1098169af70190",
-      "md5_tract": "05a49884d49339c08c5a56b541aae520"
+      "md5_wav": "2a5cd30d4516b472a432874809ee577b",
+      "md5_tract": "072d7f9ccdaa9e464aa36aade29c8c6d"
     },
     {
       "id": "H2",
-      "situation": "manuelle, oral -> nasal",
-      "note": "paire minimale moteur : a.a~",
+      "situation": "manual, oral -> nasal",
+      "note": "engine minimal pair: a.a~",
       "entree": "ta.a~ta",
       "use_g2p": false,
       "sampa_moteur": "ta.a~ta",
@@ -2561,9 +2563,9 @@
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.984,
-        "rms_background": 0.2111,
-        "rms_plateaux": 0.2182,
-        "rms_global": 0.1069
+        "rms_background": 0.2118,
+        "rms_plateaux": 0.2189,
+        "rms_global": 0.1072
       },
       "verdict": {
         "voyelles_entree": [
@@ -2678,13 +2680,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "a2711a1fa4c79032d051d4c337de8390",
-      "md5_tract": "6d5327d15dd42f0ffaff552810ea0b95"
+      "md5_wav": "36676846d2bd742909a20f1d384925cf",
+      "md5_tract": "a2825ae259e76ce7a88a0b5f4489fdf6"
     },
     {
       "id": "H3",
-      "situation": "manuelle, nasal -> nasal",
-      "note": "paire minimale moteur : a~.a~",
+      "situation": "manual, nasal -> nasal",
+      "note": "engine minimal pair: a~.a~",
       "entree": "ta~.a~ta",
       "use_g2p": false,
       "sampa_moteur": "ta~.a~ta",
@@ -2711,9 +2713,9 @@
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": -0.1,
         "relamp_moyen_background": 0.984,
-        "rms_background": 0.2033,
-        "rms_plateaux": 0.2285,
-        "rms_global": 0.1062
+        "rms_background": 0.2042,
+        "rms_plateaux": 0.2294,
+        "rms_global": 0.1067
       },
       "verdict": {
         "voyelles_entree": [
@@ -2828,13 +2830,13 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "c67963d5ca3d6f7f17e702cdb10b1d55",
-      "md5_tract": "96dc3e3923fd2a1699ae97acf6dba2f0"
+      "md5_wav": "e2910ce11003ee0f6c658d1f7e9c83f5",
+      "md5_tract": "575c43d93bdb3e2fcf150b3c49978012"
     },
     {
       "id": "H4",
-      "situation": "manuelle, cas documente",
-      "note": "le SAMPA du commit dea71c6, ecrit a la main a l'entree moteur",
+      "situation": "manual, documented case",
+      "note": "the SAMPA from commit dea71c6, hand-written at the engine input",
       "entree": "kOma~.a.le.vu",
       "use_g2p": false,
       "sampa_moteur": "kOma~.a.le.vu",
@@ -2861,9 +2863,9 @@
         "vo_max_plateau_nasal": null,
         "vo_max_plateau_oral": 1.0,
         "relamp_moyen_background": 0.999,
-        "rms_background": 0.2221,
-        "rms_plateaux": 0.1391,
-        "rms_global": 0.1114
+        "rms_background": 0.2219,
+        "rms_plateaux": 0.139,
+        "rms_global": 0.1113
       },
       "verdict": {
         "voyelles_entree": [
@@ -3036,8 +3038,8 @@
           "n_cons": 0
         }
       ],
-      "md5_wav": "72c9f9141c0903add596ae5b3bcc66cf",
-      "md5_tract": "b8817b3bebbf46145d64439d3a10ebae"
+      "md5_wav": "a42a20d4ac80de53e5c47bd4a9806c34",
+      "md5_tract": "e2376d3b3d14de74b1d1b6d7451dfa04"
     }
   ]
 }

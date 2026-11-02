@@ -1,23 +1,23 @@
-SAMPA (entrée moteur) : kOma~.a.le.vu
+SAMPA (engine input) : kOma~.a.le.vu
 Total : 189 steps @100 Hz = 1.89 s
 
-Nœuds : [C]k [V]O [C]m [V]a~ [V]a [C]l [V]e [C]v [V]u
+Nodes : [C]k [V]O [C]m [V]a~ [V]a [C]l [V]e [C]v [V]u
 
- offset   dur kind        voyelle nasal  contenu
+ offset   dur kind        vowel   nasal  content
 ------------------------------------------------------------------------
       0    20 initial     -       False  
      20    22 cluster     -       False  cluster (1 cons.)
-     42    10 plateau     O       False  plateau de /O/
+     42    10 plateau     O       False  plateau of /O/
      52    22 cluster     -       False  cluster (1 cons.)
-     74    20 background  -       False  arc de fond : transition diphtongue de base (réalisation des noyaux de l'hiatus)
+     74    20 background  -       False  background arc: diphthong transition of the base (realization of the hiatus nuclei)
      94    22 cluster     -       False  cluster (1 cons.)
-    116    10 plateau     e       False  plateau de /e/
+    116    10 plateau     e       False  plateau of /e/
     126    22 cluster     -       False  cluster (1 cons.)
-    148    10 plateau     u       False  plateau de /u/
+    148    10 plateau     u       False  plateau of /u/
     158    11 decay       -       False  
     169    20 terminal    -       False  
-Porte nasalité (pré-traitement nasal_preproc) :
-  chaîne moteur (syltraj) : kOma.a.le.vu
+Nasality gate (nasal_preproc pre-processing) :
+  engine string (syltraj) : kOma.a.le.vu
   run 0 : [a~ . a]
-  oralisé : run 0 membre 0 → /a~/ (nasalité capturée)
-  VO orthogonale : /a~/ sur [74, 84) pas @100 Hz (740-840 ms)
+  oralized: run 0 member 0 → /a~/ (nasality captured)
+  orthogonal VO: /a~/ over [74, 84) steps @100 Hz (740-840 ms)

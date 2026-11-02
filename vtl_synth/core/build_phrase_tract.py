@@ -527,15 +527,14 @@ def build_phrase_tract(
         vowel_ms = 60.0
         tract_100 = None
         rho_theta = np.zeros((0, 2))
-        # Nasalité/formant — couche de pré-traitement V1V2
-        # (nasal_preproc) : les voyelles nasales MEMBRES D'HIATUS sont
-        # oralisées dans la chaîne moteur (l'arc de fond produit alors
-        # la transition diphtongue de base sur les cibles orales,
-        # exactement comme pour une voyelle orale) et leur nasalité
-        # est capturée comme événement, réinjectée plus bas dans
-        # l'espace orthogonal VO (étape 3b-bis). syltraj n'est pas
-        # modifié ; les segments/étiquettes/timers conservent la
-        # chaîne originale (ipa) ci-dessus.
+        # Nasality/formants — V1V2 preprocessing layer
+        # (nasal_preproc): hiatus-MEMBER nasal vowels are oralized in
+        # the motor chain (the background arc then carries the base
+        # diphthong transition on oral targets, exactly as for an oral
+        # vowel) and their nasality is captured as an event,
+        # re-injected downstream in the orthogonal velar-port space VO
+        # (step 3b-bis). syltraj is not modified; the segments/labels/
+        # timers keep the original (ipa) chain above.
         from vtl_synth.core.nasal_preproc import split_nasal_hiatus
         ipa_motor, nasal_plan = split_nasal_hiatus(ipa)
         Pval, block_info, _nodes_syl, _anchors_syl = build_phrase_pval(
@@ -551,9 +550,9 @@ def build_phrase_tract(
             print(f'[build_phrase_tract] syltraj B(t): {tract_100.shape} '
                   f'at {TARGET_SR} Hz ({len(block_info)} blocks)')
             if nasal_plan['events']:
-                print(f'[build_phrase_tract] nasal_preproc: moteur '
+                print(f'[build_phrase_tract] nasal_preproc: engine '
                       f'{ipa_motor!r} — {len(nasal_plan["events"])} '
-                      'événement(s) de nasalité (hiatus)')
+                      'nasality event(s) (hiatus)')
     else:
         nasal_plan = None
         import warnings
@@ -872,14 +871,13 @@ def build_phrase_tract(
         _f += _bi.n_steps
 
     # ------------------------------------------------------------------
-    # Step 3b-bis: nasalité orthogonale des membres d'hiatus (porte
-    # nasal_preproc — correction V1V2). Mêmes cibles et mêmes rampes
-    # que le chemin des plateaux nasaux ci-dessus, fusion des
-    # intervalles adjacents (la bascule nasal/oral n'a lieu qu'aux
-    # vraies frontières nasal/oral), puis le timer vélaire existant
-    # (lissage du premier ordre, tau = 20 ms, ci-dessous) façonne les
-    # transitions. Aucun autre canal n'est modifié : B(t)/E(t)/V(t)
-    # restent ceux de la base orale.
+    # Step 3b-bis: orthogonal nasality of the hiatus members (the
+    # nasal_preproc gate — V1V2 fix). Same targets and same ramps as
+    # the nasal plateau path above, merge of adjacent intervals (the
+    # nasal/oral toggle happens only at true nasal/oral boundaries),
+    # then the existing velar timer (first-order smoothing,
+    # tau = 20 ms, below) shapes the transitions. No other channel is
+    # modified: B(t)/E(t)/V(t) remain those of the oral base.
     # ------------------------------------------------------------------
     if nasal_plan is not None and nasal_plan.get('events'):
         from vtl_synth.core.nasal_preproc import nasal_hiatus_intervals, \
@@ -891,8 +889,8 @@ def build_phrase_tract(
         nasal_plan['intervals'] = _ivs
         if verbose and _ivs:
             _iv_txt = ', '.join(f'{k}@{_t0}-{_t1}' for _t0, _t1, k in _ivs)
-            print(f'[build_phrase_tract] nasal_preproc: VO orthogonale '
-                  f'-> {_iv_txt} (pas @100 Hz)')
+            print(f'[build_phrase_tract] nasal_preproc: orthogonal VO '
+                  f'-> {_iv_txt} (steps @100 Hz)')
         for _t0, _t1, _vk in _ivs:
             _seg = vo_nasal_segment(_t1 - _t0, VO_NASALIZED_VOWEL,
                                     sr=TARGET_SR)

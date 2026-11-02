@@ -2,46 +2,47 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # -*- coding: utf-8 -*-
 """
-nasal_preproc.py — porte nasalité/formant (couche de pré-traitement V1V2)
-=========================================================================
-Factorisation orthogonalisée de la nasalité pour les hiatus V1.V2 liés
-(audit V1V2 / AUDIT.md §6 — variante « non perturbatrice » prescrite pour
-la correction moteur).
+nasal_preproc.py — nasality/formant port (V1V2 pre-processing layer)
+====================================================================
+Orthogonalized factoring of nasality for linked V1.V2 hiatuses
+(V1V2 audit / AUDIT.md §6 — the prescribed "non-perturbing" variant
+for the motor correction).
 
-Principe
---------
-1. L'élaboration de l'espace paramétrique par ``syltraj`` est laissée
-   INTACTE. Elle est déjà construite sur la base orale : une voyelle
-   nasale partage la cible polaire de sa contrepartie orale
-   (``syltraj.build_nodes`` : ``base = key.rstrip('~')`` — la nasalité
-   n'y intervient que comme drapeau). L'arc de fond du hiatus
-   (``background``, 2·T_voy) EST la transition diphtongue de base.
-2. La présente couche de pré-traitement oralise UNIQUEMENT les voyelles
-   nasales membres d'un hiatus (séquence vocalique adjacente de
-   longueur ≥ 2) : le moteur ``syltraj`` reçoit une chaîne purement
-   orale pour ces positions, et la nasalité est capturée comme
-   ÉVÉNEMENT (règle vocalique d'appartenance + cible orale).
-3. La nasalité est réinjectée en aval dans l'espace orthogonal de
-   commande du port vélaire qui existe déjà (extension ``VO`` de
-   ``build_phrase_tract`` : cible ``VO_NASALIZED_VOWEL`` = 0.5, rampes
-   symétriques 20 %) et façonnée par le timer associé existant
-   (lissage anti-clic du premier ordre, τ = 20 ms). Aucun autre canal
-   n'est modifié : F1..F3/paramètres tract, enveloppe E, voisement V,
-   source glottique restent ceux de la chaîne orale.
+Principle
+---------
+1. The elaboration of the parametric space by ``syltraj`` is left
+   INTACT. It is already built on the oral basis: a nasal vowel
+   shares the polar target of its oral counterpart
+   (``syltraj.build_nodes``: ``base = key.rstrip('~')`` — nasality
+   only enters there as a flag). The background arc of the hiatus
+   (``background``, 2·T_voy) IS the base diphthong transition.
+2. This pre-processing layer oralizes ONLY the nasal vowels that are
+   members of a hiatus (adjacent vowel sequence of
+   length ≥ 2): the ``syltraj`` engine receives a purely
+   oral string for those positions, and nasality is captured as an
+   EVENT (vowel membership rule + oral target).
+3. Nasality is re-injected downstream in the orthogonal control
+   space of the velar port that already exists (``VO`` extension of
+   ``build_phrase_tract``: target ``VO_NASALIZED_VOWEL`` = 0.5, symmetric
+   ramps 20%) and is shaped by the existing associated timer
+   (first-order anti-click smoothing, τ = 20 ms). No other channel
+   is modified: F1..F3/tract parameters, E envelope, voicing V,
+   glottal source remain those of the oral string.
 
 Non-perturbation
 ----------------
-* sans voyelle nasale en hiatus, la chaîne moteur est IDENTIQUE à
-  l'entrée (aller-retour tokenizer vérifié, sinon repli conservateur)
-  → sorties bit-identiques ;
-* les voyelles nasales hors hiatus (plateaux tenus) conservent le
-  chemin moteur existant (drapeau ``nasal`` des blocs ``plateau``) ;
-* ``syltraj.py`` n'est pas modifié ; la régression éventuelle de la
-  correspondance runs↔blocs est détectée et désactivée proprement
-  (repli sur le comportement antérieur, avertissement).
+* without a nasal vowel in hiatus, the motor string is IDENTICAL to
+  the input (verified tokenizer round-trip, otherwise conservative
+  fallback) → bit-identical outputs;
+* nasal vowels outside a hiatus (held plateaus) keep the existing
+  motor path (``nasal`` flag of ``plateau`` blocks);
+* ``syltraj.py`` is not modified; any regression of the
+  runs↔blocks mapping is detected and cleanly disabled
+  (fallback to the previous behavior, with a warning).
 
-Le schéma d'état module (``get_last_nasal_plan``) suit le pattern du
-dépôt (``syltraj.get_last_build``, ``continuous.get_last_pval_state``).
+The module-level state scheme (``get_last_nasal_plan``) follows the
+repository pattern (``syltraj.get_last_build``,
+``continuous.get_last_pval_state``).
 """
 from __future__ import annotations
 
@@ -50,37 +51,37 @@ import warnings
 import numpy as np
 
 # ---------------------------------------------------------------------------
-# État du dernier passage (pattern get_last_build)
+# State of the last pass (get_last_build pattern)
 # ---------------------------------------------------------------------------
 
 _LAST_PLAN: dict | None = None
 
 
 def get_last_nasal_plan():
-    """Plan de la dernière exécution de :func:`split_nasal_hiatus`.
+    """Plan of the last run of :func:`split_nasal_hiatus`.
 
     dict(original=..., motor=..., nodes_view=..., runs=..., events=...,
-         intervals=...) — ``nodes_view`` reflète la chaîne d'ORIGINE
-     (drapeaux ``nasal`` vrais), contrairement aux nœuds de
-     ``syltraj.get_last_build()`` qui voient la chaîne oralisée.
-    ``intervals`` est rempli par ``build_phrase_tract`` au moment de la
-    réinjection VO (list de (t0, t1, clés) en pas @100 Hz).
+         intervals=...) — ``nodes_view`` reflects the ORIGINAL string
+     (``nasal`` flags true), unlike the nodes of
+     ``syltraj.get_last_build()`` which see the oralized string.
+    ``intervals`` is filled by ``build_phrase_tract`` at VO re-injection
+    time (list of (t0, t1, keys) in steps @100 Hz).
     """
     return _LAST_PLAN
 
 
 # ---------------------------------------------------------------------------
-# Vue nodale de la chaîne (même tokenizer que le moteur, sans modification)
+# Node view of the string (same tokenizer as the engine, unmodified)
 # ---------------------------------------------------------------------------
 
 def _node_view(phrase: str):
-    """Chaîne → (tokens, vue nodale kind/key/nasal).
+    """String → (tokens, node view kind/key/nasal).
 
-    Reproduit la vue de ``syltraj.build_nodes`` : les '.' (DOT) ne sont
-    pas des nœuds, GAP/PAUSE/BREATH sont des pauses. L'insertion du '@'
-    des mots sans voyelle (build_flat) n'est pas reproduite : le '@'
-    n'est jamais adjacent d'une autre voyelle, il n'affecte donc pas
-    les séquences vocaliques (runs).
+    Reproduces the view of ``syltraj.build_nodes``: '.' (DOT) entries are
+    not nodes, GAP/PAUSE/BREATH are pauses. The insertion of '@' for
+    vowel-less words (build_flat) is not reproduced: '@' is never
+    adjacent to another vowel, so it does not affect
+    vowel sequences (runs).
     """
     from .syltraj import _normalize_word, _is_vowel_key, tokenize_phrase
     norm = ' '.join(_normalize_word(w) for w in phrase.strip().split())
@@ -102,7 +103,7 @@ def _node_view(phrase: str):
 
 
 def _vowel_runs(nodes: list[dict]) -> list[list[dict]]:
-    """Séquences maximales de voyelles adjacentes (longueur ≥ 2)."""
+    """Maximal sequences of adjacent vowels (length ≥ 2)."""
     runs, cur = [], []
     for nd in nodes:
         if nd['kind'] == 'V':
@@ -117,11 +118,11 @@ def _vowel_runs(nodes: list[dict]) -> list[list[dict]]:
 
 
 def _rebuild_phrase(tokens: list, strip_marks: set) -> str:
-    """Reconstruit la phrase depuis les tokens (aller-retour stable).
+    """Rebuilds the phrase from the tokens (stable round-trip).
 
-    ``strip_marks`` : indices de tokens ('S', …) dont le marqueur '~'
-    doit être retiré (oralisation). Les séparateurs sont réémis à
-    l'identique : GAP → espace, PAUSE → '|', BREATH → '%', DOT → '.'.
+    ``strip_marks``: token indices ('S', …) whose '~' marker
+    must be removed (oralization). Separators are re-emitted
+    unchanged: GAP → space, PAUSE → '|', BREATH → '%', DOT → '.'.
     """
     out: list[str] = []
     for i, tok in enumerate(tokens):
@@ -142,43 +143,43 @@ def _rebuild_phrase(tokens: list, strip_marks: set) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Couche de pré-traitement : scission nasalité / base orale
+# Pre-processing layer: nasality / oral base split
 # ---------------------------------------------------------------------------
 
 def split_nasal_hiatus(phrase: str) -> tuple[str, dict]:
-    """Oralise les voyelles nasales membres d'hiatus, capture la nasalité.
+    """Oralizes nasal vowels that are members of a hiatus, capturing nasality.
 
     Returns
     -------
     (motor_phrase, plan)
-        ``motor_phrase`` : chaîne pour ``syltraj`` (identique à
-        ``phrase`` hors hiatus nasaux) ;
-        ``plan`` : événements de nasalité pour la réinjection VO
-        (voir :func:`get_last_nasal_plan`).
+        ``motor_phrase``: string for ``syltraj`` (identical to
+        ``phrase`` outside nasal hiatuses);
+        ``plan``: nasality events for VO re-injection
+        (see :func:`get_last_nasal_plan`).
 
-    Repli conservateur : si l'aller-retour du tokenizer ne reproduit
-    pas exactement la chaîne attendue, la chaîne d'ORIGINE est
-    renvoyée sans événement (comportement moteur antérieur) — la
-    correction ne peut jamais produire une chaîne inattendue.
+    Conservative fallback: if the tokenizer round-trip does not
+    reproduce exactly the expected string, the ORIGINAL string is
+    returned without events (previous engine behavior) — the
+    correction can never produce an unexpected string.
     """
     global _LAST_PLAN
     tokens, nodes = _node_view(phrase)
     runs = _vowel_runs(nodes)
 
-    # indices de tokens à oraliser : voyelles nasales appartenant à un
-    # run (membres d'hiatus). Les voyelles nasales tenues (hors run)
-    # gardent le chemin moteur existant (plateau + drapeau nasal).
-    node_tok: list[int] = []      # nœud -> indice du token dans `tokens`
+    # token indices to oralize: nasal vowels belonging to a
+    # run (hiatus members). Held nasal vowels (outside a run)
+    # keep the existing engine path (plateau + nasal flag).
+    node_tok: list[int] = []      # node -> token index in `tokens`
     for ti, tok in enumerate(tokens):
         if tok == 'DOT':
-            continue              # les '.' ne sont pas des nœuds
-        node_tok.append(ti)       # (indice COMPLET, '.' compris)
+            continue              # '.' entries are not nodes
+        node_tok.append(ti)       # (FULL index, '.' included)
     strip_marks: set[int] = set()
     runs_events: list[list[dict]] = []
     idx = 0
     for run in runs:
-        # position du premier nœud du run dans la vue nodale (les runs
-        # sont des tranches consécutives de `nodes`)
+        # position of the run's first node in the node view (runs
+        # are consecutive slices of `nodes`)
         while idx < len(nodes) and nodes[idx] is not run[0]:
             idx += 1
         members = []
@@ -197,9 +198,9 @@ def split_nasal_hiatus(phrase: str) -> tuple[str, dict]:
 
     motor = _rebuild_phrase(tokens, strip_marks) if strip_marks else \
         ' '.join(_norm_word(w) for w in phrase.strip().split())
-    # (sans oralisation, la chaîne renvoyée est la forme normalisée
-    # mot à mot — exactement celle que build_phrase_pval calcule
-    # lui-même avant tokenisation : sorties inchangées)
+    # (without oralization, the returned string is the normalized
+    # word-by-word form — exactly the one build_phrase_pval computes
+    # itself before tokenization: unchanged outputs)
 
     plan = {
         'original': phrase,
@@ -212,8 +213,8 @@ def split_nasal_hiatus(phrase: str) -> tuple[str, dict]:
     }
 
     if strip_marks:
-        # aller-retour : le moteur doit voir exactement les tokens
-        # attendus (originaux, '~' retiré aux positions marquées)
+        # round-trip: the engine must see exactly the expected
+        # tokens (originals, with '~' removed at marked positions)
         expected = []
         for i, tok in enumerate(tokens):
             if isinstance(tok, tuple) and tok[0] == 'S' and i in strip_marks:
@@ -228,9 +229,9 @@ def split_nasal_hiatus(phrase: str) -> tuple[str, dict]:
             ok = False
         if not ok:
             warnings.warn(
-                'nasal_preproc: aller-retour tokenizer impossible '
-                f'({phrase!r} → {motor!r}) — repli sur la chaîne '
-                'originale (nasalité de hiatus non réinjectée).',
+                'nasal_preproc: tokenizer round-trip failed '
+                f'({phrase!r} → {motor!r}) — falling back to the '
+                'original string (hiatus nasality not re-injected).',
                 stacklevel=2)
             plan['motor'] = ' '.join(_norm_word(w)
                                      for w in phrase.strip().split())
@@ -252,11 +253,11 @@ def _tokenize(phrase: str) -> list:
 
 
 # ---------------------------------------------------------------------------
-# Localisation temporelle : runs ↔ groupes de blocs background
+# Temporal localization: runs ↔ background block groups
 # ---------------------------------------------------------------------------
 
 def _background_groups(block_info) -> list[tuple[int, int]]:
-    """Groupes de blocs 'background' consécutifs → (début, total) pas."""
+    """Groups of consecutive 'background' blocks → (start, total) steps."""
     groups: list[tuple[int, int]] = []
     off, start, total, inside = 0, 0, 0, False
     for b in block_info:
@@ -275,20 +276,20 @@ def _background_groups(block_info) -> list[tuple[int, int]]:
 
 def nasal_hiatus_intervals(block_info, plan: dict,
                            t_voy: int | None = None) -> list[tuple[int, int, str]]:
-    """Événements de nasalité → intervalles VO (pas @100 Hz).
+    """Nasality events → VO intervals (steps @100 Hz).
 
-    Correspondance structurelle (vérifiée, sinon repli) : le g-ième run
-    vocalique (longueur k ≥ 2) ↔ le g-ième groupe de blocs background
-    consécutifs, totalisant (k−1)·2·T_voy pas — chaque paire interne du
-    run émet exactement un arc de fond de 2·T_voy (découpage schwa
-    possible en deux blocs, le total est préservé). Le membre j du run
-    possède le créneau [j·T, (j+1)·T) en qualité de premier membre de
-    la paire j, prolongé du créneau [(2j−1)·T, 2j·T) en qualité de
-    second membre de la paire j−1 (les voyelles médianes de runs VVV
-    disposent ainsi de 2·T_voy, conformément au temps alloué par le
-    moteur). Les intervalles nasaux adjacents sont FUSIONNÉS : la
-    bascule nasal/oral ne doit se produire qu'aux vraies frontières
-    nasal↔oral (ex. 9~.a~ : vélum ouvert d'un bout à l'autre).
+    Structural mapping (verified, otherwise fallback): the g-th vowel
+    run (length k ≥ 2) ↔ the g-th group of consecutive background
+    blocks, totaling (k−1)·2·T_voy steps — each internal pair of the
+    run emits exactly one 2·T_voy background arc (a schwa may be split
+    into two blocks; the total is preserved). Member j of the run
+    owns the slot [j·T, (j+1)·T) as the first member of
+    pair j, extended by the slot [(2j−1)·T, 2j·T) as the
+    second member of pair j−1 (middle vowels of VVV runs
+    thus get 2·T_voy, matching the time allotted by the
+    engine). Adjacent nasal intervals are MERGED: the nasal/oral
+    toggle must only occur at true nasal↔oral boundaries
+    (e.g. 9~.a~: velum open from start to end).
     """
     runs = plan.get('runs') or []
     if not any(m.get('nasal') for run in runs for m in run):
@@ -296,13 +297,13 @@ def nasal_hiatus_intervals(block_info, plan: dict,
     groups = _background_groups(block_info)
     if len(groups) != len(runs):
         warnings.warn(
-            f'nasal_preproc: {len(runs)} run(s) vocalique(s) mais '
-            f'{len(groups)} groupe(s) background — correspondance '
-            'non vérifiée, nasalité de hiatus non réinjectée.',
+            f'nasal_preproc: {len(runs)} vowel run(s) but '
+            f'{len(groups)} background group(s) — mapping '
+            'unverified, hiatus nasality not re-injected.',
             stacklevel=2)
         return []
 
-    # T_voy effectif : paramètre direct, sinon plateaux, sinon dérivation
+    # effective T_voy: direct parameter, else plateaus, else derivation
     cands: list[int] = []
     if t_voy is not None:
         cands.append(int(t_voy))
@@ -314,14 +315,14 @@ def nasal_hiatus_intervals(block_info, plan: dict,
         if len(run) >= 2:
             cands.append(gt // (2 * (len(run) - 1)))
     if not cands:
-        warnings.warn('nasal_preproc: T_voy indéterminable — '
-                      'nasalité de hiatus non réinjectée.', stacklevel=2)
+        warnings.warn('nasal_preproc: cannot determine T_voy — '
+                      'hiatus nasality not re-injected.', stacklevel=2)
         return []
     T = cands[0]
     if any(c != T for c in cands):
         warnings.warn(
-            f'nasal_preproc: T_voy incohérent {sorted(set(cands))} — '
-            'nasalité de hiatus non réinjectée.', stacklevel=2)
+            f'nasal_preproc: inconsistent T_voy {sorted(set(cands))} — '
+            'hiatus nasality not re-injected.', stacklevel=2)
         return []
 
     raw: list[tuple[int, int, str]] = []
@@ -346,18 +347,18 @@ def nasal_hiatus_intervals(block_info, plan: dict,
 
 
 # ---------------------------------------------------------------------------
-# Rampe VO (même forme que le chemin plateau de build_phrase_tract)
+# VO ramp (same shape as the plateau path of build_phrase_tract)
 # ---------------------------------------------------------------------------
 
 def vo_nasal_segment(n: int, target: float, baseline: float = -0.1,
                      sr: int = 100) -> np.ndarray:
-    """Segment VO nasalé : cible tenue + rampes 20 % (max 40 ms).
+    """Nasalized VO segment: held target + 20% ramps (max 40 ms).
 
-    Réplique exactement la forme du chemin existant des plateaux
-    nasaux (build_phrase_tract, étape 3b) : rampes symétriques
-    min(max(2, 0.04·sr), n//4), ancrées sur la baseline vélaire
-    fermée (−0.1). Le lissage τ = 20 ms de build_phrase_tract
-    (timer existant) s'applique en aval, sans modification.
+    Exactly replicates the shape of the existing nasal plateau
+    path (build_phrase_tract, step 3b): symmetric ramps
+    min(max(2, 0.04·sr), n//4), anchored on the closed velar
+    baseline (−0.1). The τ = 20 ms smoothing of build_phrase_tract
+    (existing timer) applies downstream, unmodified.
     """
     if n <= 0:
         return np.zeros(0, dtype=np.float64)

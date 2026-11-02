@@ -104,10 +104,10 @@ class TestSplitNasalHiatus:
 # ---------------------------------------------------------------------------
 
 class TestNasalHiatusIntervals:
-    # profil fr du pipeline : t_voy = 120 ms = 12 pas @100 Hz
-    # (un appel direct sans t_voy utiliserait la valeur par défaut du
-    # moteur, 60 ms -> voyelles de 2 pas, nasalisation tronquée comme
-    # pour les plateaux — même comportement que le chemin existant)
+    # fr pipeline profile: t_voy = 120 ms = 12 steps @100 Hz
+    # (a direct call without t_voy would use the engine default,
+    # 60 ms -> 2-step vowels, truncated nasalization as for the
+    # plateaus — same behavior as the existing path)
     T_VOY = 12
 
     def _blocks(self, phrase):
@@ -174,7 +174,7 @@ class TestNasalHiatusIntervals:
 
 
 # ---------------------------------------------------------------------------
-# Rampe VO (même forme que le chemin plateau)
+# VO ramp (same shape as the plateau path)
 # ---------------------------------------------------------------------------
 
 class TestVoNasalSegment:
@@ -197,7 +197,7 @@ class TestVoNasalSegment:
 
 
 # ---------------------------------------------------------------------------
-# Synthèse : nasalité effective + non-perturbation
+# Synthesis: effective nasality + non-perturbation
 # ---------------------------------------------------------------------------
 
 VO_COL = 7
@@ -278,7 +278,7 @@ class TestSynthesisNasality:
             assert tracts[other].shape == tracts['H0'].shape
             for c in cols:
                 assert np.array_equal(tracts['H0'][:, c], tracts[other][:, c]), \
-                    f'colonne {c} diffère entre H0 et {other}'
+                    f'column {c} differs between H0 and {other}'
 
 
 # ---------------------------------------------------------------------------
