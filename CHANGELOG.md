@@ -5,6 +5,36 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
+### Fixed (external audit N1/N3 — 2026-11-07)
+
+- **fix(speaker): the `speaker` argument of `Pipeline` is now validated
+  and resolved per request** — it used to be a decorative label
+  (`SpeakerConfig(name=speaker)`) while the vocal tract file came from
+  the registry's ACTIVE speaker: the covtl-console bridge offered 5
+  speakers and all 5 produced byte-identical jd3 audio, and any
+  unknown name (e.g. `speaker='nobody'`) was silently accepted.
+  `resolve_speaker()` (new, in `core/pipeline.py`) does a
+  case-insensitive registry lookup and raises `ValueError` for unknown
+  names; a registered name resolves, inside the same process: the
+  orthogonal branch reads the registered `.speaker` file
+  (`speaker_file` forwarded to `build_phrase_tract`) and
+  `f0_hz=None` follows the REQUESTED speaker's registry
+  `f0_default`. Requesting the ACTIVE speaker is byte-identical to
+  the previous output; 5 speakers now yield 5 distinct WAVs. The
+  geometry/constants layer and the audio anatomy (wheel resource,
+  loaded at DLL import) remain process-global — a full swap still
+  needs `install_speaker.py` + restart (no hot reload in the wheel).
+  Tests: `tests/test_speaker_resolution.py` (23).
+- **fix(label): an explicit `label` is sanitized before it becomes a
+  file stem** — `Pipeline.run(label='..\\..\\trav_poc')` used to write
+  OUTSIDE the output directory on Windows (relative path traversal
+  from the console bridge, audit N3). `sanitize_label()` (new) rejects
+  path separators `/ \ :` with `ValueError` (surfaced by the bridge as
+  422 `InvalidLabel`, by the CLI as a hard error) and maps every other
+  character outside `[A-Za-z0-9_.-]` to `_` — glob metacharacters
+  neutralized as a side effect; dots stay (`label_of` keeps them).
+  Defense in depth for the CLI and any direct API user.
+
 ### Added (covtl-sandhi hook — 2026-11-02)
 
 - **feat(sandhi): covtl-sandhi hook (Branch A) — cross-word sandhi as

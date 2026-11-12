@@ -28,9 +28,10 @@ Equivalent command line::
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import numpy as np
 
@@ -112,6 +113,90 @@ def label_of(phrase: str) -> str:
     keep = ''.join(ch if (ch.isalnum() or ch == '.') else '_'
                    for ch in phrase)
     return keep[:30].strip('_') or 'phrase'
+
+
+# ==========================================================================
+# Label sanitization (audit N3, 2026-11-07)
+# ==========================================================================
+# An explicit ``label`` becomes a FILE STEM: the engine writes
+# ``out_dir / f'{stem}.wav'`` (plus .tract/.txt/.polar and
+# ``phrases/001_{stem}_1.tract``).  A label such as
+# ``..\..\trav_poc`` used to be taken verbatim -- writing OUTSIDE
+# out/ on Windows (relative path traversal).  The guard below:
+#   * REJECTS path separators '/', '\', ':' (traversal + Windows
+#     drive letters / NTFS alternate data streams) with a
+#     ValueError -- the caller (bridge, CLI) surfaces it instead
+#     of writing outside the output directory;
+#   * maps every other character outside [A-Za-z0-9_.-] to '_'
+#     (neutralizes glob metacharacters '*'/'?'/'[' -- a label '*'
+#     would have made a downstream ``glob(f'{stem}.*')`` match
+#     every file of the directory -- as well as control chars).
+# Dots are KEPT: the engine's own label_of keeps them
+# ('ta~.a~ta' -> 'ta_.a_ta'), so explicit labels stay consistent.
+_LABEL_SEPARATORS = re.compile(r'[\\/:]')
+_LABEL_SAFE = re.compile(r'[^A-Za-z0-9_.\-]')
+
+
+def sanitize_label(label: str) -> str:
+    """Validates and sanitizes an explicit output label (N3)."""
+    if _LABEL_SEPARATORS.search(label):
+        raise ValueError(
+            f"label must not contain path separators ('/', '\\', ':'): "
+            f"{label!r}")
+    return _LABEL_SAFE.sub('_', label)
+
+
+# ==========================================================================
+# Speaker resolution (audit N1, 2026-11-07)
+# ==========================================================================
+
+def resolve_speaker(speaker):
+    """Registry lookup for a speaker name -- the N1 fix.
+
+    Returns ``(canonical_name, speaker_file_path, f0_default)``
+    for a REGISTERED speaker (case-insensitive: 'JD3' resolves
+    to 'jd3'); ``None`` when the registry is unavailable
+    (degraded mode: the name stays a decorative label and f0
+    follows the installed constants -- the historical
+    behaviour); RAISES ``ValueError`` for an unknown name: the
+    former silent acceptance (any string, jd3 audio, happy
+    'job done') disappears.
+
+    Two layers follow the resolved speaker PER REQUEST, inside
+    the same process:
+      * the orthogonal branch (VS/VO/TRX/TRY/TS3) reads the
+        registered ``.speaker`` file (``speaker_file`` returned
+        here, forwarded to ``build_phrase_tract``);
+      * ``f0`` (the registry carries each speaker's
+        ``f0_default``).
+    The geometry/constants layer and the audio anatomy (wheel
+    resource loaded at DLL import) remain process-global: a
+    FULL speaker swap still goes through ``install_speaker.py``
+    + restart (the wheel exposes no hot reload -- see
+    speaker_registry.py).
+    """
+    try:
+        from vtl_synth.core import speaker_registry as sr
+    except Exception:                                # pragma: no cover
+        return None
+    if not sr.registry_available():
+        return None
+    names = sr.list_speakers()
+    wanted = str(speaker).strip().lower()
+    for name in names:
+        if name.lower() == wanted:
+            entry = sr.get_entry(name)
+            try:
+                spk_file = str(sr.speaker_file_path(name))
+            except Exception:                        # pragma: no cover
+                spk_file = None
+            f0 = entry.get('f0_default')
+            return (name, spk_file,
+                    float(f0) if f0 is not None else None)
+    raise ValueError(
+        f"unknown speaker {speaker!r} -- registered: {names} "
+        "(vtl_synth/data/speakers/registry.json; a full speaker "
+        "swap also needs install_speaker.py + restart)")
 
 
 def apply_f0_declination(glott400: np.ndarray,
@@ -209,6 +294,16 @@ class Pipeline:
         ``f0_hz=None`` (default) resolves to ``f0_default`` of the
         installed constants — i.e. the active speaker of the registry
         (see vtl_synth.core.speaker_registry).
+        Since the N1 fix (2026-11-07) ``speaker`` is VALIDATED
+        against the registry (case-insensitive; unknown name →
+        ValueError) and two layers follow it per request inside
+        the same process: the orthogonal branch reads the
+        registered ``.speaker`` file, and ``f0_hz=None`` resolves
+        to the REQUESTED speaker's registry ``f0_default``
+        (identical to the previous behaviour when the requested
+        speaker IS the active one). Geometry/constants and the
+        audio anatomy (wheel resource) remain process-global —
+        full swap: ``install_speaker.py`` + restart.
     lang :
         Active language profile (language pack; default ``en`` =
         the CMUdict gateway, i.e. the historical behaviour).
@@ -265,10 +360,26 @@ class Pipeline:
         # speaker of the registry (D14 fix: was the hardcoded JD3
         # literal 102.216; JD3 behaviour is unchanged since its
         # f0_default is 102.216).
+        # Speaker resolution (audit N1, 2026-11-07): validate and
+        # resolve the name against the registry. Per request, in
+        # process: the orthogonal branch reads the registered
+        # .speaker file (self.speaker_file) and f0_hz=None follows
+        # the REQUESTED speaker's registry f0_default (identical
+        # to the legacy value when the requested speaker IS the
+        # active one). Geometry/constants and the audio anatomy
+        # (wheel resource, loaded at import) stay process-global;
+        # a full swap remains install_speaker.py + restart.
+        # Unknown name -> ValueError (the former silent acceptance
+        # of any string with jd3 audio disappears). Registry
+        # unavailable -> historical label semantics, unchanged.
+        _resolved = resolve_speaker(speaker)      # raises on unknown
         if f0_hz is None:
-            f0_hz = SpeakerConfig().f0_default
+            f0_hz = (_resolved[2] if _resolved is not None
+                     and _resolved[2] is not None
+                     else SpeakerConfig().f0_default)
         self.f0_hz = f0_hz
-        self.speaker = speaker
+        self.speaker = _resolved[0] if _resolved is not None else speaker
+        self.speaker_file = _resolved[1] if _resolved is not None else None
         self.engine = engine
         self.use_orthogonal = use_orthogonal
         # Multilingual support (language pack v1.0.7, merged with the
@@ -358,6 +469,10 @@ class Pipeline:
             imageio-ffmpeg).
         label : str, optional
             File stem (default: derived from the first phrase).
+            Validated/sanitized since the N3 fix (2026-11-07): no
+            path separators (ValueError), other unsafe characters
+            map to '_' (glob metacharacters neutralized); dots are
+            kept, as in the engine's own label_of.
         sampa_guard : str, optional
             Input guard policy (CORRECTIONS v2.1 s.2): 'warn'
             (default), 'error' or 'off'; ``None`` resolves through
@@ -451,7 +566,15 @@ class Pipeline:
             expressive_plans = None
 
         # File stem from the *original* text (not the SAMPA), so that
-        # "this is easy for us" -> this_is_easy_for_us.tract
+        # "this is easy for us" -> this_is_easy_for_us.tract.
+        # N3 (audit 2026-11-07): an EXPLICIT label is validated and
+        # sanitized before it becomes a stem -- the engine writes
+        # out_dir / f'{stem}.wav' (+ .tract/.txt/.polar and
+        # phrases/001_{stem}_1.tract), so '..\..\trav_poc' used
+        # to write OUTSIDE out/ on Windows. Separators raise
+        # ValueError; other unsafe characters map to '_'.
+        if label is not None:
+            label = sanitize_label(label)
         stem = (label or label_of(text)).rstrip('._') or 'output'
         # Conversion ms -> gesture steps (1 step = 10 ms @100 Hz)
         t_cons_steps = max(1, round(self.t_cons_ms / 10.0))
@@ -469,6 +592,7 @@ class Pipeline:
                 output_dir=str(out_dir / 'phrases'),
                 f0_hz=self.f0_hz,
                 speaker=self.speaker,
+                speaker_file=self.speaker_file,  # N1: ortho layer, per request
                 use_orthogonal=self.use_orthogonal,
                 return_data=True,
                 sampa_guard=sampa_guard,
