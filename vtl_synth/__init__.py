@@ -28,7 +28,7 @@ Quick start::
 
 from __future__ import annotations
 
-__version__ = '1.1.1'
+__version__ = '1.1.2'
 
 from vtl_synth.core.pipeline import Pipeline, PipelineResult
 from vtl_synth.core.sampa_guard import (
