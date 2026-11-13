@@ -26,7 +26,11 @@ from vtl_synth.core import speaker_registry as sr
 PIPE_ROOT = Path(sr._PKG_ROOT).parent
 INSTALL_TOOL = PIPE_ROOT / 'install_speaker.py'
 
-JD3_CONSTANTS_HASH_PREFIX = '75ae0ba837ed106d'
+# Reference = the COMMITTED bytes of jd3_constants.py (LF, protected by
+# .gitattributes `*_constants.py -text`). The former 75ae0ba8... prefix
+# hashed the CRLF-smudged Windows checkout form - an artifact, not the
+# source of truth (renormalization 2026-11-13).
+JD3_CONSTANTS_HASH_PREFIX = 'cca8007def7ab431'
 
 
 def sha256(p) -> str:
