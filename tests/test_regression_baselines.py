@@ -1,10 +1,12 @@
 # SPDX-FileCopyrightText: 2026 Frédéric Berthommier
 # SPDX-License-Identifier: GPL-3.0-or-later
 # -*- coding: utf-8 -*-
-"""E2E non-regression test against regression_baselines.json (schema 2).
+"""E2E non-regression test against regression_baselines.json (schema 3).
 
 The baselines are the acoustically validated state (2026-09-04, TS3
-override included). After an INTENTIONAL change to the signal:
+override included; corpus extended 2026-11-13: nasals, nasalized
+vowels, clusters, word finals, breath pause — and the glottal layer
+pinned with glottis_sha256). After an INTENTIONAL change to the signal:
     python scripts/regen_baselines.py
 then rerun the tests.
 
@@ -14,7 +16,9 @@ registry .speaker).  For 'jd3' the reference file
 regression_baselines.json is used; for any other active speaker the
 per-speaker file regression_baselines_<name>.json is required
 (generate it with:  python scripts/regen_baselines.py  while the
-speaker is installed).
+speaker is installed).  All five speakers are validated in one run by
+scripts/run_baselines_matrix.py (repo-layer swap, one subprocess per
+speaker) — also what the CI baseline job runs.
 """
 import json
 from pathlib import Path
@@ -101,3 +105,16 @@ class TestRegressionBaselines:
         assert digest == base['tract_sha256'], (
             f'{name}: signal changed. If intentional, regenerate via '
             f'scripts/regen_baselines.py')
+
+    def test_glottis_sha256(self, name):
+        """Glottal layer pinned since schema 3 (was tract-only)."""
+        base = PHRASES[name]
+        if 'glottis_sha256' not in base:
+            pytest.skip('schema-2 baseline: glottis not pinned')
+        _, glottis = _build(base['ipa'])
+        import hashlib
+        q = np.round(glottis, QUANT)
+        digest = hashlib.sha256(q.tobytes()).hexdigest()
+        assert digest == base['glottis_sha256'], (
+            f'{name}: glottal signal changed. If intentional, regenerate '
+            f'via scripts/regen_baselines.py')

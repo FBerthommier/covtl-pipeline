@@ -39,6 +39,27 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 REFERENCE = REPO_ROOT / 'regression_baselines.json'
 QUANT = 6
 
+# Canonical corpus (schema 3): the phrase list is defined HERE — the
+# single source of truth for every speaker file — instead of being
+# copied from the reference JSON.  Phrases are engine SAMPA (the syl
+# engine notation: space = inter-word pause, '|' = long pause, '.' =
+# no-pause chain join, '%' = breath pause).
+CORPUS = {
+    # historical schema-2 phrases — their tract_sha256 values are the
+    # 2026-09-04 acoustically validated reference; regen_refuses to
+    # overwrite them with a drifted signal (see the guard below)
+    'aiu':      'a i u',
+    'ba':       'ba',
+    'ba_da_ga': 'ba da ga',
+    # schema-3 additions (2026-11-13): nasals + nasalized vowels,
+    # clusters, word-final obstruents, breath pause
+    'nasals':       'ma na',
+    'nasal_vowels': 'b9 d9',
+    'clusters':     'pla stRi',
+    'finals':       'bas Rab',
+    'breath':       'ba % da',
+}
+
 
 def _stats(vec) -> dict:
     v = np.asarray(vec, dtype=np.float64)
@@ -61,6 +82,10 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--list', action='store_true',
                     help='show active speaker and baseline files, change nothing')
+    ap.add_argument('--force', action='store_true',
+                    help='allow overwriting a drifted historical baseline '
+                         '(schema-2 tract_sha256 of the 2026-09-04 '
+                         'reference); default is to abort')
     args = ap.parse_args()
 
     active = speaker_registry.active_name()
@@ -78,32 +103,60 @@ def main() -> int:
             f"speaker actif '{active}' — relancer install_speaker.py install "
             f"{active} avant de regenerer les baselines.")
 
-    ref = json.loads(REFERENCE.read_text(encoding='utf-8'))
+    dest = REFERENCE if active == 'jd3' \
+        else REPO_ROOT / f'regression_baselines_{active}.json'
+    previous = {}
+    if dest.exists():
+        previous = json.loads(dest.read_text(encoding='utf-8')).get(
+            'phrases', {})
 
     phrases = {}
-    for name in sorted(ref['phrases']):
-        base = ref['phrases'][name]
-        tract, glottis = _build(base['ipa'])
-        q = np.round(tract, QUANT)
-        digest = hashlib.sha256(q.tobytes()).hexdigest()
+    drift = []
+    for name in sorted(CORPUS):
+        ipa = CORPUS[name]
+        tract, glottis = _build(ipa)
+        q_tract = np.round(tract, QUANT)
+        tract_digest = hashlib.sha256(q_tract.tobytes()).hexdigest()
+        q_glottis = np.round(glottis, QUANT)
+        glottis_digest = hashlib.sha256(q_glottis.tobytes()).hexdigest()
+        # non-regression guard: a historical tract_sha256 that changes
+        # means the SIGNAL drifted — regenerating would launder a
+        # regression into the new baselines. Refuse unless --force.
+        old = previous.get(name, {}).get('tract_sha256')
+        if old is not None and old != tract_digest:
+            drift.append((name, old[:16], tract_digest[:16]))
         phrases[name] = {
-            'ipa': base['ipa'],
+            'ipa': ipa,
             'n_frames': int(tract.shape[0]),
             'tract_shape': list(tract.shape),
             'glottis_shape': list(glottis.shape),
             'tract_cols': _column_stats(tract, TRACT_PARAM_NAMES),
             'glottis_cols': _column_stats(glottis, GLOTTIS_PARAM_NAMES),
-            'tract_sha256': digest,
+            'tract_sha256': tract_digest,
+            'glottis_sha256': glottis_digest,
         }
-        print(f"  {name:12s} {base['ipa']:30s} sha256={digest[:16]}")
+        print(f"  {name:13s} {ipa:14s} tract={tract_digest[:16]} "
+              f"glottis={glottis_digest[:16]}")
+
+    if drift and not args.force:
+        for name, old, new in drift:
+            print(f"DRIFT {name}: {old} -> {new}")
+        raise SystemExit(
+            "ABORT: le signal a derive sur des phrases historiques "
+            "(voir DRIFT ci-dessus). Une regen sans verification serait "
+            "une regression blanchie. Verifier le changement de signal; "
+            "s'il est volontaire: relancer avec --force.")
 
     out = {
         'meta': {
-            'schema': 2,
+            'schema': 3,
             'date': datetime.now().date().isoformat(),
-            'engine': ref.get('meta', {}).get('engine', 'syl'),
+            'engine': 'syl',
             'quant_decimals': QUANT,
             'speaker': active,
+            'corpus': 'scripts/regen_baselines.py CORPUS (schema 3): '
+                      'vowels/plosives + nasals + nasalized vowels + '
+                      'clusters + word finals + breath pause',
             'note': ("Baselines RELATIVES au speaker actif '%s' (see "
                      "install_speaker.py / scripts/regen_baselines.py). "
                      "Regenerer apres toute modification volontaire du signal."
@@ -111,8 +164,6 @@ def main() -> int:
         },
         'phrases': phrases,
     }
-    dest = REFERENCE if active == 'jd3' \
-        else REPO_ROOT / f'regression_baselines_{active}.json'
     dest.write_text(json.dumps(out, indent=2), encoding='utf-8')
     print(f"baselines '{active}' -> {dest} ({len(phrases)} phrases)")
     return 0
