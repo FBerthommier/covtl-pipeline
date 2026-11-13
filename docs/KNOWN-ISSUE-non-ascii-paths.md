@@ -1,6 +1,7 @@
 # Known issue (Windows): `vocaltractlab_cython` crashes on non-ASCII installation paths
 
 **Status:** open upstream — root cause identified, fix proposed, workaround shipped in COVTL Console 3.1.4+ builds.
+**Upstream issues:** [TUD-STKS/VocalTractLabBackend-dev#61](https://github.com/TUD-STKS/VocalTractLabBackend-dev/issues/61) (backend root cause + proposed fix) · [paul-krug/vocaltractlab-cython#7](https://github.com/paul-krug/vocaltractlab-cython/issues/7) (binding-side cross-post).
 **Audience:** Windows users, packagers, and downstream maintainers. Linux/macOS are not affected (POSIX paths are byte-transparent to `fopen`).
 
 ## Symptom
@@ -20,7 +21,7 @@ End-to-end chain, verified against `vocaltractlab_cython` 0.0.17 and `VocalTract
 
 Binary evidence (PE import tables of the published wheel): `VocalTractLabApi.dll` imports the narrow `std::_Fiopen(const char*)` overload from MSVCP140.dll plus `_CxxThrowException`/`__std_terminate`/`abort` from VCRUNTIME140; no wide-char path API is used anywhere in the chain. The PyInstaller bootloader is exonerated (fully wide-char in 6.22.3; minimal numpy/scipy/matplotlib onedir bundles run fine from the same non-ASCII path — the failing file open is the only ANSI-path operation in the initialization chain).
 
-Same-family precedents: HDF5 #5037 (resolved 2025 by trying UTF-8 first), llama.cpp #18571 (model loading on non-ASCII paths, fixed by Unicode APIs), ParaView (VTK/HDF5 `é`-in-path). **No existing issue tracks this on either repository** — this document will become the upstream issue.
+Same-family precedents: HDF5 #5037 (resolved 2025 by trying UTF-8 first), llama.cpp #18571 (model loading on non-ASCII paths, fixed by Unicode APIs), ParaView (VTK/HDF5 `é`-in-path). Filed upstream on 2026-11-13: [VocalTractLabBackend-dev#61](https://github.com/TUD-STKS/VocalTractLabBackend-dev/issues/61) + [vocaltractlab-cython#7](https://github.com/paul-krug/vocaltractlab-cython/issues/7).
 
 ## Workaround shipped in COVTL (application side)
 
@@ -34,4 +35,4 @@ Same-family precedents: HDF5 #5037 (resolved 2025 by trying UTF-8 first), llama.
 
 ## References
 
-Full root-cause report (FR) and the ready-to-file upstream issue draft (EN): COVTL integration workspace, `download/Rapport_vocaltractlab_cython_chemins_non-ASCII.pdf` and `download/draft_issue_VocalTractLabBackend-dev_EN.md`.
+Full root-cause report (FR): COVTL integration workspace, `download/Rapport_vocaltractlab_cython_chemins_non-ASCII.pdf`. The ready-to-file issue draft became [VocalTractLabBackend-dev#61](https://github.com/TUD-STKS/VocalTractLabBackend-dev/issues/61) (2026-11-13).

@@ -3,6 +3,42 @@
 All notable changes to this package are documented here.
 Format: Keep a Changelog — https://keepachangelog.com/
 
+## [1.1.3] — 2026-11-13
+
+### Fixed
+
+- **registry**: the nine speaker/constants SHA-256 entries in
+  `vtl_synth/data/speakers/registry.json` are renormalized to the
+  committed (LF) bytes. They previously recorded the CRLF-smudged
+  working-tree form, so the install-time integrity check warned
+  spuriously on Windows checkouts (`796028b`);
+  `vtl_synth/data/speakers/*_constants.py` is now marked `-text` in
+  `.gitattributes` (like `*.speaker`) so checkouts stay byte-stable.
+- **packaging**: dropped the UTF-8 BOM that the 1.1.1 release edit
+  accidentally left in `vtl_synth/__init__.py` — CPython imports a
+  BOM'd file, but `ast.parse`-based tooling and `tomllib` reject it
+  (`9637c67`).
+- **continuous**: a V1 `text_to_tract()` call leaked its last
+  perceived-value interpolation state (`continuous._LAST_PVAL_STATE`)
+  into later syllable builds, drifting the planned F0 in long-lived
+  processes that mix both APIs (observed in the console bridge:
+  116.6 Hz instead of 112.1 Hz; `25d4923`). The state is now cleared
+  before each dispatch — all reference outputs stay bit-identical.
+- **assemble_tract**: latent `IndexError` on out-of-range tract
+  segment indices fixed (`67bd71e`).
+
+### Added
+
+- Baselines matrix over the five registered speakers
+  (`regression_baselines_{m01,s1,s2,w02}.json` +
+  `scripts/run_baselines_matrix.py`) with an anti-drift guard
+  (`scripts/regen_baselines.py` refuses to regenerate on drift), and
+  CI on `windows-latest` in addition to Linux
+  (`.github/workflows/ci.yml`). Test coverage 62.4 % → 74.4 %
+  (syllable chain ≈ 84.7 %) with **no change to any reference
+  signal** (coverage-hardening merge, `ade6e6e`).
+- `LEGACY.md` — the legacy/dead-code policy for the code base.
+
 ## [Unreleased]
 
 ### Fixed (external audit N1/N3 — 2026-11-07)
