@@ -499,6 +499,14 @@ def build_phrase_tract(
         print(f'[build_phrase_tract] Segments: '
               f'{[(s.key, s.kind, s.duration_ms, s.glottal_tag, s.velum_tag) for s in segments]}')
 
+    # Reset continuous's last-parse channel: the syl engine below never
+    # populates it (only the V1 text_to_tract chain does), so a stale
+    # entry from an earlier V1 call in the same process would otherwise
+    # leak into the envelope/timer steps (f0 contour shift, 2026-11-13).
+    # 'legacy' repopulates it through its own parse within this call.
+    from vtl_synth.core.continuous import clear_last_pval_state
+    clear_last_pval_state()
+
     # ------------------------------------------------------------------
     # Step 2: Berthommier core → B(t) at 100 Hz
     # ------------------------------------------------------------------

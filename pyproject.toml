@@ -77,3 +77,22 @@ vtl_synth = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+# Coverage policy (decisions documented in LEGACY.md):
+# branch coverage on the whole shipped package; the omissions below are
+# dead code (kept for import compatibility) and the ffmpeg encoding
+# path — each with the evidence recorded in LEGACY.md.
+[tool.coverage.run]
+branch = true
+source = ["vtl_synth"]
+
+[tool.coverage.report]
+precision = 1
+omit = [
+    # dead since the glottal_source port, zero importers (LEGACY.md §2)
+    "vtl_synth/core/pulmonary_effort.py",
+    # research/calibration tool, not on the runtime path (LEGACY.md §2)
+    "vtl_synth/utils/calibrate_vowels.py",
+    # ffmpeg encoding: slow and not bit-stable (LEGACY.md §3)
+    "vtl_synth/video/encoder.py",
+]

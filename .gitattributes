@@ -2,6 +2,8 @@
 # vtl_synth/data/speakers/registry.json — git must never normalize
 # their line endings (a CRLF smudge changes the hash).
 *.speaker -text
-# Constants files are hash-validated against registry.json the same way -
-# never let git smudge their line endings (a CRLF smudge changes the hash).
-*_constants.py -text
+# Same rule for the per-speaker constants sources shipped next to the
+# registry: they are hash-pinned too, so the blob must be checked out
+# byte-identical on every platform (completes the platform-independent
+# registry hashes of b2c87a8, which only covered *.speaker).
+vtl_synth/data/speakers/*_constants.py -text

@@ -1,10 +1,11 @@
 {
   "meta": {
-    "schema": 2,
-    "date": "2026-09-28",
+    "schema": 3,
+    "date": "2026-11-13",
     "engine": "syl",
     "quant_decimals": 6,
     "speaker": "m01",
+    "corpus": "scripts/regen_baselines.py CORPUS (schema 3): vowels/plosives + nasals + nasalized vowels + clusters + word finals + breath pause",
     "note": "Baselines RELATIVES au speaker actif 'm01' (see install_speaker.py / scripts/regen_baselines.py). Regenerer apres toute modification volontaire du signal."
   },
   "phrases": {
@@ -173,7 +174,8 @@
           "mean": 0.0
         }
       },
-      "tract_sha256": "3d6fb1e61cc9d88b569e01d9bcaae6bb1effef03cf6602e90b1c06d181aef926"
+      "tract_sha256": "3d6fb1e61cc9d88b569e01d9bcaae6bb1effef03cf6602e90b1c06d181aef926",
+      "glottis_sha256": "a4816c85b3cd220337db2884c1cdc63b7a27fd1aaa85fd8625d33e8bf033a6f2"
     },
     "ba": {
       "ipa": "ba",
@@ -340,7 +342,8 @@
           "mean": 0.0
         }
       },
-      "tract_sha256": "8323a7ac65e26966ab282eace4cd6c8bdb3c83e01697cf91bb24c1e5b5d0dbd5"
+      "tract_sha256": "8323a7ac65e26966ab282eace4cd6c8bdb3c83e01697cf91bb24c1e5b5d0dbd5",
+      "glottis_sha256": "904ae2b8a5727d6ff8bed2c2ea3516a0540014301c05ce1901b9d6758eb33268"
     },
     "ba_da_ga": {
       "ipa": "ba da ga",
@@ -507,7 +510,848 @@
           "mean": 0.0
         }
       },
-      "tract_sha256": "45cc77de8c0c1c92057a865f73222b2fceff9130521ac5be80fec169922e97f5"
+      "tract_sha256": "45cc77de8c0c1c92057a865f73222b2fceff9130521ac5be80fec169922e97f5",
+      "glottis_sha256": "473483d3a97dbd37a12a7cd5f9aede85c7e4516f8fa8091af36e5f93e1c4f001"
+    },
+    "breath": {
+      "ipa": "ba % da",
+      "n_frames": 400,
+      "tract_shape": [
+        400,
+        19
+      ],
+      "glottis_shape": [
+        400,
+        11
+      ],
+      "tract_cols": {
+        "HX": {
+          "min": 0.0,
+          "max": 0.6056,
+          "mean": 0.218011
+        },
+        "HY": {
+          "min": -4.8376,
+          "max": -4.6255,
+          "mean": -4.701814
+        },
+        "JX": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "JA": {
+          "min": -3.7157,
+          "max": -1.94353,
+          "mean": -3.349478
+        },
+        "LP": {
+          "min": -0.218967,
+          "max": -0.004209,
+          "mean": -0.141827
+        },
+        "LD": {
+          "min": 0.047261,
+          "max": 1.245377,
+          "mean": 0.940949
+        },
+        "VS": {
+          "min": 0.0,
+          "max": 1.0,
+          "mean": 0.21
+        },
+        "VO": {
+          "min": -0.1,
+          "max": -0.1,
+          "mean": -0.1
+        },
+        "TCX": {
+          "min": 0.625799,
+          "max": 2.753134,
+          "mean": 0.997407
+        },
+        "TCY": {
+          "min": -1.8909,
+          "max": -0.81278,
+          "mean": -1.488269
+        },
+        "TTX": {
+          "min": 4.042233,
+          "max": 5.525077,
+          "mean": 4.269976
+        },
+        "TTY": {
+          "min": -1.192555,
+          "max": -0.161376,
+          "mean": -0.824968
+        },
+        "TBX": {
+          "min": 2.537799,
+          "max": 4.143463,
+          "mean": 2.767799
+        },
+        "TBY": {
+          "min": -1.0977,
+          "max": 0.278621,
+          "mean": -0.609533
+        },
+        "TRX": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "TRY": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "TS1": {
+          "min": 0.301333,
+          "max": 0.301999,
+          "mean": 0.301759
+        },
+        "TS2": {
+          "min": -0.0,
+          "max": 0.049333,
+          "mean": 0.017769
+        },
+        "TS3": {
+          "min": -0.050639,
+          "max": 0.018667,
+          "mean": 0.002695
+        }
+      },
+      "glottis_cols": {
+        "f0": {
+          "min": 119.0005,
+          "max": 129.0005,
+          "mean": 125.433652
+        },
+        "pressure": {
+          "min": 0.0,
+          "max": 8000.0,
+          "mean": 1070.645318
+        },
+        "x_bottom": {
+          "min": 0.054,
+          "max": 0.054,
+          "mean": 0.054
+        },
+        "x_top": {
+          "min": 0.072,
+          "max": 0.072,
+          "mean": 0.072
+        },
+        "chink_area": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "lag": {
+          "min": 1.222,
+          "max": 1.222,
+          "mean": 1.222
+        },
+        "rel_amp": {
+          "min": 0.0,
+          "max": 0.983723,
+          "mean": 0.121105
+        },
+        "double_pulsing": {
+          "min": 0.05,
+          "max": 0.05,
+          "mean": 0.05
+        },
+        "pulse_skewness": {
+          "min": 0.502,
+          "max": 0.502,
+          "mean": 0.502
+        },
+        "f0_flutter": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "aspiration_strength": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        }
+      },
+      "tract_sha256": "bbfe4e06ee3cf38bf9d983182a63b69e2adc3194b4a79bb9de1fafeebc98ecc0",
+      "glottis_sha256": "1e242ecf0efd4f8a15e327b2d0ea911336ab07d9c60d5cd1d1a52c260e116773"
+    },
+    "clusters": {
+      "ipa": "pla stRi",
+      "n_frames": 472,
+      "tract_shape": [
+        472,
+        19
+      ],
+      "glottis_shape": [
+        472,
+        11
+      ],
+      "tract_cols": {
+        "HX": {
+          "min": 0.0,
+          "max": 0.752365,
+          "mean": 0.481777
+        },
+        "HY": {
+          "min": -4.8376,
+          "max": -4.6255,
+          "mean": -4.7529
+        },
+        "JX": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "JA": {
+          "min": -3.7157,
+          "max": -1.562833,
+          "mean": -2.806155
+        },
+        "LP": {
+          "min": -0.494502,
+          "max": -0.004209,
+          "mean": -0.296966
+        },
+        "LD": {
+          "min": 0.047261,
+          "max": 1.245377,
+          "mean": 0.693104
+        },
+        "VS": {
+          "min": 0.0,
+          "max": 1.0,
+          "mean": 0.289979
+        },
+        "VO": {
+          "min": -0.1,
+          "max": -0.1,
+          "mean": -0.1
+        },
+        "TCX": {
+          "min": 0.625799,
+          "max": 3.23338,
+          "mean": 1.639559
+        },
+        "TCY": {
+          "min": -1.8909,
+          "max": -0.509455,
+          "mean": -1.05955
+        },
+        "TTX": {
+          "min": 4.042233,
+          "max": 5.402505,
+          "mean": 4.374422
+        },
+        "TTY": {
+          "min": -1.192555,
+          "max": 0.111113,
+          "mean": -0.445655
+        },
+        "TBX": {
+          "min": 2.537799,
+          "max": 4.537873,
+          "mean": 3.228152
+        },
+        "TBY": {
+          "min": -1.0977,
+          "max": 0.639844,
+          "mean": -0.074681
+        },
+        "TRX": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "TRY": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "TS1": {
+          "min": 0.300636,
+          "max": 0.301999,
+          "mean": 0.301237
+        },
+        "TS2": {
+          "min": -0.0,
+          "max": 0.084213,
+          "mean": 0.048888
+        },
+        "TS3": {
+          "min": -0.98854,
+          "max": 1.005334,
+          "mean": 0.038488
+        }
+      },
+      "glottis_cols": {
+        "f0": {
+          "min": 118.807249,
+          "max": 133.807248,
+          "mean": 126.964473
+        },
+        "pressure": {
+          "min": 0.0,
+          "max": 13013.661254,
+          "mean": 1041.93014
+        },
+        "x_bottom": {
+          "min": 0.050244,
+          "max": 0.156725,
+          "mean": 0.073661
+        },
+        "x_top": {
+          "min": 0.068948,
+          "max": 0.155464,
+          "mean": 0.087847
+        },
+        "chink_area": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "lag": {
+          "min": 1.222,
+          "max": 1.222,
+          "mean": 1.222
+        },
+        "rel_amp": {
+          "min": 0.0,
+          "max": 1.413436,
+          "mean": 0.100304
+        },
+        "double_pulsing": {
+          "min": 0.05,
+          "max": 0.05,
+          "mean": 0.05
+        },
+        "pulse_skewness": {
+          "min": 0.49986,
+          "max": 0.502078,
+          "mean": 0.501576
+        },
+        "f0_flutter": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "aspiration_strength": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        }
+      },
+      "tract_sha256": "c80d18370e0dbcf9b0e03c5a687d3fc3c9778552ad319aa7659118e5e659d704",
+      "glottis_sha256": "68ab3509f5e58d791c2db8497033871c26ba9fac9cc271714592a8eafcbb1620"
+    },
+    "finals": {
+      "ipa": "bas Rab",
+      "n_frames": 496,
+      "tract_shape": [
+        496,
+        19
+      ],
+      "glottis_shape": [
+        496,
+        11
+      ],
+      "tract_cols": {
+        "HX": {
+          "min": 0.0,
+          "max": 0.6056,
+          "mean": 0.28326
+        },
+        "HY": {
+          "min": -4.8376,
+          "max": -4.6255,
+          "mean": -4.724665
+        },
+        "JX": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "JA": {
+          "min": -3.7157,
+          "max": -1.468575,
+          "mean": -3.197217
+        },
+        "LP": {
+          "min": -0.218967,
+          "max": -0.004209,
+          "mean": -0.148765
+        },
+        "LD": {
+          "min": 0.047261,
+          "max": 1.245377,
+          "mean": 0.828273
+        },
+        "VS": {
+          "min": 0.0,
+          "max": 1.0,
+          "mean": 0.267883
+        },
+        "VO": {
+          "min": -0.1,
+          "max": -0.1,
+          "mean": -0.1
+        },
+        "TCX": {
+          "min": 0.625799,
+          "max": 3.354902,
+          "mean": 1.148113
+        },
+        "TCY": {
+          "min": -1.8909,
+          "max": -0.692177,
+          "mean": -1.355972
+        },
+        "TTX": {
+          "min": 4.042233,
+          "max": 4.2742,
+          "mean": 4.16594
+        },
+        "TTY": {
+          "min": -1.192555,
+          "max": -0.3,
+          "mean": -0.775047
+        },
+        "TBX": {
+          "min": 2.537799,
+          "max": 4.641094,
+          "mean": 2.868376
+        },
+        "TBY": {
+          "min": -1.0977,
+          "max": 0.454804,
+          "mean": -0.447383
+        },
+        "TRX": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "TRY": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "TS1": {
+          "min": 0.301333,
+          "max": 0.301999,
+          "mean": 0.301688
+        },
+        "TS2": {
+          "min": -0.0,
+          "max": 0.078391,
+          "mean": 0.026179
+        },
+        "TS3": {
+          "min": -0.06701,
+          "max": 1.00746,
+          "mean": 0.071273
+        }
+      },
+      "glottis_cols": {
+        "f0": {
+          "min": 118.408317,
+          "max": 128.408317,
+          "mean": 125.002614
+        },
+        "pressure": {
+          "min": 0.0,
+          "max": 8000.0,
+          "mean": 1541.780967
+        },
+        "x_bottom": {
+          "min": 0.050637,
+          "max": 0.143363,
+          "mean": 0.080355
+        },
+        "x_top": {
+          "min": 0.069341,
+          "max": 0.142659,
+          "mean": 0.092839
+        },
+        "chink_area": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "lag": {
+          "min": 1.222,
+          "max": 1.222,
+          "mean": 1.222
+        },
+        "rel_amp": {
+          "min": 0.0,
+          "max": 0.983723,
+          "mean": 0.150501
+        },
+        "double_pulsing": {
+          "min": 0.05,
+          "max": 0.05,
+          "mean": 0.05
+        },
+        "pulse_skewness": {
+          "min": 0.499922,
+          "max": 0.502078,
+          "mean": 0.501387
+        },
+        "f0_flutter": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "aspiration_strength": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        }
+      },
+      "tract_sha256": "0c1e549da13eb9a04fe9e37169f9b7ab47c2a1098b9c43a58e96acd5223ec35f",
+      "glottis_sha256": "2e550620d1cca1433f0a42a889590c6c916598ef1d131c4ed6b64223bb773637"
+    },
+    "nasal_vowels": {
+      "ipa": "b9 d9",
+      "n_frames": 400,
+      "tract_shape": [
+        400,
+        19
+      ],
+      "glottis_shape": [
+        400,
+        11
+      ],
+      "tract_cols": {
+        "HX": {
+          "min": 0.353147,
+          "max": 0.6056,
+          "mean": 0.405581
+        },
+        "HY": {
+          "min": -4.8376,
+          "max": -4.682705,
+          "mean": -4.71484
+        },
+        "JX": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "JA": {
+          "min": -3.082028,
+          "max": -1.94353,
+          "mean": -2.963347
+        },
+        "LP": {
+          "min": -0.347629,
+          "max": -0.004209,
+          "mean": -0.300482
+        },
+        "LD": {
+          "min": 0.047261,
+          "max": 0.903413,
+          "mean": 0.782349
+        },
+        "VS": {
+          "min": 0.0,
+          "max": 0.6697,
+          "mean": 0.140637
+        },
+        "VO": {
+          "min": -0.1,
+          "max": -0.1,
+          "mean": -0.1
+        },
+        "TCX": {
+          "min": 1.337633,
+          "max": 2.753134,
+          "mean": 1.484781
+        },
+        "TCY": {
+          "min": -1.278292,
+          "max": -0.81278,
+          "mean": -1.172974
+        },
+        "TTX": {
+          "min": 4.042233,
+          "max": 5.525077,
+          "mean": 4.485571
+        },
+        "TTY": {
+          "min": -0.623698,
+          "max": -0.161376,
+          "mean": -0.528983
+        },
+        "TBX": {
+          "min": 2.927633,
+          "max": 4.143463,
+          "mean": 3.119569
+        },
+        "TBY": {
+          "min": -0.340835,
+          "max": 0.278621,
+          "mean": -0.215262
+        },
+        "TRX": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "TRY": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "TS1": {
+          "min": 0.301238,
+          "max": 0.301333,
+          "mean": 0.301258
+        },
+        "TS2": {
+          "min": 0.044716,
+          "max": 0.049333,
+          "mean": 0.045684
+        },
+        "TS3": {
+          "min": -0.048515,
+          "max": 0.021332,
+          "mean": 0.016748
+        }
+      },
+      "glottis_cols": {
+        "f0": {
+          "min": 119.0005,
+          "max": 129.0005,
+          "mean": 125.433652
+        },
+        "pressure": {
+          "min": 0.0,
+          "max": 8000.0,
+          "mean": 1070.645318
+        },
+        "x_bottom": {
+          "min": 0.054,
+          "max": 0.054,
+          "mean": 0.054
+        },
+        "x_top": {
+          "min": 0.072,
+          "max": 0.072,
+          "mean": 0.072
+        },
+        "chink_area": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "lag": {
+          "min": 1.222,
+          "max": 1.222,
+          "mean": 1.222
+        },
+        "rel_amp": {
+          "min": 0.0,
+          "max": 0.983723,
+          "mean": 0.121105
+        },
+        "double_pulsing": {
+          "min": 0.05,
+          "max": 0.05,
+          "mean": 0.05
+        },
+        "pulse_skewness": {
+          "min": 0.502,
+          "max": 0.502,
+          "mean": 0.502
+        },
+        "f0_flutter": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "aspiration_strength": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        }
+      },
+      "tract_sha256": "48d4e022de44641eba58e47433ff4afe6060389e3e43d6f81f4778affeabb25b",
+      "glottis_sha256": "1e242ecf0efd4f8a15e327b2d0ea911336ab07d9c60d5cd1d1a52c260e116773"
+    },
+    "nasals": {
+      "ipa": "ma na",
+      "n_frames": 400,
+      "tract_shape": [
+        400,
+        19
+      ],
+      "glottis_shape": [
+        400,
+        11
+      ],
+      "tract_cols": {
+        "HX": {
+          "min": 0.0,
+          "max": 0.6056,
+          "mean": 0.218011
+        },
+        "HY": {
+          "min": -4.8376,
+          "max": -4.6255,
+          "mean": -4.701814
+        },
+        "JX": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "JA": {
+          "min": -3.7157,
+          "max": -2.353257,
+          "mean": -3.374062
+        },
+        "LP": {
+          "min": -0.218967,
+          "max": -0.004209,
+          "mean": -0.141827
+        },
+        "LD": {
+          "min": 0.047261,
+          "max": 1.245377,
+          "mean": 0.940949
+        },
+        "VS": {
+          "min": 0.0,
+          "max": 1.0,
+          "mean": 0.24
+        },
+        "VO": {
+          "min": -0.1,
+          "max": 0.984614,
+          "mean": 0.104
+        },
+        "TCX": {
+          "min": 0.625799,
+          "max": 2.01296,
+          "mean": 0.952997
+        },
+        "TCY": {
+          "min": -1.8909,
+          "max": 0.259797,
+          "mean": -1.423914
+        },
+        "TTX": {
+          "min": 3.585235,
+          "max": 4.2742,
+          "mean": 4.153586
+        },
+        "TTY": {
+          "min": -1.192555,
+          "max": 0.746189,
+          "mean": -0.770514
+        },
+        "TBX": {
+          "min": 2.537799,
+          "max": 3.243774,
+          "mean": 2.713818
+        },
+        "TBY": {
+          "min": -1.0977,
+          "max": 1.47338,
+          "mean": -0.537847
+        },
+        "TRX": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "TRY": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "TS1": {
+          "min": 0.301333,
+          "max": 0.301999,
+          "mean": 0.301759
+        },
+        "TS2": {
+          "min": -0.0,
+          "max": 0.049333,
+          "mean": 0.017769
+        },
+        "TS3": {
+          "min": 0.0,
+          "max": 0.018667,
+          "mean": 0.006727
+        }
+      },
+      "glottis_cols": {
+        "f0": {
+          "min": 119.0005,
+          "max": 129.0005,
+          "mean": 125.433652
+        },
+        "pressure": {
+          "min": 0.0,
+          "max": 8000.0,
+          "mean": 1070.645318
+        },
+        "x_bottom": {
+          "min": 0.054,
+          "max": 0.054,
+          "mean": 0.054
+        },
+        "x_top": {
+          "min": 0.072,
+          "max": 0.072,
+          "mean": 0.072
+        },
+        "chink_area": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "lag": {
+          "min": 1.222,
+          "max": 1.222,
+          "mean": 1.222
+        },
+        "rel_amp": {
+          "min": 0.0,
+          "max": 0.983723,
+          "mean": 0.121105
+        },
+        "double_pulsing": {
+          "min": 0.05,
+          "max": 0.05,
+          "mean": 0.05
+        },
+        "pulse_skewness": {
+          "min": 0.502,
+          "max": 0.502,
+          "mean": 0.502
+        },
+        "f0_flutter": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        },
+        "aspiration_strength": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0
+        }
+      },
+      "tract_sha256": "8165ea28a4e1a7678ecbda6538100e6d7ef6258114f7502d836a886c3c1a18bd",
+      "glottis_sha256": "1e242ecf0efd4f8a15e327b2d0ea911336ab07d9c60d5cd1d1a52c260e116773"
     }
   }
 }

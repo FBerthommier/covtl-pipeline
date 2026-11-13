@@ -268,7 +268,11 @@ class AssembleTract:
 
         for j, key in enumerate(covtl_keys):
             if key in covtl_to_full:
-                full_tract_100[:, covtl_to_full[key]] = tract_frames[:, j]
+                if tract_frames.dtype.names is not None:
+                    # structured input: one field per COVTL key (1-D array)
+                    full_tract_100[:, covtl_to_full[key]] = tract_frames[key]
+                else:
+                    full_tract_100[:, covtl_to_full[key]] = tract_frames[:, j]
 
         # --- Insert the extension parameters: VS, VO ---
         # VS: priority vs_ortho (JD) > extension_data['VS'] (TimedEnvelope)
