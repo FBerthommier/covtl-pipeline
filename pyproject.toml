@@ -77,3 +77,14 @@ vtl_synth = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+# Coverage policy (see LEGACY.md for the omit rationale):
+# branch coverage on the whole shipped package; the legacy V1 modules
+# kept for API compatibility and the ffmpeg video path are excluded
+# there with per-line comments, not silently.
+[tool.coverage.run]
+branch = true
+source = ["vtl_synth"]
+
+[tool.coverage.report]
+precision = 1
