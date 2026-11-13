@@ -1270,6 +1270,19 @@ def get_last_timer_data():
     return _LAST_PVAL_STATE.get('timer_data')
 
 
+def clear_last_pval_state() -> None:
+    """Empty the last-parse channel.
+
+    build_phrase_tract clears it before dispatching the trajectory
+    engine: the syl engine never populates it (only this module's V1
+    chain does), so without the clear a prior text_to_tract() call in
+    the same process would leave a STALE nodes/timer_data that the
+    envelope and pulmonary-effort steps would consume (observed as an
+    f0 contour shift of ~4 Hz on 'a i u', 2026-11-13).
+    """
+    _LAST_PVAL_STATE.clear()
+
+
 def _chain_elements_to_pval(
     elements: list,
     sr: float = 100.0,
