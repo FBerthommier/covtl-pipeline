@@ -14,6 +14,7 @@ arXiv:2307.02299 §2.2). Sequences without consecutive pause nodes are
 byte-identical (hashes recorded on the pre-fix engine @ 48442aa9).
 """
 import hashlib
+import sys
 
 import numpy as np
 import pytest
@@ -82,9 +83,54 @@ _SINGLE_PAUSE_SHA = {
     'bi.ba': '03fbee82929b4f9f752e9b83c22b4a089b96828597f4cde5c0b972eecd2d9c59',
 }
 
+# Values that feed build_phrase_pval (imported by syltraj from the
+# *installed* core/constants.py — the file swapped by install_speaker.py).
+_JD3_PINNED_NAMES = (
+    'VOWEL_TARGETS', 'CONSONANT_TARGETS', 'ALL_PHONEME_KEYS', 'CO_VTL',
+    'COVTL_PARAMS', 'N_VTL_PARAMS', 'NEUTRAL_RHO', 'NEUTRAL_THETA', 'CO',
+)
+
+
+def _installed_matches_jd3_reference() -> bool:
+    """True when the installed constants carry the jd3 reference values.
+
+    The pinned SHAs record the jd3 engine state @ 48442aa9.  On a machine
+    whose active speaker is not jd3 (install_speaker.py swap) or whose
+    constants were recalibrated, the single-pause matrices legitimately
+    differ — the audit would then measure the machine, not the engine.
+    """
+    import importlib.util
+
+    import numpy as np
+
+    from vtl_synth.core import constants as installed
+    from vtl_synth.core import speaker_registry as sr
+
+    spec = importlib.util.spec_from_file_location(
+        '_jd3_ref', sr.constants_source_path('jd3'))
+    ref = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = ref  # dataclasses py3.9 need this
+    spec.loader.exec_module(ref)
+    try:
+        for name in _JD3_PINNED_NAMES:
+            a, b = getattr(installed, name), getattr(ref, name)
+            if isinstance(a, np.ndarray):
+                if not np.array_equal(a, b):
+                    return False
+            elif a != b:
+                return False
+    finally:
+        sys.modules.pop(spec.name, None)
+    return True
+
 
 @pytest.mark.parametrize('seq', ['bi ba', 'bi.ba'])
 def test_single_pause_paths_unchanged(seq):
+    if not _installed_matches_jd3_reference():
+        pytest.skip(
+            'installed core/constants.py is not the jd3 reference (active '
+            'speaker swap or recalibrated constants) — the pinned SHAs only '
+            'apply to the jd3 engine state @ 48442aa9')
     Pval, _, _, _ = _build(seq)
     digest = hashlib.sha256(Pval.tobytes()).hexdigest()
     assert digest == _SINGLE_PAUSE_SHA[seq], (
