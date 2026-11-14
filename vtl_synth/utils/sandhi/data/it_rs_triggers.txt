@@ -1,0 +1,26 @@
+# Mots-outils déclencheurs du raddoppiamento sintattico, SANS
+# accent écrit (Serianni 1989). Les oxytons (accent final écrit :
+# città, però, più…) sont couverts par la règle orthographique du
+# module, pas par cette liste. Hors liste (norme) : per, con, in,
+# di, non, articles et pronoms atones.
+a
+da
+e
+o
+ma
+se
+che
+come
+dove
+qualche
+fra
+tra
+su
+fu
+qui
+qua
+sta
+sto
+va
+fa
+do
