@@ -255,33 +255,49 @@ def test_timed_envelope_v1_extensions():
 
 
 def test_timed_envelope_breathy_phonation_mode():
-    """_make_phonation_mode_events (l.721-802) : glottal_tag='breathy'
-    (level C du TagInterpreter) sur un segment → mode de phonation
-    non modal planifié.
+    """_make_phonation_mode_events (l.721-802) : les modes de phonation
+    (breathy/creaky/whisper) atteignent les FeatureEvents.
 
     Wave 4 fix (COVERAGE_REPORT.md wave 4 §7.4): _schedule_segment_events
     now merges the level-C tag_overrides into the effective tags, so
-    the phonation modes (breathy/creaky/whisper) actually reach the
-    FeatureEvents. Before the fix the override annotated the segment
-    but the events were built from DEFAULT_PHONEME_TAGS alone (glottis
-    delta vs modal ≈ 0.13, i.e. nothing)."""
+    the phonation modes actually reach the FeatureEvents. Before the
+    fix the override annotated the segment but the events were built
+    from DEFAULT_PHONEME_TAGS alone.
+
+    NB: TimedEnvelope(anchors=...) re-derives its segments via
+    anchors_to_segments, which relabels the vowels as '@' — a level-C
+    override keyed on the original vowel ('a') therefore does not
+    match; the override must target the CONVERTED key ('@' for a
+    vowel, the consonant key itself for a C). Both routes are locked
+    here, for the three phonation modes."""
     from vtl_synth.core.tag_system import TagInterpreter
     from vtl_synth.core.enveloppe import TimedEnvelope
 
-    def glottis_with(overrides):
-        segments, chain, anchors = _v1_segments('ba')
-        ti = TagInterpreter(
-            tag_overrides=overrides) if overrides else TagInterpreter()
-        env = TimedEnvelope(anchors=anchors, tag_interpreter=ti)
-        return np.asarray(env.get_all_extensions()['glottis'])
+    PHONATION_PARAMS = {'chink_area', 'x_bottom', 'x_top', 'f0_offset',
+                        'double_pulsing', 'pulse_skewness'}
+    EXPECTED = {
+        'breathy': {'chink_area', 'x_bottom'},
+        'creaky': {'f0_offset', 'double_pulsing'},
+        'whisper': {'chink_area', 'x_bottom', 'x_top'},
+    }
 
-    base = glottis_with(None)
-    for mode in ('breathy', 'creaky', 'whisper'):
-        g = glottis_with({'a': {'voicing': mode}})
-        assert np.isfinite(g).all()
-        # the phonation mode materially changes the glottis vector
-        delta = np.abs(g - base).max()
-        assert delta > 0.5, (mode, delta)
+    def phonation_events(key, mode):
+        segments, chain, anchors = _v1_segments('ba')
+        ti = TagInterpreter(tag_overrides={key: {'voicing': mode}})
+        env = TimedEnvelope(anchors=anchors, tag_interpreter=ti)
+        return {e.param_name for e in env.timer.events
+                if e.param_name in PHONATION_PARAMS}
+
+    for mode, expected in EXPECTED.items():
+        for key in ('@', 'b'):      # converted vowel key, consonant key
+            params = phonation_events(key, mode)
+            assert params == expected, (mode, key, params)
+    # and a default (no override) schedule carries none of them
+    segments, chain, anchors = _v1_segments('ba')
+    env0 = TimedEnvelope(anchors=anchors)
+    none_e = {e.param_name for e in env0.timer.events
+              if e.param_name in PHONATION_PARAMS}
+    assert none_e == set(), none_e
 
 
 def test_timed_envelope_add_vot_override():
