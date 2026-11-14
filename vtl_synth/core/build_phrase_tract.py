@@ -1021,10 +1021,20 @@ def build_phrase_tract(
     # not to the parser t_start values (~2.3x too fast —
     # they caused x_top/chink oscillations at sequence start, then
     # freezing of the glottal shape on 'modal').
-    from vtl_synth.core.glottal_source import classify_block_events
+    from vtl_synth.core.glottal_source import (
+        classify_block_events, phonation_schedule_from_segments,
+    )
     from vtl_synth.core.constants import TARGET_SR as _TSR
+    # Wave-4 enveloppe fix (redo of 269b23a — the reading gap): carry
+    # the level-C phonation overrides (breathy/creaky/whisper) into
+    # the shape events, so the glottal trajectory rebuilt by
+    # AssembleTract actually reflects the mode (TimedEnvelope's
+    # FeatureEvents alone never survived the assembly).
+    phonation_schedule = phonation_schedule_from_segments(
+        segments, n_steps, sr=_TSR)
     ext_aligned['shape_events'] = classify_block_events(
-        block_info, [s.key for s in cons_segments_all], sr=_TSR)
+        block_info, [s.key for s in cons_segments_all], sr=_TSR,
+        phonation_schedule=phonation_schedule)
 
     # Extract the consonant timing from block_info for the downstream
     # corrections in assemble_tract.py (velar TBY clamping, etc.)
