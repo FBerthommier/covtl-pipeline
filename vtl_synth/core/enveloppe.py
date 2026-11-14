@@ -1589,7 +1589,16 @@ class TimedEnvelope:
         Returns
         -------
         dict[str, np.ndarray]
-            - 'E'              : effort (n_frames,)
+            - 'E_fallback'     : anchor-indexed effort (n_frames,) —
+              RENAMED from 'E' in wave 4 (COVERAGE_REPORT.md wave 3
+              §2.2/§7.2): in build_phrase_tract (l.751) the 'E' entry
+              was unconditionally overwritten by the block-synchronized
+              E_100 of amplitude_envelope (branch A), so the value
+              computed here was dead on arrival at the engine output.
+              The anchor-indexed effort stays available under its
+              honest name; consumers that need the engine effort must
+              take it from the engine extensions ('E' set by
+              build_phrase_tract / text_to_tract).
             - 'VO'             : velum opening (n_frames,)
             - 'VS'             : velum shape (n_frames,)
             - 'V'              : voicing (n_frames,)
@@ -1599,7 +1608,7 @@ class TimedEnvelope:
             - 'timer_events'   : dict of all timer trajectories
         """
         return {
-            'E': self.compute_effort(),
+            'E_fallback': self.compute_effort(),
             'VO': self.compute_velum(),
             'VS': self.compute_velum_shape(),
             'V': self.compute_voicing(),

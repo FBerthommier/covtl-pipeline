@@ -242,9 +242,14 @@ def test_timed_envelope_v1_extensions():
     from vtl_synth.core.enveloppe import TimedEnvelope
     env = TimedEnvelope(anchors=anchors)
     ext = env.get_all_extensions()
-    for key in ('E', 'VO', 'VS', 'V', 'f0', 'aspiration'):
+    for key in ('E_fallback', 'VO', 'VS', 'V', 'f0', 'aspiration'):
         assert key in ext, key
         assert np.isfinite(np.asarray(ext[key], dtype=float)).all(), key
+    # wave 4: the engine effort 'E' is no longer exported by
+    # TimedEnvelope (overwritten by E_100 at the build_phrase_tract
+    # junction — dead on arrival); the anchor-indexed effort is now
+    # honestly named 'E_fallback'
+    assert 'E' not in ext
     g = np.asarray(ext['glottis'])
     assert g.shape[1] == 11 and np.isfinite(g).all()
 
@@ -298,7 +303,7 @@ def test_create_timed_envelope_from_segments_v1():
     segments, _, _ = _v1_segments('ba da')
     env = create_timed_envelope_from_segments(segments)
     ext = env.get_all_extensions()
-    for key in ('E', 'VO', 'VS', 'V', 'f0'):
+    for key in ('E_fallback', 'VO', 'VS', 'V', 'f0'):
         assert key in ext, key
         assert np.isfinite(np.asarray(ext[key], dtype=float)).all(), key
 

@@ -747,7 +747,11 @@ def build_phrase_tract(
                 shape = (n_steps,) + val.shape[1:]
                 extensions[key] = np.zeros(shape, dtype=val.dtype)
 
-    # Replace the effort envelope with E(t) from block_info
+    # Set the effort envelope from block_info (branch A).
+    # Wave 4 (COVERAGE_REPORT.md wave 3 §2.2/§7.2): TimedEnvelope no
+    # longer exports an 'E' key (renamed 'E_fallback') — this
+    # assignment is now a creation, not an overwrite of a value that
+    # was dead on arrival.
     extensions['E'] = E_100
 
     # ------------------------------------------------------------------
