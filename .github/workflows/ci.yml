@@ -13,8 +13,29 @@ on:
   pull_request:
 
 jobs:
+  # Fast lane (wave 3 recommendation, COVERAGE_REPORT.md wave 2 §5.1):
+  # the phonetic-input corpus locks the model notation (CV/CCV/VCV
+  # categories, space/|/%/. separators, C vs CC vs C.C cluster
+  # semantics — covtl-lambda conformity) in ~6 s and yields ~40 %
+  # package coverage. It runs on every push/PR as an early signal,
+  # ahead of the full ~3 min suite below.
+  phonetic-fast:
+    name: phonetic corpus (fast, ~6 s)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e . pytest pytest-cov
+      - name: Phonetic corpus
+        run: pytest tests/test_phonetic_model_inputs.py --cov=vtl_synth --cov-branch --cov-report=term
+
   tests:
-    name: pytest + coverage
+    name: pytest + coverage (full)
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
