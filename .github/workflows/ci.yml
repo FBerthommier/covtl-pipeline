@@ -67,3 +67,29 @@ jobs:
       # not involved (baselines stop at the tract/glottis matrices).
       - name: Baseline matrix
         run: python scripts/run_baselines_matrix.py
+
+  # Wave 4 recommendation (COVERAGE_REPORT.md wave 3 §7.4): the V1V2 ×
+  # sandhi composition test is skipped when only the Branch A stub is
+  # installed. This job activates the Branch B rule package (official
+  # "copy" procedure of covtl-sandhi v0.1.0 — the trailing "/." copies
+  # the CONTENT over the stub) and runs the crossed suite, so the
+  # composition is continuously verified instead of silently skipped.
+  sandhi:
+    name: sandhi composition (Branch B)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pipeline
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e . pytest
+      - name: Activate Branch B (covtl-sandhi rules)
+        run: |
+          git clone --depth 1 https://github.com/FBerthommier/covtl-sandhi.git ${{ runner.temp }}/covtl-sandhi
+          cp -r ${{ runner.temp }}/covtl-sandhi/sandhi/. vtl_synth/utils/sandhi/
+          python -c "import vtl_synth.utils.sandhi as s; assert s.SANDHI_FULL, 'Branch B activation failed'"
+      - name: Crossed suite (hook + composition)
+        run: pytest tests/test_sandhi_hook.py tests/test_sandhi_v1v2_composition.py -v
