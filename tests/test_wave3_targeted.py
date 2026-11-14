@@ -89,19 +89,20 @@ def test_preprocess_phrase_public_api():
     """l.261-265 : preprocess_phrase — normalisation + caractères
     ignorés (API publique documentée, zéro appelant interne).
 
-    Découverte vague 3 (bug de cohérence, rapport §4.6) :
-    notation.ALL_K omet 7 consonnes valides (S, T, f, k, p, s, t)
-    présentes dans constants.ALL_PHONEME_KEYS — unknown_chars les
-    signale donc à tort comme « ignorées » alors que la tokenisation
-    syltraj les synthétise bien (flat('ka pa') contient k et p).
-    Ce test verrouille le comportement RÉEL et échouera le jour où
-    la table sera alignée."""
+    Wave 4 fix (COVERAGE_REPORT.md wave 3 §4.6-1, §7.1) :
+    notation.ALL_K now derives from constants.ALL_PHONEME_KEYS, so
+    the voiceless consonants (S, T, f, k, p, s, t) are recognized —
+    no more false 'ignored characters' for phrases like 'klinpan'
+    while the tokenizer synthesizes them."""
     normalized, ignored = preprocess_phrase('ba da é x')
     assert normalized == 'ba da e x'
     assert ignored == ['x']
+    # the 7 previously missing consonants are now recognized
     normalized, ignored = preprocess_phrase('klinpan')
     assert normalized == 'klinpan'
-    assert ignored == ['k', 'p']   # signalés à tort (ALL_K incomplet)
+    assert ignored == []
+    normalized, ignored = preprocess_phrase('stra ka pa fjuZ')
+    assert ignored == []
 
 
 def test_c_target_unknown_key_fallback():
