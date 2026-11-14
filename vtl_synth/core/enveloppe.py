@@ -387,7 +387,16 @@ class FeatureTimer:
         list[FeatureEvent]
         """
         events: List[FeatureEvent] = []
+        # Wave 4 fix (COVERAGE_REPORT.md wave 4 §7.4): the effective
+        # tags are the DEFAULT tags updated by the level-C overrides
+        # of the TagInterpreter (tag_system.TagInterpreter.apply does
+        # exactly this to derive glottal_tag/velum_tag/vot_ms).
+        # Reading DEFAULT_PHONEME_TAGS alone made every level-C
+        # override (e.g. {'voicing': 'breathy'}) invisible to the
+        # phonation-mode / voicing / VOT event makers — the override
+        # annotated the segment but never reached the FeatureEvents.
         tags = DEFAULT_PHONEME_TAGS.get(seg.key, {})
+        tags = {**tags, **self.tag_interpreter.tag_overrides.get(seg.key, {})}
         phoneme = seg.key
 
         # --- Voicing / VOT ---

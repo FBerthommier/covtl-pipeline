@@ -252,17 +252,31 @@ def test_timed_envelope_v1_extensions():
 def test_timed_envelope_breathy_phonation_mode():
     """_make_phonation_mode_events (l.721-802) : glottal_tag='breathy'
     (level C du TagInterpreter) sur un segment → mode de phonation
-    non modal planifié."""
-    segments, chain, anchors = _v1_segments('ba')
-    # level C : override direct du tag glottal du premier segment
-    voiced = [s for s in segments if getattr(s, 'is_voiced', False)]
-    target = voiced[0] if voiced else segments[0]
-    target.glottal_tag = 'breathy'
+    non modal planifié.
+
+    Wave 4 fix (COVERAGE_REPORT.md wave 4 §7.4): _schedule_segment_events
+    now merges the level-C tag_overrides into the effective tags, so
+    the phonation modes (breathy/creaky/whisper) actually reach the
+    FeatureEvents. Before the fix the override annotated the segment
+    but the events were built from DEFAULT_PHONEME_TAGS alone (glottis
+    delta vs modal ≈ 0.13, i.e. nothing)."""
+    from vtl_synth.core.tag_system import TagInterpreter
     from vtl_synth.core.enveloppe import TimedEnvelope
-    env = TimedEnvelope(anchors=anchors)
-    ext = env.get_all_extensions()
-    g = np.asarray(ext['glottis'])
-    assert g.shape[1] == 11 and np.isfinite(g).all()
+
+    def glottis_with(overrides):
+        segments, chain, anchors = _v1_segments('ba')
+        ti = TagInterpreter(
+            tag_overrides=overrides) if overrides else TagInterpreter()
+        env = TimedEnvelope(anchors=anchors, tag_interpreter=ti)
+        return np.asarray(env.get_all_extensions()['glottis'])
+
+    base = glottis_with(None)
+    for mode in ('breathy', 'creaky', 'whisper'):
+        g = glottis_with({'a': {'voicing': mode}})
+        assert np.isfinite(g).all()
+        # the phonation mode materially changes the glottis vector
+        delta = np.abs(g - base).max()
+        assert delta > 0.5, (mode, delta)
 
 
 def test_timed_envelope_add_vot_override():
