@@ -417,14 +417,22 @@ def test_align_trajectories_pad_and_truncate():
     assert o2['TS3_ortho'].shape == (60,)
 
 
-def test_parse_to_anchors_api_drift_documented():
-    """Découverte vague 3 (rapport §4.6) : parse_to_anchors est exporté
-    dans vtl_synth.core.__all__ mais CASSÉ — il appelle
-    parse_ipa_with_markers avec l'ancien kwarg ``pause_marker=``,
-    renommé ``coarticulation_marker=``. Jamais appelé par le moteur,
-    l'API drift n'avait jamais été détectée. Ce test verrouille le
-    comportement actuel (TypeError) et échouera le jour de la
-    correction — penser alors à mettre à jour le rapport."""
+def test_parse_to_anchors_nominal():
+    """parse_to_anchors (enveloppe.py) — wave 4 fix (COVERAGE_REPORT.md
+    wave 3 §4.6-2, §7.1): the function called parse_ipa_with_markers
+    with the stale keyword ``pause_marker=`` (renamed
+    ``coarticulation_marker=``), so every call raised TypeError. The
+    keyword is fixed; the nominal path now returns the V_o / C / V /
+    V_e anchor chain per syllable."""
     from vtl_synth.core.enveloppe import parse_to_anchors
-    with pytest.raises(TypeError, match='pause_marker'):
-        parse_to_anchors('ba da')
+    anchors = parse_to_anchors('ba da')
+    assert len(anchors) == 8
+    labels = [a.label for a in anchors]
+    assert labels == ['V_o', 'C_b', 'V', 'V_e',
+                      'V_o', 'C_d', 'V', 'V_e']
+    # anchors carry absolute times in chronological order
+    ts = [a.t_ms for a in anchors]
+    assert ts == sorted(ts)
+    # single syllable
+    anchors_ba = parse_to_anchors('ba')
+    assert len(anchors_ba) == 4

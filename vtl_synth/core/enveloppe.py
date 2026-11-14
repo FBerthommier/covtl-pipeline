@@ -1914,9 +1914,9 @@ def _get_consonant_target(key: str) -> Optional[Tuple[float, float]]:
 
 def parse_to_anchors(
     ipa_str: str,
-    pause_marker: str = '.',
-    pause_duration_ms: float = 50.0,
-    vowel_duration_ms: float = 80.0,
+    coarticulation_marker: str = '.',
+    pause_duration_ms: float = 300.0,
+    vowel_duration_ms: float = 60.0,
     consonant_durations: Optional[Dict[str, float]] = None,
 ) -> List[GestureAnchor]:
     """Parses an IPA string and returns the gesture anchors.
@@ -1927,9 +1927,12 @@ def parse_to_anchors(
     Parameters
     ----------
     ipa_str : str
-        IPA string with pause markers ('.').
-    pause_marker : str
-        Pause marker character.
+        IPA string with coarticulation markers ('.').
+    coarticulation_marker : str
+        Coarticulation/pause marker character (renamed from
+        ``pause_marker`` when ``parse_ipa_with_markers`` evolved —
+        wave 4 fix, COVERAGE_REPORT.md wave 3 §4.6-2: the stale
+        keyword made every call raise TypeError).
     pause_duration_ms : float
         Default duration of a pause (ms).
     vowel_duration_ms : float
@@ -1943,13 +1946,13 @@ def parse_to_anchors(
         Anchors in chronological order.
     """
     from vtl_synth.core.continuous import (
-    parse_ipa_with_markers,
-    syllabify_continuous,
-)
+        parse_ipa_with_markers,
+        syllabify_continuous,
+    )
 
     tokens = parse_ipa_with_markers(
         ipa_str,
-        pause_marker=pause_marker,
+        coarticulation_marker=coarticulation_marker,
         pause_duration_ms=pause_duration_ms,
         vowel_duration_ms=vowel_duration_ms,
         consonant_durations=consonant_durations,
