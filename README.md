@@ -132,6 +132,35 @@ after an install. Per-speaker regression baselines
 test suite; regenerate them with `scripts/regen_baselines.py` after an
 intentional signal change.
 
+### All five speakers validated in CI
+
+The regression baselines are speaker-relative, so CI runs them for
+**every registered speaker**, not just the active one:
+`scripts/run_baselines_matrix.py` swaps the two repository layers the
+tract/glottis signals depend on (`core/constants.py` +
+`data/speakers/ACTIVE_SPEAKER`) and runs
+`tests/test_regression_baselines.py` in a **fresh subprocess per
+speaker** (constants are imported at module load — an in-process swap
+would be poisoned by `sys.modules`). The repository state is restored
+bit-exactly on exit, whatever happened. The same script regenerates
+all five baseline files (`--regen`) after an intentional signal
+change. On GitHub Actions this is the `baselines` job of `ci.yml`
+(windows-latest — the baselines are generated and acoustically
+validated on Windows); locally:
+
+```bash
+python scripts/run_baselines_matrix.py              # test all 5
+python scripts/run_baselines_matrix.py --speaker s2 # test one
+python scripts/run_baselines_matrix.py --regen      # regen all 5
+```
+
+Each of the five baseline files pins, per phrase of the corpus, the
+tract **and glottis** matrices: per-column min/max/mean statistics
+plus `tract_sha256` / `glottis_sha256` over the quantized (1e-6)
+signal — the glottal layer is pinned since schema 3, so the phonation
+chain itself is regression-guarded (see
+[COVERAGE_REPORT.md](COVERAGE_REPORT.md)).
+
 ## Languages
 
 `setup_lang.py` + `lang_pack/` add **German, English, Spanish, French,
@@ -263,6 +292,12 @@ pipe_breathy = Pipeline(tag_overrides={
 result = pipe_breathy.run("this is easy for us", output_dir="./out")
 # the 4 modes produce 4 distinct WAVs (measured RMS delta vs normal:
 # breathy 0.017, creaky 0.048, whisper 0.026)
+
+# whole-phrase phonation in one entry (since wave 5): the special
+# key '*' overrides every segment; an explicit per-key entry wins
+pipe_whisper = Pipeline(tag_overrides={'*': {'voicing': 'whisper'}})
+
+# the four modes side by side: python examples/demo_phonation.py
 ```
 
 The full engine API (72 symbols: `build_phrase_tract`,

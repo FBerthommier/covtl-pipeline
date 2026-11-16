@@ -3,6 +3,32 @@
 All notable changes to this package are documented here.
 Format: Keep a Changelog — https://keepachangelog.com/
 
+## [Unreleased] — wave 5 (post-1.2.0 hardening)
+
+### Added
+
+- `tag_overrides` accepts the special key `'*'`: one entry applies the
+  mode to the whole phrase (`Pipeline(tag_overrides={'*':
+  {'voicing': 'breathy'}})`); an explicit per-key entry always wins
+  over the wildcard. The one-entry form the console's phonation
+  selector needs.
+- The full-path phonation checks (preset resolution, schedule
+  conversion, block-event relabelling, distinct glott400 per mode,
+  `Pipeline` forwarding) are now **pytest-collected**
+  (`tests/test_phonation_full_path.py`) — they ran standalone-only
+  before, invisible to CI. The standalone checker stays.
+- README: the all-five-speakers CI baseline matrix
+  (`scripts/run_baselines_matrix.py`, `baselines` job) and the
+  tract+glottis pinning (schema 3) are documented (§ Multi-speakers).
+- Example `examples/demo_phonation.py` — the four modes side by side.
+
+### Changed
+
+- Packaging metadata: `description` mentions the phonation modes and
+  the sandhi rule package (the 1.2.0 headline features were absent
+  from the one-line PyPI summary); Python 3.13/3.14 classifiers added
+  (the chain is validated on 3.14 in the TestPyPI verification venv).
+
 ## [1.2.0] — 2026-11-15
 
 ### Fixed

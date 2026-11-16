@@ -396,7 +396,12 @@ class FeatureTimer:
         # phonation-mode / voicing / VOT event makers — the override
         # annotated the segment but never reached the FeatureEvents.
         tags = DEFAULT_PHONEME_TAGS.get(seg.key, {})
-        tags = {**tags, **self.tag_interpreter.tag_overrides.get(seg.key, {})}
+        # Wave 5 (P1.3): the wildcard override applies first, an
+        # explicit per-key entry wins over it — same precedence as
+        # TagInterpreter.apply.
+        tags = {**tags,
+                **self.tag_interpreter.tag_overrides.get('*', {}),
+                **self.tag_interpreter.tag_overrides.get(seg.key, {})}
         phoneme = seg.key
 
         # --- Voicing / VOT ---

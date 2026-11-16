@@ -471,3 +471,41 @@ def test_parse_to_anchors_nominal():
     # single syllable
     anchors_ba = parse_to_anchors('ba')
     assert len(anchors_ba) == 4
+
+
+def test_tag_overrides_wildcard_applies_to_all_keys():
+    """Wave 5 (P1.3): the special key '*' in tag_overrides applies to
+    every segment — a whole-phrase phonation mode in one entry — and
+    an explicit per-key entry always wins over the wildcard. The
+    wildcard also reaches the FeatureEvent makers (enveloppe.py reads
+    it with the same precedence)."""
+    from vtl_synth.core.tag_system import TagInterpreter, Segment
+    from vtl_synth.core.prosody_source import Segment as PSegment
+    from vtl_synth.core.enveloppe import TimedEnvelope
+
+    # -- TagInterpreter: wildcard alone
+    ti = TagInterpreter(tag_overrides={'*': {'voicing': 'whisper'}})
+    segs = [PSegment(key='D', kind='C', t_start=0, t_end=60),
+            PSegment(key='i', kind='V', t_start=60, t_end=150)]
+    out = ti.apply_all(segs)
+    assert all(s.glottal_tag == 'whisper' for s in out)
+
+    # -- precedence: per-key wins over the wildcard
+    ti2 = TagInterpreter(tag_overrides={
+        '*': {'voicing': 'breathy'}, 'i': {'voicing': 'creaky'}})
+    out2 = ti2.apply_all([PSegment(key='i', kind='V', t_start=0, t_end=90),
+                           PSegment(key='a', kind='V', t_start=90, t_end=180)])
+    glottal = {s.key: s.glottal_tag for s in out2}
+    assert glottal['i'] == 'creaky' and glottal['a'] == 'breathy'
+
+    # -- wildcard reaches the phonation spans (schedule path)
+    from vtl_synth.core.glottal_source import phonation_schedule_from_segments
+    spans = phonation_schedule_from_segments(ti.apply_all(segs), n_steps=100)
+    assert len(spans) == 2 and all(m == 'whisper' for m, _, _ in spans)
+
+    # -- no wildcard, no per-key: bit-exact default behaviour (guard
+    # against the wave-5 edit leaking '*' into every call)
+    ti3 = TagInterpreter()
+    out3 = ti3.apply_all([PSegment(key='i', kind='V', t_start=0, t_end=90)])
+    assert out3[0].glottal_tag == 'modal'
+    assert phonation_schedule_from_segments(out3, 100) == []
