@@ -355,7 +355,8 @@ class Pipeline:
                  lang: str = 'en',
                  expressive: bool = False,
                  sandhi: str = 'off',
-                 sandhi_mode: str = 'g2p'):
+                 sandhi_mode: str = 'g2p',
+                 tag_overrides: Optional[Dict[str, Dict]] = None):
         # None -> f0_default of the installed constants, i.e. the active
         # speaker of the registry (D14 fix: was the hardcoded JD3
         # literal 102.216; JD3 behaviour is unchanged since its
@@ -437,6 +438,15 @@ class Pipeline:
             print('[pipeline] covtl-sandhi rule package (Branch B) '
                   'not installed: sandhi falls back to off')
             self.sandhi = 'off'
+
+        # Level-C phonetic tag overrides (wave-4 enveloppe fix, redo of
+        # 269b23a): forwarded to build_phrase_tract → TagInterpreter, so
+        # the phonation modes (breathy/creaky/whisper) are reachable from
+        # the Pipeline API — the reading gap of the first fix: the events
+        # were built but nothing upstream could drive them.
+        # Keys are CONVERTED segment keys ('@' for a vowel — cf. bfc19bb),
+        # values are tag dicts, e.g. {'@': {'voicing': 'breathy'}}.
+        self.tag_overrides = dict(tag_overrides) if tag_overrides else None
 
     # ------------------------------------------------------------------
     # Full chain
@@ -602,6 +612,7 @@ class Pipeline:
                 pause_short_ms=self.pause_short_ms,
                 pause_long_ms=self.pause_long_ms,
                 pause_breath_ms=pause_breath_ms,
+                tag_overrides=self.tag_overrides,
             )
             # F0 prosody: expressive (pitch accents + attack resets +
             # nuclear fall, plan aligned on the syltraj blocks) or

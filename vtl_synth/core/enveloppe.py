@@ -387,7 +387,16 @@ class FeatureTimer:
         list[FeatureEvent]
         """
         events: List[FeatureEvent] = []
+        # Wave 4 fix (COVERAGE_REPORT.md wave 4 §7.4): the effective
+        # tags are the DEFAULT tags updated by the level-C overrides
+        # of the TagInterpreter (tag_system.TagInterpreter.apply does
+        # exactly this to derive glottal_tag/velum_tag/vot_ms).
+        # Reading DEFAULT_PHONEME_TAGS alone made every level-C
+        # override (e.g. {'voicing': 'breathy'}) invisible to the
+        # phonation-mode / voicing / VOT event makers — the override
+        # annotated the segment but never reached the FeatureEvents.
         tags = DEFAULT_PHONEME_TAGS.get(seg.key, {})
+        tags = {**tags, **self.tag_interpreter.tag_overrides.get(seg.key, {})}
         phoneme = seg.key
 
         # --- Voicing / VOT ---
@@ -1580,7 +1589,16 @@ class TimedEnvelope:
         Returns
         -------
         dict[str, np.ndarray]
-            - 'E'              : effort (n_frames,)
+            - 'E_fallback'     : anchor-indexed effort (n_frames,) —
+              RENAMED from 'E' in wave 4 (COVERAGE_REPORT.md wave 3
+              §2.2/§7.2): in build_phrase_tract (l.751) the 'E' entry
+              was unconditionally overwritten by the block-synchronized
+              E_100 of amplitude_envelope (branch A), so the value
+              computed here was dead on arrival at the engine output.
+              The anchor-indexed effort stays available under its
+              honest name; consumers that need the engine effort must
+              take it from the engine extensions ('E' set by
+              build_phrase_tract / text_to_tract).
             - 'VO'             : velum opening (n_frames,)
             - 'VS'             : velum shape (n_frames,)
             - 'V'              : voicing (n_frames,)
@@ -1590,7 +1608,7 @@ class TimedEnvelope:
             - 'timer_events'   : dict of all timer trajectories
         """
         return {
-            'E': self.compute_effort(),
+            'E_fallback': self.compute_effort(),
             'VO': self.compute_velum(),
             'VS': self.compute_velum_shape(),
             'V': self.compute_voicing(),
@@ -1914,9 +1932,9 @@ def _get_consonant_target(key: str) -> Optional[Tuple[float, float]]:
 
 def parse_to_anchors(
     ipa_str: str,
-    pause_marker: str = '.',
-    pause_duration_ms: float = 50.0,
-    vowel_duration_ms: float = 80.0,
+    coarticulation_marker: str = '.',
+    pause_duration_ms: float = 300.0,
+    vowel_duration_ms: float = 60.0,
     consonant_durations: Optional[Dict[str, float]] = None,
 ) -> List[GestureAnchor]:
     """Parses an IPA string and returns the gesture anchors.
@@ -1927,9 +1945,12 @@ def parse_to_anchors(
     Parameters
     ----------
     ipa_str : str
-        IPA string with pause markers ('.').
-    pause_marker : str
-        Pause marker character.
+        IPA string with coarticulation markers ('.').
+    coarticulation_marker : str
+        Coarticulation/pause marker character (renamed from
+        ``pause_marker`` when ``parse_ipa_with_markers`` evolved —
+        wave 4 fix, COVERAGE_REPORT.md wave 3 §4.6-2: the stale
+        keyword made every call raise TypeError).
     pause_duration_ms : float
         Default duration of a pause (ms).
     vowel_duration_ms : float
@@ -1943,13 +1964,13 @@ def parse_to_anchors(
         Anchors in chronological order.
     """
     from vtl_synth.core.continuous import (
-    parse_ipa_with_markers,
-    syllabify_continuous,
-)
+        parse_ipa_with_markers,
+        syllabify_continuous,
+    )
 
     tokens = parse_ipa_with_markers(
         ipa_str,
-        pause_marker=pause_marker,
+        coarticulation_marker=coarticulation_marker,
         pause_duration_ms=pause_duration_ms,
         vowel_duration_ms=vowel_duration_ms,
         consonant_durations=consonant_durations,

@@ -954,45 +954,33 @@ def build_global_pval(nodes, anchors, T_cons, T_voy, T_pause_short,
                 pt_A = A.pt or [0.0, 0.0]
                 T_use = T_pause_short
             pt_B = B.pt or [0.0, 0.0]
-            if m == 0:
-                _append_arc(blocks, pt_A, pt_B, T_use, nu, K, Pexp)
-                post = _amp(B.kind == 'V')
-                pre = _pre_amp_backward_scan(anchors, idx) if was_pending \
-                    else 0.0
-                block_info.append(SylBlock(
-                    n_steps=T_use, kind='initial', long=False,
-                    pre_amp=pre, post_amp=post, breath=was_breath))
-                if post > 0.01 and not b_vonset:
-                    _append_attack(blocks, block_info, pt_B, T_cons, post)
-            else:
-                blocks.append(build_cluster_pval(pt_A, pt_B, consonants,
-                                                 T_cons, nu, K, Kvoy,
-                                                 Pexp))
-                block_info.append(SylBlock(
-                    n_steps=(len(consonants) + 1) * T_cons, kind='cluster',
-                    n_cons=len(consonants),
-                    cons_tokens=['C'] * len(consonants), cons_keys=[c.key for c in consonants],
-                    pre_token='O',
-                    post_token=('y' if B.is_syl_vowel_onset
-                                else ('V' if B.kind == 'V' else 'O')),
-                    has_following_plateau=_has_following_plateau(anchors,
-                                                                 idx)))
+            # Wave 4 refactor: the else arm (cluster after a pause with
+            # a terminal departure point) is dead via the public API —
+            # build_anchors inserts a vowel-onset anchor after every
+            # pause that precedes a C, so m == 0 whenever a_term holds
+            # here (proof by sys.settrace over 25 pause forms,
+            # COVERAGE_REPORT.md wave 2 §4.4; wave 3 marked it
+            # pragma: no cover, wave 4 removes it).
+            _append_arc(blocks, pt_A, pt_B, T_use, nu, K, Pexp)
+            post = _amp(B.kind == 'V')
+            pre = _pre_amp_backward_scan(anchors, idx) if was_pending \
+                else 0.0
+            block_info.append(SylBlock(
+                n_steps=T_use, kind='initial', long=False,
+                pre_amp=pre, post_amp=post, breath=was_breath))
+            if post > 0.01 and not b_vonset:
+                _append_attack(blocks, block_info, pt_B, T_cons, post)
             continue
 
         if b_term:
-            if m > 0:
-                blocks.append(build_cluster_pval(
-                    A.pt or [0.0, 0.0], B.pt or [0.0, 0.0], consonants,
-                    T_cons, nu, K, Kvoy, Pexp))
-                block_info.append(SylBlock(
-                    n_steps=(len(consonants) + 1) * T_cons, kind='cluster',
-                    n_cons=len(consonants),
-                    cons_tokens=['C'] * len(consonants), cons_keys=[c.key for c in consonants],
-                    pre_token=('y' if A.is_syl_vowel_onset
-                               else ('O' if a_vonset
-                                     else ('V' if a_V else 'O'))),
-                    post_token='F' if B.kind == 'synth' else 'O'))
-            elif A.kind == 'V' and B.kind == 'pause':
+            # Wave 4 refactor: the m > 0 arm (terminal cluster) is dead
+            # via the public API — build_anchors inserts a word-end
+            # anchor (COEFCEN*rho_V) before every pause that follows a
+            # C, so m == 0 whenever b_term holds here (proof by
+            # sys.settrace over 25 pause forms, COVERAGE_REPORT.md
+            # wave 2 §4.4; wave 3 marked it pragma: no cover, wave 4
+            # removes it).
+            if A.kind == 'V' and B.kind == 'pause':
                 _append_decay(blocks, block_info, A.pt or [0.0, 0.0],
                               T_cons, pre_amp=1.0)
             if B.kind == 'pause':
@@ -1001,20 +989,14 @@ def build_global_pval(nodes, anchors, T_cons, T_voy, T_pause_short,
                 pending_breath = B.breath
             continue
 
-        if pending_pt is not None:
-            T_use = _pause_steps()
-            _append_arc(blocks, pending_pt, B.pt or [0.0, 0.0], T_use,
-                        nu, K, Pexp)
-            pre_a = _amp(a_V)
-            block_info.append(SylBlock(n_steps=T_use, kind='pause',
-                                       long=pending_long, pre_amp=pre_a,
-                                       breath=pending_breath))
-            _append_decay(blocks, block_info, A.pt or [0.0, 0.0], T_cons,
-                          pre_amp=pre_a)
-            _append_attack(blocks, block_info, B.pt or [0.0, 0.0], T_cons,
-                           post_amp=_amp(b_V))
-            pending_pt = None
-            pending_breath = False
+        # Wave 4 refactor: the mid-loop pause block that consumed a
+        # pending_pt in front of a non-terminal anchor is dead via the
+        # public API — a non-terminal anchor following a pause is
+        # always preceded by a terminal one, so the a_term branch above
+        # consumes the pending point first (proof by sys.settrace over
+        # 25 pause forms, COVERAGE_REPORT.md wave 2 §4.4; wave 3 marked
+        # it pragma: no cover, wave 4 removes it). Only the m == 0 /
+        # cluster arms of the background decision remain below.
 
         if m == 0:
             if b_vonset and not b_V:
@@ -1038,23 +1020,14 @@ def build_global_pval(nodes, anchors, T_cons, T_voy, T_pause_short,
                 has_following_plateau=_has_following_plateau(anchors,
                                                              idx)))
 
-    if anchors:
-        Blast = anchors[-1]
-        if Blast.hold and Blast.kind == 'V':
-            blocks.append(np.tile(compute_P(*Blast.pt), (T_voy, 1)))
-            _vi = min(max(Blast.i, 0), len(nodes) - 1)
-            block_info.append(SylBlock(n_steps=T_voy, kind='plateau',
-                                       vowel_key=nodes[_vi].key.rstrip('~'),
-                                       nasal=nodes[_vi].nasal))
-
-    if pending_pt is not None and anchors:
-        T_use = _pause_steps()
-        _append_arc(blocks, pending_pt, anchors[-1].pt or [0.0, 0.0],
-                    T_use, nu, K, Pexp)
-        block_info.append(SylBlock(n_steps=T_use, kind='terminal',
-                                   breath=pending_breath))
-        pending_pt = None
-        pending_breath = False
+    # Wave 4 refactor: the two post-loop blocks below (trailing V
+    # plateau, pending pause arc) are dead via the public API —
+    # build_anchors always appends a terminal 'synth' anchor, so
+    # anchors[-1].kind == 'synth' != 'V' (no trailing plateau) and the
+    # last loop turn (X, synth) never leaves a pending point (no
+    # trailing pause). Proof by sys.settrace over 25 pause forms,
+    # COVERAGE_REPORT.md wave 2 §4.4; wave 3 marked them pragma: no
+    # cover, wave 4 removes them.
 
     Pval = np.vstack(blocks) if blocks else \
         np.zeros((T_cons, N_VTL_PARAMS))

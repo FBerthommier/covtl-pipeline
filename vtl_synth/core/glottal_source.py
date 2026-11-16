@@ -250,7 +250,15 @@ def smooth_glottal_trajectory(
 def _lookup_preset_vector(label: str) -> np.ndarray:
     """Get the 11-element control vector for a glottal shape label.
 
-    Uses JD3_GLOTTIS_PRESETS when available, falls back to generic.
+    Uses JD3_GLOTTIS_PRESETS when available, falls back to the
+    speaker-independent GLOTTIS_PRESETS, then to modal.
+
+    Wave-4 enveloppe fix (redo of 269b23a): 'creaky' has no JD3 entry
+    (the JD3.speaker file ships no creaky shape) — the former
+    JD3-then-modal chain silently collapsed every creaky event onto
+    the modal baseline. The generic preset (f0 80, double_pulsing 0.3,
+    pulse_skewness 0.5) is the documented stand-in
+    (constants.GLOTTIS_PRESETS docstring).
     """
     # Normalize label names
     normalized = label
@@ -259,6 +267,17 @@ def _lookup_preset_vector(label: str) -> np.ndarray:
 
     if normalized in JD3_GLOTTIS_PRESETS:
         return JD3_GLOTTIS_PRESETS[normalized].to_vector()
+
+    # Generic speaker-independent presets for the phonation shapes the
+    # JD3 speaker file does not ship ('creaky' — cf. the redo of the
+    # wave-4 enveloppe fix: the former JD3-then-modal chain collapsed
+    # every creaky event onto the modal baseline). Restricted to the
+    # phonation labels so an emptied JD3 table still hits the modal
+    # fallback below (locked by test_glottal_source_rules).
+    from .constants import GLOTTIS_PRESETS as _GENERIC
+    if normalized in ('creaky', 'breathy', 'whisper') \
+            and normalized in _GENERIC:
+        return _GENERIC[normalized].to_vector()
 
     # Fallback: return modal
     if 'modal' in JD3_GLOTTIS_PRESETS:
@@ -803,6 +822,7 @@ def classify_block_events(
     block_info: list,
     cons_keys: list,
     sr: float = TARGET_SR,
+    phonation_schedule: Optional[List[Tuple[str, int, int]]] = None,
 ) -> List[Tuple[str, int]]:
     """Shape events aligned with block_info (the trajectory's REAL timing).
 
@@ -821,6 +841,18 @@ def classify_block_events(
     An initial 'modal' is emitted at frame 0; consecutive identical
     labels are deduplicated.
 
+    Wave-4 enveloppe fix (redo of 269b23a — the reading gap): the
+    phonation-mode FeatureEvents produced by TimedEnvelope
+    (_make_phonation_mode_events) never survived the assembly, because
+    AssembleTract rebuilds the glottis from these shape_events alone.
+    ``phonation_schedule`` now lets the caller inject the annotated
+    phonation modes (breathy / creaky / whisper) as
+    (mode, start_frame, end_frame) spans: every event falling inside a
+    span is RELABELLED with the mode, and a trailing event restores the
+    held shape at the span end — so the glottal trajectory carries the
+    modulation at the JD3 preset scale (native .tract units), with the
+    same 12 ms critically-damped smoothing as every other shape change.
+
     Parameters
     ----------
     block_info : list
@@ -829,6 +861,10 @@ def classify_block_events(
         IPA keys of the consonants in chronological order.
     sr : float
         Sampling frequency of the block frames (Hz).
+    phonation_schedule : list of (str, int, int), optional
+        (mode_label, start_frame, end_frame) spans, e.g. from
+        ``phonation_schedule_from_segments``. Overlapping spans:
+        the LAST one in the list wins (callers emit one per segment).
 
     Returns
     -------
@@ -859,11 +895,95 @@ def classify_block_events(
         # pause/terminal/initial/decay/attack: hold the previous shape
         off += n_steps
 
+    # --- Wave-4 enveloppe fix: relabel the phonation spans -------------
+    # Replace the shape of every event inside a phonation span with the
+    # mode label, EMIT a (mode, span_start) event when no event exists
+    # there (a span may cover a late plateau whose shape is held), and
+    # restore the held shape at the span end (the
+    # smooth_glottal_trajectory low-pass does the transition).
+    if phonation_schedule:
+        PHONATION_SHAPES = {'breathy', 'creaky', 'whisper'}
+        for mode, f0, f1 in phonation_schedule:
+            if mode not in PHONATION_SHAPES:
+                continue
+            # held shape BEFORE the span, for the restoration event
+            held = None
+            for label, f in events:
+                if f < f0:
+                    held = label
+                elif f == f0 and label not in PHONATION_SHAPES:
+                    held = label
+            events = [(mode if (f0 <= f < f1) else label, f)
+                      for label, f in events]
+            # force the mode ON at the span start if nothing fires there
+            if not any(f0 <= f < f1 for _, f in events):
+                events.append((mode, f0))
+            # restoration AFTER the span (unless a real event exists there)
+            later = [f for _, f in events if f >= f1]
+            if later and min(later) > f1:
+                events.append(((held or 'modal'), f1))
+            elif not later:
+                events.append(((held or 'modal'), f1))
+        events.sort(key=lambda x: x[1])
+
     dedup = [events[0]]
     for label, f in events[1:]:
         if label != dedup[-1][0] or f == 0:
             dedup.append((label, f))
     return dedup
+
+
+def phonation_schedule_from_segments(
+    segments: list,
+    n_steps: int,
+    sr: float = TARGET_SR,
+) -> List[Tuple[str, int, int]]:
+    """Phonation spans (mode, start, end) from annotated segments.
+
+    Wave-4 enveloppe fix (redo of 269b23a): converts the level-C
+    phonation overrides (visible as ``segment.glottal_tag`` after
+    TagInterpreter.apply) into frame spans on the REAL trajectory
+    timeline. Segments carry parser-relative times (they run faster
+    than the trajectory blocks); the spans are mapped proportionally
+    (t / t_max of the segment chain) onto ``n_steps`` — the same
+    convention as the alignment used for consonant_frames in
+    build_phrase_tract step 6.
+
+    Parameters
+    ----------
+    segments : list[Segment]
+        Annotated segments (with .glottal_tag, .t_start, .t_end in ms —
+        the Segment dataclass of types.py).
+    n_steps : int
+        Total trajectory frames (block_info sum of n_steps).
+    sr : float
+        Sampling frequency of the trajectory frames (Hz). Kept for
+        signature symmetry; the mapping is proportional, not absolute.
+
+    Returns
+    -------
+    list of (str, int, int)
+        (mode_label, start_frame, end_frame), chronological.
+    """
+    PHONATION_TAGS = {'breathy', 'creaky', 'whisper'}
+    spans: List[Tuple[str, int, int]] = []
+    tagged = [s for s in segments
+              if getattr(s, 'glottal_tag', 'modal') in PHONATION_TAGS]
+    if not tagged:
+        return spans
+
+    t_max = max(getattr(s, 't_end', getattr(s, 't_start', 0.0))
+                for s in segments) or 1.0
+
+    def to_frame(t_ms: float) -> int:
+        return int(round(min(1.0, max(0.0, t_ms / t_max)) * n_steps))
+
+    for s in tagged:
+        f0 = to_frame(getattr(s, 't_start', 0.0))
+        f1 = to_frame(getattr(s, 't_end', f0 + 60.0))
+        if f1 > f0:
+            spans.append((s.glottal_tag, f0, f1))
+    return spans
 
 
 # ==============================================================================

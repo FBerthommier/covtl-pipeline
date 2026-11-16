@@ -27,6 +27,22 @@ The V1 **signal** is deliberately not pinned by baselines: the
 acoustically validated reference is the syl engine (see
 `regression_baselines.json`, `engine: 'syl'`).
 
+### 1bis. Notation gap — the hyphen `-` (wave 2 audit, 2026-11-14)
+
+The V1 parser (`core/parsing.py::_is_syllable_separator`) treats `-`
+as an alias of the syllable separator `.`; the syl engine
+(`core/syltraj.py::tokenize_phrase`) emits a `DOT` for `.` only and
+silently consumes `-` (it is preserved by `notation.normalize_text`
+but matched by no token). `bi-ba` and `biba` therefore build
+identical trajectories, while `bi.ba` differs.
+
+Decision (pending maintainer alignment): **documented, not changed** —
+aligning the hyphen would alter the bit-identity of every existing
+baseline built on a hyphenated input. The current behaviour is locked
+by `tests/test_phonetic_model_inputs.py::test_separators_tokenize`
+(case `bi-ba` → no separator): if the hyphen is ever aligned with the
+dot, that test fails and this section must be updated.
+
 ## 2. Dead code — omitted from the coverage measure
 
 | Module | Evidence | Decision |

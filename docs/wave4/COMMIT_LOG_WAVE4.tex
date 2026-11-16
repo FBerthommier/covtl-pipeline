@@ -1,0 +1,601 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{adjustbox}
+\usepackage{enumitem}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{microtype}
+\usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=darkgray,urlcolor=blue!60!black,bookmarks=true,bookmarksnumbered=true,unicode=true]{hyperref}
+
+\geometry{a4paper, top=2.6cm, bottom=2.6cm, left=2.5cm, right=2.5cm}
+\setlength{\headheight}{14pt}
+
+% ─── Header / footer ────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\itshape covtl-pipeline / vtl-synth --- Wave-4 Commit Log}
+\fancyhead[R]{\small base 3903645}
+\fancyfoot[C]{\small\thepage}
+
+% ─── Typography ─────────────────────────────────────────────────────
+\titleformat{\section}{\Large\bfseries\color{blue!35!black}}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\large\bfseries\color{blue!30!black}}{\thesubsection}{0.7em}{}
+\setlength{\parskip}{0.45em}
+\setlength{\parindent}{0pt}
+\widowpenalty=10000
+\clubpenalty=10000
+
+\definecolor{codebg}{HTML}{F7F7F5}
+\definecolor{okgreen}{HTML}{2E7D32}
+
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{codebg},
+  frame=single, framerule=0.3pt, rulecolor=\color{gray!40},
+  breaklines=true, breakatwhitespace=true,
+  columns=fullflexible, keepspaces=true,
+  aboveskip=0.8em, belowskip=0.8em,
+  showstringspaces=false,
+}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\commit}[1]{\texttt{#1}}
+\newcommand{\pkg}[1]{\texttt{#1}}
+\newcommand{\pct}[1]{{#1}\,\%}
+
+\hypersetup{
+  pdftitle={Wave-4 Commit Log: Rationale and Non-Regression Evidence (vtl-synth 1.1.3)},
+  pdfauthor={Z.ai},
+  pdfsubject={Commit-by-commit rationale of the wave-4 patch series with non-regression test series},
+  pdfkeywords={git, commits, testing, non-regression, coverage, speech synthesis}
+}
+
+\begin{document}
+
+% ════════════════════════════════════════════════════════════════════
+% NO TITLE PAGE — cover generated separately, merged as page 0.
+% ════════════════════════════════════════════════════════════════════
+
+\tableofcontents
+\newpage
+
+% ────────────────────────────────────────────────────────────────────
+\section{Purpose and Scope}
+\label{sec:purpose}
+
+This document is the engineering record of the wave-4 patch series
+applied to \pkg{vtl-synth}~1.1.3 (repository
+\pkg{covtl-pipeline}, base commit
+\code{3903645d3f91862c49f934aee94e2b2cc09c4bd}). It travels with the
+patch: applying the series to the base commit and reading this log
+side by side gives a reviewer the intent, the logical justification,
+the measured improvement, and the non-regression evidence of every
+change, in the order the changes should be reviewed.
+
+The series consists of eight atomic commits, ten files touched,
+1{,}170 insertions and 88 deletions. Every commit compiles, passes
+the full test suite, and---wherever it is supposed to preserve
+behavior---passes the byte-level and structural regression pins of
+the repository. The order of the commits is itself part of the design:
+the series opens with the test hardening (so that every later commit
+is judged by the strengthened suite), proceeds from pure refactoring
+(no behavioral change, hash-proven) to bug fixes (intended behavioral
+changes, each with a before/after observable), and closes with CI and
+coverage-complement commits.
+
+\begin{table}[htbp]
+\centering
+\caption{The wave-4 series at a glance.}
+\label{tab:series}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} c l l l}
+\toprule
+\# & Commit & Type & Files \\
+\midrule
+1 & \commit{017acea} & test + ci & 6 (tests, LEGACY, CI, pyproject) \\
+2 & \commit{971f2f2} & refactor & 1 (\code{syltraj.py}) \\
+3 & \commit{ec81a1a} & fix & 2 (\code{notation.py}, test) \\
+4 & \commit{7681cfe} & fix & 2 (\code{enveloppe.py}, test) \\
+5 & \commit{269b23a} & fix & 2 (\code{enveloppe.py}, test) \\
+6 & \commit{c02f482} & refactor & 3 (\code{enveloppe.py}, \code{build\_phrase\_tract.py}, test) \\
+7 & \commit{7d60b6e} & ci & 1 (\code{ci.yml}) \\
+8 & \commit{bfc19bb} & test & 1 (\code{test\_wave3\_targeted.py}) \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\subsection{How to Apply}
+
+\begin{lstlisting}[language=bash, caption={Applying the series (line endings matter).}]
+git checkout -b wave4 3903645
+git am --keep-cr covtl-wave4-patch/commits/*.patch
+# or, as a single squashed change:
+git apply --keep-cr wave4_squashed.diff
+\end{lstlisting}
+
+The engine sources of the repository are CRLF blobs in git; the test
+sources are LF. The patch series preserves those line endings, and
+\code{git am} requires \code{--keep-cr} to replay them (an application
+without the flag fails on \code{syltraj.py}---the symptom is a patch
+mismatch, not a defect of the series). The series was validated by
+applying it to a virgin clone of the base commit: the resulting tree
+is byte-identical to the developed branch, and the full suite is
+green on the patched tree.
+
+% ────────────────────────────────────────────────────────────────────
+\section{Commit 1 --- \commit{017acea}: Wave-3 Test Hardening}
+\label{sec:c1}
+
+\subsection{Rationale}
+
+The wave-3 measurement campaign (which preceded this series) had
+improved coverage from \pct{74.5} to \pct{76.1} but left its
+artifacts---a strengthened phonetic corpus, platform-independent
+pins, targeted tests, a CI fast lane, and the coverage
+configuration---outside the repository. The first commit of this
+series imports that hardening wholesale, so that every subsequent
+commit is judged against the strengthened suite rather than the
+original one. This is the standard safety pattern for a
+behavior-changing series: \emph{raise the bar first}.
+
+\subsection{Content}
+
+\begin{itemize}[leftmargin=1.4em, itemsep=0.15em]
+  \item \code{tests/test\_phonetic\_model\_inputs.py}: the phonetic
+        corpus grows to 97 test cases, including a batch-load test
+        (five real TIMIT phrases) and a label-sanitation uniqueness
+        test that locks the silent-dict-overwrite failure mode of
+        \code{build\_batch\_tract} (two labels that differ only in
+        non-word characters must not collide after sanitation).
+  \item \code{tests/test\_syltraj\_double\_pause.py}: the regression
+        pins become platform-independent. The single-pause
+        trajectories are hashed after quantization to $10^{-9}$
+        (removing \code{libm} last-bit differences between Windows
+        and Linux while still catching any real trajectory change),
+        and structural invariants are added: exact block schedule,
+        vowel plateaus equal to the algebraic projection
+        \code{compute\_P(*target)} \emph{exactly}, bounded inter-step
+        jump. The raw Windows pins are kept as an informational
+        control.
+  \item \code{tests/test\_wave3\_targeted.py}: 26 targeted tests,
+        each citing the exact line it activates (arc variants of
+        \code{syltraj}, V1 engine paths, nasal hiatus, speaker-file
+        errors, the timed-envelope route,
+        \code{\_align\_trajectories} padding and truncation).
+  \item \code{LEGACY.md} \S1bis: the hyphen policy---V1 treated
+        \code{-} as a syllable separator alias, the syl engine
+        silently consumes it---is documented as a locked gap with a
+        test that will fail the day someone aligns the behaviors,
+        forcing a documentation update.
+  \item \code{.github/workflows/ci.yml}: a \code{phonetic-fast} job
+        runs the 97-case corpus ($\approx$6\,s) on every push and
+        pull request, ahead of the full suite.
+  \item \code{pyproject.toml}: the \code{[tool.coverage]} blocks
+        (omits with their LEGACY ledger references,
+        \code{exclude\_lines}) make local and CI measurements
+        identical.
+\end{itemize}
+
+\subsection{Evidence}
+
+The commit is test- and infrastructure-only: no engine source is
+touched, and the 49 regression baselines pass unchanged by
+construction. The corpus run time on this machine: 97 tests in
+4.6\,s (wall clock $\approx$5.7\,s including interpreter startup).
+
+% ────────────────────────────────────────────────────────────────────
+\section{Commit 2 --- \commit{971f2f2}: Removing the Four Dead Arms}
+\label{sec:c2}
+
+\subsection{Rationale}
+
+The wave-2 tracer sweep (\code{sys.settrace} over 25 pause forms) had
+established that four control-flow arms of
+\code{build\_global\_pval} are structurally unreachable through the
+public API; wave~3 had marked them \code{pragma: no cover}. Marking
+dead code is an accounting decision; removing it is an engineering
+one, and it is the right one: unreachable arms in the central
+trajectory builder are a standing trap for future maintainers (every
+reader must re-derive their unreachability) and a permanent tax on
+the coverage denominator. This commit replaces the marks with
+removal---27 statements deleted, each replacement site carrying a
+comment that cites the tracer evidence and names the invariant of
+\code{build\_anchors} that guarantees unreachability.
+
+\begin{table}[htbp]
+\centering
+\caption{The four removed arms and the anchor-builder invariant that
+makes each unreachable.}
+\label{tab:arms}
+\small
+\begin{tabularx}{\textwidth}{@{ } l X }
+\toprule
+\textbf{Removed arm} & \textbf{Invariant of \code{build\_anchors}} \\
+\midrule
+\code{a\_term} \code{else} (cluster after a pause with terminal departure) &
+A vowel-onset anchor is inserted after every pause that precedes a consonant, so the consonant count $m$ is always 0 when \code{a\_term} holds; the \code{m==0} arm (arc + \code{initial} block) is the live path. \\
+\addlinespace
+\code{b\_term} \code{m>0} (terminal cluster) &
+A word-end anchor (\code{COEFCEN}$\cdot\rho_V$) is inserted before every pause that follows a consonant, so $m=0$ when \code{b\_term} holds; the \code{elif} (V decay before pause) is live. \\
+\addlinespace
+Mid-loop pending-pause block &
+A non-terminal anchor following a pause is always preceded by a terminal one, so the \code{a\_term} branch consumes the pending point first. \\
+\addlinespace
+Two post-loop blocks (trailing V plateau, trailing pause arc) &
+The anchor chain always terminates with a \code{synth} anchor: never a held vowel, never a leftover pending point. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{The Error the Harness Caught}
+
+The first attempted edit inverted the live and dead arms of the
+\code{a\_term}/\code{b\_term} branches---an easy mistake when the
+dead code looks \emph{more} general than the live code. The
+bit-identity harness (\code{bitident.py}) compared the fingerprints
+of 22 pause phrases before and after the edit and reported 88
+differences, including block-schedule changes (\code{['cluster',
+...]} where \code{['initial', ...]} was expected). The commit that
+was finally recorded is the corrected version, and the incident is
+retained here as the operational argument for the harness: a change
+of this shape must not be merged on reading alone.
+
+\subsection{Non-Regression Evidence}
+
+\begin{lstlisting}[language=bash, caption={Bit-identity protocol around commit 2.}]
+# before the commit (on the parent):
+python3 bitident.py save pre
+# after applying the commit:
+python3 bitident.py check pre
+# -> OK - 22 phrases bit-identical (raw + quantized + structure)
+\end{lstlisting}
+
+\begin{itemize}[leftmargin=1.4em, itemsep=0.15em]
+  \item \textbf{Raw SHA-256}: identical on all 22 pause phrases
+        (single and double pauses, breath pauses \code{\%}, TIMIT
+        dotted forms, nasal clusters, schwa edge cases).
+  \item \textbf{Quantized SHA-256} ($10^{-9}$): identical.
+  \item \textbf{Block structure}: kinds, shapes, and step counts of
+        every \code{SylBlock} identical.
+  \item \textbf{Regression baselines}: the 49 pinned tract/glottis
+        SHA-256 tests (schema 3, speaker JD3) pass unchanged.
+  \item \textbf{Suite}: all corpus, structure, and double-pause tests
+        green (110 tests at commit time).
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────────────
+\section{Commit 3 --- \commit{ec81a1a}: The Consonant Registry Fix}
+\label{sec:c3}
+
+\subsection{Rationale}
+
+\code{notation.ALL\_K} was defined as the union of the vowel and
+consonant \emph{target} tables. But the consonant target table
+carries only the voiced articulatory targets; the voiceless
+counterparts---the \code{\_VOICELESS\_KEYS} of
+\code{constants.py}, namely \code{p}, \code{t}, \code{k},
+\code{f}, \code{s}, \code{S}, \code{T}, \code{tS}---are
+registered in \code{ALL\_PHONEME\_KEYS} and are fully
+synthesizable by the engine. Consequence: the reporting helpers
+(\code{unknown\_chars}, \code{preprocess\_phrase}) flagged valid,
+synthesizable consonants as ``ignored characters'': the phrase
+\code{'klinpan'} came back with \code{ignored = ['k', 'p']}
+while the tokenizer accepted \code{k} and \code{p} without
+complaint---a warning that contradicted the engine.
+
+The fix derives the guard from the complete registry:
+\code{ALL\_K = frozenset(ALL\_PHONEME\_KEYS)}. Tokenization is
+untouched (the fix only widens the known-character set used for
+reporting); what changes is that the report becomes truthful.
+
+\subsection{Measured Improvement}
+
+\begin{itemize}[leftmargin=1.4em, itemsep=0.15em]
+  \item Before: \code{'klinpan'} reported ignored
+        \code{['k','p']}; the phrase \code{'stra ka pa fjuZ'}
+        reported six false positives.
+  \item After: both return empty ignored-lists; the accented-vowel
+        normalization and the genuinely unknown \code{x} path are
+        unchanged (\code{'ba da \'e x'} $\to$ \code{('ba da e x',
+        ['x'])}).
+  \item \code{core/notation.py} coverage: $\approx$91\,\%
+        $\to$ \pct{97.7} (one line missing).
+\end{itemize}
+
+\subsection{Non-Regression Evidence}
+
+The 131 notation/corpus/targeted tests pass, including the updated
+nominal expectations; the full suite (493 tests at this commit) is
+green; the 49 baselines are untouched by construction (the change
+affects only the reporting path, not the trajectory path). The
+previously documented test that \emph{locked the bug} (expecting
+\code{['k','p']}) was rewritten into the nominal expectation---the
+commit message records both states so a reviewer sees exactly what
+the observable change is.
+
+% ────────────────────────────────────────────────────────────────────
+\section{Commit 4 --- \commit{7681cfe}: Repairing \code{parse\_to\_anchors}}
+\label{sec:c4}
+
+\subsection{Rationale}
+
+\code{parse\_to\_anchors} is exported in
+\code{vtl\_synth.core.\_\_all\_\_}---a public convenience wrapper
+combining parsing and anchor construction. It was broken: it
+called the parser with the old keyword \code{pause\_marker}
+while the parameter had been renamed to \code{coarticulation\_
+marker} years of commits earlier; every call raised a
+\code{TypeError}. Because no internal code path calls the wrapper,
+the API drift had gone unnoticed through every functional test---a
+textbook demonstration that exported symbols need their own smoke
+tests, not only transitive coverage.
+
+The fix passes the renamed keyword and aligns the defaults with the
+callee (300\,ms pause, 60\,ms vowel). The docstring is updated to
+name the parameter correctly and to record the drift.
+
+\subsection{Measured Improvement}
+
+\begin{itemize}[leftmargin=1.4em, itemsep=0.15em]
+  \item Before: \code{parse\_to\_anchors('ba da')} $\to$
+        \code{TypeError}.
+  \item After: returns the 8-anchor chain
+        \code{[V\_o, C\_b, V, V\_e, V\_o, C\_d, V, V\_e]} with
+        strictly non-decreasing anchor times; the single-syllable
+        call returns 4 anchors.
+  \item Function coverage: \pct{0} (unreachable: raised on entry)
+        $\to$ \pct{100}.
+\end{itemize}
+
+\subsection{Non-Regression Evidence}
+
+The rewritten nominal test locks the anchor labels, the count, and
+the chronological ordering. No engine path uses the wrapper, so the
+49 baselines and the bit-identity harness are unaffected by
+construction. The 36 targeted and legacy-API tests pass.
+
+% ────────────────────────────────────────────────────────────────────
+\section{Commit 5 --- \commit{269b23a}: Tag Overrides Reach the Events}
+\label{sec:c5}
+
+\subsection{Rationale}
+
+This fix resolves a defect discovered \emph{during} wave~4,
+while trying to cover the phonation-mode event maker: the function
+sat at \pct{18.5} with a passing ``breathy'' test whose glottis
+delta came from the preset path, not from the feature events.
+Root cause: the event scheduler built its tag dictionary from the
+default phoneme tags alone, ignoring the level-C overrides carried
+by the \code{TagInterpreter} it was given. The override annotated
+the segment---the glottal tag was set to \code{'breathy'}---but
+the event makers for VOT, voicing, and phonation mode never saw
+it. The documented tag-override API (level~C of the three-level
+tag system) was silently inoperative for the phonation modes.
+
+The fix mirrors \code{TagInterpreter.apply}: the effective tags are
+the defaults updated by the overrides.
+
+\subsection{A Second Layer the Tests Exposed}
+
+With the first fix in place, the coverage still showed the function
+body unentered. Investigation found a second mechanism:
+\code{TimedEnvelope(anchors=...)} re-derives its segments through
+\code{anchors\_to\_segments}, which relabels vowels as
+\code{@}---so a level-C override keyed on the original vowel
+(\code{'a'}) never matches the converted segment keys. This is not a
+bug to fix but a contract to document (the override must target the
+converted key), and commit~8 locks it in tests.
+
+\subsection{Measured Improvement}
+
+\begin{itemize}[leftmargin=1.4em, itemsep=0.15em]
+  \item Before: a breathy override produced a glottis delta of
+        $\approx$0.13 against the modal baseline (i.e.\ nothing); zero
+        phonation feature events in the timer.
+  \item After: the three modes produce their exact feature-event
+        sets---breathy: \code{chink\_area} and \code{x\_bottom};
+        creaky: \code{f0\_offset} and \code{double\_pulsing};
+        whisper: those plus \code{x\_top}---and the glottis deltas
+        are 1.04 / 1.39 / 1.65 respectively.
+  \item Event-maker coverage: \pct{18.5} $\to$ \pct{96.3}
+        (after commit 8); module \code{enveloppe.py}:
+        \pct{81.6} $\to$ \pct{85.3}.
+\end{itemize}
+
+\subsection{Non-Regression Evidence}
+
+Default schedules (no overrides) are locked to carry \emph{zero}
+phonation events; the timers/expressive suites (90 tests) pass; the
+engine outputs are untouched (the fix is on the research-API branch,
+not the engine branch), and the baselines remain green.
+
+% ────────────────────────────────────────────────────────────────────
+\section{Commit 6 --- \commit{c02f482}: The \code{E\_fallback} Rename}
+\label{sec:c6}
+
+\subsection{Rationale}
+
+The two envelope branches of the package overlap on the effort
+channel. The branch-B export of \code{TimedEnvelope}
+(\code{get\_all\_extensions()}, anchor-indexed) computed an
+\code{'E'} trajectory that
+\code{build\_phrase\_tract} then \emph{unconditionally overwrote}
+with \code{E\_100} (branch~A, block-synchronized, the one true master
+of the engine effort) at the junction. The branch-B value was
+computed, resampled, and thrown away---dead on arrival, at the cost
+of reader confusion about which branch owns the effort.
+
+The fix renames the branch-B export to \code{'E\_fallback'}: an
+honest name for a value that is available for research use but is
+not what the engine emits. The junction assignment in
+\code{build\_phrase\_tract} becomes a creation instead of an
+overwrite, with a comment recording the history.
+
+\subsection{Compatibility Statement}
+
+This is the one externally visible rename of the series. Any
+third-party consumer reading \code{ext['E']} from
+\code{TimedEnvelope.get\_all\_extensions()} must switch to
+\code{ext['E\_fallback']}. No internal consumer is affected:
+\code{build\_phrase\_tract} and \code{text\_to\_tract} define the
+engine \code{'E'} themselves, and \code{assemble\_tract} consumes
+only the engine-fed dictionary.
+
+\subsection{Non-Regression Evidence}
+
+The engine outputs are, by construction, unchanged---the overwritten
+value never reached them. The 49 baselines and the full suite (493
+tests at this commit, including the two updated extension tests that
+now assert the presence of \code{'E\_fallback'} and the
+\emph{absence} of \code{'E'}) pass.
+
+% ────────────────────────────────────────────────────────────────────
+\section{Commit 7 --- \commit{7d60b6e}: The Sandhi CI Lane}
+\label{sec:c7}
+
+\subsection{Rationale}
+
+The V1V2 $\times$ sandhi composition test skips whenever only the
+Branch-A stub is installed---which is the state of a fresh checkout.
+The composition of the two-branch architecture was therefore
+\emph{never} verified by continuous integration: it was verified
+only in the ad hoc measurement campaigns. The commit adds a dedicated
+CI job that closes the gap permanently: clone \pkg{covtl-sandhi},
+activate Branch~B with the official copy procedure (copying the
+content of \code{sandhi/} over the stub directory
+\code{vtl\_synth/utils/sandhi/}---the trailing \code{/.} in the
+documented command is what makes it a content copy), assert
+\code{SANDHI\_FULL}, then run the crossed suite (hook +
+composition).
+
+\subsection{Verification}
+
+The workflow YAML parses (four jobs:
+\code{phonetic-fast}, \code{tests}, \code{baselines}, \code{sandhi});
+the activation procedure is the one exercised in the wave-3 and
+wave-4 measurement campaigns, where the crossed suite runs green
+(501 passed, 3 expected skips with Branch~B active).
+
+% ────────────────────────────────────────────────────────────────────
+\section{Commit 8 --- \commit{bfc19bb}: Locking the Phonation Modes}
+\label{sec:c8}
+
+\subsection{Rationale}
+
+The wave-4 phonation test that accompanied commit~5 drove its
+override through the original vowel key (\code{'a'}); because of the
+\code{@} relabeling (Section~\ref{sec:c5}), that override never
+matched, and the glottis delta the test asserted came from the preset
+path. The test \emph{passed} while exercising almost nothing of the
+event machinery---the exact failure mode this campaign exists to
+eliminate. This commit rewrites it into a contract test: for each of
+the three modes, on both a converted vowel key and a consonant key,
+the exact feature-event parameter set is asserted; the no-override
+baseline is asserted to carry no phonation events at all.
+
+\subsection{Measured Improvement}
+
+\code{\_make\_phonation\_mode\_events}: \pct{18.5} $\to$
+\pct{96.3}; the body of the phonation scheduler is now exercised by
+a test that says precisely what it expects, rather than by a test
+that passes for the wrong reason.
+
+% ────────────────────────────────────────────────────────────────────
+\section{Consolidated Non-Regression Test Series}
+\label{sec:series}
+
+This section is the checklist a reviewer or release engineer runs
+after applying the series. Each command is copy-pasteable; expected
+outputs are the ones observed on the developed branch and on the
+validated virgin-clone application.
+
+\subsection{Layer 0 --- Patch Integrity (before anything else)}
+
+\begin{lstlisting}[language=bash]
+# on a virgin clone of the base commit:
+git checkout -b wave4 3903645
+git am --keep-cr covtl-wave4-patch/commits/*.patch
+git diff wave4-developed 3903645..HEAD   # empty: tree identical
+\end{lstlisting}
+
+\subsection{Layer 1 --- Byte-Level Output Pins}
+
+\begin{lstlisting}[language=bash]
+pytest tests/test_regression_baselines.py -q
+# expected: 49 passed (~3 s)
+\end{lstlisting}
+
+\subsection{Layer 2 --- Structural Trajectory Pins (Platform-Independent)}
+
+\begin{lstlisting}[language=bash]
+pytest tests/test_syltraj_double_pause.py -q
+# expected: all passed; on non-Windows machines an [info] line may
+# report that the raw digest differs from the Windows reference pin
+# (libm float noise) while the quantized pin matched
+\end{lstlisting}
+
+\subsection{Layer 3 --- Bit-Identity Harness (Refactor Proofs)}
+
+\begin{lstlisting}[language=bash]
+# with the parent of commit 2 checked out:
+python3 bitident.py save pre
+git cherry-pick 971f2f2   # or apply patch 0002
+python3 bitident.py check pre
+# expected: OK - 22 phrases bit-identical (raw + quantized + structure)
+\end{lstlisting}
+
+\subsection{Layer 4 --- Functional Contracts (Intended Changes)}
+
+\begin{lstlisting}[language=bash]
+pytest tests/test_wave3_targeted.py::test_preprocess_phrase_public_api -q
+# consonant fix: 'klinpan' -> ignored []; 'stra ka pa fjuZ' -> ignored []
+pytest "tests/test_wave3_targeted.py::test_parse_to_anchors_nominal" -q
+# API repair: 8-anchor chain, chronological times
+pytest tests/test_wave3_targeted.py -q -k "phonation"
+# tag fix: exact event sets for breathy/creaky/whisper
+# expected: 26 passed (whole targeted file)
+\end{lstlisting}
+
+\subsection{Layer 5 --- Full Suite and Fast Lane}
+
+\begin{lstlisting}[language=bash]
+pytest tests/ -q          # 501 passed, 3 skipped (~2-3 min)
+pytest tests/test_phonetic_model_inputs.py -q   # 97 passed (~6 s)
+\end{lstlisting}
+
+\subsection{Coverage Re-Measurement (Optional Audit)}
+
+\begin{lstlisting}[language=bash]
+pytest tests/ --cov=vtl_synth --cov-branch \
+  --cov-report=term-missing:skip-covered \
+  --cov-report=xml:coverage_wave4.xml -q
+# constant scope (sandhi excluded): 80.2% lines, 67.0% branches,
+# 76.6% combined; honest ceiling 78.6% combined
+\end{lstlisting}
+
+\section{Closing Notes for Reviewers}
+
+The series was designed so that each commit can be reverted
+independently if a maintainer disagrees with a decision: the dead-arm
+removal stands alone (hash-proven), the three fixes are orthogonal
+to each other, and the CI/test commits touch no engine source. The
+one commit that requires coordinated action is the
+\code{'E'}~$\to$~\code{'E\_fallback'} rename if downstream consumers
+exist---hence its compatibility statement in Section~\ref{sec:c6}.
+
+Every number quoted in this log was re-verified against the
+campaign's coverage XML at document-writing time; the XML ships
+with the patch. The companion synthesis report (same series,
+directory \code{docs/wave4/synthesis/}, file
+\code{COVERAGE\_SYNTHESIS\_WAVE1-4.pdf}) carries the full
+four-wave tables and the PyPI promotion case.
+
+\end{document}

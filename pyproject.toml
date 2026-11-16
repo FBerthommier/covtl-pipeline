@@ -85,9 +85,28 @@ testpaths = ["tests"]
 [tool.coverage.run]
 branch = true
 source = ["vtl_synth"]
+omit = [
+    "*/tests/*",
+    "*/data/*",
+    "*/__pycache__/*",
+    "vtl_synth/data/*",
+    # dead since the glottal_source port, zero importers (LEGACY.md §2)
+    "vtl_synth/core/pulmonary_effort.py",
+    # research/calibration tool, not on the runtime path (LEGACY.md §2)
+    "vtl_synth/utils/calibrate_vowels.py",
+    # ffmpeg encoding: slow and not bit-stable (LEGACY.md §3)
+    "vtl_synth/video/encoder.py",
+]
 
 [tool.coverage.report]
 precision = 1
+show_missing = true
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
 omit = [
     # dead since the glottal_source port, zero importers (LEGACY.md §2)
     "vtl_synth/core/pulmonary_effort.py",

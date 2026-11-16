@@ -25,7 +25,7 @@ from __future__ import annotations
 import re
 import unicodedata
 
-from .constants import VOWEL_TARGETS, CONSONANT_TARGETS
+from .constants import ALL_PHONEME_KEYS, CONSONANT_TARGETS, VOWEL_TARGETS
 
 _TILDE = '\u0303'
 
@@ -35,7 +35,15 @@ _TILDE = '\u0303'
 
 VOWELS_K = frozenset(VOWEL_TARGETS.keys())
 CONSONANTS_K = frozenset(CONSONANT_TARGETS.keys())
-ALL_K = VOWELS_K | CONSONANTS_K
+# Wave 4 fix (COVERAGE_REPORT.md wave 3 §4.6-1): ALL_K used to be
+# VOWELS_K | CONSONANTS_K, which misses the voiceless counterparts
+# (p, t, k, f, s, S, T, tS — constants._VOICELESS_KEYS) that
+# ALL_PHONEME_KEYS registers for the tokenizers. unknown_chars()
+# therefore reported valid, synthesizable consonants as "ignored"
+# (e.g. preprocess_phrase('klinpan') → ignored ['k', 'p'] while
+# build_flat('ka pa') tokenizes k and p). Derive ALL_K from the
+# complete registry instead.
+ALL_K = frozenset(ALL_PHONEME_KEYS)
 
 # ==========================================================================
 # Conversion tables (to K)
