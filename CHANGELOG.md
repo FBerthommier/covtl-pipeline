@@ -3,6 +3,46 @@
 All notable changes to this package are documented here.
 Format: Keep a Changelog — https://keepachangelog.com/
 
+## [1.2.0] — 2026-11-15
+
+### Fixed
+
+- **enveloppe/phonation (wave 4 §7.4, redo)**: the phonation modes
+  (breathy/creaky/whisper) were built as FeatureEvents but never
+  survived the assembly — `AssembleTract` rebuilt the glottis from the
+  shape events alone, discarding `extension_data['glottis']`. The
+  modes now ride the shape-event channel at the JD3 preset scale
+  (`classify_block_events(phonation_schedule=...)`), 'creaky' resolves
+  through the generic presets (no JD3 entry — it silently collapsed
+  onto modal). Measured on "this is easy for us": 4 distinct WAVs
+  (RMS delta vs normal: breathy 0.017, creaky 0.048, whisper 0.026;
+  all 0.000 before the fix).
+- **notation**: `ALL_K` derives from the complete phoneme registry —
+  the voiceless consonants p, t, k, f, s, S, T, tS are no longer
+  reported as "ignored characters" (wave 4 §7.1).
+- **enveloppe**: `parse_to_anchors` repaired (stale `pause_marker`
+  kwarg → TypeError since the `parse_ipa_with_markers` rename).
+- **packaging**: `TimedEnvelope.get_all_extensions()` exports
+  `E_fallback` instead of an `E` overwritten at the junction.
+
+### Added
+
+- `Pipeline(tag_overrides=...)` — level-C phonetic tag overrides
+  exposed on the Pipeline API (phonation modes, VOT, per-key tags).
+- The **covtl-sandhi rule package (Branch B)** ships in the wheel:
+  `--sandhi standard` works out of the box (fr/en/de/es/it/pt).
+- Wave-4 hardening: phonetic corpus at 98 tests, quantized SHA pins,
+  26 targeted tests, fast CI lane, dedicated sandhi CI job.
+- Coverage dossier waves 1–4 (COVERAGE_REPORT.md + addendum + PDF
+  synthesis) — 500 green tests, 76.6 % combined coverage, honest
+  ceiling 78.6 %.
+
+### Removed
+
+- The four dead arms of `build_global_pval` (wave 4 §7.2) — replaced
+  the wave-3 `pragma: no cover` markers with actual deletion,
+  bit-identity proven by SHA-256 over 22 pause phrases.
+
 ## [1.1.3] — 2026-11-13
 
 ### Fixed

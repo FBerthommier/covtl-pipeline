@@ -1,9 +1,18 @@
 # vtl-synth — articulatory synthesis from text (COVTL + VocalTractLab)
 
-Version 1.1.0 adds a **multi-speaker registry**, a **6-language pack**
-(de/en/es/fr/it/pt), **expressive prosody** and the **polar-coordinate
-video** — with the default engine outputs unchanged (bit-identical
-baselines).
+[![PyPI version](https://img.shields.io/pypi/v/vtl-synth?repository_url=https://test.pypi.org)](https://test.pypi.org/project/vtl-synth/)
+
+Version 1.2.0 makes the **phonation modes (breathy / creaky / whisper)
+audible end-to-end** — `Pipeline(tag_overrides=...)` drives the level-C
+phonetic tags through the glottal shape events down to the synthesized
+WAV —, activates the **covtl-sandhi rule package** behind the
+`--sandhi` hook, and hardens the test suite to **500 green tests** with
+a coverage campaign in four waves (74.5 % → 76.6 %, honest ceiling
+78.6 %; see the [coverage dossier](docs/README.md)).
+
+Version 1.1.0 added the multi-speaker registry, the 6-language pack
+(de/en/es/fr/it/pt), expressive prosody and the polar-coordinate video —
+engine outputs unchanged (bit-identical baselines).
 
 `vtl-synth` turns English text (or phonetic input) into:
 
@@ -60,7 +69,17 @@ Repository: <https://github.com/fberthommier/covtl-pipeline>
   [covtl-sandhi](https://github.com/FBerthommier/covtl-sandhi)
   rule package behind the built-in hook: off by default
   (bit-identical outputs), coverage levels `minimal/standard/careful`.
+  Since 1.2.0 the full covtl-sandhi rule package (Branch B) ships
+  inside the wheel: `--sandhi standard` works out of the box; the
+  identity-stub fallback disappears.
   See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) §8.5.
+- **Coverage dossier (waves 1–4)** —
+  [COVERAGE_REPORT.md](COVERAGE_REPORT.md) + addendum: the four-wave
+  measurement campaign (methodology, per-commit evidence, non-regression
+  proofs), and the wave-4bis addendum documenting the phonation redo
+  (the glottal shape-event channel, measured audio deltas on the four
+  modes). PDF synthesis:
+  [docs/wave4/synthesis/COVERAGE_SYNTHESIS_WAVE1-4.pdf](docs/wave4/synthesis/COVERAGE_SYNTHESIS_WAVE1-4.pdf).
 - **Architecture** — [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md):
   developer map of the engine (module layout, data flow, the
   B(t) + E_source(t) + E_ortho(t) decomposition) — including the
@@ -213,6 +232,9 @@ Engine options (COVTL model parameters) on `run`/`text-to-wav`:
 | `--engine` | syl | trajectory engine (`syl` recommended, `legacy` = pre-syltraj) |
 | `--fps`, `--scale`, `--no-video` | 25, 2 | video rendering |
 
+Phonation modes are a Python-API feature (tag overrides on the
+converted vowel keys); the CLI stays phonetically neutral by default.
+
 Note on the arc-shape constants (see `syltraj.py` and the CHANGELOG):
 the `syl` engine uses the convention ν = −1, K = 1000,
 `SYL_COEFCEN` = 0.5 — ν = 1 is recovered when the cosine is written
@@ -233,6 +255,14 @@ print(result.wav_path, result.duration_s)
 # phonetic input, audio only
 result = pipe.text_to_wav("ba da ga | iowa a g",
                           output_dir="./out/phon", use_g2p=False)
+
+# phonation modes: breathy / creaky / whisper on the vowels
+# (level-C tag overrides, converted segment keys)
+pipe_breathy = Pipeline(tag_overrides={
+    '@': {'voicing': 'breathy'}, 'i': {'voicing': 'breathy'}})
+result = pipe_breathy.run("this is easy for us", output_dir="./out")
+# the 4 modes produce 4 distinct WAVs (measured RMS delta vs normal:
+# breathy 0.017, creaky 0.048, whisper 0.026)
 ```
 
 The full engine API (72 symbols: `build_phrase_tract`,

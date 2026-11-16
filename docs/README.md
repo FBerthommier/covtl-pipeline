@@ -18,6 +18,13 @@ Shared developer docs at the repository root and in this folder:
 `../CHANGELOG.md` (release history), `../MIGRATION_NOTES.md`
 (packaging decisions, if present).
 
+- **Coverage dossier (waves 1–4)** — `../COVERAGE_REPORT.md` and the
+  wave-4bis addendum `../ADDENDUM_COVERAGE_REPORT.md`: measurement
+  methodology, per-commit evidence, non-regression proofs, and the
+  phonation redo with measured audio deltas. PDF synthesis in
+  `wave4/synthesis/COVERAGE_SYNTHESIS_WAVE1-4.pdf`, commit log in
+  `wave4/COMMIT_LOG_WAVE4.pdf`.
+
 ## Building the PDFs
 
 ```bash
