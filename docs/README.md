@@ -24,6 +24,11 @@ Shared developer docs at the repository root and in this folder:
   phonation redo with measured audio deltas. PDF synthesis in
   `wave4/synthesis/COVERAGE_SYNTHESIS_WAVE1-4.pdf`, commit log in
   `wave4/COMMIT_LOG_WAVE4.pdf`.
+- **Coverage dossier, wave-5 addendum** —
+  `../ADDENDUM_COVERAGE_REPORT_WAVE5.md`: the post-1.2.0 hardening
+  audit — the CI-visible phonation tests, the wildcard tag override,
+  and the console alignment (519 green tests, 76.7 % combined, honest
+  ceiling 79.0 %).
 
 ## Building the PDFs
 

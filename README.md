@@ -80,6 +80,10 @@ Repository: <https://github.com/fberthommier/covtl-pipeline>
   (the glottal shape-event channel, measured audio deltas on the four
   modes). PDF synthesis:
   [docs/wave4/synthesis/COVERAGE_SYNTHESIS_WAVE1-4.pdf](docs/wave4/synthesis/COVERAGE_SYNTHESIS_WAVE1-4.pdf).
+  The wave-5 addendum documents the post-1.2.0 hardening audit:
+  the CI-visible phonation tests, the wildcard tag override, and the
+  console alignment (519 green tests, 76.7 % combined, honest ceiling
+  79.0 %).
 - **Architecture** — [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md):
   developer map of the engine (module layout, data flow, the
   B(t) + E_source(t) + E_ortho(t) decomposition) — including the
@@ -299,6 +303,9 @@ pipe_whisper = Pipeline(tag_overrides={'*': {'voicing': 'whisper'}})
 
 # the four modes side by side: python examples/demo_phonation.py
 ```
+
+Audio demos of the four modes: `docs/demos/` (normal / breathy / creaky
+/ whisper, RMS measured).
 
 The full engine API (72 symbols: `build_phrase_tract`,
 `text_to_tract`, timers, envelopes, polar model, …) is available in
