@@ -27,6 +27,8 @@ vtl_synth/data/speakers/ACTIVE_SPEAKER
 
 # Exceptions : la démo polaire courte est versionnée
 !examples/*.mp4
+# ainsi que les démos audio de phonation (vague 5)
+!docs/demos/*.wav
 
 # Editors / OS
 .vscode/
