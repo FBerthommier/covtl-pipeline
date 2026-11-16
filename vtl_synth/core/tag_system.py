@@ -284,10 +284,15 @@ class TagInterpreter:
     tag_overrides : dict, optional
         Manual overrides per IPA key.
         Format: {'b': {'glottal_opening': 0.5}, ...}
+        The special key ``'*'`` applies to every segment (wave 5,
+        P1.3): ``{'*': {'voicing': 'breathy'}}`` breathes the whole
+        phrase. A per-key entry always wins over the wildcard.
     speaker_vtl_mapping : dict, optional
         Speaker-specific mapping for abstract tags.
         Format: {'voiceless': {'VO': 1.0, 'VS': 0.0, 'TS3': 0.0}, ...}
     """
+
+    WILDCARD_KEY = '*'
 
     def __init__(
         self,
@@ -318,7 +323,10 @@ class TagInterpreter:
         # 1. Default tags
         tags = DEFAULT_PHONEME_TAGS.get(segment.key, {}).copy()
 
-        # 2. Manual overrides (level C)
+        # 2. Manual overrides (level C) — the wildcard entry first,
+        # so an explicit per-key entry always wins over it (wave 5)
+        if self.WILDCARD_KEY in self.tag_overrides:
+            tags.update(self.tag_overrides[self.WILDCARD_KEY])
         if segment.key in self.tag_overrides:
             tags.update(self.tag_overrides[segment.key])
 
