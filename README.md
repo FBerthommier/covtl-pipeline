@@ -1,6 +1,6 @@
 # covtl-synth — articulatory synthesis from text (COVTL + VocalTractLab)
 
-[![PyPI version](https://img.shields.io/pypi/v/covtl-synth?repository_url=https://test.pypi.org)](https://test.pypi.org/project/covtl-synth/)
+[![PyPI version](https://img.shields.io/pypi/v/covtl-synth.svg)](https://pypi.org/project/covtl-synth/)
 
 (PyPI distribution **covtl-synth**; the Python module and the CLI stay
 `vtl_synth` / `vtl-synth`.)
@@ -105,7 +105,9 @@ Repository: <https://github.com/fberthommier/covtl-pipeline>
 ## Quick start
 
 ```bash
-pip install .            # or: pip install -e .
+pip install covtl        # the whole suite (engine + console + sandhi)
+# or the engine alone:  pip install covtl-synth
+# from source:          pip install .   (or: pip install -e .)
 vtl-synth run "this is easy for us" -o ./out
 ```
 
