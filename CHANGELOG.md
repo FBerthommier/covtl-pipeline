@@ -5,6 +5,15 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
+### Changed
+
+- Distribution renamed `vtl-synth` → **`covtl-synth`** (owner decision,
+  naming consistency with `covtl-console` / `covtl-sandhi`). The Python
+  module (`vtl_synth`) and the CLI (`vtl-synth`) are unchanged; the
+  console chain is re-pinned accordingly (`covtl-synth==1.2.1`,
+  console 3.1.9). Already-published `vtl-synth` releases stay on
+  TestPyPI (immutable, no re-upload).
+
 ## [1.2.1] — 2026-11-17
 
 ### Added

@@ -1,6 +1,9 @@
-# vtl-synth — articulatory synthesis from text (COVTL + VocalTractLab)
+# covtl-synth — articulatory synthesis from text (COVTL + VocalTractLab)
 
-[![PyPI version](https://img.shields.io/pypi/v/vtl-synth?repository_url=https://test.pypi.org)](https://test.pypi.org/project/vtl-synth/)
+[![PyPI version](https://img.shields.io/pypi/v/covtl-synth?repository_url=https://test.pypi.org)](https://test.pypi.org/project/covtl-synth/)
+
+(PyPI distribution **covtl-synth**; the Python module and the CLI stay
+`vtl_synth` / `vtl-synth`.)
 
 Version 1.2.1 hardens the 1.2.0 release: the **whole-phrase phonation
 selector** (`tag_overrides={'*': {'voicing': ...}}` — one entry drives
@@ -18,7 +21,7 @@ Version 1.1.0 added the multi-speaker registry, the 6-language pack
 (de/en/es/fr/it/pt), expressive prosody and the polar-coordinate video —
 engine outputs unchanged (bit-identical baselines).
 
-`vtl-synth` turns English text (or phonetic input) into:
+`covtl-synth` (module `vtl_synth`) turns English text (or phonetic input) into:
 
 - a **`.tract`** file — the 400 Hz sequence of 19 tract + 11 glottis
   VocalTractLab parameters,

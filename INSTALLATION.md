@@ -207,7 +207,7 @@ match your Python version and the phrase to taste, then double-click
 ### Uninstall
 
 ```
-pip uninstall vtl-synth
+pip uninstall covtl-synth
 ```
 
 You are now ready to use **covtl-pipeline** on Windows!
