@@ -5,6 +5,17 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
+## [1.2.2] — 2026-11-17
+
+### Changed
+
+- Packaging only: the shipped README now carries the pypi.org badge and
+  the `pip install covtl` quick start (the 1.2.1 files still carried
+  the TestPyPI badge; PyPI renders the description embedded in the
+  file and offers no post-upload edit). Code unchanged from 1.2.1.
+
+## [1.2.1] — 2026-11-17
+
 ### Changed
 
 - Distribution renamed `vtl-synth` → **`covtl-synth`** (owner decision,
@@ -13,10 +24,6 @@ Format: Keep a Changelog — https://keepachangelog.com/
   console chain is re-pinned accordingly (`covtl-synth==1.2.1`,
   console 3.1.9). Already-published `vtl-synth` releases stay on
   TestPyPI (immutable, no re-upload).
-
-## [1.2.1] — 2026-11-17
-
-### Added
 
 ### Added
 
