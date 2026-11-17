@@ -106,5 +106,5 @@ The VTL synthesizer comes from the `vocaltractlab-cython` wheel
 ## Uninstall
 
 ```bat
-pip uninstall vtl-synth
+pip uninstall covtl-synth
 ```

@@ -1,4 +1,4 @@
-# CI for covtl-pipeline / vtl-synth.
+# CI for covtl-pipeline / covtl-synth.
 #
 # windows-latest on purpose: the regression baselines (tract/glottis
 # sha256, schema 3) are generated and acoustically validated on
