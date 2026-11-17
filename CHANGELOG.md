@@ -3,7 +3,11 @@
 All notable changes to this package are documented here.
 Format: Keep a Changelog — https://keepachangelog.com/
 
-## [Unreleased] — wave 5 (post-1.2.0 hardening)
+## [Unreleased]
+
+## [1.2.1] — 2026-11-17
+
+### Added
 
 ### Added
 

@@ -2,13 +2,17 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/vtl-synth?repository_url=https://test.pypi.org)](https://test.pypi.org/project/vtl-synth/)
 
-Version 1.2.0 makes the **phonation modes (breathy / creaky / whisper)
-audible end-to-end** — `Pipeline(tag_overrides=...)` drives the level-C
-phonetic tags through the glottal shape events down to the synthesized
-WAV —, activates the **covtl-sandhi rule package** behind the
-`--sandhi` hook, and hardens the test suite to **500 green tests** with
-a coverage campaign in four waves (74.5 % → 76.6 %, honest ceiling
-78.6 %; see the [coverage dossier](docs/README.md)).
+Version 1.2.1 hardens the 1.2.0 release: the **whole-phrase phonation
+selector** (`tag_overrides={'*': {'voicing': ...}}` — one entry drives
+breathy / creaky / whisper over every segment; an explicit per-key
+entry wins), the **full-path phonation checks now collected by CI**
+(`tests/test_phonation_full_path.py`, **519 green tests**), and
+corrected packaging metadata (description names the headline features,
+Python 3.13/3.14 classifiers). The 1.2.0 foundations remain: phonation
+modes audible end-to-end through `Pipeline(tag_overrides=...)`, the
+**covtl-sandhi rule package** behind the `--sandhi` hook, and a
+coverage campaign in five waves (74.5 % → 76.7 %, honest ceiling
+79.0 %; see the [coverage dossier](docs/README.md)).
 
 Version 1.1.0 added the multi-speaker registry, the 6-language pack
 (de/en/es/fr/it/pt), expressive prosody and the polar-coordinate video —
