@@ -47,6 +47,10 @@ Repository: <https://github.com/fberthommier/covtl-pipeline>
 
 ## Documentation
 
+- **Reference manual (didactic synthesis)** — [docs/covtl-reference-manual.pdf](docs/covtl-reference-manual.pdf): standalone one-stop synthesis of the whole documentation family,
+  written after Peter Birkholz's VocalTractLab 2.4 work
+  (vocaltractlab.de) — the COVTL chain drives VocalTractLab 2.4, and
+  this credit stays attached in every derived production.
 - **Documentation index** — [docs/README.md](docs/README.md): the five
   manuals (LaTeX sources + compiled PDFs, English US).
 - **Reference manual** — [docs/manual.pdf](docs/manual.pdf): full model
@@ -57,7 +61,7 @@ Repository: <https://github.com/fberthommier/covtl-pipeline>
 - **Speakers** — [docs/speakers.pdf](docs/speakers.pdf): the
   multi-speaker registry, `install_speaker.py`, the four layers of a
   switch, provenance chains and the defect catalogue (v1.1.0).
-- **Language pack** --- [docs/language_pack.pdf](docs/language_pack.pdf), covering the six languages, `setup_lang.py` and the **marker-only LANG SECTION (v1.2.0)**: the language selects pronunciation modules, lexicons, G2P and notation, while vowel targets stay the active speaker’s own (the former per-language overrides and JD3 guard were removed, defect D24). Pack internals: [lang_pack/README.md](lang_pack/README.md), [lang_pack/manual/manual.pdf](lang_pack/manual/manual.pdf), [lang_pack/ARCHITECTURE.md](lang_pack/ARCHITECTURE.md). Speaker characteristics: [docs/SPEAKERS.md](docs/SPEAKERS.md).
+- **Language pack** --- [docs/language_pack.pdf](docs/language_pack.pdf), covering the six languages, `setup_lang.py` and the **marker-only LANG SECTION (v1.2.0)**: the language selects pronunciation modules, lexicons, G2P and notation, while vowel targets stay the active speaker’s own (the former per-language overrides and JD3 guard were removed, defect D24). Pack internals: [lang_pack/README.md](lang_pack/README.md), [lang_pack/ARCHITECTURE.md](lang_pack/ARCHITECTURE.md). Speaker characteristics: [docs/SPEAKERS.md](docs/SPEAKERS.md).
 - **Polar visualization** — [docs/polar_visualization.pdf](docs/polar_visualization.pdf):
   the (ρ, θ) plane, the dissociated vocalic/consonantal branches and
   the dual-panel video (v1.1.0).

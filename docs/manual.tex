@@ -1,3 +1,17 @@
+%% =====================================================================
+%% SPDX-FileCopyrightText: 2026 Frédéric Berthommier
+%% SPDX-License-Identifier: CC-BY-SA-4.0
+%%
+%% This manual is licensed under the Creative Commons Attribution-
+%% ShareAlike 4.0 International license (CC BY-SA 4.0) - see
+%% LICENSE-DOCS.md at the root of this repository.
+%%
+%% VocalTractLab credit: the COVTL chain is built on VocalTractLab 2.4,
+%% written by Peter Birkholz (https://www.vocaltractlab.de , GPLv3).
+%% Wherever this documentation describes vocal-tract synthesis, it
+%% describes results obtained with VocalTractLab 2.4 - this credit must
+%% be kept attached in every derived production.
+%% =====================================================================
 % covtl-pipeline --- User Manual
 % SPDX-License-Identifier: GPL-3.0-or-later
 % Copyright (C) 2026 Frédéric Berthommier
@@ -152,7 +166,11 @@
 \author{\large Frédéric Berthommier\\[0.3em]
 \small\texttt{fberthommier@users.noreply.github.com}}
 \date{\small Version 1.1.0 --- September 2026\\[0.2em]
-\textit{Licensed under GPL-3.0-or-later}}
+\textit{Licensed under GPL-3.0-or-later}\\[0.4em]
+\footnotesize\textit{This manual documents engine v1.1.0. The engine has
+since evolved to 1.2.2 (2026-11-17) --- see the CHANGELOG for the newer
+features (phonation modes, wildcard tag overrides, the
+\texttt{covtl-synth} distribution name) not covered here.}}
 
 \begin{document}
 \maketitle
@@ -687,7 +705,9 @@ adjusts it from context, in two ways:
       retracts to the cluster angle \(\theta_{CC,d} = -2.5\pi/6\) with
       \(\rho = 1.2\), \texttt{g/k} uses \(\theta_{CC,g} = -\pi/12\) with
       \(\rho = 1.1\), and the liquids/nasals \texttt{l, n} are realized
-      stop-like (\(\rho_{\mathrm{stop}} = 1.2\), \(\theta = 270^\circ\)).
+      stop-like (\(\rho_{\mathrm{stop}} = 1.15\), \(\theta = 270^\circ\);
+      pinned by \texttt{test\_cluster\_target\_rules}, cf.\ the
+      \texttt{covtl-lambda} contract).
       Outside a cluster, \texttt{d/t} use the dental angle
 \(3\pi/2 = 270^\circ\) (v1.2.0: the former \(23\pi/16\)
 override left the apical closure open on every speaker, the
@@ -1042,6 +1062,26 @@ synchronization. A phrase-final vowel followed by nothing holds its
 plateau (\emph{phrase-final hold}); a pause is \emph{not} a transition to
 a neutral position --- the tract holds the decaying anchor.
 
+\paragraph{Low-level API: always pass explicit timings.} The schedule
+above describes the \emph{CLI} defaults. The low-level entry point
+\texttt{build\_phrase\_pval(phrase)} called \emph{without} explicit
+\texttt{t\_cons}/\texttt{t\_voy} does not use 8 steps: it derives
+\(T_{\mathrm{voy}} = \max(1, \mathrm{round}(\texttt{vowel\_ms}/10/3))\)
+--- 2 steps (20\,ms) with the 60\,ms \texttt{vowel\_ms} default
+(measured: the \texttt{a~} plateau of \texttt{ta~.ata} collapses to
+2 steps, against 12 steps with the French timings
+\texttt{t\_cons=14, t\_voy=12} and 8 steps with the English ones
+\texttt{t\_cons=10, t\_voy=8}). The nasal-hiatus re-injection layer
+(\S\ref{subsec:nasal}) scales with this duration: with the full
+smoothed chain the VO plateau reaches 0.491 with the French timings and
+0.470 with the English ones, but only $\approx$0.14 under the 2-step
+fallback --- the nasal vowel of the hiatus is then barely realized
+(reference: \texttt{AUDIT\_V1V2}, healthy plateau 0.49--0.50,
+\texttt{VO\_NASALIZED\_VOWEL} = 0.5). The \texttt{Pipeline} class
+always passes the active profile's timings; direct
+\texttt{build\_phrase\_pval}/\texttt{build\_phrase\_tract} calls
+should pass \texttt{t\_cons}/\texttt{t\_voy} explicitly.
+
 \subsection{The orthogonal branch}\label{sec:ortho}
 
 Three of the 19 VTL tract parameters are not commanded by the polar
@@ -1195,6 +1235,19 @@ F0(t) \;=\; F0_{\mathrm{base}} \;+\; k_E\,\big(E(t) - \overline{E}\big),
 \end{equation}
 clamped to \([40, 600]\,\mathrm{Hz}\), with the last voiced value held
 through unvoiced spans.
+
+\paragraph{Where the base F0 comes from.} \(F0_{\mathrm{base}}\) is
+\emph{not} taken from the language profile: the Pipeline passes its
+speaker-resolved \texttt{f0\_hz} on every path
+(\texttt{pipeline.py}: \texttt{f0\_base=self.f0\_hz}), i.e.\ the
+\texttt{f0\_default} of the registered speaker (102.216\,Hz for JD3)
+or the explicit \texttt{-{}-f0} value. The \texttt{f0\_base} field of
+a \texttt{LangProfile} (102.216\,Hz for all six bundled languages) is a
+declared fallback that the engine does not read. What the profile
+\emph{does} contribute on every path --- expressive or fallback --- are
+the contour gains: \texttt{onset\_gain} (en 1.06, fr 1.03, es 1.08,
+it 1.06, pt 1.04, de 1.03) and \texttt{final\_gain} (0.85, or 0.80 for
+de and pt).
 
 %==============================================================================
 \section{The multi-speaker registry and the language pack}\label{sec:multispeaker}
@@ -1610,9 +1663,17 @@ synthesize_to_wav("./out/this_is_easy_for_us.tract",
       (12 targets, Table~\ref{tab:vowels});
 \item \textbf{Consonants}: \texttt{p b t d k g f v s z S Z T D tS dZ m n
       J l L R j w h \turnh{} C X} (canonical voiced forms of
-      Table~\ref{tab:cons} plus their voiceless partners; \texttt{R}
-      is the only rhotic --- a spelled \texttt{r} in the input is
-      normalized to \texttt{R} by \texttt{notation.py});
+      Table~\ref{tab:cons} plus their voiceless partners --- only
+      \texttt{p t k f s S T tS} have one, resolved to their voiced
+      counterpart by \texttt{\_normalize\_consonant\_key()}: p~$\to$~b,
+      t~$\to$~d, k~$\to$~g, f~$\to$~v, s~$\to$~z, S~$\to$~Z,
+      T~$\to$~D, tS~$\to$~dZ; \texttt{C} and \texttt{X} have none);
+      \texttt{R} is the only rhotic --- a spelled \texttt{r} in the
+      input is normalized to \texttt{R} by \texttt{notation.py};
+      \texttt{X} is a notational duplicate of \texttt{R}: same polar
+      target ($\rho$ 1.28, $\theta$ 234$^\circ$) and same muscle
+      selector, but a longer default duration (100\,ms vs 70\,ms in
+      \texttt{CONSONANT\_DURATIONS});
 \item \textbf{Separators}: \texttt{.} syllable break (coarticulated),
       space short pause, \texttt{|} long pause; \texttt{\~{}} marks
       nasality.

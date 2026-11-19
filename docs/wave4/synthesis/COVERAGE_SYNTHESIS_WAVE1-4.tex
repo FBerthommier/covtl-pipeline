@@ -1,3 +1,17 @@
+%% =====================================================================
+%% SPDX-FileCopyrightText: 2026 Frédéric Berthommier
+%% SPDX-License-Identifier: CC-BY-SA-4.0
+%%
+%% This manual is licensed under the Creative Commons Attribution-
+%% ShareAlike 4.0 International license (CC BY-SA 4.0) - see
+%% LICENSE-DOCS.md at the root of this repository.
+%%
+%% VocalTractLab credit: the COVTL chain is built on VocalTractLab 2.4,
+%% written by Peter Birkholz (https://www.vocaltractlab.de , GPLv3).
+%% Wherever this documentation describes vocal-tract synthesis, it
+%% describes results obtained with VocalTractLab 2.4 - this credit must
+%% be kept attached in every derived production.
+%% =====================================================================
 \documentclass[11pt,a4paper]{article}
 
 \usepackage{graphicx}
@@ -86,6 +100,14 @@ intended for the package documentation that accompanies a PyPI
 promotion: it documents the methodology, the measured evidence, and the
 reasons why the package can be promoted with a defensible quality
 position.
+
+\textbf{Engine state at 2026-11-13 (v1.1.3).} The suite has since
+grown: the 1.2.x releases (see the pipeline CHANGELOG and the wave~5
+addendum \code{ADDENDUM\_COVERAGE\_REPORT\_WAVE5.md}) added the
+phonation, expressive-prosody and multi-speaker campaigns; the suite
+collected at the time of this revision counts 521 tests (504 at the
+time of this report: 501 pass, 3 skip by design --- figures unchanged
+in the tables below, which reflect the wave~1--4 state).
 
 Across the four waves, combined branch coverage of the constant scope
 (the \pkg{vtl\_synth} package, excluding the companion sandhi rule

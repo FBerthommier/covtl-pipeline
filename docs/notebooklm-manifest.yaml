@@ -1,0 +1,46 @@
+# notebooklm-manifest.yaml - COVTL documentation manifest for NotebookLM
+#
+# Usage: put this file in your Google Drive folder, then in NotebookLM add
+# each `path` below as a source (the paths are absolute raw.githubusercontent
+# URLs, fetched directly from GitHub). All documents are CC BY-SA 4.0 -
+# see LICENSE-DOCS.md in each repository. The COVTL chain is built on
+# VocalTractLab 2.4 by Peter Birkholz (vocaltractlab.de) - keep this credit.
+
+
+documents:
+  - id: manual_001
+    path: https://raw.githubusercontent.com/FBerthommier/covtl-pipeline/main/docs/covtl-reference-manual.pdf
+    title: "COVTL reference manual - didactic synthesis of the documentation family (after Peter Birkholz / VocalTractLab 2.4)"
+    license: CC-BY-SA-4.0
+    repository: https://github.com/FBerthommier/covtl-pipeline
+    credit: Built on VocalTractLab 2.4 by Peter Birkholz (vocaltractlab.de)
+  - id: manual_002
+    path: https://raw.githubusercontent.com/FBerthommier/covtl-pipeline/main/docs/manual.pdf
+    title: "COVTL pipeline - user manual (articulatory text-to-speech)"
+    license: CC-BY-SA-4.0
+    repository: https://github.com/FBerthommier/covtl-pipeline
+  - id: manual_003
+    path: https://raw.githubusercontent.com/FBerthommier/covtl-pipeline/main/docs/speakers.pdf
+    title: "COVTL speakers - guide to the five voices"
+    license: CC-BY-SA-4.0
+    repository: https://github.com/FBerthommier/covtl-pipeline
+  - id: manual_004
+    path: https://raw.githubusercontent.com/FBerthommier/covtl-pipeline/main/docs/wave4/synthesis/COVERAGE_SYNTHESIS_WAVE1-4.pdf
+    title: "COVTL coverage synthesis - waves 1-4 (expressive prosody, phonation, sandhi)"
+    license: CC-BY-SA-4.0
+    repository: https://github.com/FBerthommier/covtl-pipeline
+  - id: manual_005
+    path: https://raw.githubusercontent.com/FBerthommier/covtl-sandhi/main/docs/covtl-sandhi-guide.pdf
+    title: "covtl-sandhi - cross-word sandhi rules guide (liaison, a/an, linking-r, raddoppiamento, enlace, encadeamento, Glottalversatz)"
+    license: CC-BY-SA-4.0
+    repository: https://github.com/FBerthommier/covtl-sandhi
+  - id: manual_006
+    path: https://raw.githubusercontent.com/FBerthommier/covtl-console/main/docs/user-manual/user-manual.pdf
+    title: "COVTL console - user manual (local lab web interface)"
+    license: CC-BY-SA-4.0
+    repository: https://github.com/FBerthommier/covtl-console
+  - id: manual_007
+    path: https://raw.githubusercontent.com/FBerthommier/covtl-console/main/docs/tech-manual/tech-manual.pdf
+    title: "COVTL console - technical manual (bridge, API, packaging)"
+    license: CC-BY-SA-4.0
+    repository: https://github.com/FBerthommier/covtl-console

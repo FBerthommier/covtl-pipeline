@@ -1,3 +1,17 @@
+%% =====================================================================
+%% SPDX-FileCopyrightText: 2026 Frédéric Berthommier
+%% SPDX-License-Identifier: CC-BY-SA-4.0
+%%
+%% This manual is licensed under the Creative Commons Attribution-
+%% ShareAlike 4.0 International license (CC BY-SA 4.0) - see
+%% LICENSE-DOCS.md at the root of this repository.
+%%
+%% VocalTractLab credit: the COVTL chain is built on VocalTractLab 2.4,
+%% written by Peter Birkholz (https://www.vocaltractlab.de , GPLv3).
+%% Wherever this documentation describes vocal-tract synthesis, it
+%% describes results obtained with VocalTractLab 2.4 - this credit must
+%% be kept attached in every derived production.
+%% =====================================================================
 % covtl-pipeline --- Multi-Speaker Registry Manual
 % SPDX-License-Identifier: GPL-3.0-or-later
 % Copyright (C) 2026 Frédéric Berthommier
@@ -318,6 +332,15 @@ default F0 from the \emph{active} speaker constants
 232.458 for w02); a forced \texttt{-f0} value is announced. Proof on
 s2: \texttt{-f0 181.008} measures a median F0 of 183.5\,Hz in the
 output signal.
+
+\paragraph{Speaker F0 vs language profile.} The speaker's
+\texttt{f0\_default} is the base of every F0 contour: the Pipeline
+passes it on all paths (\texttt{f0\_base=self.f0\_hz}), and the
+\texttt{f0\_base} field declared by a language profile is a fallback
+the engine does not read. The language profile contributes the contour
+gains only (\texttt{onset\_gain}/\texttt{final\_gain}); see the
+``Where the base F0 comes from'' note of the main manual
+(\code{docs/manual.pdf}, \S F0).
 
 \begin{callout}[Baselines are speaker-relative]
 The end-to-end baselines encode the synthesis output of
