@@ -64,7 +64,7 @@ import numpy as np
 from vtl_synth.core.polar import K_CONSONANT_DEFAULT
 
 POLAR_SR = 100          # Hz, native sampling of the .polar trajectories
-POLAR_VERSION = 4
+POLAR_VERSION = 5      # v5: CV reduced-vowel approach anchoring (ventre fix)
 STEP_MS = 10.0          # 1 gesture step = 10 ms @ 100 Hz
 
 # Display curvature (arXiv:2307.02299 §2.1: "K = 30 for vowel arcs and
@@ -401,11 +401,23 @@ def build_phrase_polar(phrase: str,
             _check(b.kind, (m + 1) * T, n)
             # red: the vocalic background keeps flowing anchor→anchor
             zv_parts.append(arc_z(dep, arr, n, NU_VOCALIC))
-            # blue: dep → C₁ → ⋯ → C_m → arr, T steps per sub-arc,
-            # in the ORIGINAL arcplot anchoring (phase on the shorter
-            # radius — teardrop loops, v4; was polar_arc arrival-phase
-            # anchoring, which bulged every leg consonant-side)
-            pts = [tuple(p) for p in [dep] + targets + [arr]]
+            # blue: dep → C₁ → ⋯ → C_m → arr, T steps per sub-arc, in the
+            # ORIGINAL arcplot anchoring (phase on the shorter radius —
+            # teardrop loops, v4) with the CV REDUCED-VOWEL approach
+            # anchoring of the certified planning display (manual §5.6;
+            # big.bi-supplement 'ba' lens, POLAR_VERSION 5): when the
+            # recorded departure is a full vowel (post-vocalic onset), the
+            # approach leg is drawn from the REDUCED arrival-vowel anchor
+            # (0.5·rho_V, theta_V) — inside the disk — so the approach is
+            # the concave inner branch and the release (return) leg rides
+            # the outer arc as the ventre, instead of both legs hugging
+            # the same outer concavity. Phrase-initial onsets already
+            # record the reduced anchor (rho < 0.7) and are kept as is.
+            dep_disp = list(dep)
+            if dep[0] > 0.7:
+                dep_disp = [0.5 * arr[0], arr[1]]
+            pts = [tuple(dep_disp)] + [tuple(p) for p in targets] \
+                + [tuple(arr)]
             zc = np.vstack([_z_leg_arcplot(pts[k], pts[k + 1], T,
                                            NU_CONSONANTAL, K_C_DISPLAY)
                             for k in range(m + 1)])
