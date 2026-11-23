@@ -124,3 +124,15 @@ never executed on macOS (cross-checked on Linux), no Intel build.
   `make_latest=false`.
 - covtl.org: don't regenerate QR codes for a version bump (targets are
   content URLs); only the SHA lines change.
+
+
+## PENDING for the next release round (owner-approved, already on main)
+
+- **Polar display fix, do not miss it**: commit `d294f51` on main
+  (2026-11-23) fixes the inverted return-leg concavity of the polar
+  display ("ventre" fix) — `POLAR_VERSION = 5` in
+  `vtl_synth/video/polar_video.py` (CV reduced-vowel approach anchoring,
+  manual §5.6). It ships automatically with the next `publish-prod`
+  dispatches: any `covtl-synth` >= this main is the fixed build. The
+  console bundles rebuilt from that PyPI state embed it; display-only
+  (audio/baselines untouched), so no pin or migration concern.
