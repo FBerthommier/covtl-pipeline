@@ -6,6 +6,7 @@ file name.
 
 | file | content |
 |---|---|
+| `From_Phonetics_to_Articulatory_Phonology.pdf` | Didactic manual (2nd edition, 2026-11): the making of covtl, step by step - from the coordination function and the unit circle to the complete driving of VocalTractLab; implementation record corrected against covtl-synth 1.2.2 (speaker JD3). Entry point of the documentation family. |
 | `manual.pdf` / `.tex` | Reference manual: the Berthommier COVTL model (polar targets, projection, coarticulation), source model, CLI/Python API, file formats, registry and language-pack overview, worked example, developer guide. |
 | `speakers.pdf` / `.tex` | Multi-speaker registry: the five speakers (jd3, s1, s2, m01, w02), `install_speaker.py`, the four layers of a switch, provenance chains (DVTD construction, adaptation, Option A), defect catalogue D1–D21. |
 | `language_pack.pdf` / `.tex` | Language pack: six languages (en, fr, es, de, it, pt), `setup_lang.py` (install/setlang/calibrate/verify/restore), vowel-target calibration, per-language profiles, JD3 guard, troubleshooting. |

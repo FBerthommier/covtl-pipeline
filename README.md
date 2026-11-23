@@ -51,6 +51,7 @@ Repository: <https://github.com/fberthommier/covtl-pipeline>
   written after Peter Birkholz's VocalTractLab 2.4 work
   (vocaltractlab.de) — the COVTL chain drives VocalTractLab 2.4, and
   this credit stays attached in every derived production.
+- **Didactic manual** - [docs/From_Phonetics_to_Articulatory_Phonology.pdf](docs/From_Phonetics_to_Articulatory_Phonology.pdf): the making of covtl, step by step (2nd edition) - the entry point of the whole documentation family, written after Peter Birkholz's VocalTractLab 2.4 work; this credit stays attached in every derived production.
 - **Documentation index** — [docs/README.md](docs/README.md): the five
   manuals (LaTeX sources + compiled PDFs, English US).
 - **Reference manual** — [docs/manual.pdf](docs/manual.pdf): full model
