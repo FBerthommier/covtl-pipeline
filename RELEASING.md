@@ -136,3 +136,13 @@ never executed on macOS (cross-checked on Linux), no Intel build.
   dispatches: any `covtl-synth` >= this main is the fixed build. The
   console bundles rebuilt from that PyPI state embed it; display-only
   (audio/baselines untouched), so no pin or migration concern.
+
+- **UNDER STUDY (owner, 2026-11-24) — schwa position**: an engine change
+  concerning the schwa position (currently `VOWEL_TARGETS['@'] =
+  (0.7167, pi)`, the centroid of the calibrated triangle, re-centred
+  2026-09-04) is being studied and will require a GLOBAL modification
+  (targets + possibly syltraj waypoints/polar display, cf.
+  `syl._vv_waypoint` and the '@' phoneme entry). To be ACCUMULATED into
+  the same next full rebuild round as the polar v5 display fix above —
+  do not ship it piecemeal. Not started: no code exists yet; this is a
+  planning note only.
