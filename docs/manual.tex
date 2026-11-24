@@ -40,6 +40,7 @@
 % from a system font with IPA Extensions coverage (Lucida Sans Unicode).
 \newfontfamily\ipafont[Path=./, Extension=.ttf, HyphenChar=None]{.l_10646}
 \newcommand{\turnh}{{\ipafont\symbol{"0265}}}
+\newcommand{\code}[1]{\texttt{#1}}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, backgrounds}
 \usepackage[
@@ -508,8 +509,8 @@ in a complex \emph{phonetic plane}:
   \node[font=\scriptsize, blue!60!black, above left] at (174:0.91) {6};
   \fill[blue!60!black] (177.9:0.722) circle (1.1pt);
   \node[font=\scriptsize, blue!60!black, right] at (179:0.74) {9};
-  \fill[blue!60!black] (180:0.7167) circle (1.1pt);
-  \node[font=\scriptsize\bfseries, blue!60!black, below, yshift=1pt] at (180:0.69) {@};
+  \fill[blue!60!black] (180:0.580) circle (1.1pt);
+  \node[font=\scriptsize\bfseries, blue!60!black, below, yshift=1pt] at (180:0.553) {@};
   \fill[blue!60!black] (260.6:0.519) circle (1.1pt);
   \node[font=\scriptsize, blue!60!black, left] at (260:0.53) {y};
   \fill[blue!60!black] (226.1:0.396) circle (1.1pt);
@@ -545,9 +546,10 @@ scale from the target tables of \texttt{constants.py}. Filled dots: the 12
 vowel targets (Table~\ref{tab:vowels}); crosses: landmark consonant
 targets (Table~\ref{tab:cons}). The dashed unit circle is the frontier of
 the vowel space; consonant closures live beyond it (\(\rho > 1\)). The
-schwa \(@\) sits at the centroid of the calibrated \(a\!-\!i\!-\!u\)
-triangle. /m/ coincides with /b/ --- same target and same selector; only
-the velum extension (VO, outside the COVTL selector) differs.}
+schwa \(@\) sits at the interior mid-central \((0.580, 180^\circ)\)
+(audit 2026-11-24). /m/ coincides with /b/ --- same target and same
+selector; only the velum extension (VO, outside the COVTL selector)
+differs.}
 \label{fig:polar-plane}
 \end{figure}
 
@@ -578,11 +580,15 @@ center coefficient \(c_1(\mathrm{TCY})\) had to be raised by \(+0.25\) to
 obtain the velar occlusion of \(/g/\) (Table~\ref{tab:co}), and the radii
 of \(/i/\) and \(/u/\) were reduced from the August
 unit-radius fit (\(1.00 \to 0.60\) and \(1.00 \to 0.55\)) to compensate, preserving F2 to within a few tens of
-Hz. The schwa \(@\) is placed at the centroid of the calibrated
-\(a\!-\!i\!-\!u\) triangle,
-\(\bar\rho = (1.000+0.600+0.550)/3 = 0.7167\), \(\theta = \pi\); it serves
-as the mute vowel of isolated consonants and as a waypoint against
-vowel-to-vowel closure (\S\ref{subsec:vv}).
+Hz. The schwa \(@\) is the INTERIOR mid-central target
+\((0.580, \pi)\) --- acoustically anchored (F1 \(620\) / F2 \(1463\)~Hz
+measured against a 600/1400 reference; audit 2026-11-24, ex polar
+centroid \(\bar\rho = 0.7167\) of 2026-09-04, kept one step); it serves
+as the mute vowel of isolated consonants and as the mandatory waypoint
+against vowel-to-vowel closure (\S\ref{subsec:vv}) --- the routing is
+unconditional in the engine, while its drawn representation in the
+\texttt{.polar} plane is optional (\texttt{display\_schwa\_route},
+default off; \S\ref{sec:layers}).
 
 \begin{table}[t]
 \centering
@@ -601,7 +607,7 @@ vowel-to-vowel closure (\S\ref{subsec:vv}).
 \texttt{O} & 1.000 & 2.616              & 149.9 & clamped at \(\rho=1\) \\
 \texttt{6} & 0.894 & 3.053              & 174.9 & \oe{} \\
 \texttt{9} & 0.722 & 3.105              & 177.9 & \oe{}\raisebox{0.4ex}{\tiny $\tilde{}$} (nasalized via VO) \\
-\texttt{@} & 0.7167 & \(\pi\)           & 180.0 & centroid of the $a$--$i$--$u$ triangle \\
+\texttt{@} & 0.580 & \(\pi\)           & 180.0 & interior mid-central (audit 2026-11-24; ex-centroid 0.7167) \\
 \texttt{y} & 0.519 & 4.548              & 260.6 & \\
 \texttt{2} & 0.396 & 3.946              & 226.1 & \o{} \\
 \bottomrule
@@ -970,7 +976,16 @@ engine hooks a VTL \emph{closure probe} (minimum lingual tube area at the
 center of the block, on the 19-parameter resting state); when the probe
 returns less than the threshold
 \(0.18\,\mathrm{cm^2}\), the background arc is routed through the schwa
-\(@\) as two half-arcs with exact continuity at the junctions.
+\(@\) as two half-arcs with exact continuity at the junctions. The
+waypoint IS the schwa target \((0.580, \pi)\) since the 2026-11-24
+audit (ex-centroid 0.7167, which swung the routed arcs toward the /a/
+periphery); the routing is \textbf{mandatory and unconditional} --- it
+is the physics validated by the audit (quasi-constant-aperture
+corridor \(\rho\,0.55 \to 0.58 \to 0.60\), every routed leg
+\(\ge 0.170\,\mathrm{cm^2}\), Hausdorff\((\,\)buib\(~{},~{}\)buaib\()\)
+\(= 0.42\)) --- while its DRAWN representation in the \texttt{.polar}
+plane is the optional \texttt{display\_schwa\_route} toggle (default
+off; \S\ref{sec:layers}).
 
 \subsection{Coarticulation across word boundaries}\label{subsec:notation-coart}
 
@@ -1586,7 +1601,13 @@ vtl-synth polar-video out/x.tract --polar out/x.polar out/x.wav -o out/x.mp4
 dual-panel MP4 (sagittal view | polar figure, 25\,Hz) from a
 \texttt{.tract}, a \texttt{.polar} and a \texttt{.wav}. The
 reconstruction, the file format and the rendering are documented in
-\texttt{docs/polar\_visualization.pdf}.
+\texttt{docs/polar\_visualization.pdf}. Both \texttt{polar-build} and
+\texttt{run --polar} accept the display-only option
+\texttt{-{}-display-schwa-route} (schwa audit 2026-11-24): when set,
+the drawn vocalic branch shows the routed
+dep\,$\to$\,@\,$\to$\,arr legs of the closing VV arcs; the default
+(OFF) draws the legacy direct arcs. The engine routing itself is never
+conditional (\S\ref{subsec:vv}).
 
 \subsection{inspect --- tract inspector}
 

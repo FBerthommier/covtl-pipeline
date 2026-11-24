@@ -96,3 +96,33 @@ collected** (le rapport annonçait 521 au 23/11 ; 8 tests ont été ajoutés
 entre-temps). Les corrections utilisent 529.
 Invariants : `git diff -- vtl_synth/ tests/ scripts/` VIDE ; pages PDF
 inchangées (polar 9 / language_pack 12 / speakers 14 / manual 28).
+
+## Campagne 2026-11-24 (rework schwa — deux couches, toggle d'affichage)
+
+Mission du propriétaire après l'audit schwa validé
+(`docs/schwa-position-audit-EN.md`, traduction EN de l'audit FR du
+24/11). Quatre commits : couches de représentation (B) → traduction EN
+(A) → patch audit + flag display (C) → documentation complète (E).
+**Cette campagne touche le CODE** (cible `'@'` + routage VV + toggle
+display) : voir CHANGELOG.md « Changed » pour le détail moteur.
+
+| Fichier | Modification |
+|---|---|
+| `docs/ARCHITECTURE.md` | section « Two representation layers » (layer 1 cibles / layer 2 f(P(t)) / toggle display) ; valeur schwa §5 : (0.580, 180°) ex-centroïde ; haché jd3 registry mis à jour |
+| `docs/manual.tex` | sous-section « Two representation layers » (§ architecture) ; cible @ (table + TikZ + §voyelles) = (0.580, π) ; §VV : routage obligatoire + toggle ; §CLI polar-build/run : `--display-schwa-route` ; PDF recompilé (**29 pp.**, ex 28) ; + fix latent `\code` non défini (note F4 du 23/11, footnote silencieusement perdue) |
+| `docs/polar_visualization.tex` | sous-section « The schwa routing: mandatory in the engine, optional on display » ; table events `bg` ; résidu « version = 4 » → 5 ; PDF recompilé (**10 pp.**, ex 9) |
+| `docs/SPEAKERS.md` | §6 : schéma schwa par speaker — jd3/s1/s2 (0.580, 180°), m01 (0.750, 123°) / w02 (0.750, 234°) inchangés ; routage obligatoire, tracé optionnel ; hachés registry |
+| `docs/From_Phonetics_errata.md` | errata #3 : schwa 0.580 (le manuel cite le centroïde 0.7167, annexe C + record d'implémentation) |
+| `docs/reference-manual-errata.md` | errata #3 : schwa 0.580 + routage effectif obligatoire + toggle display (§ table voyelles + §4.5) |
+| `docs/schwa-position-audit-EN.md` (nouveau) | traduction EN-US de l'audit FR, éléments étiquetés [layer 1: target] / [layer 2: mandatory routing] / [layer 2: display option] |
+| `docs/README.md` | index : entrée « Engine studies » (étude schwa EN) |
+| `README.md` | phrase « two representation layers » (intro) + §Polar video : routage obligatoire, toggle display-only |
+| `CHANGELOG.md` | entrée « Changed » (cible, toggle display optionnel défaut OFF, tests) |
+| `RELEASING.md` | « UNDER STUDY » → « IMPLEMENTED — routing mandatory, display toggle default OFF » + bullet livrable étude |
+| `docs/DOC_SYNC_LOG.md` | la présente entrée |
+| `vtl_synth/…` (code) | cible `'@'` (constants + jd3/s1/s2 constants, registry, hachés), commentaires syltraj, `_vv_probe` + toggle `display_schwa_route` (polar_video, pipeline, CLI), `tests/test_schwa_waypoint.py` (ON/OFF) — **moteur inconditionnel** |
+
+Validation : 540 tests collectés (529 + 11 du patch) — 538 passed /
+2 skipped / 0 échec (venv audit, editable sur le clone) ; baselines
+5 speakers vertes sans régénération ; toggle vérifié ON (jonction
+(0.580, π) à 1e-6) / OFF (identité au .polar de 6536f5a).

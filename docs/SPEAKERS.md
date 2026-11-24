@@ -113,3 +113,28 @@ limits" are resolved for three vowels by the current c2-ported matrices;
 only w02 /o/ is confirmed as a true limit. See
 `audit_rapports_externes.md` and `rapport_triangle_vocalique.md` in the
 working archive for the full measurements.
+
+## 6. Schwa scheme per speaker (audit 2026-11-24)
+
+The 2026-11-24 schwa audit (`docs/schwa-position-audit-EN.md`) moved
+the common schwa target from the polar centroid of the calibrated
+triangle (0.7167, 180° — the 2026-09-04 re-centring, kept one step) to
+the INTERIOR mid-central **(0.580, 180°)**, acoustically anchored
+(F1 620 / F2 1463 Hz measured, ref 600/1400).
+
+| speaker | schwa target | scheme |
+|---|---|---|
+| jd3 | (0.580, 180°) | reference — moved by the audit (ex-centroid) |
+| s1 | (0.580, 180°) | follows the jd3 scheme (ex-centroid) |
+| s2 | (0.580, 180°) | follows the jd3 scheme (ex-centroid) |
+| m01 | (0.750, 123°) | own multi-criteria schwa — unchanged |
+| w02 | (0.750, 234°) | own multi-criteria schwa — unchanged |
+
+The schwa is the waypoint of the closing VV arcs
+(`syltraj._vv_waypoint`): the routing is **mandatory and
+unconditional** in the motor chain; only its drawn representation in
+the .polar plane is optional (`display_schwa_route`, default off =
+legacy direct arc). The registry hashes of the touched speaker
+constants were regenerated (jd3 `eb3637c3…`, s1 `65ccd435…`,
+s2 `f590d9ca…`); baselines stayed green without regeneration (no
+corpus phrase contains '@' or an intra-word closing VV pair).

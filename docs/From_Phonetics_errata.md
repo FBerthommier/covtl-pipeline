@@ -19,3 +19,17 @@ and is not rewritten; corrections are recorded here.
    anchor (0.5*rho_V, theta_V), so the approach is the concave inner
    branch and the release rides the outer arc. Readers of older v4 files
    keep v4 semantics.
+3. **Schwa target — interior mid-central (0.580, 180°), not the polar
+   centroid** (implementation record §"vowel radii" and appendix C,
+   production table): the manual cites the centroid ρ̄ =
+   (1 + 0.60 + 0.55)/3 = 0.7167 (re-centring of 2026-09-04). Since the
+   2026-11-24 audit the production state is `'@' = (0.580, π)` — the
+   INTERIOR mid-central, acoustically anchored (F1 620 / F2 1463 Hz
+   measured, ref 600/1400). The centroid value stayed one step only
+   (2026-09-04 → 2026-11-24): at 0.7167 the routed « buib » hugged the
+   /a/ meridian and mimicked « buaib » (Hausdorff 0.283); at 0.580 the
+   corridor crosses at quasi-constant aperture (H = 0.420, legs
+   ≥ 0.170 cm²). The schwa remains the waypoint of the closing VV arcs
+   (routing mandatory, unconditional); its display in the .polar plane
+   is optional (`display_schwa_route`, default off). Cf.
+   `docs/schwa-position-audit-EN.md`, `vtl_synth/core/constants.py`.

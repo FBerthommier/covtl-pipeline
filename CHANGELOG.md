@@ -5,6 +5,40 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
+### Changed
+
+- Engine (schwa): `VOWEL_TARGETS['@']` moved from the polar centroid
+  (0.7167, π) of 2026-09-04 to the INTERIOR mid-central (0.580, π)
+  (audit 2026-11-24). Global change as planned in RELEASING.md: the
+  closing-VV-arc waypoint (`syl._vv_waypoint`) and the '@' phoneme
+  entry of the .polar manifest follow the target; s1/s2 speaker
+  constants follow the jd3 scheme (m01/w02 keep their own
+  multi-criteria schwa). Routing is MANDATORY and unconditional — it
+  is the physics validated by the audit. Rationale: the centroid
+  radius placed the waypoint near the open-central periphery, so the
+  routed « buib » (u→i) trajectory hugged the /a/ meridian and
+  mimicked « buaib » (Hausdorff 0.283 on the polar disk); at
+  ρ = 0.580 the corridor crosses at quasi-constant aperture
+  (ρ 0.55 → 0.58 → 0.60, single sigmoid glide), the dissimilarity
+  rises to H = 0.42 and every routed leg of the 10 closing pairs
+  stays ≥ 0.170 cm² (probe), above the /u/ plateau (0.152). Acoustic
+  anchor: ρ 0.580 = F1 620 / F2 1463 Hz measured (ref 600/1400, cf.
+  lang_blocks calibration passes).
+- Polar display (OPTIONAL toggle, default OFF): `polar_video` gains
+  `_vv_probe` + `display_schwa_route` — the .polar re-run hooks the
+  VV closure probe like the motor chain and draws the routed
+  dep → @ → arr legs ONLY when the flag is ON (CLI
+  `--display-schwa-route` on `run --polar` and `polar-build`,
+  console payload/checkbox); OFF (default) draws the legacy direct
+  arc, byte-identical to the .polar of the pre-audit revision. The
+  engine routing is never conditional; display-only — audio and
+  baselines untouched.
+- Tests: new `tests/test_schwa_waypoint.py` locking the audit
+  acceptance criteria (target value, waypoint follow, polar manifest
+  entry, stubbed routing structure, display toggle ON = routed
+  junction / OFF = legacy direct arc identity, legs ≥ /u/ plateau,
+  quasi-constant aperture, H(buib, buaib) ≥ 0.40).
+
 ### Docs
 
 - F1 README: polar-build/polar-video CLI examples corrected (PHRASE arg; .tract first for polar-video).

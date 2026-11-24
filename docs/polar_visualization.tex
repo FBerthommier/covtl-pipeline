@@ -295,7 +295,9 @@ Each helper records, per appended block and in
 \code{arc} & departure and arrival anchor pair + duration in steps
 (pause, initial and terminal arcs) \\
 \code{bg} & anchor pair + duration (vocalic background arcs; the
-schwa routing of closing VV arcs records its two half-arcs) \\
+schwa routing of closing VV arcs records its two half-arcs
+dep\,$\to$\,@\,$\to$\,arr when the \code{display\_schwa\_route}
+display option is on --- see \S\ref{sec:schwa-toggle}) \\
 \code{hold} & anchor point + duration (decay/attack stationary
 holds) \\
 \code{cluster} & anchor pair, list of consonant \emph{node} targets
@@ -351,12 +353,38 @@ approach sub-arc --- on the validation corpus \code{ba.da.ga} the
 reconstructed peaks coincide with the engine targets to within
 $10^{-9}$ (Table~\ref{tab:targets}).
 
+\subsection{The schwa routing: mandatory in the engine, optional on display}
+\label{sec:schwa-toggle}
+
+Closing VV arcs whose direct chord would occlude the tract are routed
+through the schwa waypoint (\code{syltraj.\_vv\_waypoint}, threshold
+$0.18\,\mathrm{cm^2}$). Since the 2026-11-24 schwa audit the waypoint
+IS the interior mid-central target $(0.580, \pi)$, and the routing is
+\textbf{mandatory and unconditional} in the motor chain --- it is the
+physics validated by the audit (quasi-constant-aperture corridor, every
+routed leg above the /u/ plateau, Hausdorff(buib, buaib) $= 0.42$;
+see \code{docs/schwa-position-audit-EN.md}). No flag ever gates it.
+
+The DISPLAY mirrors layer 2 outside the engine and carries the only
+optional knob: \code{display\_schwa\_route} (CLI
+\code{-{}-display-schwa-route} on \code{run --polar} and
+\code{polar-build}; console checkbox \emph{``Display the routed
+trajectory through the schwa (planning path)''}; default OFF). When ON,
+the instrumented re-run hooks the same VV closure probe as the motor
+chain (\code{polar\_video.\_vv\_probe}) and the \code{bg} queue records
+the two half-arcs dep $\to$ @ $\to$ arr, junction exactly at the
+waypoint (verified to $10^{-6}$ in the \code{.polar} file). When OFF
+(default), the drawn vocalic branch keeps the legacy direct arcs ---
+byte-identical to the pre-audit \code{.polar}. Audio, \code{.tract}
+and baselines are never affected: the engine \emph{always routes};
+only the representation toggles.
+
 \subsection{The .polar intermediate file (version 5)}
 
 Version~5 adds the CV reduced-vowel approach anchoring (ventre fix) written by the current engine; readers of older files fall back to v4 semantics.
 
 The result is stored in a self-documented JSON file with
-\code{format}~=~\code{covtl-polar} and \code{version}~=~4:
+\code{format}~=~\code{covtl-polar} and \code{version}~=~5:
 
 \begin{lstlisting}[style=json]
 {

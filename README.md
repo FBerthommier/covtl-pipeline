@@ -221,6 +221,11 @@ cross-section (left) and polar (ρ, θ) plane (right) at 25 Hz, vowels in
 **red**, consonants in **blue**, each branch with a fading trail. See
 `docs/polar_visualization.pdf` and the short demo
 `examples/polar_demo_en.mp4`.
+The closing VV arcs are always routed through the schwa waypoint by the
+engine (mandatory, audit 2026-11-24); `--display-schwa-route` (on
+`run --polar` and `polar-build`) is a **display-only** option to draw
+that routed dep → @ → arr path in the `.polar` plane instead of the
+legacy direct arc (default off; audio never affected).
 
 **Interactive HTML demos** (`docs/html/`): the same dual-panel
 view as self-contained web pages — play/pause, scrub, slow motion,

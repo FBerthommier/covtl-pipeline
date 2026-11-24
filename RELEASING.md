@@ -137,15 +137,30 @@ never executed on macOS (cross-checked on Linux), no Intel build.
   console bundles rebuilt from that PyPI state embed it; display-only
   (audio/baselines untouched), so no pin or migration concern.
 
-- **UNDER STUDY (owner, 2026-11-24) — schwa position**: an engine change
-  concerning the schwa position (currently `VOWEL_TARGETS['@'] =
-  (0.7167, pi)`, the centroid of the calibrated triangle, re-centred
-  2026-09-04) is being studied and will require a GLOBAL modification
-  (targets + possibly syltraj waypoints/polar display, cf.
-  `syl._vv_waypoint` and the '@' phoneme entry). To be ACCUMULATED into
-  the same next full rebuild round as the polar v5 display fix above —
-  do not ship it piecemeal. Not started: no code exists yet; this is a
-  planning note only.
+- **IMPLEMENTED (owner, 2026-11-24) — schwa position**: the engine change
+  concerning the schwa position is DONE (audit 2026-11-24, same day the
+  study was opened): `VOWEL_TARGETS['@'] = (0.580, pi)` — the INTERIOR
+  mid-central, replacing the centroid of the calibrated triangle
+  (0.7167, pi, re-centred 2026-09-04). GLOBAL modification as planned:
+  targets (core/constants.py + jd3/s1/s2 speaker constants; m01/w02
+  keep their own multi-criteria schwa) + the closing-VV-arc waypoint
+  (`syl._vv_waypoint`, follows the target) + the '@' phoneme entry of
+  the .polar manifest (inventory, data-driven). Status: **routing
+  mandatory, display toggle default OFF** — the motor routing is
+  unconditional (always follows `'@'`), while the polar display hooks
+  the VV closure probe (`_vv_probe`) only behind the OPTIONAL
+  `display_schwa_route` flag (CLI `--display-schwa-route` on
+  `run --polar` and `polar-build`, console payload/checkbox; OFF, the
+  default, draws the legacy direct arc). Acceptance criteria locked in
+  `tests/test_schwa_waypoint.py`: quasi-constant-aperture
+  corridor (ρ 0.55 → 0.58 → 0.60), routed legs ≥ 0.170 cm² (above the
+  /u/ plateau), Hausdorff(« buib », « buaib ») ≥ 0.40 (was 0.283 —
+  the diphthong of « buib » no longer mimics « buaib »). Baselines
+  untouched: no corpus phrase contains '@' or an intra-word closing
+  VV pair (verified — `aiu` transitions are word-crossing, routed
+  through synthetic anchors, not through the waypoint). Still to be
+  ACCUMULATED into the same next full rebuild round as the polar v5
+  display fix above — do not ship it piecemeal.
 
 - **Schwa study deliverable (audit 2026-11-24)**: the position study is
   documented in `docs/schwa-position-audit-EN.md` (English translation
