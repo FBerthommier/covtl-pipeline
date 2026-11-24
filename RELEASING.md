@@ -146,3 +146,10 @@ never executed on macOS (cross-checked on Linux), no Intel build.
   the same next full rebuild round as the polar v5 display fix above —
   do not ship it piecemeal. Not started: no code exists yet; this is a
   planning note only.
+
+- **Schwa study deliverable (audit 2026-11-24)**: the position study is
+  documented in `docs/schwa-position-audit-EN.md` (English translation
+  of the French internal audit, layer-classified: layer 1 target /
+  layer 2 mandatory routing / layer 2 display option) — read it before
+  reviewing the schwa change; it carries the acceptance criteria reused
+  by `tests/test_schwa_waypoint.py`.

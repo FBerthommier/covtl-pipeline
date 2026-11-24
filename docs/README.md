@@ -31,6 +31,13 @@ Shared developer docs at the repository root and in this folder:
   audit — the CI-visible phonation tests, the wildcard tag override,
   and the console alignment (519 green tests, 76.7 % combined, honest
   ceiling 79.0 %).
+- **Engine studies** — `schwa-position-audit-EN.md`: the schwa
+  position change study (audit 2026-11-24; English translation of the
+  French internal audit) — occlusion corner of the (ρ, θ) plane,
+  dissimilarity law H = 1 − ρ_w, decision `'@'` = (0.580, 180°),
+  measured impact, validation; every element classified by
+  representation layer (layer 1 target / layer 2 mandatory routing /
+  layer 2 display option).
 
 ## Building the PDFs
 
