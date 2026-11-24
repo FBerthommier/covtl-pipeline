@@ -5,6 +5,22 @@ Format: Keep a Changelog — https://keepachangelog.com/
 
 ## [Unreleased]
 
+### Docs
+
+- F1 README: polar-build/polar-video CLI examples corrected (PHRASE arg; .tract first for polar-video).
+- F2 README: `calibrate` marked deprecated (D24); LANG SECTION marker-only guard-rail.
+- F3 README + docs/polar_visualization.tex + errata: .polar format v4 -> v5 (CV reduced-vowel approach anchoring).
+- F4 docs/manual.tex: two pressure mappings documented (active min(E,1.5)^1.2 vs legacy E^2, pulmonary_effort.py not imported).
+- F5 docs/manual.tex: /i,u/ radius chronology corrected (1.00 -> 0.60 / 0.55, August unit-radius fit).
+- F6 docs/From_Phonetics_errata.md (new): didactic manual errata (dental target 270 deg; .polar v5).
+- F7 docs/language_pack.tex: banner label aligned to the compiled PDF (v1.0.9 update, 2026-09-23).
+- F8 README: test counts updated (529 tests collected; 519 green at the wave-5 CI run).
+- F9 lang_pack/README: regression baselines = 40 pins (8 phrases x 5 speakers, schema 3).
+- F10 docs/README: "Seven PDF documents" + no-source note for the didactic and reference manuals.
+- F11 docs/reference-manual-errata.md (new): User Manual is 28 pp (was cited 27 pp).
+- F12 docs/speakers.tex + docs/SPEAKERS.md: tract-length conventions cross-referenced (17.00 cm tense-vowel average vs 16.83 cm static Route A).
+- F13 README: arXiv:2609.31508 (EMA/CTW 2026) added to the References.
+
 ## [1.2.2] — 2026-11-17
 
 ### Changed

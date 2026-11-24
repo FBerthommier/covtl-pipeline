@@ -100,7 +100,7 @@ are within **±30 %**. Compare your `Bilan` line with:
 
 | language | expected `Bilan` | notes |
 |---|---|---|
-| en | 4/8 (measured 2026-09-15) | original calibration — formally covered by the 62 regression baselines, not the LPC chain |
+| en | 4/8 (measured 2026-09-15) | original calibration — formally covered by the regression baselines (40 pins: 8 phrases x 5 speakers, schema 3), not the LPC chain |
 | fr | 4/12 | v1.0.6 "validated" block under the current measurement chain (see the bias below) |
 | es | 6/7 | /i/: F2 ceiling ≈1300 Hz on this engine — flagged HYPOTHESIS |
 | de | 10/14 | lax and front-rounded vowels: F1 measured low (LPC bias) |

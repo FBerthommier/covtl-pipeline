@@ -9,6 +9,8 @@ et réalisation in-situ (LPC sur audio synthétisé, 145 runs VCV + phrases).
 
 ## 1. Tableau récapitulatif
 
+> (L en statique Route A ; `speakers.pdf` table 1 rapporte la moyenne sur voyelles tendues : jd3 17,00 cm — conventions distinctes, voir `docs/speakers.pdf` §1.)
+
 | | jd3 | s1 | s2 | m01 | w02 |
 |---|---|---|---|---|---|
 | Type | référence | DVTD s1 ♂ (IRM) | DVTD s2 ♀ (IRM) | officiel VTL 2.4 ♂ | officiel VTL 2.4 ♀ |

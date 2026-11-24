@@ -576,8 +576,8 @@ strict Maeda anchors; the other vowels were fitted by least squares under
 the constraint \(\rho \le 1\). Two documented compensations: the
 center coefficient \(c_1(\mathrm{TCY})\) had to be raised by \(+0.25\) to
 obtain the velar occlusion of \(/g/\) (Table~\ref{tab:co}), and the radii
-of \(/i/\) and \(/u/\) were reduced (\(0.80 \to 0.60\) and
-\(0.80 \to 0.55\)) to compensate, preserving F2 to within a few tens of
+of \(/i/\) and \(/u/\) were reduced from the August
+unit-radius fit (\(1.00 \to 0.60\) and \(1.00 \to 0.55\)) to compensate, preserving F2 to within a few tens of
 Hz. The schwa \(@\) is placed at the centroid of the calibrated
 \(a\!-\!i\!-\!u\) triangle,
 \(\bar\rho = (1.000+0.600+0.550)/3 = 0.7167\), \(\theta = \pi\); it serves
@@ -1211,7 +1211,7 @@ P_{\mathrm{sub}} \;=\; P_{\min} \;+\; \min(E, 1.5)^{1.2}\,
 \end{equation}
 with a phonation floor of \(3\,000\,\mathrm{dPa}\) while voicing is on
 and a pre-voicing regime during voiced closures (pressure 1800\,dPa,
-relative amplitude clipped to 0.10--0.18). The pulmonary-effort variant
+relative amplitude clipped to 0.10--0.18). Two pressure mappings coexist in the code base: the active\footnote{\code{glottal\_source.compute\_pressure}: \code{P = Pmin + min(E,1.5)**1.2 (Pmax - Pmin)}.} mapping \(\min(E,1.5)^{1.2}\) (equation above), and the legacy \code{pulmonary\_effort.py} mapping \(E^2\) --- kept as reference, currently not imported by the synthesis chain; only the former drives production. The pulmonary-effort variant
 zeroes the effort on plosive occlusions (5\,ms smoothing) and takes the
 maximum of the effort, \(60\,\%\) of the pre-voicing level and
 \(50\,\%\) of nasality before smoothing (10\,ms).

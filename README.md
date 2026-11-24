@@ -9,7 +9,7 @@ Version 1.2.1 hardens the 1.2.0 release: the **whole-phrase phonation
 selector** (`tag_overrides={'*': {'voicing': ...}}` — one entry drives
 breathy / creaky / whisper over every segment; an explicit per-key
 entry wins), the **full-path phonation checks now collected by CI**
-(`tests/test_phonation_full_path.py`, **519 green tests**), and
+(`tests/test_phonation_full_path.py`, **529 tests collected** (519 green at the wave-5 CI run)), and
 corrected packaging metadata (description names the headline features,
 Python 3.13/3.14 classifiers). The 1.2.0 foundations remain: phonation
 modes audible end-to-end through `Pipeline(tag_overrides=...)`, the
@@ -94,7 +94,7 @@ Repository: <https://github.com/fberthommier/covtl-pipeline>
   [docs/wave4/synthesis/COVERAGE_SYNTHESIS_WAVE1-4.pdf](docs/wave4/synthesis/COVERAGE_SYNTHESIS_WAVE1-4.pdf).
   The wave-5 addendum documents the post-1.2.0 hardening audit:
   the CI-visible phonation tests, the wildcard tag override, and the
-  console alignment (519 green tests, 76.7 % combined, honest ceiling
+  console alignment (529 tests collected, 76.7 % combined, honest ceiling
   79.0 %).
 - **Architecture** — [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md):
   developer map of the engine (module layout, data flow, the
@@ -191,23 +191,24 @@ fully reversible:
 python setup_lang.py list                 :: available + current
 python setup_lang.py install --lang fr    :: install/activate French
 python setup_lang.py setlang de           :: switch language
-python setup_lang.py calibrate fr         :: re-derive vowel targets (JD3 only)
+python setup_lang.py calibrate fr         :: deprecated (D24): no-op
 python setup_lang.py verify               :: integrity check
 python setup_lang.py restore              :: back to native vowels
 ```
 
-**Guard-rail**: the pack vowel targets are calibrated *in situ* on
-**JD3** — `calibrate` (re)installs speaker jd3 first and says so; the
-other speakers keep their native vowel targets (a non-jd3 speaker with
-an active language is flagged as an unverified combination). Lexicons
+**Guard-rail**: since the D24 resolution the LANG SECTION is a marker
+only — vowel targets and effort gains are the active speaker's own
+(recalibrated per speaker, see docs/SPEAKERS.md); `calibrate` is
+deprecated and writes nothing. Lexicons
 are CC BY-SA 3.0 (Wikipron) — keep the `README_xx_lexicon.md` notices
 beside the TSV files; details in `lang_pack/LICENSE.md`.
 
 ## Polar video
 
 `vtl-synth run --polar "this is easy for us" -o ./out` also writes a
-`.polar` intermediate (100 Hz, format v4: dissociated vocalic /
-consonantal trajectories) and renders a **dual-panel MP4** — sagittal
+`.polar` intermediate (100 Hz, format v5: dissociated vocalic /
+consonantal trajectories; v5 adds the CV reduced-vowel approach
+anchoring) and renders a **dual-panel MP4** — sagittal
 cross-section (left) and polar (ρ, θ) plane (right) at 25 Hz, vowels in
 **red**, consonants in **blue**, each branch with a fading trail. See
 `docs/polar_visualization.pdf` and the short demo
@@ -248,8 +249,8 @@ vtl-synth text-to-wav "hello world" -o ./out      # audio only
 vtl-synth tract-to-mp4 out/x.tract out/x.wav -o out/x.mp4
 vtl-synth inspect out/x.tract --states 2 --ranges
 vtl-synth plot-tract out/x.tract --which all -o out/x.png
-vtl-synth polar-build out/x.tract out/x.wav -o out/x.polar
-vtl-synth polar-video out/x.polar out/x.tract out/x.wav -o out/x.mp4
+vtl-synth polar-build "ba.da.ga" -o out/ba.polar --tcons 160
+vtl-synth polar-video out/x.tract --polar out/x.polar out/x.wav -o out/x.mp4
 ```
 
 Speaker/language options (`-s/--speaker`, `-l/--lang`,
@@ -368,7 +369,7 @@ covtl-pipeline/
 │       │                                # *_constants.py + registry.json
 │       └── *_lexicon.tsv                # installed Wikipron lexicons
 ├── scripts/                  # regen_baselines, calibrate_fine_v2, f0_report…
-├── tests/                    # lightweight suite (153 tests, engine
+├── tests/                    # test suite (529 tests collected: engine
 │                             # non-regression + CLI/g2p + registry)
 ├── examples/                 # demo.py, demo_prosody.py,
 │                             # polar_demo_en.mp4, html/ interactive demos
@@ -430,6 +431,9 @@ of the Berthommier COVTL model:
    trajectories observed in Öhman's spectrographic analysis of VCV
    syllables", *Interspeech 2025*, Rotterdam, Netherlands.
    HAL: hal-05233039, DOI: 10.5281/zenodo.17018832 —
+5. F. Berthommier, "Assessing a Mathematical Model of Syllable Production via CTW Alignment with EMA Data",
+   arXiv:2609.31508 [eess.AS], 2026.
+   <https://arxiv.org/abs/2609.31508>
    <https://hal.science/hal-05233039v1>
 
 Please also cite VocalTractLab itself (see

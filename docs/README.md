@@ -1,11 +1,12 @@
 # covtl-pipeline — Documentation (v1.1.0)
 
-Five manuals, English (US), LaTeX sources + compiled PDFs.
+Seven PDF documents (five manuals, the didactic manual and the reference manual), English (US), LaTeX sources + compiled PDFs. Note: `covtl-reference-manual.pdf` and `From_Phonetics_to_Articulatory_Phonology.pdf` have no .tex source in the repository (PDF + errata sheet).
 Each manual is self-contained; they cross-reference each other by
 file name.
 
 | file | content |
 |---|---|
+| `From_Phonetics_errata.md` | Errata sheet of the didactic manual (2nd edition): production dental target 270 deg vs the article's 23*pi/16; .polar format v5. |
 | `From_Phonetics_to_Articulatory_Phonology.pdf` | Didactic manual (2nd edition, 2026-11): the making of covtl, step by step - from the coordination function and the unit circle to the complete driving of VocalTractLab; implementation record corrected against covtl-synth 1.2.2 (speaker JD3). Entry point of the documentation family. |
 | `manual.pdf` / `.tex` | Reference manual: the Berthommier COVTL model (polar targets, projection, coarticulation), source model, CLI/Python API, file formats, registry and language-pack overview, worked example, developer guide. |
 | `speakers.pdf` / `.tex` | Multi-speaker registry: the five speakers (jd3, s1, s2, m01, w02), `install_speaker.py`, the four layers of a switch, provenance chains (DVTD construction, adaptation, Option A), defect catalogue D1–D21. |

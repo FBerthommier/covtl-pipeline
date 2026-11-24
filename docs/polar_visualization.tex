@@ -351,14 +351,16 @@ approach sub-arc --- on the validation corpus \code{ba.da.ga} the
 reconstructed peaks coincide with the engine targets to within
 $10^{-9}$ (Table~\ref{tab:targets}).
 
-\subsection{The .polar intermediate file (version 4)}
+\subsection{The .polar intermediate file (version 5)}
+
+Version~5 adds the CV reduced-vowel approach anchoring (ventre fix) written by the current engine; readers of older files fall back to v4 semantics.
 
 The result is stored in a self-documented JSON file with
 \code{format}~=~\code{covtl-polar} and \code{version}~=~4:
 
 \begin{lstlisting}[style=json]
 {
-  "format": "covtl-polar", "version": 4,
+  "format": "covtl-polar", "version": 5,
   "sample_rate": 100, "speaker": "JD3",
   "n_steps": 176, "duration_s": 1.76,
   "columns": { "vocalic_rho": "...", "consonantal_theta": "...", ... },

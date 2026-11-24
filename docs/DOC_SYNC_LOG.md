@@ -66,3 +66,33 @@ identiques avant/après dans les trois dépôts (preuve en annexe du
   (`test_cluster_target_rules`) **PASS**.
 - Workflows `publish-prod.yml` : déclenchement `workflow_dispatch`
   uniquement — aucune publication possible par un push.
+
+
+## Campagne 2026-11-23 (12+1 constats, branche docs/sync-audit-2026-11-23)
+
+Application des 13 corrections du rapport d'analyse de cohérence du
+23/11/2026 (campagne doc-only, zéro code touché).
+
+| F | Fichier(s) | Modification | Preuve |
+|---|---|---|---|
+| F1 | README.md | Exemples CLI polar-build/polar-video alignés sur cli/main.py | grep "polar-video out/x.tract" OK |
+| F2 | README.md | `calibrate` marqué deprecated (D24) ; garde JD3 remplacée par la formulation marker-only | grep "reinstalls" vide ; "deprecated" présent |
+| F3a | README.md | .polar format v4 → v5 + note CV reduced-vowel anchoring | grep "format v4" vide |
+| F3b | docs/polar_visualization.tex | subsection (version 5), "version": 5, phrase v5 ; PDF recompilé (9 pp.) | grep '"version": 4' vide |
+| F3c | docs/reference-manual-errata.md (nouveau) | errata §5.4/§12.2 version 5 | fichier présent |
+| F4 | docs/manual.tex | note « deux mappings de pression » (actif E^1.2 vs legacy E^2, pulmonary_effort.py non importé) ; PDF recompilé (28 pp.) | grep "pulmonary\_effort" OK |
+| F5 | docs/manual.tex | chronologie rayons /i,u/ : 1.00 → 0.60 / 0.55 (l'état 0.80 n'existe pas pour JD3 ; 0.80 = cible s2/glide j) | grep "0.80 \to 0.60" vide |
+| F6 | docs/From_Phonetics_errata.md (nouveau) + docs/README.md | errata manuel didactique : /d/ production 270° (3π/2) vs 23π/16 des articles ; .polar v5 | docs/README.md référence l'errata |
+| F7 | docs/language_pack.tex | bandeau aligné sur le PDF compilé : « v1.0.9 update » (résolution D24, 2026-09-23) ; PDF recompilé (12 pp.) | libellé identique .tex/.pdf |
+| F8 | README.md | comptages : 153 → 529 tests collected ; 519 green → 529 collected (519 green wave-5 CI) ×2 | grep "153 tests" vide |
+| F9 | lang_pack/README.md | 62 baselines → 40 pins (8 phrases × 5 speakers, schema 3) | grep "62 regression" vide |
+| F10 | docs/README.md | « Five manuals » → « Seven PDF documents » + note PDFs sans source .tex | grep "Five manuals" vide |
+| F11 | docs/reference-manual-errata.md | 27 pp → 28 pp (2 occurrences, reference manual) | errata point 2 |
+| F12 | docs/speakers.tex + docs/SPEAKERS.md | renvoi croisé conventions L : 17.00 cm (moyenne voyelles tendues) vs 16.83 cm (statique Route A) ; speakers.pdf recompilé (14 pp.) | les deux fichiers se référencent |
+| F13 | README.md | référence arXiv:2609.31508 ajoutée (EMA/CTW 2026) | grep "2609.31508" OK |
+
+Déviation consignée : le comptage vérifié le 2026-11-24 est **529 tests
+collected** (le rapport annonçait 521 au 23/11 ; 8 tests ont été ajoutés
+entre-temps). Les corrections utilisent 529.
+Invariants : `git diff -- vtl_synth/ tests/ scripts/` VIDE ; pages PDF
+inchangées (polar 9 / language_pack 12 / speakers 14 / manual 28).
