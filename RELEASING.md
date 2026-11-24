@@ -168,3 +168,16 @@ never executed on macOS (cross-checked on Linux), no Intel build.
   layer 2 mandatory routing / layer 2 display option) — read it before
   reviewing the schwa change; it carries the acceptance criteria reused
   by `tests/test_schwa_waypoint.py`.
+
+- **HTML demos stale on the schwa — regenerate in the SAME round**
+  (owner decision, 2026-11-24): `docs/html/polar_demo_en.html` still
+  carries 13 inline trajectory values ρ = 0.7167 — its phrase is
+  precisely « this is easy for us », which ends on the `@s` plateau
+  (and the demo AUDIO resynthesizes with the new `'@'` target — the
+  baselines are untouched only because no corpus phrase contains '@').
+  Regenerate the pages (and their MP4s) with
+  `python docs/html/make_html_demos.py` BEFORE the next `publish-prod`
+  chain and commit the refreshed artifacts, so GitHub Pages serves the
+  0.580 schwa the same day the bundles ship it; `polar_demo_fr.html`
+  carries one residual 0.7167 too. Same round as the two fixes above —
+  do not ship the chain with a demo page contradicting the engine.
