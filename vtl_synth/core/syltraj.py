@@ -89,11 +89,18 @@ _REF_PLACE_KEYS = {'d', 't', 'g', 'k'}
 
 SR_GESTURE: float = 100.0   # gesture step = 10 ms
 
-# Waypoint of closing VV arcs: schwa @ (the most open central
-# vowel of the model) — the direct polar arc between distant vowels
-# can close the tract mid-transition (superposition of the
-# contributions of the two anchors, e.g. iu/ui 0.062 cm² over 132
-# swept pairs, 11 closing — cf. _diag_vv_mid).
+# Waypoint of closing VV arcs: schwa @ — the interior mid-central vowel
+# of the model (ρ = 0.580 since the 2026-11-24 audit, ex polar-centroid
+# 0.7167) — the direct polar arc between distant vowels can close the
+# tract mid-transition (superposition of the contributions of the two
+# anchors, e.g. iu/ui 0.062 cm² over 132 swept pairs, 11 closing —
+# cf. _diag_vv_mid). Routing through the interior schwa keeps the
+# corridor at quasi-constant aperture (ρ_u 0.55 → 0.58 → ρ_i 0.60) and
+# every routed leg ≥ 0.170 cm², above the /u/ plateau (0.152).
+# Layer 2 note (audit 2026-11-24): this routing is MANDATORY and
+# unconditional in the motor chain — no flag ever gates it; only its
+# DISPLAY mirror (.polar re-run, polar_video) is optional behind the
+# display_schwa_route toggle (default OFF = legacy direct arcs).
 SYL_VV_WAYPOINT_DTHETA: float = np.pi  # (reserved: angular threshold)
 SYL_VV_CLOSURE_THRESH: float = 0.18   # cm² (margin ~0.03 vs the full
 # chain: the probe measures on the 19-param resting state, the chain
@@ -110,9 +117,13 @@ VV_CLOSURE_PROBE = None
 def _vv_waypoint() -> list:
     """Schwa waypoint of closing VV arcs.
 
-    Languages without '@' in their VOWEL_TARGETS (Italian, Spanish:
-    no phonological schwa) fall back to the NEUTRAL anchor, which IS
-    the schwa by definition (constants.NEUTRAL_RHO/NEUTRAL_THETA).
+    The waypoint IS the '@' vowel target (interior mid-central since
+    the 2026-11-24 audit: ρ = 0.580, θ = π — quasi-constant-aperture
+    corridor, ex polar centroid 0.7167 which swung the routed arcs
+    toward the /a/ periphery). Languages without '@' in their
+    VOWEL_TARGETS (Italian, Spanish: no phonological schwa) fall back
+    to the NEUTRAL anchor, which IS the schwa by definition
+    (constants.NEUTRAL_RHO/NEUTRAL_THETA).
     """
     wp = VOWEL_TARGETS.get('@')
     if wp is None:

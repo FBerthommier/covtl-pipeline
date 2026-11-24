@@ -54,7 +54,7 @@ BACKUP_MANIFEST = BACKUP_DIR / "backup_manifest.json"
 from vtl_synth.core import speaker_registry as sr    # noqa: E402
 from vtl_synth.core.speaker_jd import parse_speaker_file  # noqa: E402
 
-JD3_CONSTANTS_HASH_PREFIX = "75ae0ba837ed106d"       # original de reference
+JD3_CONSTANTS_HASH_PREFIX = "eb3637c3769397b4"       # original de reference
 
 
 # ==========================================================================

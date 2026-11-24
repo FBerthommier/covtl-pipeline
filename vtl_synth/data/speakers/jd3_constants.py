@@ -302,15 +302,24 @@ VOWEL_TARGETS: Dict[str, Tuple[float, float]] = {
     'O': (1.000, 2.616),           # 149.9° — clamped
     '6': (0.894, 3.053),           # 174.9° (œ)
     '9': (0.722, 3.105),           # 177.9° (œ̃)
-    # '@' (schwa / e-muet) : CENTRE DU TRIANGLE VOCALIQUE a-i-u tel que
-    # construit (ρ calibrés ≠ 1) : ρ̄ = (1.000 + 0.600 + 0.550)/3 =
-    # 0.7167, θ = π (moyenne circulaire des sommets 60/180/300° — les
-    # sinus s'annulent par symétrie, l'axe central est celui de a).
-    # La référence du modèle COVTL place son @ ailleurs (position jugée
-    # incorrecte — bilan 2026-09-04).  Le @ sert de voyelle muette aux
-    # consonnes isolées avant pause et de waypoint aux arcs VV fermants
+    # '@' (schwa / e-muet) : CIBLE INTÉRIEURE semi-centrale, ρ = 0.580,
+    # θ = π (audit 2026-11-24 — remplace le centroïde polaire
+    # ρ̄ = (1.000 + 0.600 + 0.550)/3 = 0.7167 du 2026-09-04, qui plaçait
+    # le schwa près du pourtour ouvert-central /a/ : les arcs VV fermants
+    # routés via le waypoint (syltraj._vv_waypoint) balançaient alors
+    # largement vers le méridien de /a/ et « buib » (u→i) mimait
+    # « buaib » (Hausdorff = 0.283). À ρ = 0.580 (ancre acoustique :
+    # F1 620 / F2 1463 Hz mesurés vs réf. 600/1400, cf. lang_blocks) le
+    # corridor VV traverse à ouverture quasi constante (0.55 → 0.58 →
+    # 0.60 — glissade sigmoïde unique), la dissimilarité à « buaib »
+    # monte à H = 1 − ρ = 0.42 et toutes les jambes routées des 10
+    # paires fermantes restent ≥ 0.170 cm² (sonde 19 p. au repos),
+    # au-dessus du plateau /u/ (0.152). La référence du modèle COVTL
+    # place son @ ailleurs (position jugée incorrecte — bilan
+    # 2026-09-04).  Le @ sert de voyelle muette aux consonnes isolées
+    # avant pause et de waypoint aux arcs VV fermants
     # (syltraj._vv_waypoint).
-    '@': (0.7167, np.pi),          # centre du triangle a-i-u (ə)
+    '@': (0.580, np.pi),           # schwa intérieur semi-central (ə)
     'y': (0.519, 4.548),           # 260.6°
     '2': (0.396, 3.946),           # 226.1° (ø)
 }

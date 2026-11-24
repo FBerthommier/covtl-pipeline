@@ -1,9 +1,9 @@
 {
   "_meta": {
     "created": "2026-09-11",
-    "note": "Source unique de verite multi-speakers. Le speaker actif est designe par le marqueur ACTIVE_SPEAKER (nom court) ; install_speaker.py permute constants.py + ressource wheel. s1/s2 constants v2 : phase 2 corrigee (scripts/calibrate_fine_v2.py).",
+    "note": "Source unique de verite multi-speakers. Le speaker actif est designe par le marqueur ACTIVE_SPEAKER (nom court) ; install_speaker.py permute constants.py + ressource wheel. s1/s2 constants v2 : phase 2 corrigee (scripts/calibrate_fine_v2.py). 2026-11-24 : audit schwa — @ interieur (0.580, pi) sur jd3/s1/s2 (m01/w02 inchanges), haches regenerees.",
     "wheel_default_sha256": "a583bdaaa7ffe216d65b088cc7541664e2633bfff76b79c63861fdd7bc571f00",
-    "jd3_constants_reference_sha256": "75ae0ba837ed106d2b426e484e409e656c9cef4bc6ea37a13d9da7a66cc40003"
+    "jd3_constants_reference_sha256": "eb3637c3769397b4cf38a388aba096025159ccf694a5680d03d632fd9d206fd7"
   },
   "jd3": {
     "speaker": "jd3.speaker",
@@ -11,7 +11,7 @@
     "f0_default": 102.216,
     "description": "JD3 reference (original SynthVTL24b)",
     "speaker_sha256": "e1e592dae13991e981c17bcc326cccc7bce3705e3862eb77fdeaeb238418a503",
-    "constants_sha256": "75ae0ba837ed106d2b426e484e409e656c9cef4bc6ea37a13d9da7a66cc40003"
+    "constants_sha256": "eb3637c3769397b4cf38a388aba096025159ccf694a5680d03d632fd9d206fd7"
   },
   "s1": {
     "speaker": "s1.speaker",
@@ -19,7 +19,7 @@
     "f0_default": 114.908,
     "description": "DVTD sujet 1 male (IRM DVTD, VTL reel ~20 cm) — constants v3 : phase 2 D15 + TTY natif (correctif bunching) + @ multi-criteres ; triangle vocalique 23/09 : port repertoire gestuel jd3 (c0/c1/c2) + cibles jd3 recalees",
     "speaker_sha256": "64ec4db032ed32b8f8a052fc00ed76676a6b8f1c57c2650dde8262924f681bbd",
-    "constants_sha256": "954aca621c633960fc3e84e1a0eacc78b3e0039a51a1d82e8d0b86b99aa7967c"
+    "constants_sha256": "65ccd435c1e6ca17e77deef29ab1e81db3f6d8c19d3dd8be3fbc33dd60817f75"
   },
   "s2": {
     "speaker": "s2.speaker",
@@ -27,7 +27,7 @@
     "f0_default": 181.008,
     "description": "DVTD sujet 2 female (IRM DVTD) — constants v3 : phase 2 D15 + TTY natif (correctif bunching) + @ multi-criteres ; triangle vocalique 23/09 : port repertoire gestuel jd3 (c0/c1/c2) + cibles jd3 recalees",
     "speaker_sha256": "46c0b3042b584b9672fc7a7e6d2d7e53f468c079c9f955f50439bb2521c7de0b",
-    "constants_sha256": "b3837a4dd79c011160a2e7ac92868ddec88c0437206f012743a8e72c439f2318"
+    "constants_sha256": "f590d9ca5ac7a856009c756db1b29df3607c7f58c7eb690c818437fb71e87110"
   },
   "m01": {
     "speaker": "m01.speaker",

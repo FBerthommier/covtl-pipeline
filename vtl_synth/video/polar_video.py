@@ -200,9 +200,38 @@ def _normalize_phrase(phrase: str) -> str:
     return _normalize_ipa(_syl_norm(phrase))
 
 
+def _vv_probe():
+    """VV closure probe for the display re-run, or None if unavailable.
+
+    When the ``display_schwa_route`` option is ON, the .polar re-run
+    applies the SAME schwa routing as the motor chain
+    (build_phrase_tract hooks syltraj.VV_CLOSURE_PROBE during the
+    synthesis and resets it afterwards). vocaltractlab_cython is
+    optional for the display-only path: without it the probe stays None
+    and the display falls back to the direct arcs (legacy behaviour).
+    """
+    try:
+        from vtl_synth.core.build_phrase_tract import \
+            _make_vv_closure_probe
+        return _make_vv_closure_probe()
+    except Exception:
+        return None
+
+
 def _recorded_build_pval(phrase: str, t_cons: int, t_voy: int,
-                         pause_short_ms: float, pause_long_ms: float):
+                         pause_short_ms: float, pause_long_ms: float,
+                         display_schwa_route: bool = False):
     """Instrumented ``syl.build_phrase_pval`` → (block_info, queues).
+
+    ``display_schwa_route`` is the DISPLAY toggle (layer 2, optional,
+    default OFF): when True the VV_CLOSURE_PROBE is hooked for the
+    re-run exactly like ``build_phrase_tract`` does for the motor chain
+    (cf. ``_vv_probe``), so the schwa routing of closing VV arcs is
+    drawn as it is synthesized — two background legs dep → @ → arr.
+    When False (default) the probe stays unhooked and the display draws
+    the legacy direct arcs — byte-identical to the .polar of the
+    pre-audit revision. The MOTOR routing is never conditional: this
+    flag only gates what the display draws.
 
     The helpers of ``build_global_pval`` that carry the polar geometry
     (``_append_arc``, ``_append_background``, ``_append_decay``,
@@ -281,10 +310,23 @@ def _recorded_build_pval(phrase: str, t_cons: int, t_voy: int,
         setattr(syl, '_append_decay', decay)
         setattr(syl, '_append_attack', attack)
         setattr(syl, 'build_cluster_pval', cluster)
+        # Schwa routing on the display side, OPTION (layer 2, default
+        # OFF): hook the closure probe exactly like build_phrase_tract
+        # does for the motor chain ONLY when display_schwa_route is on,
+        # so the drawn background arcs match the synthesized trajectory
+        # (routed legs dep → @ → arr as two arcs through the waypoint).
+        # OFF = legacy direct arcs (pre-audit .polar). Restored in the
+        # finally block below.
+        saved_probe = syl.VV_CLOSURE_PROBE
+        if display_schwa_route:
+            probe = _vv_probe()
+            if probe is not None:
+                syl.VV_CLOSURE_PROBE = probe
         _, block_info, _, _ = syl.build_phrase_pval(
             phrase, t_cons=t_cons, t_voy=t_voy,
             pause_short_ms=pause_short_ms, pause_long_ms=pause_long_ms)
     finally:
+        syl.VV_CLOSURE_PROBE = saved_probe
         for name, fn in orig.items():
             setattr(syl, name, fn)
 
@@ -296,8 +338,15 @@ def build_phrase_polar(phrase: str,
                        t_cons: int,
                        t_voy: int,
                        pause_short_ms: float,
-                       pause_long_ms: float) -> dict:
+                       pause_long_ms: float,
+                       display_schwa_route: bool = False) -> dict:
     """One phrase → .polar dict (two branch trajectories 100 Hz + timing).
+
+    ``display_schwa_route`` (layer 2 display option, default OFF): when
+    True the drawn vocalic branch shows the schwa routing of the
+    closing VV arcs (two legs dep → @ → arr, junction at the waypoint);
+    OFF draws the legacy direct arcs. The engine routing itself is
+    never conditional (cf. ``_recorded_build_pval``).
 
     The phrase is re-run through the instrumented
     ``syltraj.build_phrase_pval`` with the same parameters as the
@@ -335,7 +384,8 @@ def build_phrase_polar(phrase: str,
     from vtl_synth.core.nasal_preproc import split_nasal_hiatus
     ipa, nasal_plan = split_nasal_hiatus(ipa)
     block_info, ev = _recorded_build_pval(ipa, t_cons, t_voy,
-                                          pause_short_ms, pause_long_ms)
+                                          pause_short_ms, pause_long_ms,
+                                          display_schwa_route)
     q_arc, q_bg, q_hold, q_cluster = (ev['arc'], ev['bg'], ev['hold'],
                                       ev['cluster'])
 
@@ -481,12 +531,17 @@ def build_polar(phrases: list,
                 t_cons: int,
                 t_voy: int,
                 pause_short_ms: float,
-                pause_long_ms: float) -> dict:
+                pause_long_ms: float,
+                display_schwa_route: bool = False) -> dict:
     """Full utterance (list of phrases) → .polar dict.
 
     Phrase timelines are concatenated (the .tract of ``Pipeline.run``
     stacks the phrase tracts in the same order), so the polar time axis
     matches the audio/video time axis.
+
+    ``display_schwa_route`` (default OFF) is the display-only toggle of
+    the closing-VV schwa routing (cf. ``build_phrase_polar``); the
+    audio/engine routing is never conditional.
     """
     traj_v = np.zeros((0, 2))
     traj_c = np.zeros((0, 2))
@@ -494,7 +549,8 @@ def build_polar(phrases: list,
     offset = 0
     for phrase in phrases:
         p = build_phrase_polar(phrase, t_cons, t_voy,
-                               pause_short_ms, pause_long_ms)
+                               pause_short_ms, pause_long_ms,
+                               display_schwa_route)
         traj_v = np.vstack([traj_v, p['traj_v']])
         traj_c = np.vstack([traj_c, p['traj_c']])
         for ph in p['phonemes']:

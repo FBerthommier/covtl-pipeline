@@ -140,7 +140,8 @@ per phrase: build_phrase_tract(...)
 - Every phoneme is a target `z = rho * exp(i*theta)`. Vowels live inside
   the unit circle (`rho <= 1`, anchors/plateaus); consonant closures
   beyond it (`rho` 1.0-1.45). Anchors: /a/ = 180 deg, /i/ = 300 deg,
-  /u/ = 60 deg; schwa @ = centroid of the a-i-u triangle.
+  /u/ = 60 deg; schwa @ = interior mid-central (0.580, 180 deg) since
+  the 2026-11-24 audit (ex polar centroid 0.7167, one step 2026-09-04).
 - Static projection (`polar.compute_P`):
   `P[p] = c1[p] + rho * c0[p] * cos(c2[p] - theta)` with the per-parameter
   coefficient table `CO_VTL` (see `constants.py`; documented calibration
@@ -221,7 +222,7 @@ data ships as package data in `data/speakers/`:
 
 | file | status |
 |---|---|
-| `jd3.speaker`, `jd3_constants.py` | reference (SynthVTL24b original; hash `75ae0ba837ed106d…`) |
+| `jd3.speaker`, `jd3_constants.py` | reference (SynthVTL24b original; hash `eb3637c3769397b4…`) |
 | `s1.speaker`, `s2.speaker` | built from DVTD MRI (subject anatomies) |
 | `s1_constants.py`, `s2_constants.py` | calibrated v3 (D15: 2D (ρ,θ) area-function occlusives, native TTY + apical bonus, multi-criteria `@`) |
 | `m01.speaker`, `w02.speaker` | retouched from the official **VTL 2.4 ZIP** speaker files (pure option A + 2025→11-code glottal mapping, index 7 = PS) |

@@ -310,8 +310,25 @@ VOWEL_TARGETS: Dict[str, Tuple[float, float]] = {
     'O': (1.000, 2.616),           # 149.9° — clamped
     '6': (0.894, 3.053),           # 174.9° (œ)
     '9': (0.722, 3.105),           # 177.9° (œ̃)
-    # '@' (schwa): centre of the a-i-u triangle, ρ̄ = 0.7167, θ = π.
-    '@': (0.7167, np.pi),          # centre du triangle a-i-u (ə)
+    # '@' (schwa / e-muet): INTERIOR mid-central target, ρ = 0.580, θ = π
+    # (audit 2026-11-24 — supersedes the polar centroid ρ̄ = 0.7167 of
+    # 2026-09-04, which was kept one step only). The centroid radius
+    # placed the schwa near the open-central periphery (/a/ meridian at
+    # ρ → 1), so the closing VV arcs routed through the waypoint
+    # (syltraj._vv_waypoint) swung wide like a passage through /a/:
+    # for « buib » (u→i) the routed trajectory hugged the /a/ meridian
+    # and mimicked « buaib » (Hausdorff(buib, buaib) = 0.283 on the
+    # polar disk). At ρ = 0.580 (acoustic anchor: F1 620 Hz, F2 1463 Hz
+    # measured vs 600/1400 reference, cf. lang_blocks calibration
+    # passes) the VV corridor crosses at quasi-constant aperture
+    # (ρ_u 0.55 → 0.58 → ρ_i 0.60 — a single sigmoid glide instead of a
+    # two-step excursion), the dissimilarity from « buaib » rises to
+    # H = 1 − ρ = 0.42, and every routed leg of the 10 closing pairs
+    # stays ≥ 0.170 cm² (19-param resting-state probe), above the /u/
+    # plateau (0.152) — no transient occlusion. '@' remains the mute
+    # vowel of isolated pre-pause consonants and the VV closing-arc
+    # waypoint (syltraj._vv_waypoint).
+    '@': (0.580, np.pi),           # schwa intérieur semi-central (ə)
     'y': (0.519, 4.548),           # 260.6°
     '2': (0.396, 3.946),           # 226.1° (ø)
 }

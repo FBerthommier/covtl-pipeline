@@ -196,7 +196,8 @@ def cmd_run(args: argparse.Namespace) -> int:
                       use_g2p=not args.phonetic, video=not args.no_video,
                       fps=args.fps, scale=args.scale, label=args.label,
                       polar=args.polar,
-                      sampa_guard=args.sampa_guard)
+                      sampa_guard=args.sampa_guard,
+                      display_schwa_route=args.display_schwa_route)
     print()
     print('=' * 60)
     print('SUCCESS')
@@ -282,7 +283,8 @@ def cmd_polar_build(args: argparse.Namespace) -> int:
         phrases,
         t_cons=max(1, round(t_cons_ms / 10.0)),
         t_voy=max(1, round(t_voy_ms / 10.0)),
-        pause_short_ms=pause_short_ms, pause_long_ms=pause_long_ms)
+        pause_short_ms=pause_short_ms, pause_long_ms=pause_long_ms,
+        display_schwa_route=args.display_schwa_route)
     out = write_polar(args.output, polar)
     print(f'polar: {out} ({polar["n_steps"]} steps @100 Hz, '
           f'{polar["duration_s"]:.2f} s, {len(polar["phonemes"])} phonemes)')
@@ -375,6 +377,12 @@ def build_parser() -> argparse.ArgumentParser:
                    help='also write the .polar intermediate file (100 Hz '
                         'polar trajectories + phoneme timing) and render '
                         'the dual-panel video (tract | polar figure)')
+    p.add_argument('--display-schwa-route', action='store_true',
+                   help='polar display option (schwa audit 2026-11-24): '
+                        'draw the routed dep -> @ -> arr legs of the '
+                        'closing VV arcs in the .polar plane instead of '
+                        'the legacy direct arc (default OFF; audio and '
+                        'the engine routing are never affected)')
     p.add_argument('--fps', type=int, default=25,
                    help='video frame rate (default: 25)')
     p.add_argument('--scale', type=int, default=2,
@@ -429,6 +437,11 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument('phrase',
                    help='phrase in the internal notation (e.g. "ba.da.ga")')
     p.add_argument('-o', '--output', required=True, help='output .polar file')
+    p.add_argument('--display-schwa-route', action='store_true',
+                   help='polar display option (schwa audit 2026-11-24): '
+                        'draw the routed dep -> @ -> arr legs of the '
+                        'closing VV arcs instead of the legacy direct '
+                        'arc (default OFF; engine routing unaffected)')
     _add_engine_options(p)
     p.set_defaults(func=cmd_polar_build)
 

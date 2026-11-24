@@ -160,7 +160,7 @@ VOWEL_TARGETS: Dict[str, Tuple[float, float]] = {
     '9': (0.722, 3.105),   # 177.9°
     'y': (0.519, 4.548),   # 260.6°
     '2': (0.396, 3.946),   # 226.1°
-    '@': (0.7167, np.pi),         # centre du triangle (jd3)
+    '@': (0.580, np.pi),         # schwa intérieur semi-central — suit le schéma jd3 (audit 2026-11-24, ex-centroïde 0.7167)
 }
 
 

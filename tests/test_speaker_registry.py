@@ -31,7 +31,7 @@ INSTALL_TOOL = PIPE_ROOT / 'install_speaker.py'
 # blobs are the CRLF form historically generated on Windows; the former
 # renormalization attempt cca8007def7ab431... hashed an LF-normalized
 # variant that no longer exists in the repository).
-JD3_CONSTANTS_HASH_PREFIX = '75ae0ba837ed106d'
+JD3_CONSTANTS_HASH_PREFIX = 'eb3637c3769397b4'
 
 
 def sha256(p) -> str:

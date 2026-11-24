@@ -461,7 +461,8 @@ class Pipeline:
             scale: int = 2,
             label: Optional[str] = None,
             polar: bool = False,
-            sampa_guard: Optional[str] = None) -> PipelineResult:
+            sampa_guard: Optional[str] = None,
+            display_schwa_route: bool = False) -> PipelineResult:
         """Synthesize ``text`` into .tract + .wav (+ .mp4).
 
         Parameters
@@ -487,6 +488,13 @@ class Pipeline:
             Input guard policy (CORRECTIONS v2.1 s.2): 'warn'
             (default), 'error' or 'off'; ``None`` resolves through
             the ``VTL_SAMPA_GUARD`` environment variable.
+        display_schwa_route : bool
+            Display-only toggle for the ``.polar`` export (schwa
+            audit 2026-11-24): when True the drawn vocalic branch
+            shows the routed dep → @ → arr legs of the closing VV
+            arcs; False (default) draws the legacy direct arcs. The
+            MOTOR routing of those arcs is unconditional — this flag
+            never changes audio, .tract or baselines.
         """
         from vtl_synth.core.speaker_registry import announce
         announce(f0_used=self.f0_hz)
@@ -675,11 +683,15 @@ class Pipeline:
             # phoneme targets + per-phoneme timing, re-run with the
             # same engine parameters as the synthesis above (so the
             # .polar timeline matches the .tract / audio timeline).
+            # display_schwa_route is the display-only toggle of the
+            # closing-VV schwa routing (audit 2026-11-24): the motor
+            # routing above is unconditional.
             from vtl_synth.video.polar_video import build_polar, write_polar
             polar_data = build_polar(
                 phrases, t_cons=t_cons_steps, t_voy=t_voy_steps,
                 pause_short_ms=self.pause_short_ms,
-                pause_long_ms=self.pause_long_ms)
+                pause_long_ms=self.pause_long_ms,
+                display_schwa_route=display_schwa_route)
             write_polar(polar_path, polar_data)
             result.polar_path = polar_path
 
