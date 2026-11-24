@@ -164,6 +164,23 @@ per phrase: build_phrase_tract(...)
   would close the tract are routed through the schwa (probe threshold
   0.18 cm^2).
 
+### Two representation layers
+
+Every engine mechanism belongs to exactly one of two layers — the
+classification that frames any change review (schwa audit 2026-11-24):
+
+| Layer | Mechanisms | Change impact |
+|---|---|---|
+| **Layer 1 — generic polar coordinates → P(t)** | phoneme targets (`VOWEL_TARGETS`, `CONSONANT_TARGETS`), syllabic graph (anchors), transition arcs — e.g. the schwa target `'@'` = (0.580, 180°) | structural: changing a target changes the gesture itself |
+| **Layer 2 — f(P(t)): transformations applied to the trajectories** | consonant selector override (**mandatory**), schwa waypoint routing of the closing VV arcs (`syltraj._vv_waypoint`, **mandatory** — always active, follows the `'@'` target), tag engine, effort/voicing envelopes | reshapes the parameter stream after projection; audio semantics |
+| **Display routing toggle (layer 2, display only)** | `display_schwa_route` — CLI `--display-schwa-route` (`run --polar`, `polar-build`), console payload/checkbox; default **OFF** | optional: decides whether the drawn vocalic branch shows the routed dep → @ → arr legs (ON) or the legacy direct arc (OFF); audio/engine never affected |
+
+The rule: the motor **always routes** (that is the physics validated by
+the audit); only the **representation** of that routing is shown or not
+according to the option. The `.polar` display re-run
+(`video/polar_video.py`) mirrors layer 2 outside the engine and is the
+only place where the schwa routing is conditional.
+
 ## 6. The source model in one page
 
 - Tags (phonetic A / articulatory B / control C) are compiled to JD3

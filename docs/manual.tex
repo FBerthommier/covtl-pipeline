@@ -1441,6 +1441,44 @@ Each stage of the chain:
 \end{itemize}
 \end{callout}
 
+\subsection{Two representation layers}
+\label{sec:layers}
+
+Every engine mechanism belongs to exactly one of two layers --- the
+classification that frames any change review (schwa audit
+2026-11-24):
+
+\begin{itemize}[leftmargin=1.5em]
+\item \textbf{Layer 1 --- generic polar coordinates \(\to\) P(t)}:
+      the planning plane \((\rho,\theta)\) --- phoneme targets
+      (\texttt{VOWEL\_TARGETS}, \texttt{CONSONANT\_TARGETS}), the
+      syllabic graph, the transition arcs. These coordinates produce
+      the tract parameters through the closed-form projection
+      Eq.~\eqref{eq:computeP}. Any change here is structural: it
+      changes the target, hence the gesture (example: the schwa
+      target \texttt{'@'} is the interior mid-central
+      \((0.580, 180^\circ)\), audit 2026-11-24).
+\item \textbf{Layer 2 --- \(f(P(t))\), transformations applied to the
+      trajectories}: everything that reshapes the parameter stream
+      after projection --- the consonant selector override
+      (mandatory), the schwa waypoint routing of the closing VV arcs
+      (\texttt{syltraj.\_vv\_waypoint}; \textbf{mandatory} --- always
+      active, follows the \texttt{'@'} target), the tag engine, and
+      the effort/voicing envelopes.
+\end{itemize}
+
+Outside the engine, the \texttt{.polar} display re-run
+(\texttt{video/polar\_video.py}) mirrors layer 2 and carries the only
+\emph{optional} knob: \texttt{display\_schwa\_route} (CLI
+\texttt{-{}-display-schwa-route} on \texttt{run --polar} and
+\texttt{polar-build}, console payload \texttt{display\_schwa\_route};
+default \textsc{off}) decides whether the drawn vocalic branch shows
+the routed dep\,$\to$\,@\,$\to$\,arr legs (ON) or the legacy direct
+arc (OFF). The rule: the motor \emph{always routes} --- that is the
+physics validated by the audit --- and only the \emph{representation}
+of that routing is shown or hidden; audio and baselines are never
+affected.
+
 %==============================================================================
 \section{CLI reference}\label{sec:cli}
 %==============================================================================

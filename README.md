@@ -38,6 +38,14 @@ tag-based extension engine drives voicing, nasality, laterality,
 glottal effort and F0 (timed envelopes indexed by the segment events);
 a syllabic trajectory engine (syltraj) shapes the
 consonant/vowel arcs, inter-word pauses and phrase-final holds.
+The engine separates **two representation layers** — the generic polar
+coordinates that project into tract parameters (targets, graph, arcs)
+and the transformations applied to the resulting trajectories
+(selector override, schwa waypoint routing, tags, envelopes): the
+schwa routing of closing VV arcs is mandatory, while its display in
+the `.polar` plane is an option (default off) — see
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), §"Two representation
+layers".
 
 The package layout follows the
 [vtl-pipeline](https://github.com/FBerthommier/vtl-pipeline)
