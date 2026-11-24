@@ -13,8 +13,9 @@ whole chain AFTER the versions have been bumped in the sources:
      covtl-sandhi -> covtl-pipeline (covtl-synth + covtl meta) ->
      covtl-console;
   3. wait for each new version to be visible on pypi.org;
-  4. standalone bundles: dispatch build-windows-x64 / build-linux-x64,
-     wait, download the published zips anonymously and compute sha256;
+  4. standalone bundles: dispatch build-windows.yml / build-linux.yml
+     (workflow names build-windows-x64 / build-linux-x64), wait,
+     download the published zips anonymously and compute sha256;
   5. macOS: optional --macos-zip (prebuilt, per PUBLISH-CHECKLIST) ->
      (re)create release macos-standalone + dispatch attest-releases;
   6. covtl.org: replace the three SHA-256 lines in index.html (API
@@ -226,7 +227,11 @@ def preflight(a):
 
 
 def bump_bundle_pins(a):
-    """Align the standalone-chain pins with the requested chain (API commits)."""
+    """Align the standalone-chain pins with the requested chain (API commits).
+
+    The commit messages carry ``[skip ci]``: both build workflows watch
+    their own file via ``paths:`` filters, and an unconditional push
+    would start a bundle build before PyPI holds the new versions."""
     _, win = get_file(REPOS["console"], ".github/workflows/build-windows.yml")
     new = win
     for old, new_v in ((f"covtl-synth=={a.old_synth}", f"covtl-synth=={a.synth}"),
@@ -237,20 +242,46 @@ def bump_bundle_pins(a):
     if new != win:
         put_file(REPOS["console"], ".github/workflows/build-windows.yml", new,
                  "build: bump the standalone chain pins to "
-                 f"sandhi {a.sandhi} / synth {a.synth} / console {a.console}")
+                 f"sandhi {a.sandhi} / synth {a.synth} / console {a.console} "
+                 "[skip ci]")
     _, sh = get_file(REPOS["console"], "packaging/linux/rebuild.sh")
     old_line = f'"covtl-console=={a.old_console}"'
     if old_line in sh:
         put_file(REPOS["console"], "packaging/linux/rebuild.sh",
                  sh.replace(old_line, f'"covtl-console=={a.console}"'),
-                 f"build: bump the linux standalone pin to covtl-console=={a.console}")
+                 f"build: bump the linux standalone pin to covtl-console=={a.console} "
+                 "[skip ci]")
+    # the linux release title carries the console version verbatim — keep
+    # it truthful (the Windows twin derives its title from inputs.version)
+    _, lin = get_file(REPOS["console"], ".github/workflows/build-linux.yml")
+    old_title = f"standalone Linux x64 ({a.old_console})"
+    if old_title in lin:
+        put_file(REPOS["console"], ".github/workflows/build-linux.yml",
+                 lin.replace(old_title, f"standalone Linux x64 ({a.console})"),
+                 f"build: linux release title -> console {a.console} [skip ci]")
     log("  bundle pins aligned")
 
 
 # ------------------------------------------------------------------- steps
+def pypi_has(project, version):
+    """True when this exact version is already published on pypi.org
+    (a publish-prod dispatch on an existing version is a duplicate and
+    PyPI rejects it permanently - the run would fail)."""
+    try:
+        req = urllib.request.Request(f"{PYPI}/{project}/{version}/json")
+        urllib.request.urlopen(req, timeout=30).read()
+        return True
+    except Exception:
+        return False
+
+
 def step_pypi(a, t0):
     log("STEP 1: PyPI publication (trusted publishing)")
-    publish(REPOS["sandhi"], "publish-prod.yml", "sandhi", t0)
+    if pypi_has("covtl-sandhi", a.sandhi):
+        log(f"  covtl-sandhi {a.sandhi} already on pypi.org - "
+            "publish dispatch skipped (duplicate would be rejected)")
+    else:
+        publish(REPOS["sandhi"], "publish-prod.yml", "sandhi", t0)
     publish(REPOS["pipeline"], "publish-prod.yml", "synth+meta", t0)
     publish(REPOS["console"], "publish-prod.yml", "console", t0)
     for project, version in (("covtl-sandhi", a.sandhi),
@@ -263,10 +294,10 @@ def step_pypi(a, t0):
 def step_bundles(a):
     log("STEP 2: standalone bundles (Windows + Linux)")
     t0 = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-    dispatch(REPOS["console"], "build-windows-x64.yml", {"version": a.console})
-    dispatch(REPOS["console"], "build-linux-x64.yml")
-    wait_run(REPOS["console"], "build-windows-x64.yml", t0, "windows", 60)
-    wait_run(REPOS["console"], "build-linux-x64.yml", t0, "linux", 60)
+    dispatch(REPOS["console"], "build-windows.yml", {"version": a.console})
+    dispatch(REPOS["console"], "build-linux.yml")
+    wait_run(REPOS["console"], "build-windows.yml", t0, "windows", 60)
+    wait_run(REPOS["console"], "build-linux.yml", t0, "linux", 60)
     shas = {}
     for tag, asset in (("windows-standalone", "COVTL-Console-Windows-x64.zip"),
                        ("linux-standalone", "COVTL-Console-Linux-x64.zip")):

@@ -22,8 +22,8 @@ Standalone bundles (from PyPI, pinned):
 
 | Bundle | Release tag | Built by |
 |---|---|---|
-| Windows x64 zip | `windows-standalone` | `build-windows-x64.yml` (+ Sigstore attestation, automatic) |
-| Linux x64 zip | `linux-standalone` | `build-linux-x64.yml` (+ attestation) |
+| Windows x64 zip | `windows-standalone` | `build-windows.yml` (name `build-windows-x64`; + Sigstore attestation, automatic) |
+| Linux x64 zip | `linux-standalone` | `build-linux.yml` (name `build-linux-x64`; + attestation) |
 | macOS arm64 zip | `macos-standalone` | external prebuilt zip (see below) + `attest-releases.yml` |
 
 Site: `FBerthommier/covtl.org` (GitHub Pages, domain covtl.org).
@@ -71,7 +71,8 @@ python release_chain.py --sandhi ... --synth ... --console ... --covtl ... \
 ```
 
 Manual fallback (if the script cannot run): dispatch on github.com →
-Actions, in this exact order: `publish-prod` on covtl-sandhi, then on
+Actions, in this exact order: `publish-prod` on covtl-sandhi (skip it
+when its version is unchanged - PyPI rejects duplicates), then on
 covtl-pipeline (both jobs green), then on covtl-console; then
 `build-windows-x64` (input = console version) and `build-linux-x64`;
 finally update the SHAs on covtl.org and commit. Never re-upload an
