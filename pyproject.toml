@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "covtl-synth"
-version = "1.2.2"
+version = "1.2.3"
 description = "Articulatory synthesis from text (Berthommier COVTL model + VocalTractLab): 5 speakers, 6 languages, expressive prosody, phonation modes, sandhi, polar video"
 readme = "README.md"
 requires-python = ">=3.9"

@@ -3,7 +3,7 @@
 All notable changes to this package are documented here.
 Format: Keep a Changelog — https://keepachangelog.com/
 
-## [Unreleased]
+## [1.2.3] - 2026-11-24
 
 ### Changed
 
@@ -55,6 +55,7 @@ Format: Keep a Changelog — https://keepachangelog.com/
 - F12 docs/speakers.tex + docs/SPEAKERS.md: tract-length conventions cross-referenced (17.00 cm tense-vowel average vs 16.83 cm static Route A).
 - F13 README: arXiv:2609.31508 (EMA/CTW 2026) added to the References.
 
+- F14 docs/html + examples/polar_demo_en.mp4: demos regenerated on the 0.580 schwa target (13 inline 0.7167 trajectory values refreshed, audio resynthesized; INDEX_TEMPLATE now carries the permanent VocalTractLab credit).
 ## [1.2.2] — 2026-11-17
 
 ### Changed
