@@ -41,7 +41,7 @@ classifiers = [
 # bump this file whenever one of them moves.
 dependencies = [
     "covtl-synth==1.2.3",
-    "covtl-console==3.1.11",
+    "covtl-console==3.1.12",
     "covtl-sandhi==0.1.1",
 ]
 
