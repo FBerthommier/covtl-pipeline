@@ -33,3 +33,13 @@ and is not rewritten; corrections are recorded here.
    (routing mandatory, unconditional); its display in the .polar plane
    is optional (`display_schwa_route`, default off). Cf.
    `docs/schwa-position-audit-EN.md`, `vtl_synth/core/constants.py`.
+
+3. **.polar display — version 6, branchement on the full departure vowel**
+   (2026-11-25 audit, words 'oga'/'ago'): the v5 'reduced arrival-vowel
+   anchoring' applied only to full-vowel departures (rho > 0.7: a, o, O,
+   e) and anchored the approach leg on a phantom REDUCED ARRIVAL vowel
+   ('a réduit' for oga, 'o réduit' for ago) instead of the departure
+   vowel. Since display v6 the consonantal branch departs from the FULL
+   departure-vowel anchor — exactly like the motor chain — and the
+   reduced anchoring of manual section 5.6 ('ba' lens) remains valid for
+   INITIAL onsets only.

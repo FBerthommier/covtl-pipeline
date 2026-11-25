@@ -129,7 +129,8 @@ never executed on macOS (cross-checked on Linux), no Intel build.
 
 ## PENDING for the next release round (owner-approved, already on main)
 
-- **Polar display fix, do not miss it**: commit `d294f51` on main
+- **Polar display fix, do not miss it**: commit `d294f51` on main  UPDATE 2026-11-25: the polar display fix itself was audited and corrected — `POLAR_VERSION = 6` (commit adding the oga/ago branchement fix, applied from covtl-pipeline_oga-ago_branchement.patch): the consonantal branch departs from the FULL departure vowel (the v5 reduced-arrival anchoring was aberrant for post-vocalic onsets). Ships with the same round. Accumulated in this round too: the schwa position '@' = (0.580, pi) study (audit_schwa_covtl-pipeline.pdf) — its 13-file patch is PENDING REWORK per PROMPT_SCHWA_REWORK.md (routing mandatory; display optional flag), not yet on main.
+
   (2026-11-23) fixes the inverted return-leg concavity of the polar
   display ("ventre" fix) — `POLAR_VERSION = 5` in
   `vtl_synth/video/polar_video.py` (CV reduced-vowel approach anchoring,

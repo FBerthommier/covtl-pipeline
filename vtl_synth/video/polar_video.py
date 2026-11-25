@@ -64,7 +64,7 @@ import numpy as np
 from vtl_synth.core.polar import K_CONSONANT_DEFAULT
 
 POLAR_SR = 100          # Hz, native sampling of the .polar trajectories
-POLAR_VERSION = 5      # v5: CV reduced-vowel approach anchoring (ventre fix)
+POLAR_VERSION = 6      # v6: branchement on the full departure vowel (oga/ago audit)
 STEP_MS = 10.0          # 1 gesture step = 10 ms @ 100 Hz
 
 # Display curvature (arXiv:2307.02299 §2.1: "K = 30 for vowel arcs and
@@ -453,19 +453,25 @@ def build_phrase_polar(phrase: str,
             zv_parts.append(arc_z(dep, arr, n, NU_VOCALIC))
             # blue: dep → C₁ → ⋯ → C_m → arr, T steps per sub-arc, in the
             # ORIGINAL arcplot anchoring (phase on the shorter radius —
-            # teardrop loops, v4) with the CV REDUCED-VOWEL approach
-            # anchoring of the certified planning display (manual §5.6;
-            # big.bi-supplement 'ba' lens, POLAR_VERSION 5): when the
-            # recorded departure is a full vowel (post-vocalic onset), the
-            # approach leg is drawn from the REDUCED arrival-vowel anchor
-            # (0.5·rho_V, theta_V) — inside the disk — so the approach is
-            # the concave inner branch and the release (return) leg rides
-            # the outer arc as the ventre, instead of both legs hugging
-            # the same outer concavity. Phrase-initial onsets already
-            # record the reduced anchor (rho < 0.7) and are kept as is.
+            # teardrop loops, v4). POLAR_VERSION 6 (audit 2026-11-25,
+            # 'oga'/'ago' branchement defect): the consonantal branch
+            # departs from the FULL departure-vowel anchor — exactly
+            # like the motor chain (build_cluster_pval:
+            # dep_v = compute_P(*anchor_dep)) — so the branchement lands
+            # on the vowel itself (o or a). The former v5 'reduced
+            # arrival-vowel anchoring' substituted (0.5·rho_arr,
+            # theta_arr) whenever the departure was a full vowel
+            # (rho > 0.7), i.e. ONLY for open-vowel departures (a, o,
+            # O, e — never on the certified 'big.bi' test, whose i/u
+            # departures sit at rho 0.55–0.60): for 'oga' the approach
+            # leg started at a phantom 'a réduit' (0.5, 180°) on the
+            # ARRIVAL meridian instead of on o (1.0, 104.7°), and
+            # symmetrically a phantom 'o réduit' for 'ago' — a
+            # branchement disconnected from both the departure vowel
+            # and the vocalic path (radial gap 0.5). Phrase-initial
+            # onsets keep their recorded (reduced) anchor: the engine
+            # itself plans them from the neutral periphery.
             dep_disp = list(dep)
-            if dep[0] > 0.7:
-                dep_disp = [0.5 * arr[0], arr[1]]
             pts = [tuple(dep_disp)] + [tuple(p) for p in targets] \
                 + [tuple(arr)]
             zc = np.vstack([_z_leg_arcplot(pts[k], pts[k + 1], T,
