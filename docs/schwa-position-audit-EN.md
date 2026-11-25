@@ -37,11 +37,16 @@ The quality goal set by the requester: the diphthong trajectory of
 « buaib » (u→a→i).
 
 The geometric study run on the engine (VTL tongue-area probe, 132 VV
-pairs swept) establishes two structural results. First, the (ρ, θ)
-plane contains an **occlusion corner** centred on θ = 0°: the tongue
-area is zero there for every radius, which forbids any short passage
-between u (60°) and i (300°) — the waypoint routing must therefore go
-through the open zone |θ| ≥ 105°, notably the 180° meridian. Second,
+pairs swept) establishes two structural results. First, the layer-2
+engine projection (VTL tongue-area probe, JD3) has a **sub-threshold
+sector** around the θ = 0° meridian: below the 0.18 cm² routing
+threshold from ρ ≈ 0.12 at θ = 0° (receding to 0.36 at ±60°, none for
+|θ| ≥ 70° on the unit disk), running to the rim of the measured domain
+and continuous with the ρ > 1 consonantal region; the central disk
+(ρ ≲ 0.10, neutral at ρ = 0: 0.277 cm²) is open, and the set contains
+the /i/ and /u/ plateaus — a routing criterion, not a zone. The
+waypoint routing must therefore go through the open zone |θ| ≥ 105°,
+notably the 180° meridian. Second,
 the dissimilarity between the « buib » and « buaib » trajectories
 follows exactly the law **H = 1 − ρ_w**: the only effective lever is
 the waypoint radius, the angle being constrained.
@@ -137,29 +142,32 @@ rebuilt by `build_phrase_polar`, the engine projection by
 
 ## 4. Results of the geometric study
 
-### 4.1 The occlusion corner of the engine plane
+### 4.1 The sub-threshold sector of the layer-2 projection
 
-The aperture landscape reveals the deep structure of the (ρ, θ) plane:
-the tongue area is zero over the whole θ = 0° meridian, at any radius,
-and stays under the 0.18 cm² threshold in a corner roughly bounded by
-θ ∈ [−75°, +60°]. This corner separates u (60°) from i (300°): the
-direct chord between the two targets crosses a zone of complete
-occlusion — that is the measured origin of the defect (direct u→i arc:
-0.062 cm²). Conversely, the whole crown |θ| ≥ 105° is open, the area
-growing with ρ up to 2 cm² towards (1.0, 180°). No waypoint of the
-plane can therefore « cut » between u and i across the top: the routing
-must go through the wide open way, around the 180° meridian.
+The aperture landscape (fine grid, ρ from 0 to 1.5) gives the inner
+boundary ρ*(θ): the tongue area drops below the 0.18 cm² threshold
+from ρ ≈ 0.12 on the θ = 0° meridian, the boundary receding with the
+angle (0.18 at ±40°, 0.36 at ±60°) and no sub-threshold point beyond
+|θ| = 70° on the unit disk. The direct u→i chord (|z|min = 0.29 at
+θ ≈ 0°) crosses sub-threshold states (0.066 cm²) — the measured origin
+of the defect (direct arc: 0.062 cm², blend states). Conversely the
+whole crown |θ| ≥ 105° is open, the area growing with ρ up to 2 cm²
+towards (1.0, 180°): the open alternative for the routing is the 180°
+meridian.
 
-> **Figure 1** — Aperture landscape A(ρ, θ) (engine probe, cm²). The
-> dashed line is the 0.18 cm² routing threshold; the θ ≈ 0° occlusion
-> corner forbids the short u→i passage (blue dotted chord). Red cross:
-> @ before (centroid 0.7167); green star: @ after (0.580).
+> **Figure 1** — Aperture landscape A(ρ, θ) (engine probe, cm²), fine
+> grid ρ ∈ [0, 1.5]. The dashed line is the 0.18 cm² routing
+> threshold; the thick line is the inner boundary ρ*(θ) of the
+> sub-threshold set; the u→i chord crosses sub-threshold states (blue
+> dotted chord). Red cross: @ before (centroid 0.7167); green star:
+> @ after (0.580); the central disk is open (neutral at ρ = 0); the
+> consonantal targets (ρ > 1) close by design.
 
 ### 4.2 Closing VV pairs and corridors
 
 The sweep of the 132 ordered pairs identifies ten closing pairs at
 D = 12 (eight at D = 4, the default step of the chain): they all
-connect the high vowels i, u, y, e across the occlusion corner —
+connect the high vowels i, u, y, e across the sub-threshold sector —
 {i–u}, {i–y}, {i–o}, {u–e}, {u–y} as unordered pairs. The direct arc
 i→u / u→i is worth 0.062–0.063 cm², the others 0.132–0.170 cm². For
 every candidate waypoint (ρ_w, θ_w), the two routed legs dep→wp and
@@ -174,7 +182,8 @@ between the routed trajectory of « buib » and that of « buaib » equals
 exactly **H = 1 − ρ_w** for every waypoint of the 180° meridian
 (verified from ρ_w = 0.42 to 1.00). The reason is geometric: the two
 trajectories share the same 240° angular sweep (constrained by the
-corner), and their maximal gap occurs at their respective junctions —
+open-corridor analysis — only θ_w ∈ [150°, 210°] opens every closing
+pair), and their maximal gap occurs at their respective junctions —
 (ρ_w, 180°) against (1.0, 180°). The waypoint radius is therefore the
 only dissociation lever, and it acts linearly: every 0.1 of radius
 removed moves « buib » 0.1 away from « buaib » on the disk.
@@ -248,7 +257,9 @@ without radial excursion. (iii) The **leg areas** drop marginally
 > (H = 0.420).
 
 > **Figure 3** — Engine time courses θ(t) (top) and ρ(t) (bottom). The
-> angular sweep stays 240° (constraint of the occlusion corner); the
+> angular sweep stays 240° (constraint of the open-corridor analysis:
+> the short chord is closed by the measured blend states, 0.062 cm²);
+> the
 > sigmoid gain is on ρ(t): constant corridor 0.55→0.58→0.60 after
 > (blue) against the 0.7167 bump before (orange) and the 1.0 excursion
 > of buaib (red).
@@ -417,8 +428,9 @@ display/motor inconsistency discovered during the audit.
 
 One structural limit must be stated honestly: the angular sweep stays
 240° (through the long way, 180° meridian included) for every u↔i
-pair, because the short path is an engine occlusion corner — no
-waypoint positioning can remove it. The « sigmoid » gain is therefore
+pair, because the short path is closed by the measured blend states
+of the direct arc (0.062 cm², i–u) — no waypoint positioning can
+remove it. The « sigmoid » gain is therefore
 carried by the aperture profile (single gesture at constant radius) and
 by the radial dissociation from « buaib », which matches the request
 (« more and more sigmoid, less and less like buaib »). If the owner

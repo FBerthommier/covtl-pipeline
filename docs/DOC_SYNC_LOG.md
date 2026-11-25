@@ -126,3 +126,36 @@ Validation : 540 tests collectés (529 + 11 du patch) — 538 passed /
 2 skipped / 0 échec (venv audit, editable sur le clone) ; baselines
 5 speakers vertes sans régénération ; toggle vérifié ON (jonction
 (0.580, π) à 1e-6) / OFF (identité au .polar de 6536f5a).
+
+
+---
+
+## Campagne « exclusion zone » (2026-11-25) — reformulation ensembliste
+
+Retrait du notionnel « occlusion corner / coin d'occlusion / zone
+d'exclusion autour de ρ = 0 » (entré le 24/11 par traduction verbatim
+d'un rapport d'audit externe) : le point ρ = 0 est le NEUTRE du
+modèle (0.277 cm² mesuré, sonde VTL JD3 au repos) et le disque central
+ρ ≲ 0.10 est ouvert dans toutes les directions. Correction purement
+documentaire (aucun code, aucun test moteur, aucune baseline). Le
+vocabulaire de remplacement de la v1 (« mur de fermeture annulaire /
+annular closure wall ») est RETIRÉ — aucun nom géométrique ne remplace
+le notionnel : description strictement ensembliste (ensemble
+sous-le-seuil {(ρ, θ) : A < 0.18 cm²}, frontière intérieure ρ*(θ) =
+0.12 à θ = 0°, 0.36 à ±60°, rien au-delà de |θ| ≥ 70° sur le disque
+unité ; continu avec la région ρ > 1 par les cibles consonantiques ;
+contient les plateaux de /i/ (0.137) et /u/ (0.142)).
+
+| Fichier | Constat | Correction |
+|---|---|---|
+| `docs/schwa-position-audit-EN.md` | 6 occurrences « occlusion corner » (résumé exécutif, titre §4.1, corps, légendes fig. 1 et 3, §4.2, §4.3, §8.2) | reformulation ensembliste : « sub-threshold sector of the layer-2 projection », frontière intérieure ρ*(θ), disque central ouvert (neutre 0.277 cm²), cordes fermées par les états de mélange mesurés (0.062-0.066 cm²), « open-corridor analysis » |
+| `docs/README.md` | l. 36 « occlusion corner of the (ρ, θ) plane » | « sub-threshold sector of the layer-2 projection (the ρ ≈ 0 central disk is open, neutral) » |
+| `docs/manual.tex` | § anti-fermeture « sweeps through the occlusion region » | « sweeps through occluded configurations (measured on the i-u pair) » — usage consonantique légitime l. 460 (constriction/occlusion region) INCHANGÉ |
+
+Contrôle : grep notionnel + vocabulaire v1 (occlusion corner, coin
+d'occlusion, exclusion zone, zone d'exclusion, annular closure wall,
+mur de fermeture/annulaire) = 0 occurrence sur pipeline + console ;
+usages légitimes conservés (occlusions consonantiques,
+rho_min_occlusion, velar occlusion of /g/). manual.pdf recompilé
+(xelatex, 29 pp., même pagination) ; suite tests inchangée.
+Console : aucune occurrence (vérifié).
