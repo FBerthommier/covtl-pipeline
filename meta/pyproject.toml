@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "covtl"
-version = "1.2.4"
+version = "1.2.5"
 description = "The COVTL articulatory speech synthesis suite: covtl-synth engine, covtl-console web bridge, covtl-sandhi cross-word rules - one install command"
 readme = "README.md"
 requires-python = ">=3.9"
