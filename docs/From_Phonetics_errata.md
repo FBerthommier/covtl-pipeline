@@ -12,13 +12,15 @@ and is not rewritten; corrections are recorded here.
    `docs/SPEAKERS.md` (2026-09-23) and the CHANGELOG entry
    "SYL_THETA_DENTAL fix 23*pi/16 -> 3*pi/2 (270 deg...)". Table 5 of the
    same document (d = 1.10, 270 deg) is correct.
-2. **.polar format — version 5** (chapter 7, .polar intermediate):
-   `POLAR_VERSION = 5` (`vtl_synth/video/polar_video.py`). Version 5 adds
-   the CV reduced-vowel approach anchoring ("ventre" fix, 2026-11-23):
-   post-vocalic onset consonants are drawn from the reduced arrival-vowel
-   anchor (0.5*rho_V, theta_V), so the approach is the concave inner
-   branch and the release rides the outer arc. Readers of older v4 files
-   keep v4 semantics.
+2. **.polar format — version 7** (chapter 7, .polar intermediate):
+   `POLAR_VERSION = 7` (`vtl_synth/video/polar_video.py`). Version 5
+   added the CV reduced-vowel approach anchoring; versions 6-7
+   (2026-11-25, words 'oga'/'ago'/'bea.ba'/'a.ba') fixed the consonantal
+   leg geometry: the branch departs from the FULL departure-vowel anchor
+   (like the motor chain), leg sampling uses the engine's cos^2 profile
+   (Pexp=2, legs meet on the consonant peak within ~2.4% of the chord),
+   and the release-leg phase sign is mirrored so the pair closes as the
+   reference lens. Readers of older v4 files keep v4 semantics.
 3. **Schwa target — interior mid-central (0.580, 180°), not the polar
    centroid** (implementation record §"vowel radii" and appendix C,
    production table): the manual cites the centroid ρ̄ =

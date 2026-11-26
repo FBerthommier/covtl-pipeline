@@ -64,7 +64,8 @@ import numpy as np
 from vtl_synth.core.polar import K_CONSONANT_DEFAULT
 
 POLAR_SR = 100          # Hz, native sampling of the .polar trajectories
-POLAR_VERSION = 6      # v6: branchement on the full departure vowel (oga/ago audit)
+POLAR_VERSION = 7      # v7: leg sampling/phase aligned with the reference
+                        # arcs (bea.ba/a.ba second audit)
 STEP_MS = 10.0          # 1 gesture step = 10 ms @ 100 Hz
 
 # Display curvature (arXiv:2307.02299 §2.1: "K = 30 for vowel arcs and
@@ -82,7 +83,8 @@ NU_CONSONANTAL = -1
 ORIENTATION = 'inverse'     # polar_arc sweep giving dep → arr
 
 
-def _z_leg_arcplot(p_dep, p_arr, n, nu, K, Pexp=1.0):
+def _z_leg_arcplot(p_dep, p_arr, n, nu, K, Pexp=2.0,
+                   include_departure=False):
     """(n, 2) display sub-arc in the ORIGINAL arcplot anchoring.
 
     Reference form (Syllable_Synthesis ``arcplot``, the code behind the
@@ -101,19 +103,51 @@ def _z_leg_arcplot(p_dep, p_arr, n, nu, K, Pexp=1.0):
     artifact of carrying the phase on the (longer) arrival radius, as
     ``polar.polar_arc`` does.
 
+    POLAR_VERSION 7 (second audit 2026-11-25, 'bea.ba'/'a.ba') aligns
+    the legs with the reference frames and the engine on three
+    points:
+
+    1. ``Pexp = 2`` — the temporal mixing of the reference arcs
+       (``build_cluster_pval``: "rk = cos(th/2)^Pexp ... reference
+       arcs (nu=-1, K=1000, Pexp=2)").  With Pexp=1 the release leg's
+       first drawn sample sat sin(pi/(2n)) ~ 16% of the chord BELOW
+       the consonant peak (0.27-0.32 rho units on 'a.ba'/'bea.ba'):
+       the outbound leg reached /b/ exactly while the return leg
+       visibly started short of it — the "points aller et retour du
+       /b/ differents" report.  With Pexp=2 the cost is
+       sin^2(pi/(2n)) ~ 2.4% — the engine's own inter-sub-arc step —
+       and the legs MEET at the peak like the reference frames.
+    2. Phase sign mirrored on the legs whose carrier is the ARRIVAL
+       (departure radius larger — the release legs of a V->C->V): the
+       carrier approaches its true angle from the CCW side, exactly
+       like the engine's ``arc_B`` (phase pa_theta + (nu/K)*th with
+       th in [-pi, 0] i.e. +18deg -> 0 for nu=-1).  The return leg
+       then bows on the side OPPOSITE the outbound leg and the pair
+       closes as the reference lens — the 'bea.ba' return branch of
+       /b/ had its nu inverted (it retraced the outbound side).
+    3. ``include_departure`` (first leg of each cluster only): the
+       grid includes the departure endpoint, so the branchement lands
+       EXACTLY on the recorded anchor (z_c is NaN before the cluster,
+       there is no shared sample to skip).  Subsequent legs keep the
+       reference opint = -1 drop — their departure sample is already
+       drawn by the previous leg's last frame.
+
     The sweep runs th in [0, pi] when the departure carries the phase
-    (z(0) = dep) and th in [pi, 0] otherwise (z(pi) = pd = dep); the
-    first sample is dropped so consecutive legs do not duplicate their
-    shared endpoint, mirroring the reference opint = -1.
+    (z(0) = dep) and th in [pi, 0] otherwise (z(pi) = pd = dep).
     """
     dep = complex(p_dep[0] * np.exp(1j * p_dep[1]))
     arr = complex(p_arr[0] * np.exp(1j * p_arr[1]))
     if p_dep[0] <= p_arr[0]:
-        pa, pd, th = dep, arr, np.linspace(0.0, np.pi, n + 1)[1:]
+        pa, pd, s = dep, arr, 1
+        th = np.linspace(0.0, np.pi, n + 1)[1:]
     else:
-        pa, pd, th = arr, dep, np.linspace(np.pi, 0.0, n + 1)[1:]
+        pa, pd, s = arr, dep, -1
+        th = np.linspace(np.pi, 0.0, n + 1)[1:]
+    if include_departure:
+        th = (np.linspace(0.0, np.pi, n) if s == 1
+              else np.linspace(np.pi, 0.0, n))
     rho = np.cos(th / 2.0) ** Pexp
-    z = rho * pa * np.exp(1j * nu * th / K) + (1.0 - rho) * pd
+    z = rho * pa * np.exp(1j * s * nu * th / K) + (1.0 - rho) * pd
     return np.column_stack([np.abs(z), np.angle(z)])
 
 
@@ -471,11 +505,24 @@ def build_phrase_polar(phrase: str,
             # and the vocalic path (radial gap 0.5). Phrase-initial
             # onsets keep their recorded (reduced) anchor: the engine
             # itself plans them from the neutral periphery.
+            # POLAR_VERSION 7 (second audit 2026-11-25, 'bea.ba' /
+            # 'a.ba'): leg geometry aligned with the reference frames
+            # and the engine - Pexp 2 (reference temporal mixing: the
+            # release leg now starts 2.4% of the chord from the
+            # consonant peak instead of 16%, so the outbound and
+            # return legs MEET on /b/), mirrored phase sign on the
+            # release legs (the return bows on the side opposite the
+            # outbound leg, closing the reference lens - the 'bea.ba'
+            # return branch had its nu inverted), and an inclusive
+            # departure grid on the FIRST leg only (branchement exact
+            # on the recorded anchor; z_c is NaN before the cluster,
+            # so nothing is duplicated).
             dep_disp = list(dep)
             pts = [tuple(dep_disp)] + [tuple(p) for p in targets] \
                 + [tuple(arr)]
             zc = np.vstack([_z_leg_arcplot(pts[k], pts[k + 1], T,
-                                           NU_CONSONANTAL, K_C_DISPLAY)
+                                           NU_CONSONANTAL, K_C_DISPLAY,
+                                           include_departure=(k == 0))
                             for k in range(m + 1)])
             zc_spans.append((step, step + n, zc))
             for k, (ck, tgt) in enumerate(zip(b.cons_keys, targets)):
