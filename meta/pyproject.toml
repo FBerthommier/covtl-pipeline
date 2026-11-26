@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "covtl"
-version = "1.2.5"
+version = "1.2.6"
 description = "The COVTL articulatory speech synthesis suite: covtl-synth engine, covtl-console web bridge, covtl-sandhi cross-word rules - one install command"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -41,7 +41,7 @@ classifiers = [
 # bump this file whenever one of them moves.
 dependencies = [
     "covtl-synth==1.2.4",
-    "covtl-console==3.1.13",
+    "covtl-console==3.1.14",
     "covtl-sandhi==0.1.1",
 ]
 
