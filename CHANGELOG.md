@@ -3,6 +3,37 @@
 All notable changes to this package are documented here.
 Format: Keep a Changelog — https://keepachangelog.com/
 
+## [Unreleased]
+
+### Changed
+
+- Engine (VV arcs, schwa): closing vowel-vowel background arcs now keep
+  their DIRECT path with a probe-tuned SOFT RECTIFICATION instead of
+  the two-half-arc routing through the schwa waypoint (audit
+  2026-11-26). The 2026-11-24 routing put a stationary schwa at the leg
+  junction — each half-arc is a full cos^Pexp sigmoid with zero
+  endpoint velocity, so at the production D=4 the motor states were
+  [dep, @, @, arr]: half the diphthong frozen on the exact P(@) state,
+  an unjustified pause on the schwa (f2 plateau; « buib » heard
+  « buiəb »). The rectification keeps the direct arc and pulls ONLY
+  the tongue-height columns of `VV_RECTIFY_SELECTOR` (TCY, TBY — the
+  constriction-forming parameters; the 12 other parameters follow the
+  direct glide, no rerouting) toward the schwa values with a sin² bump
+  exactly zero at the endpoints (anchors bit-exact): amplitude s is
+  tuned by the closure probe (smallest value of `VV_RECTIFY_STEPS`
+  opening the corridor ≥ 0.18 cm²). Measured: iu opens 0.062 → 0.229
+  cm² at s = 0.3; all 8 closing pairs of the 132-pair sweep (10 at the
+  fine D=12 sampling) open at s ≤ 0.3 — zero fallback; the trajectory
+  never stalls (min |dP| 0.05 > 0 at D=12, no repeated state, never
+  approaches P(@)); Hausdorff(buib, buaib) = 1.0 (criterion ≥ 0.40).
+  The 2026-11-24 two-leg routing survives as the FALLBACK when no
+  amplitude opens the corridor (block vowel_key '@'). `SylBlock` gains
+  `rectify_s` (0 = direct/fallback legs, > 0 = rectified amplitude).
+  Tests: `test_schwa_waypoint.py` rewritten (rectification structure,
+  fallback legs, display ON/OFF, acoustic criteria) — 534 passed /
+  3 skipped (baselines untouched: no in-word closing VV pair in the
+  corpus).
+
 ## [1.2.3] - 2026-11-24
 
 ### Changed

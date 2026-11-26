@@ -183,3 +183,14 @@ never executed on macOS (cross-checked on Linux), no Intel build.
   0.580 schwa the same day the bundles ship it; `polar_demo_fr.html`
   carries one residual 0.7167 too. Same round as the two fixes above —
   do not ship the chain with a demo page contradicting the engine.
+
+- **Round 1.2.4 accumulation — soft rectification of closing VV arcs**
+  (audit C, 2026-11-26, patch applied on main): direct VV path kept,
+  probe-tuned TCY/TBY soft rectification (`VV_RECTIFY_SELECTOR` /
+  `VV_RECTIFY_STEPS`, `SylBlock.rectify_s`), two-leg waypoint routing
+  kept as fallback only. Engine change (syltraj.py) — baselines green
+  WITHOUT regeneration (no closing VV pair in the corpus); registry
+  hashes regenerated; console test rewritten for the new semantics.
+  Ship in this round per PROMPT_SCHWA_RECTIFICATION.md §3.3 (bump
+  1.2.3 -> 1.2.4, changelog dating, demos check, publish chain, console
+  pin).

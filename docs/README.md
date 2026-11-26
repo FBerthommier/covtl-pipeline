@@ -37,7 +37,7 @@ Shared developer docs at the repository root and in this folder:
   projection (the ρ ≈ 0 central disk is open, neutral),
   dissimilarity law H = 1 − ρ_w, decision `'@'` = (0.580, 180°),
   measured impact, validation; every element classified by
-  representation layer (layer 1 target / layer 2 mandatory routing /
+  representation layer (layer 1 target / layer 2 soft rectification TCY/TBY, fallback routing /
   layer 2 display option).
 
 ## Building the PDFs

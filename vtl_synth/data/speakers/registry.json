@@ -1,9 +1,9 @@
 {
   "_meta": {
     "created": "2026-09-11",
-    "note": "Source unique de verite multi-speakers. Le speaker actif est designe par le marqueur ACTIVE_SPEAKER (nom court) ; install_speaker.py permute constants.py + ressource wheel. s1/s2 constants v2 : phase 2 corrigee (scripts/calibrate_fine_v2.py). 2026-11-24 : audit schwa — @ interieur (0.580, pi) sur jd3/s1/s2 (m01/w02 inchanges), haches regenerees.",
+    "note": "Source unique de verite multi-speakers. Le speaker actif est designe par le marqueur ACTIVE_SPEAKER (nom court) ; install_speaker.py permute constants.py + ressource wheel. s1/s2 constants v2 : phase 2 corrigee (scripts/calibrate_fine_v2.py). 2026-11-24 : audit schwa — @ interieur (0.580, pi) sur jd3/s1/s2 (m01/w02 inchanges), haches regenerees. 2026-11-26 : audit rectification VV — commentaire @ (cible de rectification), hache regeneree.",
     "wheel_default_sha256": "a583bdaaa7ffe216d65b088cc7541664e2633bfff76b79c63861fdd7bc571f00",
-    "jd3_constants_reference_sha256": "eb3637c3769397b4cf38a388aba096025159ccf694a5680d03d632fd9d206fd7"
+    "jd3_constants_reference_sha256": "23caf082e7ba2df420c6c6f239dab5ced69f09f195b7d15b969edec9fa5de8be"
   },
   "jd3": {
     "speaker": "jd3.speaker",
@@ -11,7 +11,7 @@
     "f0_default": 102.216,
     "description": "JD3 reference (original SynthVTL24b)",
     "speaker_sha256": "e1e592dae13991e981c17bcc326cccc7bce3705e3862eb77fdeaeb238418a503",
-    "constants_sha256": "eb3637c3769397b4cf38a388aba096025159ccf694a5680d03d632fd9d206fd7"
+    "constants_sha256": "23caf082e7ba2df420c6c6f239dab5ced69f09f195b7d15b969edec9fa5de8be"
   },
   "s1": {
     "speaker": "s1.speaker",

@@ -317,8 +317,13 @@ VOWEL_TARGETS: Dict[str, Tuple[float, float]] = {
     # au-dessus du plateau /u/ (0.152). La référence du modèle COVTL
     # place son @ ailleurs (position jugée incorrecte — bilan
     # 2026-09-04).  Le @ sert de voyelle muette aux consonnes isolées
-    # avant pause et de waypoint aux arcs VV fermants
-    # (syltraj._vv_waypoint).
+    # avant pause, de CIBLE DE RECTIFICATION aux arcs VV fermants
+    # (syltraj._vv_waypoint : la rectification douce TCY/TBY de
+    # l'audit 2026-11-26 tire les colonnes hauteur-de-langue vers ces
+    # valeurs sur le trajet direct — plus de jambes routées, plus de
+    # pause sur schwa) et de waypoint à la ROUTE DE SECOURS en deux
+    # demi-arcs (quand aucune amplitude de rectification n'ouvre le
+    # corridor).
     '@': (0.580, np.pi),           # schwa intérieur semi-central (ə)
     'y': (0.519, 4.548),           # 260.6°
     '2': (0.396, 3.946),           # 226.1° (ø)

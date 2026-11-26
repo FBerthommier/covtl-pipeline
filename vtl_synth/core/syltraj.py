@@ -92,44 +92,116 @@ SR_GESTURE: float = 100.0   # gesture step = 10 ms
 # Waypoint of closing VV arcs: schwa @ — the interior mid-central vowel
 # of the model (ρ = 0.580 since the 2026-11-24 audit, ex polar-centroid
 # 0.7167) — the direct polar arc between distant vowels can close the
-# tract mid-transition (superposition of the contributions of the two
-# anchors, e.g. iu/ui 0.062 cm² over 132 swept pairs, 11 closing —
-# cf. _diag_vv_mid). Routing through the interior schwa keeps the
-# corridor at quasi-constant aperture (ρ_u 0.55 → 0.58 → ρ_i 0.60) and
-# every routed leg ≥ 0.170 cm², above the /u/ plateau (0.152).
-# Layer 2 note (audit 2026-11-24): this routing is MANDATORY and
-# unconditional in the motor chain — no flag ever gates it; only its
-# DISPLAY mirror (.polar re-run, polar_video) is optional behind the
-# display_schwa_route toggle (default OFF = legacy direct arcs).
+# tract mid-transition (superposition of the two anchors' lingual
+# contributions, e.g. iu/ui 0.062 cm² over 132 swept pairs, 8 closing
+# at D=4 / 10 at D=12, probe sweep of the 2026-11-26 audit). The
+# 2026-11-24 answer routed the arc through the interior schwa as two
+# half-arcs — but each half-arc is a FULL cos^Pexp sigmoid with zero
+# endpoint velocity, so the junction state P(@) is reached, HELD (at
+# the production D=4 the motor states are [dep, @, @, arr]: a
+# stationary schwa over half the diphthong) then left — an
+# unjustified pause on the schwa (f2 plateau, « buib » heard
+# « buiəb »).
+#
+# Audit 2026-11-26 (probe-tuned soft rectification): the DIRECT arc is
+# KEPT; only the tongue-height columns of VV_RECTIFY_SELECTOR (TCY,
+# TBY — the constriction-forming parameters; every other parameter
+# follows the direct glide, no rerouting) are rectified toward the
+# schwa values with a sin² bump, zero at the endpoints (exact anchors
+# preserved), max at mid-arc:
+#   P'(t)[p] = P(t)[p] + s·sin²(π·t/(D−1))·(P(@)[p] − P(t)[p]).
+# The amplitude s is TUNED BY THE PROBE (the smallest value of
+# VV_RECTIFY_STEPS lifting the central-half min area back above
+# SYL_VV_CLOSURE_THRESH): the iu family opens 0.062 → 0.229 cm² at
+# s = 0.3 and every closing pair of the sweep opens at s ≤ 0.3, zero
+# fallback. The trajectory never stops (no repeated state, every
+# |ΔP| > 0 — the pause is gone), no schwa segment is inserted, and
+# the polar path stays the direct sweep (u→i through 0°, never the
+# π meridian). FALLBACK: if no amplitude opens the arc, the 2026-11-24
+# two-half-arc routing through @ applies (the audited corridor: legs
+# with quasi-constant aperture, block vowel_key '@').
 SYL_VV_WAYPOINT_DTHETA: float = np.pi  # (reserved: angular threshold)
 SYL_VV_CLOSURE_THRESH: float = 0.18   # cm² (margin ~0.03 vs the full
 # chain: the probe measures on the 19-param resting state, the chain
 # adds V/VO/TS3 extensions — measured eu: probe 0.152 vs chain 0.120)
 
+# Soft rectification of closing VV arcs (audit 2026-11-26): the
+# selector names (CO_VTL column keys) rectified toward the schwa
+# values, and the probed amplitude sweep, in increasing order.
+VV_RECTIFY_SELECTOR: tuple = ('TCY', 'TBY')
+VV_RECTIFY_STEPS: tuple = tuple(round(x, 2) for x in
+                                np.arange(0.1, 1.01, 0.1))
+
 # Optional probe injected by build_phrase_tract:
 # callable(Pval_block (n,15)) -> min area (cm²) at the middle of the block.
 # If the probe returns < SYL_VV_CLOSURE_THRESH, the vocalic background arc
-# is routed through the schwa as two half-arcs (exact continuity at the
-# junctions: the arcs go anchor to anchor, exact endpoints).
+# is first softly rectified on the VV_RECTIFY_SELECTOR columns
+# (probe-tuned amplitude, exact endpoints); if no amplitude of
+# VV_RECTIFY_STEPS opens the corridor, the arc is routed through the
+# schwa as two half-arcs (exact continuity at the junctions: the arcs
+# go anchor to anchor, exact endpoints).
 VV_CLOSURE_PROBE = None
 
 
 def _vv_waypoint() -> list:
-    """Schwa waypoint of closing VV arcs.
+    """Schwa waypoint: RECTIFICATION target of closing VV arcs (and
+    the waypoint of the two-half-arc FALLBACK routing).
 
     The waypoint IS the '@' vowel target (interior mid-central since
     the 2026-11-24 audit: ρ = 0.580, θ = π — quasi-constant-aperture
     corridor, ex polar centroid 0.7167 which swung the routed arcs
-    toward the /a/ periphery). Languages without '@' in their
-    VOWEL_TARGETS (Italian, Spanish: no phonological schwa) fall back
-    to the NEUTRAL anchor, which IS the schwa by definition
-    (constants.NEUTRAL_RHO/NEUTRAL_THETA).
+    toward the /a/ periphery). Since the 2026-11-26 audit the closing
+    arcs keep their DIRECT path and only the VV_RECTIFY_SELECTOR
+    columns are pulled toward the schwa values (soft rectification,
+    probe-tuned amplitude); the two-leg routing through this point is
+    the fallback when no amplitude opens the corridor. Languages
+    without '@' in their VOWEL_TARGETS (Italian, Spanish: no
+    phonological schwa) fall back to the NEUTRAL anchor, which IS the
+    schwa by definition (constants.NEUTRAL_RHO/NEUTRAL_THETA).
     """
     wp = VOWEL_TARGETS.get('@')
     if wp is None:
         from vtl_synth.core.constants import NEUTRAL_RHO, NEUTRAL_THETA
         wp = (NEUTRAL_RHO, NEUTRAL_THETA)
     return list(wp)
+
+
+def _rectify_vv_arc(arc: np.ndarray):
+    """Probe-tuned soft rectification of a closing VV background arc.
+
+    Keeps the direct arc; pulls the VV_RECTIFY_SELECTOR columns (TCY,
+    TBY — the tongue-height/constriction-forming parameters) toward
+    the schwa values with a sin² bump, exactly zero at the endpoints
+    (the anchors stay bit-exact) and maximal at mid-arc, where the
+    superposition closure is worst:
+        P'(t)[p] = P(t)[p] + s·sin²(π·t/(D−1))·(P(@)[p] − P(t)[p]).
+
+    The amplitude s is the SMALLEST value of VV_RECTIFY_STEPS whose
+    rectified block passes the probe (central-half min area ≥
+    SYL_VV_CLOSURE_THRESH) — the probe tunes the rectification.
+    Returns (rectified_block, s), or (None, 1.0) when the amplitude
+    sweep is exhausted (the caller then falls back to the two-half-arc
+    schwa routing).
+    """
+    if VV_CLOSURE_PROBE is None:
+        return None, 0.0
+    keys = list(CO_VTL.keys())
+    cols = [keys.index(k) for k in VV_RECTIFY_SELECTOR
+            if k in keys]
+    if not cols:
+        return None, 0.0
+    wp_state = compute_P(*_vv_waypoint())
+    D = len(arc)
+    if D < 2:
+        return None, 0.0
+    ramp = np.sin(np.pi * np.arange(D) / (D - 1)) ** 2   # (D,)
+    for s in VV_RECTIFY_STEPS:
+        cand = arc.copy()
+        for p in cols:
+            cand[:, p] = cand[:, p] + s * ramp * (wp_state[p] - arc[:, p])
+        if VV_CLOSURE_PROBE(cand) >= SYL_VV_CLOSURE_THRESH:
+            return cand, s
+    return None, 1.0
 
 # Nasal vowels: Unicode precomposed → oral key + nasal flag.
 # Also handles: combining tilde U+0303 after the key, and a direct '~' suffix.
@@ -186,6 +258,11 @@ class SylBlock:
     post_amp: float = 0.0
     nasal: bool = False           # nasal vowel plateau (partial VO)
     breath: bool = False          # breath pause block ('%', v1.0.8)
+    rectify_s: float = 0.0        # closing VV arc: soft-rectification
+    #                              amplitude (0 = direct arc; > 0 =
+    #                              TCY/TBY pulled toward the schwa,
+    #                              audit 2026-11-26; two-leg routing
+    #                              fallback => 0 with vowel_key '@')
 
 
 # ==========================================================================
@@ -855,15 +932,21 @@ def _has_following_plateau(anchors, idx):
 
 def _append_background(blocks, block_info, pt_dep, pt_arr, D, nu, K,
                        Pexp):
-    """Vocalic background arc, with schwa routing if the middle closes.
+    """Vocalic background arc: soft rectification of closing arcs, with
+    the schwa two-half-arc routing as fallback.
 
     The direct polar arc between distant vowels can close the tract
     mid-transition (superposition of the contributions of the two
     anchors).  If the VV_CLOSURE_PROBE probe is hooked up and measures
     an area < SYL_VV_CLOSURE_THRESH in the central half, the arc is
-    routed through the schwa @ as two half-arcs (exact endpoints at
-    the junctions; the total time D is preserved, the 'background'
-    envelope being constant there is no side effect on the other branches).
+    first SOFTLY RECTIFIED on the VV_RECTIFY_SELECTOR columns toward
+    the schwa values (probe-tuned amplitude, sin² bump zero at the
+    endpoints: the anchors stay exact, the total time D is preserved
+    and the trajectory never stalls — no schwa pause, audit
+    2026-11-26).  If no amplitude of VV_RECTIFY_STEPS opens the
+    corridor, the 2026-11-24 routing through the schwa @ applies as
+    two half-arcs (exact endpoints at the junctions; no side effect on
+    the other branches).
     """
     from vtl_synth.core.constants import VOWEL_TARGETS as _VT
     arc = arc_B(pt_dep, pt_arr, list(range(N_VTL_PARAMS)), D,
@@ -871,6 +954,12 @@ def _append_background(blocks, block_info, pt_dep, pt_arr, D, nu, K,
     if VV_CLOSURE_PROBE is not None and D >= 4:
         area = VV_CLOSURE_PROBE(arc)
         if area < SYL_VV_CLOSURE_THRESH:
+            fixed, s = _rectify_vv_arc(arc)
+            if fixed is not None:
+                blocks.append(fixed)
+                block_info.append(SylBlock(n_steps=D, kind='background',
+                                           rectify_s=float(s)))
+                return
             wp = _vv_waypoint()
             half = D // 2
             leg1 = arc_B(pt_dep, wp, list(range(N_VTL_PARAMS)), half,

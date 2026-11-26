@@ -326,8 +326,12 @@ VOWEL_TARGETS: Dict[str, Tuple[float, float]] = {
     # H = 1 − ρ = 0.42, and every routed leg of the 10 closing pairs
     # stays ≥ 0.170 cm² (19-param resting-state probe), above the /u/
     # plateau (0.152) — no transient occlusion. '@' remains the mute
-    # vowel of isolated pre-pause consonants and the VV closing-arc
-    # waypoint (syltraj._vv_waypoint).
+    # vowel of isolated pre-pause consonants, the RECTIFICATION target
+    # of closing VV arcs (syltraj._vv_waypoint: the TCY/TBY soft
+    # rectification of the 2026-11-26 audit pulls the tongue-height
+    # columns toward these values on the direct path — no routed legs,
+    # no schwa pause) and the waypoint of the two-half-arc FALLBACK
+    # routing (when no rectification amplitude opens the corridor).
     '@': (0.580, np.pi),           # schwa intérieur semi-central (ə)
     'y': (0.519, 4.548),           # 260.6°
     '2': (0.396, 3.946),           # 226.1° (ø)

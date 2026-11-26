@@ -25,3 +25,10 @@ in this repository; corrections are recorded here and not rewritten).
    .polar plane is optional (`display_schwa_route`, default off =
    legacy direct arc). The new figure position for '@' is
    (ρ, θ) = (0.580, 180°). Cf. `docs/schwa-position-audit-EN.md`.
+
+3. **Schwa routing / VV closure** (sections describing the waypoint
+   routing as unconditional): the effective treatment of closing VV
+   arcs is now a SOFT RECTIFICATION — direct path kept, TCY/TBY pulled
+   toward the schwa by a probe-tuned sin^2 bump; the two-leg waypoint
+   routing remains as the fallback (`VV_RECTIFY_SELECTOR`,
+   `VV_RECTIFY_STEPS`, 2026-11-26).

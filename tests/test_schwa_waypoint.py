@@ -1,27 +1,37 @@
 # SPDX-FileCopyrightText: 2026 Frédéric Berthommier
 # SPDX-License-Identifier: GPL-3.0-or-later
 # -*- coding: utf-8 -*-
-"""Non-regression of the 2026-11-24 schwa recentring (audit).
+"""Non-regression of the schwa treatment of closing VV arcs.
 
-VOWEL_TARGETS['@'] moved from the polar centroid (0.7167, pi) of
-2026-09-04 to the INTERIOR mid-central (0.580, pi). The schwa is the
-waypoint of the closing VV arcs (syl._vv_waypoint) and a phoneme entry
-of the polar manifest (.polar inventory). Acceptance criteria of the
-audit, locked in here:
+Two audits, two layers:
 
-  - the corridor crosses at quasi-constant aperture (rho bump <= 0.03
-    on the u->i window of « buib »);
-  - the routed legs stay above the /u/ plateau (min area >= 0.15 cm2,
-    real VTL probe);
-  - the trajectory of « buib » is measurably LESS similar to « buaib »
-    than the centroid waypoint (Hausdorff >= 0.40 on the polar disk,
-    was 0.2833);
-  - the display re-run (polar_video) applies the same schwa routing as
-    the motor chain when the display_schwa_route toggle is ON (stubbed
-    probe: two routed legs through the waypoint); OFF — the default —
-    draws the legacy direct arcs, identical to the .polar of the
-    pre-audit revision (6536f5a). The motor routing itself is never
-    conditional.
+  - 2026-11-24: VOWEL_TARGETS['@'] moved from the polar centroid
+    (0.7167, pi) of 2026-09-04 to the INTERIOR mid-central (0.580,
+    pi). The schwa target is locked here (target value, waypoint,
+    polar manifest entry).
+
+  - 2026-11-26: the closing VV arcs keep their DIRECT path and are
+    SOFTLY RECTIFIED on the TCY/TBY columns toward the schwa values
+    (probe-tuned amplitude, sin² bump zero at the endpoints) — the
+    2026-11-24 two-half-arc routing put a STATIONARY schwa at the leg
+    junction (motor states [dep, @, @, arr] at the production D=4:
+    half the diphthong frozen on P(@), an unjustified pause). The
+    two-leg routing through @ survives only as the FALLBACK when no
+    amplitude of VV_RECTIFY_STEPS opens the corridor.
+
+Acceptance criteria of the 2026-11-26 audit, locked in here:
+
+  - the rectified block is a SINGLE background block: exact anchors,
+    TCY/TBY the only modified columns, no repeated state (no pause),
+    probe area >= SYL_VV_CLOSURE_THRESH on the fine sampling;
+  - the always-closing stub still produces the two fallback legs
+    (dep -> @ -> arr, total D preserved, junction at the waypoint);
+  - the display re-run (polar_video) with display_schwa_route ON shows
+    the fallback legs exactly at the waypoint; OFF (default) draws the
+    legacy direct arcs, identical to the no-probe re-run;
+  - « buib » stays measurably dissimilar from « buaib » (Hausdorff
+    >= 0.40 on the polar disk — the rectified trajectory sweeps
+    through 0 deg, never the pi meridian).
 
 The VTL-dependent criteria are skipped gracefully when
 vocaltractlab_cython is not installed (display-only environments).
@@ -31,7 +41,7 @@ import pytest
 
 import vtl_synth.core.syltraj as syl
 from vtl_synth.core.syltraj import build_phrase_pval
-from vtl_synth.core.constants import VOWEL_TARGETS
+from vtl_synth.core.constants import VOWEL_TARGETS, CO_VTL
 
 try:
     from vtl_synth.core.build_phrase_tract import _make_vv_closure_probe
@@ -39,10 +49,30 @@ try:
 except Exception:                                     # pragma: no cover
     _HAS_VTL = False
 
+_COVTL_KEYS = list(CO_VTL.keys())
+_P_TCY = _COVTL_KEYS.index('TCY')
+_P_TBY = _COVTL_KEYS.index('TBY')
+
 
 def _close_everything_probe(block):                   # stub, no VTL
-    """Stub closure probe: every background arc 'closes' -> routing."""
+    """Stub closure probe: every background arc 'closes' -> the
+    rectification amplitude sweep is exhausted -> FALLBACK routing."""
     return 0.0
+
+
+def _rectifying_probe(block):
+    """Stub probe (no VTL): a fake lingual area driven by the TCY pull
+    toward the schwa value — the rectification's own mechanism. The
+    direct u→i arc pulls 0.63 away from the schwa TCY on its central
+    half (calibrated); each amplitude s shrinks the pull by
+    (1 − s·ramp). Threshold 0.56 / gain 4.0: the direct arc 'closes'
+    (0.02 < 0.18), s = 0.1/0.2 stay closed, s = 0.3 opens (0.30) —
+    the engine's amplitude sweep must pick s = 0.3 on « buib »."""
+    wp = syl.compute_P(*syl._vv_waypoint())
+    n = len(block)
+    lo, hi = max(1, n // 4), max(2, 3 * n // 4)
+    pull = float(np.abs(block[lo:hi, _P_TCY] - wp[_P_TCY]).max())
+    return 0.02 + 4.0 * max(0.0, 0.56 - pull)
 
 
 class TestSchwaTarget:
@@ -88,28 +118,101 @@ class TestPolarManifest:
         assert entry[0]['theta'] == pytest.approx(np.pi, abs=1e-9)
 
 
-class TestRoutingGeometry:
-    """Stubbed probe (no VTL): the routed structure and the display."""
+class TestRectification:
+    """Stubbed probes (no VTL): the rectification and its fallback."""
 
-    def test_buib_routes_two_legs(self, monkeypatch):
-        # direct (unrouted) reference FIRST, before the stub is set
-        _, blocks_d, _, _ = build_phrase_pval('buib')
-        bgs_d = [b for b in blocks_d if b.kind == 'background']
-        monkeypatch.setattr(syl, 'VV_CLOSURE_PROBE',
-                            _close_everything_probe)
-        _, blocks, _, _ = build_phrase_pval('buib')
-        # routing: two half-arcs dep -> @ -> arr, total D preserved
-        bgs = [b for b in blocks if b.kind == 'background']
+    @staticmethod
+    def _bg_blocks(phrase, probe):
+        monkey_probe = probe
+        saved = syl.VV_CLOSURE_PROBE
+        syl.VV_CLOSURE_PROBE = monkey_probe
+        try:
+            _, blocks, _, _ = build_phrase_pval(phrase)
+        finally:
+            syl.VV_CLOSURE_PROBE = saved
+        return [b for b in blocks if b.kind == 'background']
+
+    def test_buib_rectifies_single_block(self):
+        """Tunable stub: ONE rectified background block, amplitude
+        strictly interior, exact anchors, TCY/TBY the only rectified
+        columns, no repeated state (the schwa pause is gone)."""
+        bgs = self._bg_blocks('buib', _rectifying_probe)
+        assert len(bgs) == 1
+        b = bgs[0]
+        assert 0.0 < b.rectify_s < 1.0
+        assert b.vowel_key == ''
+        # total duration preserved vs the direct reference
+        bgs_d = self._bg_blocks('buib', None)
+        assert b.n_steps == bgs_d[0].n_steps
+
+    def test_rectified_columns_and_anchors(self):
+        """The rectified block deviates from the pure direct arc ONLY
+        on the selector columns, and keeps the anchors bit-exact."""
+        saved = syl.VV_CLOSURE_PROBE
+        syl.VV_CLOSURE_PROBE = _rectifying_probe
+        try:
+            Pval, blocks, _, _ = build_phrase_pval('buib')
+        finally:
+            syl.VV_CLOSURE_PROBE = saved
+        t0 = 0
+        blk = bg = None
+        for bb in blocks:
+            if bb.kind == 'background':
+                bg = bb
+                blk = Pval[t0:t0 + bb.n_steps]
+                break
+            t0 += bb.n_steps
+        # direct reference rebuilt from the KNOWN polar targets
+        direct = syl.arc_B(list(VOWEL_TARGETS['u']),
+                           list(VOWEL_TARGETS['i']),
+                           list(range(15)), len(blk),
+                           [-np.pi, 0], 0, syl.SYL_NU, syl.SYL_K,
+                           syl.SYL_PEXP)
+        dev = np.abs(blk - direct)
+        others = [p for p in range(15) if p not in (_P_TCY, _P_TBY)]
+        assert dev[:, others].max() == pytest.approx(0.0, abs=1e-12)
+        assert dev[:, [_P_TCY, _P_TBY]].max() > 0.05
+        # anchors exact
+        Pu = syl.compute_P(*VOWEL_TARGETS['u'])
+        Pi = syl.compute_P(*VOWEL_TARGETS['i'])
+        assert np.allclose(blk[0], Pu, atol=1e-12)
+        assert np.allclose(blk[-1], Pi, atol=1e-12)
+
+    def test_rectified_never_stalls(self):
+        """No schwa pause: every consecutive state pair moves (the
+        2026-11-24 routed legs had a zero-velocity junction)."""
+        saved = syl.VV_CLOSURE_PROBE
+        syl.VV_CLOSURE_PROBE = _rectifying_probe
+        try:
+            Pval, blocks, _, _ = build_phrase_pval('buib')
+        finally:
+            syl.VV_CLOSURE_PROBE = saved
+        t0 = 0
+        for bb in blocks:
+            if bb.kind == 'background':
+                break
+            t0 += bb.n_steps
+        win = Pval[t0:t0 + bb.n_steps]
+        d = np.linalg.norm(np.diff(win, axis=0), axis=1)
+        assert d.min() > 0.0
+
+    def test_fallback_two_legs(self):
+        """Always-closing stub: the amplitude sweep is exhausted, the
+        2026-11-24 fallback routing applies — two half-arcs
+        dep -> @ -> arr, total D preserved, waypoint at the junction."""
+        bgs_d = self._bg_blocks('buib', None)
+        bgs = self._bg_blocks('buib', _close_everything_probe)
         assert len(bgs) == 2
         assert bgs[0].vowel_key == '@'
         assert bgs[1].vowel_key == ''
+        assert bgs[0].rectify_s == 0.0
         assert sum(b.n_steps for b in bgs) == \
             sum(b.n_steps for b in bgs_d)
 
     def test_display_routes_like_motor(self, monkeypatch):
-        """Display toggle ON: the routed display passes EXACTLY through
-        the waypoint (rho 0.580, theta pi) at the leg junction, as the
-        motor does."""
+        """Display toggle ON with the fallback (stub probe): the routed
+        display passes EXACTLY through the waypoint (rho 0.580, theta
+        pi) at the leg junction, as the motor does."""
         from vtl_synth.video import polar_video as pv
         monkeypatch.setattr(pv, '_vv_probe',
                             lambda: _close_everything_probe)
@@ -179,10 +282,37 @@ class TestRoutingAcoustics:
                  for t0, t1 in win]
         return Pval, win, [float(a) for a in areas]
 
-    def test_buib_legs_above_u_plateau(self):
+    def test_buib_rectified_above_threshold(self):
+        """« buib » closes direct (0.062): ONE rectified background
+        block, amplitude strictly interior, central area above the
+        closure threshold (>= 0.15, margin vs the /u/ plateau 0.152)."""
+        saved = syl.VV_CLOSURE_PROBE
+        syl.VV_CLOSURE_PROBE = _make_vv_closure_probe()
+        try:
+            _, blocks, _, _ = build_phrase_pval('buib', t_cons=16,
+                                                t_voy=6)
+        finally:
+            syl.VV_CLOSURE_PROBE = saved
+        bgs = [b for b in blocks if b.kind == 'background']
+        assert len(bgs) == 1
+        assert 0.0 < bgs[0].rectify_s < 1.0
         _, _, areas = self._motor('buib')
-        assert areas, 'buib must route (two background legs)'
-        assert min(areas) >= 0.15        # /u/ plateau: 0.152 (probe)
+        assert areas, 'buib must have a background VV arc'
+        assert min(areas) >= 0.15
+
+    def test_buib_no_schwa_pause(self):
+        """The rectified trajectory never stalls (no repeated state,
+        min |dP| > 0) and never reaches the schwa state: the schwa is
+        the RECTIFICATION TARGET of two columns, not a passage point —
+        the 2026-11-24 routed legs held P(@) for half the diphthong."""
+        Pval, win, _ = self._motor('buib')
+        t0, t1 = win[0][0], win[-1][1]
+        seg = Pval[t0:t1]
+        d = np.linalg.norm(np.diff(seg, axis=0), axis=1)
+        assert d.min() > 0.0
+        P_at = syl.compute_P(*syl._vv_waypoint())
+        dist = np.linalg.norm(seg - P_at, axis=1)
+        assert dist.min() > 1.0          # never near the schwa state
 
     def test_buib_quasi_constant_aperture(self):
         from vtl_synth.video.polar_video import polar_from_pval

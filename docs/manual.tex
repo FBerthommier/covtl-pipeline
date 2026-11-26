@@ -584,11 +584,13 @@ Hz. The schwa \(@\) is the INTERIOR mid-central target
 \((0.580, \pi)\) --- acoustically anchored (F1 \(620\) / F2 \(1463\)~Hz
 measured against a 600/1400 reference; audit 2026-11-24, ex polar
 centroid \(\bar\rho = 0.7167\) of 2026-09-04, kept one step); it serves
-as the mute vowel of isolated consonants and as the mandatory waypoint
-against vowel-to-vowel closure (\S\ref{subsec:vv}) --- the routing is
-unconditional in the engine, while its drawn representation in the
-\texttt{.polar} plane is optional (\texttt{display\_schwa\_route},
-default off; \S\ref{sec:layers}).
+as the mute vowel of isolated consonants, as the soft-rectification
+target of closing vowel-to-vowel arcs (\S\ref{subsec:vv}), and as the
+waypoint of their fallback routing. The treatment is unconditional in
+the engine (rectification first, waypoint fallback second), while the
+drawn representation of the routed legs in the \texttt{.polar} plane is
+optional (\texttt{display\_schwa\_route}, default off;
+\S\ref{sec:layers}).
 
 \begin{table}[t]
 \centering
@@ -967,25 +969,30 @@ background is a single continuous arc of \(2\,T_{\mathrm{voy}}\) steps;
 an earlier conditional jump at vowel onsets was removed precisely because
 it created discontinuities.
 
-\textbf{Anti-closure routing through the schwa.} A direct polar arc
-between two distant vowels can close the vocal tract mid-transition (the
-superposition of the two anchor contributions sweeps through occluded
-configurations --- measured on the \texttt{i--u} pair:
-\(0.062\,\mathrm{cm^2}\) at mid-arc over 132 swept vowel pairs). The
-engine hooks a VTL \emph{closure probe} (minimum lingual tube area at the
-center of the block, on the 19-parameter resting state); when the probe
-returns less than the threshold
-\(0.18\,\mathrm{cm^2}\), the background arc is routed through the schwa
-\(@\) as two half-arcs with exact continuity at the junctions. The
-waypoint IS the schwa target \((0.580, \pi)\) since the 2026-11-24
-audit (ex-centroid 0.7167, which swung the routed arcs toward the /a/
-periphery); the routing is \textbf{mandatory and unconditional} --- it
-is the physics validated by the audit (quasi-constant-aperture
-corridor \(\rho\,0.55 \to 0.58 \to 0.60\), every routed leg
-\(\ge 0.170\,\mathrm{cm^2}\), Hausdorff\((\,\)buib\(~{},~{}\)buaib\()\)
-\(= 0.42\)) --- while its DRAWN representation in the \texttt{.polar}
-plane is the optional \texttt{display\_schwa\_route} toggle (default
-off; \S\ref{sec:layers}).
+\textbf{Anti-closure treatment: soft rectification (probe-tuned),
+fallback waypoint routing.} A direct polar arc between two distant
+vowels can close the vocal tract mid-transition (the superposition of
+the two anchor contributions sweeps through occluded configurations ---
+measured on the \texttt{i--u} pair: \(0.062\,\mathrm{cm^2}\) at
+mid-arc over 132 swept vowel pairs). The engine hooks a VTL \emph{closure
+probe} (minimum lingual tube area at the center of the block, on the
+19-parameter resting state); when the probe returns less than the
+threshold \(0.18\,\mathrm{cm^2}\), the direct arc is kept and the
+constriction columns \texttt{TCY}/\texttt{TBY} are SOFTLY RECTIFIED
+toward the schwa values by a \(\sin^2\) bump that is exactly zero at
+both anchors: \(A'[t,p] = A[t,p] + s\cdot\sin^2(\pi t/(D{-}1))\cdot
+(P(@)[p] - A[t,p])\), with the amplitude \(s\) being the smallest of
+the sweep \texttt{VV\_RECTIFY\_STEPS} (0.1\ldots1.0) that re-opens the
+corridor. The schwa \(@\) \((0.580, \pi)\) (2026-11-24 audit,
+ex-centroid 0.7167) is the rectification target. If NO amplitude opens
+the corridor, the fallback is the audited two-half-arc waypoint routing
+(quasi-constant-aperture corridor \(\rho\,0.55 \to 0.58 \to 0.60\),
+every leg \(\ge 0.170\,\mathrm{cm^2}\), Hausdorff\((\,\)buib\(~{},~{}\)buaib\()\)
+\(= 0.42\) for the routed mode) --- never needed on the 132-pair sweep
+(all closing pairs rectified at \(s \le 0.3\)). The drawn
+representation of the fallback legs in the \texttt{.polar} plane is the
+optional \texttt{display\_schwa\_route} toggle (default off;
+\S\ref{sec:layers}).
 
 \subsection{Coarticulation across word boundaries}\label{subsec:notation-coart}
 
@@ -1476,10 +1483,11 @@ classification that frames any change review (schwa audit
 \item \textbf{Layer 2 --- \(f(P(t))\), transformations applied to the
       trajectories}: everything that reshapes the parameter stream
       after projection --- the consonant selector override
-      (mandatory), the schwa waypoint routing of the closing VV arcs
-      (\texttt{syltraj.\_vv\_waypoint}; \textbf{mandatory} --- always
-      active, follows the \texttt{'@'} target), the tag engine, and
-      the effort/voicing envelopes.
+      (mandatory), the soft rectification of the closing VV arcs
+      (probe-tuned TCY/TBY pull toward the schwa, direct path kept;
+      \textbf{mandatory treatment} --- always active, follows the
+      \texttt{'@'} target) with the two-leg waypoint routing as its
+      fallback, the tag engine, and the effort/voicing envelopes.
 \end{itemize}
 
 Outside the engine, the \texttt{.polar} display re-run
@@ -1603,11 +1611,12 @@ dual-panel MP4 (sagittal view | polar figure, 25\,Hz) from a
 reconstruction, the file format and the rendering are documented in
 \texttt{docs/polar\_visualization.pdf}. Both \texttt{polar-build} and
 \texttt{run --polar} accept the display-only option
-\texttt{-{}-display-schwa-route} (schwa audit 2026-11-24): when set,
-the drawn vocalic branch shows the routed
-dep\,$\to$\,@\,$\to$\,arr legs of the closing VV arcs; the default
-(OFF) draws the legacy direct arcs. The engine routing itself is never
-conditional (\S\ref{subsec:vv}).
+\texttt{-{}-display-schwa-route} (schwa audits 2026-11-24/26): when
+set, the drawn vocalic branch shows the fallback waypoint routing
+(dep\,$\to$\,@\,$\to$\,arr legs) whenever a closing VV arc is
+treated; the default (OFF) draws the direct arc --- rectified or not
+(\S\ref{subsec:vv}). The engine treatment itself is never conditional
+on the display option.
 
 \subsection{inspect --- tract inspector}
 

@@ -12,7 +12,7 @@
 > | Tag | Meaning |
 > |---|---|
 > | **[layer 1: target]** | the `'@'` polar target and everything derived from it unconditionally (speaker constants, registry hashes, `.polar` manifest inventory entry) |
-> | **[layer 2: mandatory routing]** | the closing-VV-arc waypoint detour executed by the motor chain — always active, never conditional |
+> | **[layer 2: rectification target + fallback route]** | the closing-VV-arc treatment executed by the motor chain — always active, never conditional |
 > | **[layer 2: display option]** | the `.polar` display re-run that mirrors the routing in the drawn trajectory — gated by the `display_schwa_route` toggle, default OFF (owner decision, 2026-11-24; see the note in §5.2) |
 
 - Repository: github.com/FBerthommier/covtl-pipeline
@@ -30,7 +30,7 @@ position » note of RELEASING.md) covers the engine position of the
 schwa `VOWEL_TARGETS['@']`, then set at (0.7167, 180°) — the polar
 centroid of the calibrated vowel triangle, re-centred on 2026-09-04.
 The change is **global**: speaker targets, the waypoint of the closing
-VV arcs (`syl._vv_waypoint`) **[layer 2: mandatory routing]** and the
+VV arcs (`syl._vv_waypoint`) **[layer 2: rectification target + fallback route]** and the
 « @ » entry of the polar manifest (`.polar`) **[layer 1: target]**.
 The quality goal set by the requester: the diphthong trajectory of
 « buib » (u→i) must become more sigmoid and less similar to
@@ -91,7 +91,7 @@ isolated consonants before a pause (the `build_flat` rule). (iii) It is
 the **waypoint of the closing VV arcs**: when the direct polar arc
 between two vowels would occlude the tract mid-transition, the engine
 detours the background arc into two half-arcs through « @ »
-(`syltraj._vv_waypoint`) **[layer 2: mandatory routing]**, the
+(`syltraj._vv_waypoint`) **[layer 2: rectification target + fallback route]**, the
 `VV_CLOSURE_PROBE` probe deciding the routing.
 
 Finally, the « @ » entry of the polar manifest (the inventory of the
@@ -132,7 +132,7 @@ landscape** A(ρ, θ): area of the stationary target P(ρ, θ) on a
 15 radii × 25 angles grid. (ii) The **closing VV pairs**: direct arc
 (`arc_B`, exact engine geometry, D = 12 transition steps) for the 132
 ordered vowel pairs, probe < 0.18 cm². (iii) The **trajectory metrics**
-for « buib » and « buaib »: minimum area of the routed legs, radial
+for « buib » and « buaib »: minimum area of the legs, radial
 excursion (ρ bump), angular sweep of θ(t), and the Hausdorff distance H
 between the trajectories resampled in the polar plane — H quantifies
 the shape resemblance (H = 0: identical trajectories; H = 1: maximal
@@ -170,7 +170,7 @@ D = 12 (eight at D = 4, the default step of the chain): they all
 connect the high vowels i, u, y, e across the sub-threshold sector —
 {i–u}, {i–y}, {i–o}, {u–e}, {u–y} as unordered pairs. The direct arc
 i→u / u→i is worth 0.062–0.063 cm², the others 0.132–0.170 cm². For
-every candidate waypoint (ρ_w, θ_w), the two routed legs dep→wp and
+every candidate waypoint (ρ_w, θ_w), the two legs dep→wp and
 wp→arr were probed: only θ_w ∈ [150°, 210°] with a sufficient ρ_w opens
 every pair at the 0.18 threshold — but the opening is progressive and
 homogeneous in ρ_w, which allows an arbitrage.
@@ -223,7 +223,7 @@ biases neither i↔o nor e↔u.
 `_vv_waypoint()` reads `VOWEL_TARGETS['@']`: the waypoint follows the
 target mechanically, from (0.7167, π) to (0.580, π) — no code change is
 required in the function itself, only its comments document the new
-role (semi-constant corridor) **[layer 2: mandatory routing]**. The
+role (semi-constant corridor) **[layer 2: rectification target + fallback route; routing now the FALLBACK path]**. The
 engine impact on the closing arcs is the following:
 
 **Table 2 — « buib » (routed u→i) and « buaib » (reference): engine
@@ -342,7 +342,7 @@ are pinned by hash).
 | `vtl_synth/data/speakers/jd3_constants.py` | same value + comment; CRLF preserved | **[layer 1: target]** |
 | `vtl_synth/data/speakers/s1_constants.py` | follows the jd3 scheme: (0.580, π); CRLF preserved | **[layer 1: target]** |
 | `vtl_synth/data/speakers/s2_constants.py` | same as s1 | **[layer 1: target]** |
-| `vtl_synth/core/syltraj.py` | waypoint comments (`_vv_waypoint`, module block): semi-constant corridor, aperture margins | **[layer 2: mandatory routing]** (doc) |
+| `vtl_synth/core/syltraj.py` | waypoint comments (`_vv_waypoint`, module block): semi-constant corridor, aperture margins | **[layer 2: rectification target + fallback route]** (wording superseded 2026-11-26, see errata) |
 | `vtl_synth/video/polar_video.py` | new `_vv_probe()` + probe hooking in `_recorded_build_pval` (restored in `finally`) + docstrings | **[layer 2: display option]** (gated by `display_schwa_route`, owner decision) |
 | `vtl_synth/data/speakers/registry.json` | SHA-256 hashes regenerated (jd3, s1, s2) + provenance note | **[layer 1: target]** |
 | `tests/test_speaker_registry.py` | jd3 reference hash prefix updated | **[layer 1: target]** |
@@ -389,7 +389,7 @@ criteria of the audit: value of the target (0.580, π) **[layer 1:
 target]**; waypoint follow-up (`_vv_waypoint() == target`, interior
 band between neutral and periphery); « @ » entry of the polar
 manifest; two-leg routing structure with a stub probe (no VTL
-dependency) **[layer 2: mandatory routing]**; display/motor
+dependency) **[layer 2: rectification (nominal direct path + probe-tuned TCY/TBY bump), fallback = waypoint routing]**; display/motor
 consistency (the displayed junction passes exactly through the
 waypoint); direct behaviour without probe (historical fallback)
 **[layer 2: display option]**; and, with the real VTL probe: legs
@@ -504,3 +504,16 @@ Audit environment: Linux, Python 3.13, numpy 2.1, pytest 9,
 vocaltractlab-cython 0.0.17 (JD3.speaker), repository cloned at
 revision `6536f5a` then patched. Every numerical value of this report
 comes from those runs and is recorded in the cited JSON files.
+
+---
+
+**POST-AUDIT NOTE (2026-11-26, audit C — soft rectification):** the
+[layer 2: mandatory routing] classification above is superseded. The
+nominal treatment of closing VV arcs is now a SOFT RECTIFICATION of the
+TCY/TBY columns toward the schwa values (direct path kept, sin^2 bump
+zero at both anchors, amplitude tuned by the closure probe,
+`VV_RECTIFY_SELECTOR` / `VV_RECTIFY_STEPS`); the two-leg waypoint
+routing described here remains only as the FALLBACK (never triggered on
+the 132-pair sweep). The schwa target '@' = (0.580, pi) is unchanged —
+it is now the rectification target and the fallback waypoint. Cf.
+`docs/From_Phonetics_errata.md` #3 and the CHANGELOG.

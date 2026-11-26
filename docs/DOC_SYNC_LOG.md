@@ -159,3 +159,46 @@ usages légitimes conservés (occlusions consonantiques,
 rho_min_occlusion, velar occlusion of /g/). manual.pdf recompilé
 (xelatex, 29 pp., même pagination) ; suite tests inchangée.
 Console : aucune occurrence (vérifié).
+
+
+---
+
+## Campagne « rectification douce VV » (2026-11-26) — moteur
+
+Suite du rapport d'audit externe (diphtongues iu) : le détournement
+du chemin vers le schwa donnait un mauvais résultat — pause non
+justifiée sur le schwa (plateau f2). Cause : chaque demi-arc du
+routage 24/11 est une sigmoïde cos^Pexp COMPLÈTE à vitesse nulle aux
+extrémités ; à la jonction l'état P(@) est atteint puis quitté au
+ralenti — au D=4 de production, les états moteurs sont
+[dep, @, @, arr] : la moitié de la diphtonge figée sur le schwa
+exact. Trois options étudiées (rapport) : (1) arc passant par @ sans
+s'y arrêter (balayage intérieur 240° — écarté : excursion polaire
+2× plus longue, passage au territoire /y/), (2) sélecteur minimal
+TCY/TBY routés seuls (recouvert par (3) comme cas s=1), (3)
+rectification douce des 2 paramètres sur le trajet direct, amplitude
+réglée par la sonde — RETENUE et implémentée.
+
+| Fichier | Modification |
+|---|---|
+| `vtl_synth/core/syltraj.py` | `VV_RECTIFY_SELECTOR` (TCY, TBY) + `VV_RECTIFY_STEPS` (0.1..1.0) ; `_rectify_vv_arc()` (bosse sin² nulle aux extrémités, amplitude minimale ouvrant ≥ 0.18 cm²) ; `_append_background` : rectification d'abord, routage deux demi-arcs en FALLBACK ; `SylBlock.rectify_s` ; commentaires VV réécrits |
+| `vtl_synth/core/constants.py` | commentaire '@' : cible de rectification + waypoint du fallback |
+| `vtl_synth/data/speakers/jd3_constants.py` | même commentaire (hache registry regénérée) |
+| `vtl_synth/data/speakers/registry.json` | `constants_sha256` jd3 + note _meta |
+| `tests/test_speaker_registry.py` | préfixe de hache jd3 épinglé |
+| `vtl_synth/video/polar_video.py` | docstrings : l'affichage ON dessine l'arc direct unique des blocs rectifiés, les jambes dep→@→arr uniquement pour le fallback |
+| `tests/test_schwa_waypoint.py` | réécrit : structure de rectification (1 bloc, colonnes TCY/TBY seules, ancrages exacts, jamais à l'arrêt), fallback deux jambes (stub tout-fermant), affichage ON/OFF, critères acoustiques (aire ≥ 0.15, pas de pause schwa, H(buib, buaib) ≥ 0.40) |
+| `CHANGELOG.md` | entrée « Unreleased — Changed » |
+
+Validation : suite complète 534 passed / 3 skipped (sandhi optionnel,
+préexistants) ; baselines 5 speakers vertes SANS régénération (aucune
+paire VV fermante intra-mot dans le corpus : « a i u » = mots séparés,
+pas d'arc VV) ; balayage 132 paires ordonnées : 8 fermantes à D=4
+(10 à D=12), toutes rectifiées à s ≤ 0.3, zéro fallback ; métriques
+buib : aire 0.062 → 0.223 cm², vitesse minimale 0.051 > 0 (était
+0.000), distance minimale à P(@) 1.95 (jamais approché), Hausdorff
+(buib, buaib) 1.00 (critère ≥ 0.40).
+Reste à opérer (voir `docs/PROMPT_SCHWA_RECTIFICATION.md`) : manuels
+LaTeX (§VV « routage obligatoire » → rectification), SPEAKERS.md,
+erratas, docs de l'audit 24/11 (mention du fallback), console
+(test_schwa_route.py : plus de passage π pour buib), round de release.

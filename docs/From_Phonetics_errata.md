@@ -45,3 +45,12 @@ and is not rewritten; corrections are recorded here.
    departure-vowel anchor — exactly like the motor chain — and the
    reduced anchoring of manual section 5.6 ('ba' lens) remains valid for
    INITIAL onsets only.
+
+3. **.polar display / engine — soft rectification of closing VV arcs**
+   (2026-11-26, audit C): the closing-VV treatment is no longer the
+   unconditional two-leg waypoint routing. The direct arc is kept and
+   the constriction columns (TCY, TBY) are softly pulled toward the
+   schwa values by a sin^2 bump whose amplitude is tuned by the closure
+   probe (`VV_RECTIFY_SELECTOR` / `VV_RECTIFY_STEPS`); the two-leg
+   waypoint routing remains only as the fallback. The 'mandatory
+   routing' wording of the 24/11 audit is superseded.

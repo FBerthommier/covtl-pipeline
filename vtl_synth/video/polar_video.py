@@ -238,7 +238,7 @@ def _vv_probe():
     """VV closure probe for the display re-run, or None if unavailable.
 
     When the ``display_schwa_route`` option is ON, the .polar re-run
-    applies the SAME schwa routing as the motor chain
+    applies the SAME schwa treatment as the motor chain
     (build_phrase_tract hooks syltraj.VV_CLOSURE_PROBE during the
     synthesis and resets it afterwards). vocaltractlab_cython is
     optional for the display-only path: without it the probe stays None
@@ -260,11 +260,15 @@ def _recorded_build_pval(phrase: str, t_cons: int, t_voy: int,
     ``display_schwa_route`` is the DISPLAY toggle (layer 2, optional,
     default OFF): when True the VV_CLOSURE_PROBE is hooked for the
     re-run exactly like ``build_phrase_tract`` does for the motor chain
-    (cf. ``_vv_probe``), so the schwa routing of closing VV arcs is
-    drawn as it is synthesized — two background legs dep → @ → arr.
-    When False (default) the probe stays unhooked and the display draws
-    the legacy direct arcs — byte-identical to the .polar of the
-    pre-audit revision. The MOTOR routing is never conditional: this
+    (cf. ``_vv_probe``), so the schwa treatment of closing VV arcs is
+    drawn as it is synthesized — a single direct arc for the
+    probe-rectified blocks (the TCY/TBY rectification of the
+    2026-11-26 audit stays below polar-path resolution: the drawn arc
+    is the plan path dep → arr), and the two background legs
+    dep → @ → arr only for the FALLBACK routing (block vowel_key '@',
+    when no rectification amplitude opens the corridor). When False
+    (default) the probe stays unhooked and the display draws the
+    legacy direct arcs. The MOTOR treatment is never conditional: this
     flag only gates what the display draws.
 
     The helpers of ``build_global_pval`` that carry the polar geometry
@@ -275,9 +279,13 @@ def _recorded_build_pval(phrase: str, t_cons: int, t_voy: int,
     points the engine drives toward:
 
       'arc'     : (dep, arr, n)   pause / initial / terminal arcs
-      'bg'      : (dep, arr, n)   background arcs (1 or 2 per call:
-                                  the schwa routing of closing VV arcs
-                                  appends two blocks dep→@ then @→arr)
+      'bg'      : (dep, arr, n)   background arcs (1 per rectified or
+                                  direct block — the 2026-11-26 soft
+                                  rectification keeps a single direct
+                                  arc; 2 per call ONLY for the fallback
+                                  schwa routing: dep→@ then @→arr, when
+                                  no rectification amplitude opens the
+                                  corridor)
       'hold'    : (pt, n)         decay / attack stationary holds
                                   (only when the engine really appends)
       'cluster' : (dep, arr, targets, T)  anchor pair + [(rho, theta)]
@@ -344,13 +352,13 @@ def _recorded_build_pval(phrase: str, t_cons: int, t_voy: int,
         setattr(syl, '_append_decay', decay)
         setattr(syl, '_append_attack', attack)
         setattr(syl, 'build_cluster_pval', cluster)
-        # Schwa routing on the display side, OPTION (layer 2, default
+        # Schwa treatment on the display side, OPTION (layer 2, default
         # OFF): hook the closure probe exactly like build_phrase_tract
         # does for the motor chain ONLY when display_schwa_route is on,
         # so the drawn background arcs match the synthesized trajectory
-        # (routed legs dep → @ → arr as two arcs through the waypoint).
-        # OFF = legacy direct arcs (pre-audit .polar). Restored in the
-        # finally block below.
+        # (single direct arc for probe-rectified blocks; the two routed
+        # legs dep → @ → arr only for the fallback routing). OFF =
+        # legacy direct arcs. Restored in the finally block below.
         saved_probe = syl.VV_CLOSURE_PROBE
         if display_schwa_route:
             probe = _vv_probe()
@@ -377,10 +385,13 @@ def build_phrase_polar(phrase: str,
     """One phrase → .polar dict (two branch trajectories 100 Hz + timing).
 
     ``display_schwa_route`` (layer 2 display option, default OFF): when
-    True the drawn vocalic branch shows the schwa routing of the
-    closing VV arcs (two legs dep → @ → arr, junction at the waypoint);
-    OFF draws the legacy direct arcs. The engine routing itself is
-    never conditional (cf. ``_recorded_build_pval``).
+    True the drawn vocalic branch shows the schwa treatment of the
+    closing VV arcs exactly as the motor synthesizes it — a single
+    direct arc for the probe-rectified blocks (the TCY/TBY soft
+    rectification of the 2026-11-26 audit stays below polar-path
+    resolution), the two legs dep → @ → arr only for the fallback
+    routing; OFF draws the legacy direct arcs. The engine treatment
+    itself is never conditional (cf. ``_recorded_build_pval``).
 
     The phrase is re-run through the instrumented
     ``syltraj.build_phrase_pval`` with the same parameters as the
