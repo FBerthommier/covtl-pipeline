@@ -3,7 +3,7 @@
 All notable changes to this package are documented here.
 Format: Keep a Changelog — https://keepachangelog.com/
 
-## [Unreleased]
+## [1.2.4] - 2026-11-26
 
 ### Changed
 
